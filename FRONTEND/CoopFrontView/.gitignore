@@ -1,0 +1,36 @@
+.DS_Store
+node_modules/
+/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/test/unit/coverage/
+/test/e2e/reports/
+selenium-debug.log
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+
+# Created by https://www.gitignore.io/api/vuejs
+# Edit at https://www.gitignore.io/?templates=vuejs
+
+### Vuejs ###
+node_modules
+.DS_Store
+docs/_book
+test/
+
+# End of https://www.gitignore.io/api/vuejs
+
+.DS_Store
+node_modules/
+dist/
+npm-debug.log
+yarn-error.log
+

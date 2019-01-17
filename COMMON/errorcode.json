@@ -1,0 +1,14 @@
+{
+  "400": {
+    "status": 400,
+    "code": 0,
+    "message": "잘못된 요청입니다.",
+    "description": "Bad Request"
+  },
+  "500": {
+    "status": 500,
+    "code": 0,
+    "message": "서버 오류",
+    "description": "Internal Server Error"
+  }
+}

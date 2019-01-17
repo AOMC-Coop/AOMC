@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
 
+
+    //test 주석입니다
     @RequestMapping(value="/", method = RequestMethod.GET)
     public void home() { //test function
         System.out.println("TEST");

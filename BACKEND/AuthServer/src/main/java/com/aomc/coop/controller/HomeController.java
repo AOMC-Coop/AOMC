@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
 
+    
     @RequestMapping(value="/", method = RequestMethod.GET)
     public void home() { //test function
         System.out.println("TEST");

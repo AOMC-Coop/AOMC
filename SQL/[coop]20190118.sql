@@ -1,15 +1,15 @@
 CREATE DATABASE  IF NOT EXISTS `coop` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `coop`;
--- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.13, for Win64 (x86_64)
 --
 -- Host: localhost    Database: coop
 -- ------------------------------------------------------
--- Server version	5.7.18-log
+-- Server version	8.0.13
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+ SET NAMES utf8 ;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -23,7 +23,7 @@ USE `coop`;
 
 DROP TABLE IF EXISTS `channels`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `channels` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -54,10 +54,10 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `comments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `comments` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
-  `content` varchar(2000) NOT NULL,
+  `content` text NOT NULL,
   `msg_idx` int(11) NOT NULL,
   `user_idx` int(11) NOT NULL,
   `send_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -84,10 +84,10 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `file` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
-  `content` mediumblob NOT NULL,
+  `content` varchar(100) NOT NULL,
   `type` varchar(10) NOT NULL,
   `name` varchar(100) NOT NULL,
   PRIMARY KEY (`idx`)
@@ -109,10 +109,10 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `messages`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `messages` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
-  `content` varchar(2000) NOT NULL,
+  `content` text NOT NULL,
   `channel_idx` int(11) NOT NULL,
   `user_idx` int(11) NOT NULL,
   `send_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -142,7 +142,7 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `teams`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `teams` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -166,13 +166,13 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `user_has_team`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `user_has_team` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `user_idx` int(11) NOT NULL,
   `team_idx` int(11) NOT NULL,
   `join_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `owner_flag` int(11) NOT NULL,
+  `owner_flag` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idx`),
   KEY `user_has_team_user_idx_idx` (`user_idx`),
   KEY `user_has_team_team_idx_idx` (`team_idx`),
@@ -196,19 +196,19 @@ UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
+ SET character_set_client = utf8mb4 ;
 CREATE TABLE `users` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `uid` varchar(45) NOT NULL,
-  `pwd` varchar(50) NOT NULL,
+  `pwd` varchar(80) NOT NULL,
   `salt` varchar(45) NOT NULL,
   `nickname` varchar(45) NOT NULL,
-  `role` varchar(45) NOT NULL DEFAULT 'user',
+  `gender` tinyint(4) NOT NULL,
+  `role` tinyint(4) NOT NULL DEFAULT '0',
   `status` varchar(45) NOT NULL DEFAULT 'active',
   `reg_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `access_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `sess_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idx`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -231,4 +231,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-17  9:21:37
+-- Dump completed on 2019-01-18 15:19:19

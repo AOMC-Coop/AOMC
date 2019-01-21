@@ -22,8 +22,7 @@ public class TeamService {
     private TeamMapper teamMapper;
     private JwtService jwtService;
 
-    @Autowired
-    CodeJsonParser codeJsonParser;
+    CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
 //    @Resource(name="redisTemplate")
 //    private HashOperations<String, String, String> values;

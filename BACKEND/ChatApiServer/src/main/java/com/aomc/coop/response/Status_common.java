@@ -11,7 +11,7 @@ public enum Status_common {
         return status;
     }
 
-    private Status_common(String status){
+    private Status_common(String status) {
         this.status = status;
     }
 

@@ -6,9 +6,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CoopApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CoopApplication.class, args);
-	}
-	public int test = 1;
+    public static void main(String[] args) {
+        SpringApplication.run(CoopApplication.class, args);
+    }
+
+    public int test = 1;
 }
 

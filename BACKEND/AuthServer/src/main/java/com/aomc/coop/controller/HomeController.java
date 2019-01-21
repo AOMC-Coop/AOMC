@@ -4,6 +4,7 @@ import com.aomc.coop.model.UserInfo;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import com.aomc.coop.utils.CodeJsonParser;
 
 @RestController
 public class HomeController {
@@ -16,4 +17,7 @@ public class HomeController {
         UserInfo userInfo = new UserInfo();
         String userId = userInfo.getUserId();
     }
+
+    CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
+
 }

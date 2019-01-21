@@ -10,7 +10,7 @@ public enum Status_1000 {
         return status;
     }
 
-    private Status_1000(String status){
+    private Status_1000(String status) {
         this.status = status;
     }
 }

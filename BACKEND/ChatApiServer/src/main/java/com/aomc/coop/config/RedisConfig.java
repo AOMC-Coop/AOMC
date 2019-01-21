@@ -29,7 +29,7 @@ public class RedisConfig {
         return jedisConnectionFactory;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean(name = "redisTemplate")
     public RedisTemplate redisTemplateConfig(JedisConnectionFactory jedisConnectionFactory) {
         RedisTemplate redisTemplate = new RedisTemplate();

@@ -20,7 +20,7 @@
 //    private final static String AUTHORIZATION = "Authorization";
 //
 //    /**
-//     * 실패 시 기본 반환 Response
+//     * 실패 시 기본 반환
 //     */
 ////    private final static DefaultRes DEFAULT_RES = DefaultRes.builder().status(401).message("인증 실패").build();
 ////    private final static ResponseEntity<DefaultRes> RES_RESPONSE_ENTITY = new ResponseEntity<>(DEFAULT_RES, HttpStatus.UNAUTHORIZED);

@@ -1,6 +1,5 @@
 package com.aomc.coop.controller;
 
-import com.aomc.coop.model.Team;
 import com.aomc.coop.service.TeamService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,15 +17,16 @@ public class TeamController {
     public TeamController(final TeamService teamService) {
         this.teamService = teamService;
     }
-//    @RequestBody final Team team
+
+    //    @RequestBody final Team team
     @GetMapping
     @CrossOrigin
     @Transactional
-    public ResponseEntity makeTeam(){
-        try{
+    public ResponseEntity makeTeam() {
+        try {
 //            teamService.createTeam(team);
             return new ResponseEntity<>(teamService.createTeam(), HttpStatus.OK);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

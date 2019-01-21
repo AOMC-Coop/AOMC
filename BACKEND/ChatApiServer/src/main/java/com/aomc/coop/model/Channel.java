@@ -14,7 +14,7 @@ public class Channel {
     private Date create_date;
     private int star_flag;
 
-    private  List<Message> messages; //큐인지 리스트인지
+    private List<Message> messages; //큐인지 리스트인지
 //    private Queue<Message> messages;
 
 }

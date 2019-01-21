@@ -17,7 +17,7 @@ public interface TeamMapper {
     int createTeam(@Param("team") final Team team);
 
     @Insert("INSERT INTO user_has_team(team_idx, user_idx) VALUES( #{team_idx}, #{user_idx})")
-    int createUserHasTeam(@Param("team_idx") final int team_idx, @Param("user_idx") final int user_idx);
+    void createUserHasTeam(@Param("team_idx") final int team_idx, @Param("idx") final int user_idx);
 
     @Insert("INSERT INTO channels(name, team_idx, user_idx) VALUES(#{channel.name}, #{team_idx}, #{user_idx})")
     @Options(useGeneratedKeys = true, keyColumn = "channel.idx")

@@ -13,5 +13,5 @@ public class Team {
 
     private List<User> users;
     private List<Channel> channels;
-    private  String owner;
+    private String owner;
 }

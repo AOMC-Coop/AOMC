@@ -18,14 +18,13 @@ public class TeamController {
     public TeamController(final TeamService teamService) {
         this.teamService = teamService;
     }
-//    @RequestBody final Team team
-    @GetMapping
+
+    @PostMapping
     @CrossOrigin
     @Transactional
-    public ResponseEntity makeTeam(){
+    public ResponseEntity makeTeam(@RequestBody final Team team){
         try{
-//            teamService.createTeam(team);
-            return new ResponseEntity<>(teamService.createTeam(), HttpStatus.OK);
+            return new ResponseEntity<>(teamService.createTeam(team), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

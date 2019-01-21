@@ -9,6 +9,11 @@
     "message": "서버 오류",
     "description": "Internal Server Error"
   },
+  "1201": {
+    "status": 200,
+    "message": "팀 생성 성공",
+    "description": "Success Team Create"
+  },
   "1400": {
     "status": 403,
     "message": "팀 생성 실패",

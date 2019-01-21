@@ -18,5 +18,15 @@
     "status": 403,
     "message": "팀 생성 실패",
     "description": "Fail Team Create"
+  },
+  "5201": {
+    "status": 200,
+    "message": "팀 수정 성공",
+    "description": "Success Team Update"
+  },
+  "5401": {
+    "status": 403,
+    "message": "팀 수정 실패",
+    "description": "Fail Team Update"
   }
 }

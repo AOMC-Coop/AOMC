@@ -22,14 +22,21 @@ public class TeamController {
 
     @PostMapping
     @CrossOrigin
-    @Transactional
     public ResponseEntity makeTeam(@RequestBody final Team team){
         try{
             return new ResponseEntity<>(teamService.createTeam(team), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
-
+    @PutMapping
+    @CrossOrigin
+    public ResponseEntity updateTeam(@RequestBody final Team team){
+        try{
+            return new ResponseEntity<>(teamService.updateTeam(team), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

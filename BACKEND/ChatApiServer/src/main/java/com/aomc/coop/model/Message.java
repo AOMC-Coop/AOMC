@@ -6,7 +6,6 @@ import lombok.Data;
 public class Message {
     private int idx;
     private String content;
-    //채널?
     private User user;
     private Data send_date;
 

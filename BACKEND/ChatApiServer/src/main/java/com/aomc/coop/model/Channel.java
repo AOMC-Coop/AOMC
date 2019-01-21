@@ -10,7 +10,6 @@ import java.util.Queue;
 public class Channel {
     private int idx;
     private String name;
-    //팀이름?
     private List<User> users;
     private Date create_date;
     private int star_flag;

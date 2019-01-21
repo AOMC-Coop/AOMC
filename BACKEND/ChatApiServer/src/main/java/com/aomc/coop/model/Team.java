@@ -12,6 +12,6 @@ public class Team {
     private Date create_date;
 
     private List<User> users;
-    private List<Channel> channels;
-    private String owner;
+//    private List<Channel> channels;
+//    private String owner;
 }

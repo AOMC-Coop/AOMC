@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -38,14 +39,19 @@ public class TeamService {
         try {
             Channel channel = new Channel();
             channel.setName("general");
-            final int team_idx = teamMapper.createTeam(team);
+
+            teamMapper.createTeam(team);
+
+            System.out.println("team_idx는"+team.getIdx());
 
             List<User> users = team.getUsers();
-            for (User user : users) {
-                team.setOwner();
-                teamMapper.createUserHasTeam(team_idx, user.getIdx());
-                teamMapper.createChannel(channel, team_idx, user.getIdx());
-            }
+
+            System.out.println("users.size()는"+ users.size());
+//            for (User user : users) {
+//                System.out.println("user_idx는"+user.getIdx());
+//                teamMapper.createUserHasTeam(team_idx, user.getIdx());
+//                teamMapper.createChannel(channel, team_idx, user.getIdx());
+//            }
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_TEAM.getStatus());
 

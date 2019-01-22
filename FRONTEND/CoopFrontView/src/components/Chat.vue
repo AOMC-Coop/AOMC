@@ -1,12 +1,13 @@
 <template>
   <v-app id="inspire">
-    <v-navigation-drawer
+    <v-navigation-drawer 
+      class="primary"
       :clipped="$vuetify.breakpoint.lgAndUp"
       v-model="drawer"
       fixed
       app
     >
-      <v-list dense>
+      <v-list dense class="white--text">
         <template v-for="item in items">
           <v-layout
             v-if="item.heading"
@@ -26,13 +27,14 @@
           <v-list-group
             v-else-if="item.children"
             v-model="item.model"
+            class="white--text"
             :key="item.text"
             :prepend-icon="item.model ? item.icon : item['icon-alt']"
             append-icon=""
           >
             <v-list-tile slot="activator">
-              <v-list-tile-content>
-                <v-list-tile-title>
+              <v-list-tile-content >
+                <v-list-tile-title >
                   {{ item.text }}
                 </v-list-tile-title>
               </v-list-tile-content>
@@ -42,11 +44,11 @@
               :key="i"
               @click=""
             >
-              <v-list-tile-action v-if="child.icon">
-                <v-icon>{{ child.icon }}</v-icon>
+              <v-list-tile-action v-if="child.icon" >
+                <v-icon class="white--text">{{ child.icon }}</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title>
+                <v-list-tile-title class="white--text">
                   {{ child.text }}
                 </v-list-tile-title>
               </v-list-tile-content>
@@ -54,7 +56,7 @@
           </v-list-group>
           <v-list-tile v-else :key="item.text" @click="">
             <v-list-tile-action>
-              <v-icon>{{ item.icon }}</v-icon>
+              <v-icon class="white--text">{{ item.icon }}</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
@@ -67,14 +69,14 @@
     </v-navigation-drawer>
     <v-toolbar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
-      color="blue darken-3"
+      color="primary lighten-2"
       dark
       app
       fixed
     >
       <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
-        <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-        <span class="hidden-sm-and-down">Google Contacts</span>
+        <v-toolbar-side-icon  @click.stop="drawer = !drawer" ></v-toolbar-side-icon>
+        <span class="hidden-sm-and-down">Cooperation</span>
       </v-toolbar-title>
       <v-text-field
         flat
@@ -82,10 +84,10 @@
         hide-details
         prepend-inner-icon="search"
         label="Search"
-        class="hidden-sm-and-down"
+        class="hidden-sm-and-down" 
       ></v-text-field>
       <v-spacer></v-spacer>
-      <v-btn icon>
+      <v-btn icon >
         <v-icon>apps</v-icon>
       </v-btn>
       <v-btn icon>
@@ -100,36 +102,17 @@
         </v-avatar>
       </v-btn>
     </v-toolbar>
-    <v-content>
-        asdasdasdas
-      <v-container fluid fill-height>
-        <v-layout justify-center align-center>
-          <v-tooltip right>
-            <v-btn
-              slot="activator"
-              :href="source"
-              icon
-              large
-              target="_blank"
-            >
-              <v-icon large>code</v-icon>
-            </v-btn>
-            <span>Source</span>
-          </v-tooltip>
-          <v-tooltip right>
-            <v-btn slot="activator" icon large href="https://codepen.io/johnjleider/pen/EQOYVV" target="_blank">
-              <v-icon large>mdi-codepen</v-icon>
-            </v-btn>
-            <span>Codepen</span>
-          </v-tooltip>
-        </v-layout>
-      </v-container>
-    </v-content>
+    
+
+    <Content></Content>
+
+
+
     <v-btn
       fab
       bottom
       right
-      color="pink"
+      color="#3F0E40"
       dark
       fixed
       @click="dialog = !dialog"
@@ -203,7 +186,13 @@
 </template>
 
 <script>
+import Content from './Content.vue'
+
+
   export default {
+    components : {
+    'Content' : Content
+  },
     data: () => ({
       dialog: false,
       drawer: null,
@@ -245,3 +234,10 @@
     }
   }
 </script>
+
+<style>
+.v-navigation-drawer {
+background-color: aqua;
+color: brown;
+}
+</style>

@@ -1,13 +1,14 @@
 package com.aomc.coop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Queue;
 
 @Data
-public class Channel {
+public class Channel implements Serializable {
     private int idx;
     private String name;
     private List<User> users;
@@ -15,7 +16,7 @@ public class Channel {
     private int star_flag;
     private int teamIdx;
 
+    @JsonIgnore
     private List<Message> messages; //큐인지 리스트인지
-//    private Queue<Message> messages;
 
 }

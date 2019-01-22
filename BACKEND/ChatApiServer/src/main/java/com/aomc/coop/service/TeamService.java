@@ -1,8 +1,10 @@
 package com.aomc.coop.service;
 
 import com.aomc.coop.mapper.ChannelMapper;
+import com.aomc.coop.mapper.MessageMapper;
 import com.aomc.coop.mapper.TeamMapper;
 import com.aomc.coop.model.Channel;
+import com.aomc.coop.model.Message;
 import com.aomc.coop.model.Team;
 import com.aomc.coop.model.User;
 import com.aomc.coop.response.Status_1000;
@@ -24,10 +26,14 @@ import java.util.Map;
 @Service
 public class TeamService {
 
+    @Autowired
     private TeamMapper teamMapper;
 
     @Autowired
     private ChannelMapper channelMapper;
+
+    @Autowired
+    private MessageMapper messageMapper;
 
     private JwtService jwtService;
 
@@ -36,10 +42,6 @@ public class TeamService {
 //    @Resource(name="redisTemplate")
 //    private HashOperations<String, String, String> values;
 
-    public TeamService(final TeamMapper teamMapper, JwtService jwtService) {
-        this.teamMapper = teamMapper;
-        this.jwtService = jwtService;
-    }
 
     //팀생성
     //owner를 idx로 넣은것
@@ -47,26 +49,50 @@ public class TeamService {
     @Transactional
     public ResponseType createTeam(final Team team) {
         try {
+            List<User> users = team.getUsers();
+            team.setOwner(users.get(0).getIdx());
+
             Channel channel = new Channel();
             channel.setName("general");
-//            List<Channel> channels = new ArrayList<>();
-//            channels.add(channel);
-//            team.setChannels(channels);
+
+            Message message = new Message();
+            message.setContent("joined #general");
+            message.setUser(users.get(0));
+            List<Message> messages = new ArrayList<>();
+            messages.add(message);
+
+            channel.setMessages(messages);
+
+            List<Channel> channels = new ArrayList<>();
+            channels.add(channel);
+
+            team.setChannels(channels);
 
             teamMapper.createTeam(team);
 
+            System.out.println("createTeam");
 
-            List<User> users = team.getUsers();
-            team.setOwner(users.get(0).getIdx());
+            channelMapper.createChannel(channel, team.getIdx());
+
+            System.out.println("createChannel " + channel.getIdx());
+
+            messageMapper.createMessage(message, channel.getIdx(), users.get(0).getIdx());
+
+            System.out.println("createMessage");
+
 
             for (User user : users) {
                 if(user.getIdx()==team.getOwner()){
                     teamMapper.createUserHasTeam(team.getIdx(), user.getIdx(),1);
+                    System.out.println("createUserHasTeam1");
                 }else{
                     teamMapper.createUserHasTeam(team.getIdx(), user.getIdx(),0);
+                    System.out.println("createUserHasTeam2");
                 }
-                channelMapper.createChannel(channel, team.getIdx(), user.getIdx());
+                channelMapper.createUserHasChannel(channel.getIdx(), user.getIdx());
+                System.out.println("createUserHasChannel");
             }
+
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_TEAM.getStatus());
 

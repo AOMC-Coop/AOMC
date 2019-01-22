@@ -3,9 +3,11 @@ package com.aomc.coop.mapper;
 import com.aomc.coop.model.Channel;
 import com.aomc.coop.model.Team;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Mapper
+@Repository
 public interface TeamMapper {
 
     //team생성 - teams 테이블

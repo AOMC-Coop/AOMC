@@ -27,7 +27,7 @@ public class ChannelService {
 
     public ResponseType createChannel(Channel channel) {
 
-        channelMapper.createChannel(channel, team.getIdx(), user.getIdx());
+        //channelMapper.createChannel(channel, team.getIdx(), user.getIdx());
 
         // 성공
         return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_TEAM.getStatus());

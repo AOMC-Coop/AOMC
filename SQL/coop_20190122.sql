@@ -53,15 +53,11 @@ CREATE TABLE `channels` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `team_idx` int(11) NOT NULL,
-  `user_idx` int(11) NOT NULL,
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `star_flag` tinyint(4) NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idx`),
   KEY `channels_team_idx_idx` (`team_idx`),
-  KEY `channels_user_idx_idx` (`user_idx`),
-  CONSTRAINT `channels_team_idx` FOREIGN KEY (`team_idx`) REFERENCES `teams` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `channels_user_idx` FOREIGN KEY (`user_idx`) REFERENCES `users` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `channels_team_idx` FOREIGN KEY (`team_idx`) REFERENCES `teams` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -71,7 +67,6 @@ CREATE TABLE `channels` (
 
 LOCK TABLES `channels` WRITE;
 /*!40000 ALTER TABLE `channels` DISABLE KEYS */;
-INSERT INTO `channels` VALUES (1,'general',13,4,'2019-01-22 10:36:12',0,1),(2,'general',13,5,'2019-01-22 10:36:12',0,1),(3,'general',13,6,'2019-01-22 10:36:12',0,1),(4,'general',14,6,'2019-01-22 10:36:31',0,1),(5,'general',14,4,'2019-01-22 10:36:31',0,1),(6,'general',14,5,'2019-01-22 10:36:31',0,1);
 /*!40000 ALTER TABLE `channels` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -186,8 +181,37 @@ CREATE TABLE `teams` (
 
 LOCK TABLES `teams` WRITE;
 /*!40000 ALTER TABLE `teams` DISABLE KEYS */;
-INSERT INTO `teams` VALUES (13,'aomc','2019-01-22 10:36:12','2019-01-22 10:36:12',1),(14,'winterdev','2019-01-22 10:36:31','2019-01-22 10:36:31',1);
 /*!40000 ALTER TABLE `teams` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_has_channel`
+--
+
+DROP TABLE IF EXISTS `user_has_channel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+ SET character_set_client = utf8mb4 ;
+CREATE TABLE `user_has_channel` (
+  `idx` int(11) NOT NULL AUTO_INCREMENT,
+  `channel_idx` int(11) NOT NULL,
+  `user_idx` int(11) NOT NULL,
+  `star_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`idx`),
+  KEY `user_has_channel_channel_idx_idx` (`channel_idx`),
+  KEY `user_has_channel_user_idx_idx` (`user_idx`),
+  CONSTRAINT `user_has_channel_channel_idx` FOREIGN KEY (`channel_idx`) REFERENCES `channels` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `user_has_channel_user_idx` FOREIGN KEY (`user_idx`) REFERENCES `users` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_has_channel`
+--
+
+LOCK TABLES `user_has_channel` WRITE;
+/*!40000 ALTER TABLE `user_has_channel` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_has_channel` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -218,7 +242,6 @@ CREATE TABLE `user_has_team` (
 
 LOCK TABLES `user_has_team` WRITE;
 /*!40000 ALTER TABLE `user_has_team` DISABLE KEYS */;
-INSERT INTO `user_has_team` VALUES (2,13,4,'2019-01-22 10:36:12',1,1),(3,13,5,'2019-01-22 10:36:12',0,1),(4,13,6,'2019-01-22 10:36:12',0,1),(5,14,6,'2019-01-22 10:36:31',1,1),(6,14,4,'2019-01-22 10:36:31',0,1),(7,14,5,'2019-01-22 10:36:31',0,1);
 /*!40000 ALTER TABLE `user_has_team` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -264,4 +287,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-22 10:46:09
+-- Dump completed on 2019-01-22 12:45:45

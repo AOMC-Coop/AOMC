@@ -1,6 +1,7 @@
 package com.aomc.coop.service;
 
 import com.aomc.coop.mapper.ChannelMapper;
+import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.model.Channel;
 import com.aomc.coop.model.Message;
 import com.aomc.coop.model.User;
@@ -23,6 +24,9 @@ public class ChannelService {
 
     @Autowired
     private ChannelMapper channelMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private JwtService jwtService;
@@ -71,7 +75,7 @@ public class ChannelService {
             List<User> users = new ArrayList<>();
             for(Integer idx : users_idx) {
                 System.out.println("userIdx = " + idx);
-                User user = channelMapper.findByUserIdx(idx);
+                User user = userMapper.findByUserIdx(idx);
                 users.add(user);
             }
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Channel_Users.getStatus(), users);

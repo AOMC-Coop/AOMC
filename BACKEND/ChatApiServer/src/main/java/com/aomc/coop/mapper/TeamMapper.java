@@ -14,19 +14,19 @@ public interface TeamMapper {
     void createTeam(final Team team);
 
     //team생성 - user_has_team 테이블
-    @Insert("INSERT INTO user_has_team(team_idx, user_idx, owner_flag) VALUES( #{team_idx}, #{user_idx}, #{owner_flag})")
-    void createUserHasTeam(final int team_idx, final int user_idx, final int owner_flag);
+    @Insert("INSERT INTO user_has_team(team_idx, user_idx, owner_flag) VALUES( #{teamIdx}, #{userIdx}, #{ownerFlag})")
+    void createUserHasTeam(final int teamIdx, final int userIdx, final int ownerFlag);
 
     //team생성 - channels 테이블
-    @Insert("INSERT INTO channels(name, team_idx, user_idx) VALUES(#{channel.name}, #{team_idx}, #{user_idx})")
+    @Insert("INSERT INTO channels(name, team_idx, user_idx) VALUES(#{channel.name}, #{teamIdx}, #{userIdx})")
     @Options(useGeneratedKeys = true, keyProperty = "channel.idx")
-    int createChannel(@Param("channel") final Channel channel, @Param("team_idx") final int team_idx, @Param("user_idx") final int user_idx);
+    int createChannel(@Param("channel") final Channel channel, @Param("teamIdx") final int teamIdx, @Param("userIdx") final int userIdx);
 
     //team수정
     @Update("UPDATE teams SET name=#{name}, update_date=now() WHERE idx = #{idx}")
     void updateTeam(final Team team);
 
-    //team삭제?
-    @Delete("DELETE FROM teams WHERE idx = #{idx}")
-    void deleteTeam(@Param("idx") final int team_idx);
+    //team비활성화
+    @Update("UPDATE teams SET status=0, update_date=now() WHERE idx = #{idx}")
+    int deleteTeam(@Param("idx") final int teamIdx);
 }

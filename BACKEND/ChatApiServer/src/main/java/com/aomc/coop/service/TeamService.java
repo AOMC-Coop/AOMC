@@ -75,7 +75,6 @@ public class TeamService {
     @Transactional
     public ResponseType updateTeam(final Team team) {
         try {
-
             teamMapper.updateTeam(team);
             return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_UPDATE_TEAM.getStatus());
 
@@ -83,6 +82,20 @@ public class TeamService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_UPDATE_TEAM.getStatus());
         }
+
+    }
+
+    //팀삭제(팀비활성화)
+    @Transactional
+    public ResponseType deleteTeam(final int teamIdx) {
+
+            int delete_flag = teamMapper.deleteTeam(teamIdx);
+            System.out.println(delete_flag);
+
+            if(delete_flag!=0)
+                return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_DELETE_TEAM.getStatus());
+            else
+                return codeJsonParser.codeJsonParser(Status_5000.FAIL_DELETE_TEAM.getStatus());
 
     }
 

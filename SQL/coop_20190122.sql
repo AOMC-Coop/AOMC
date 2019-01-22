@@ -56,6 +56,7 @@ CREATE TABLE `channels` (
   `user_idx` int(11) NOT NULL,
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `star_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`idx`),
   KEY `channels_team_idx_idx` (`team_idx`),
   KEY `channels_user_idx_idx` (`user_idx`),
@@ -70,7 +71,7 @@ CREATE TABLE `channels` (
 
 LOCK TABLES `channels` WRITE;
 /*!40000 ALTER TABLE `channels` DISABLE KEYS */;
-INSERT INTO `channels` VALUES (1,'general',13,4,'2019-01-22 10:36:12',0),(2,'general',13,5,'2019-01-22 10:36:12',0),(3,'general',13,6,'2019-01-22 10:36:12',0),(4,'general',14,6,'2019-01-22 10:36:31',0),(5,'general',14,4,'2019-01-22 10:36:31',0),(6,'general',14,5,'2019-01-22 10:36:31',0);
+INSERT INTO `channels` VALUES (1,'general',13,4,'2019-01-22 10:36:12',0,1),(2,'general',13,5,'2019-01-22 10:36:12',0,1),(3,'general',13,6,'2019-01-22 10:36:12',0,1),(4,'general',14,6,'2019-01-22 10:36:31',0,1),(5,'general',14,4,'2019-01-22 10:36:31',0,1),(6,'general',14,5,'2019-01-22 10:36:31',0,1);
 /*!40000 ALTER TABLE `channels` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -263,4 +264,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-22 10:37:12
+-- Dump completed on 2019-01-22 10:46:09

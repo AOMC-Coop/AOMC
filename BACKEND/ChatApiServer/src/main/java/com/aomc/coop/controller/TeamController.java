@@ -39,4 +39,14 @@ public class TeamController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping(path="/{teamIdx}")
+    @CrossOrigin
+    public ResponseEntity deleteTeam(@PathVariable(value = "teamIdx") final int teamIdx){
+        try{
+            return new ResponseEntity<>(teamService.deleteTeam(teamIdx), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

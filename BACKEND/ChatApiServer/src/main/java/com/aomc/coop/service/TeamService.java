@@ -42,7 +42,6 @@ public class TeamService {
     private JwtService jwtService;
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
-//    ResponseType<T> responseType = new ResponseType<T>();
 
 //    @Resource(name="redisTemplate")
 //    private HashOperations<String, String, String> values;
@@ -89,7 +88,7 @@ public class TeamService {
 
         }catch(Exception e){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus());
+            return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_TEAM.getStatus());
         }
 
     }
@@ -102,7 +101,7 @@ public class TeamService {
             if(team == null){
                 return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ.getStatus());
             }
-            return ResponseType.res(200,"팀 조회 성공", "Success Team Read", team);
+            return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), team);
 
     }
 
@@ -152,7 +151,6 @@ public class TeamService {
 
     }
 
-
     //팀초대
     @Transactional
     public ResponseType inviteTeam(final int teamIdx, final String uid) {
@@ -168,7 +166,7 @@ public class TeamService {
         if(flag==1)
             return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_INVITE.getStatus());
         else
-            return codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus());
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INVITE.getStatus());
     }
 
     //채널조회
@@ -179,11 +177,10 @@ public class TeamService {
         if(channels == null){
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ.getStatus());
         }
-        return ResponseType.res(200,"채널 조회 성공", "Success Channel Read", channels);
-
+        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_CHANNEL.getStatus(), channels);
     }
 
-    //채널조회
+    //비활성화
     @Transactional
     public ResponseType deactiveUser(final int teamIdx, final int userIdx) {
 

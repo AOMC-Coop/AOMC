@@ -143,6 +143,11 @@
     "message": "삭제된 팀입니다",
     "description": "Fail Team Deactive"
   },
+  "5405": {
+    "status": 400,
+    "message": "멤버 초대 실패",
+    "description": "Fail Team Invite"
+  },
   "5406": {
     "status": 400,
     "message": "멤버 비활성화 실패",

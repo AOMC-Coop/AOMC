@@ -19,7 +19,19 @@
     "message": "팀 생성 실패",
     "description": "Fail Team Create"
   },
-  
+
+  "1202": {
+    "status": 200,
+    "message": "채널 생성 성공",
+    "description": "Success Channel Create"
+  },
+
+  "1401": {
+    "status": 403,
+    "message": "채널 생성 실패",
+    "description": "Fail Channel Create"
+  },
+
   "5201": {
     "status": 200,
     "message": "팀 수정 성공",

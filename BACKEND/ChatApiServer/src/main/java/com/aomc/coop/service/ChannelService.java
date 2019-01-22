@@ -27,12 +27,17 @@ public class ChannelService {
 
     public ResponseType createChannel(Channel channel) {
 
-        //channelMapper.createChannel(channel, team.getIdx(), user.getIdx());
+        if(channel == null) {
+            return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_Channel.getStatus());
+        }
 
-        // 성공
-        return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_TEAM.getStatus());
+        int idx = channelMapper.createChannel(channel, channel.getTeamIdx());
 
-        // 실패
-        //return codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus());
+        if(idx >= 0) {
+            return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_Channel.getStatus());
+        }else {
+            return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_Channel.getStatus());
+        }
+
     }
 }

@@ -20,6 +20,78 @@
     "description": "Fail Team Create"
   },
 
+  "1202": {
+    "status": 200,
+    "message": "채널 생성 성공",
+    "description": "Success Channel Create"
+  },
+
+  "1401": {
+    "status": 403,
+    "message": "채널 생성 실패",
+    "description": "Fail Channel Create"
+  },
+
+  "1203": {
+    "status": 200,
+    "message": "채널 수정 성공",
+    "description": "Success Channel Update"
+  },
+
+  "1402": {
+    "status": 403,
+    "message": "채널 수정 실패",
+    "description": "Fail Channel Update"
+  },
+
+  "1204": {
+    "status": 200,
+    "message": "메세지 조회 성공",
+    "description": "Success Message Get"
+  },
+
+  "1403": {
+    "status": 403,
+    "message": "메세지 조회 실패",
+    "description": "Fail Message Get"
+  },
+
+  "1205": {
+    "status": 200,
+    "message": "채널 멤버 조회 성공",
+    "description": "Success Channel Users Get"
+  },
+
+  "1404": {
+    "status": 403,
+    "message": "채널 멤버 조회 실패",
+    "description": "Fail Channel Users Get"
+  },
+
+  "1206": {
+    "status": 200,
+    "message": "채널 멤버 초대 성공",
+    "description": "Success Channel User Invite"
+  },
+
+  "1405": {
+    "status": 403,
+    "message": "채널 멤버 초대 실패",
+    "description": "Fail Channel User Invite"
+  },
+
+  "1207": {
+    "status": 200,
+    "message": "채널 나가기 성공",
+    "description": "Success Channel User Delete"
+  },
+
+  "1406": {
+    "status": 403,
+    "message": "채널 나가기 실패",
+    "description": "Fail Channel User Delete"
+  },
+
   "5201": {
     "status": 200,
     "message": "팀 수정 성공",

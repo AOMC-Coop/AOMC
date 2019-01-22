@@ -55,13 +55,13 @@ CREATE TABLE `channels` (
   `team_idx` int(11) NOT NULL,
   `user_idx` int(11) NOT NULL,
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `star_flag` int(11) NOT NULL DEFAULT '0',
+  `star_flag` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`idx`),
   KEY `channels_team_idx_idx` (`team_idx`),
   KEY `channels_user_idx_idx` (`user_idx`),
   CONSTRAINT `channels_team_idx` FOREIGN KEY (`team_idx`) REFERENCES `teams` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `channels_user_idx` FOREIGN KEY (`user_idx`) REFERENCES `users` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,6 +70,7 @@ CREATE TABLE `channels` (
 
 LOCK TABLES `channels` WRITE;
 /*!40000 ALTER TABLE `channels` DISABLE KEYS */;
+INSERT INTO `channels` VALUES (1,'general',13,4,'2019-01-22 10:36:12',0),(2,'general',13,5,'2019-01-22 10:36:12',0),(3,'general',13,6,'2019-01-22 10:36:12',0),(4,'general',14,6,'2019-01-22 10:36:31',0),(5,'general',14,4,'2019-01-22 10:36:31',0),(6,'general',14,5,'2019-01-22 10:36:31',0);
 /*!40000 ALTER TABLE `channels` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -172,8 +173,10 @@ CREATE TABLE `teams` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   `create_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`idx`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,6 +185,7 @@ CREATE TABLE `teams` (
 
 LOCK TABLES `teams` WRITE;
 /*!40000 ALTER TABLE `teams` DISABLE KEYS */;
+INSERT INTO `teams` VALUES (13,'aomc','2019-01-22 10:36:12','2019-01-22 10:36:12',1),(14,'winterdev','2019-01-22 10:36:31','2019-01-22 10:36:31',1);
 /*!40000 ALTER TABLE `teams` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,16 +198,17 @@ DROP TABLE IF EXISTS `user_has_team`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `user_has_team` (
   `idx` int(11) NOT NULL AUTO_INCREMENT,
-  `user_idx` int(11) NOT NULL,
   `team_idx` int(11) NOT NULL,
+  `user_idx` int(11) NOT NULL,
   `join_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `owner_flag` tinyint(4) NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`idx`),
   KEY `user_has_team_user_idx_idx` (`user_idx`),
   KEY `user_has_team_team_idx_idx` (`team_idx`),
   CONSTRAINT `user_has_team_team_idx` FOREIGN KEY (`team_idx`) REFERENCES `teams` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_has_team_user_idx` FOREIGN KEY (`user_idx`) REFERENCES `users` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -212,6 +217,7 @@ CREATE TABLE `user_has_team` (
 
 LOCK TABLES `user_has_team` WRITE;
 /*!40000 ALTER TABLE `user_has_team` DISABLE KEYS */;
+INSERT INTO `user_has_team` VALUES (2,13,4,'2019-01-22 10:36:12',1,1),(3,13,5,'2019-01-22 10:36:12',0,1),(4,13,6,'2019-01-22 10:36:12',0,1),(5,14,6,'2019-01-22 10:36:31',1,1),(6,14,4,'2019-01-22 10:36:31',0,1),(7,14,5,'2019-01-22 10:36:31',0,1);
 /*!40000 ALTER TABLE `user_has_team` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -228,14 +234,14 @@ CREATE TABLE `users` (
   `pwd` varchar(80) NOT NULL,
   `salt` varchar(45) NOT NULL,
   `nickname` varchar(45) NOT NULL,
-  `gender` tinyint(4) NOT NULL,
+  `gender` tinyint(4) NOT NULL DEFAULT '0',
   `role` tinyint(4) NOT NULL DEFAULT '0',
-  `status` varchar(45) NOT NULL DEFAULT 'active',
+  `status` tinyint(4) NOT NULL DEFAULT '1',
   `reg_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `access_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idx`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,6 +250,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (4,'dmsal','1234','1234','mooming',0,0,1,'2019-01-22 10:34:16','2019-01-22 10:34:16','2019-01-22 10:34:16'),(5,'yunjae','1234','1234','yunyun',0,0,1,'2019-01-22 10:35:08','2019-01-22 10:35:08','2019-01-22 10:35:08'),(6,'garamda','1234','1234','catman',1,0,1,'2019-01-22 10:35:29','2019-01-22 10:35:29','2019-01-22 10:35:29');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -256,4 +263,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-21  9:41:45
+-- Dump completed on 2019-01-22 10:37:12

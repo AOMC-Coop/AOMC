@@ -14,6 +14,7 @@ public class Channel implements Serializable {
     private List<User> users;
     private Date create_date;
     private int star_flag;
+    private int status;
     private int teamIdx;
 
     @JsonIgnore

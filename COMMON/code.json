@@ -10,7 +10,7 @@
     "description": "Internal Server Error"
   },
   "1201": {
-    "status": 200,
+    "status": 201,
     "message": "팀 생성 성공",
     "description": "Success Team Create"
   },
@@ -19,7 +19,7 @@
     "message": "팀 생성 실패",
     "description": "Fail Team Create"
   },
-  
+
   "5201": {
     "status": 200,
     "message": "팀 수정 성공",
@@ -30,14 +30,50 @@
     "message": "팀 삭제 성공",
     "description": "Success Team Delete"
   },
+  "5203": {
+    "status": 200,
+    "message": "팀 조회 성공",
+    "description": "Success Team Read"
+  },
+  "5204": {
+    "status": 200,
+    "message": "팀 초대 성공",
+    "description": "Success Invite"
+  },
+  "5205": {
+    "status": 200,
+    "message": "채널 조회 성공",
+    "description": "Success Channel Read"
+  },
+  "5206": {
+    "status": 200,
+    "message": "멤버 비활성화 성공",
+    "description": "Success Deactive User"
+  },
+
   "5401": {
-    "status": 403,
+    "status": 400,
     "message": "팀 수정 실패",
     "description": "Fail Team Update"
   },
   "5402": {
-    "status": 403,
+    "status": 400,
     "message": "팀 삭제 실패",
     "description": "Fail Team Delete"
+  },
+  "5403": {
+    "status": 400,
+    "message": "정보 없음",
+    "description": "Fail Read"
+  },
+  "5404": {
+    "status": 400,
+    "message": "삭제된 팀입니다",
+    "description": "Fail Team Deactive"
+  },
+  "5406": {
+    "status": 400,
+    "message": "멤버 비활성화 실패",
+    "description": "Fail Deactive User"
   }
 }

@@ -13,6 +13,7 @@ public class Team implements Serializable {
     private String name;
     private Date create_date;
     private Date update_date;
+    private int status; //0이면 비활성화
 
     private List<User> users;
     private List<Channel> channels;

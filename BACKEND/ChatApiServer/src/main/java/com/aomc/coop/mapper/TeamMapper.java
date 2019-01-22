@@ -17,10 +17,6 @@ public interface TeamMapper {
     @Insert("INSERT INTO user_has_team(team_idx, user_idx, owner_flag) VALUES( #{team_idx}, #{user_idx}, #{owner_flag})")
     void createUserHasTeam(final int team_idx, final int user_idx, final int owner_flag);
 
-    //team생성 - channels 테이블
-    @Insert("INSERT INTO channels(name, team_idx, user_idx) VALUES(#{channel.name}, #{team_idx}, #{user_idx})")
-    @Options(useGeneratedKeys = true, keyProperty = "channel.idx")
-    int createChannel(@Param("channel") final Channel channel, @Param("team_idx") final int team_idx, @Param("user_idx") final int user_idx);
 
     //team수정
     @Update("UPDATE teams SET name=#{name}, update_date=now() WHERE idx = #{idx}")

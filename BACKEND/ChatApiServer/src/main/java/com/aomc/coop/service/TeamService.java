@@ -1,5 +1,6 @@
 package com.aomc.coop.service;
 
+import com.aomc.coop.mapper.ChannelMapper;
 import com.aomc.coop.mapper.TeamMapper;
 import com.aomc.coop.model.Channel;
 import com.aomc.coop.model.Team;
@@ -24,6 +25,10 @@ import java.util.Map;
 public class TeamService {
 
     private TeamMapper teamMapper;
+
+    @Autowired
+    private ChannelMapper channelMapper;
+
     private JwtService jwtService;
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
@@ -50,6 +55,7 @@ public class TeamService {
 
             teamMapper.createTeam(team);
 
+
             List<User> users = team.getUsers();
             team.setOwner(users.get(0).getIdx());
 
@@ -59,7 +65,7 @@ public class TeamService {
                 }else{
                     teamMapper.createUserHasTeam(team.getIdx(), user.getIdx(),0);
                 }
-                teamMapper.createChannel(channel, team.getIdx(), user.getIdx());
+                channelMapper.createChannel(channel, team.getIdx(), user.getIdx());
             }
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_TEAM.getStatus());

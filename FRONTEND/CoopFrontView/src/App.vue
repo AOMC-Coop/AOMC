@@ -1,13 +1,19 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view/>
+    <!-- <img src="./assets/logo.png"> -->
+    <!-- <router-view/> -->
+<Chat></Chat>
   </div>
 </template>
 
 <script>
+import Chat from './components/Chat.vue'
+
 export default {
-  name: 'App'
+  name: 'App',
+  components : {
+    'Chat' : Chat
+  }
 }
 </script>
 

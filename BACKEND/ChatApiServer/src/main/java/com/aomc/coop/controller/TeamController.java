@@ -6,8 +6,12 @@ import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.TeamService;
 import com.aomc.coop.utils.CodeJsonParser;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -83,7 +87,7 @@ public class TeamController {
 
     /**
      *
-     *        @brief Get http://localhost:8083/api/team/{teamIdx}
+     *        @brief Get http://localhost:8083/api/team/detail/{teamIdx}
      *
      *        @details Team 조회
      *
@@ -115,11 +119,11 @@ public class TeamController {
      *        @throws
      *
      */
-    @GetMapping(path="/{teamIdx}")
+    @GetMapping(path="/detail/{teamIdx}")
     @CrossOrigin
-    public ResponseEntity readTeam(@PathVariable(value = "teamIdx") final int teamIdx){
+    public ResponseEntity readTeamDatail(@PathVariable(value = "teamIdx") final int teamIdx){
         try{
-            return new ResponseEntity<>(teamService.readTeam(teamIdx), HttpStatus.OK);
+            return new ResponseEntity<>(teamService.readTeamDetail(teamIdx), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
@@ -370,5 +374,89 @@ public class TeamController {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
     }
+
+    /**
+     *
+     *        @brief get http://localhost:8083/api/team/user/{userIdx}
+     *
+     *        @details User의 Team 목록 조회
+     *
+     *
+     *        @param PathVariable(value = "userIdx") final int userIdx
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *     "status": 200,
+     *     "message": "팀 조회 성공",
+     *     "description": "Success Team Read",
+     *     "data": [
+     *         {
+     *             "idx": 15,
+     *             "name": "winterdev",
+     *             "status": 1
+     *         },
+     *         {
+     *             "idx": 16,
+     *             "name": "aomc",
+     *             "status": 1
+     *         }
+     *     ]
+     * }
+     *
+     *        실패시
+     *        User정보없으면
+     *        {
+     *     "status": 400,
+     *     "message": "사용자 정보 없음",
+     *     "description": "Fail Read User"
+     *   }
+     *
+     *   Team 정보 없으면
+     *   {
+     *     "status": 400,
+     *     "message": "팀 정보 없음",
+     *     "description": "Fail Read Team"
+     *   }
+     *
+     *
+     *        @throws
+     *
+     */
+    @GetMapping(path="/user/{userIdx}")
+    @CrossOrigin
+    public ResponseEntity readTeamOfUser(@PathVariable(value = "userIdx") final int userIdx){
+        try{
+            return new ResponseEntity<>(teamService.readTeamOfUser(userIdx), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
+    }
+
+
+//    @GetMapping(path="/{teamIdx}")
+//    @CrossOrigin
+//    public ResponseEntity readUserOfTeam(@PathVariable(value = "teamIdx") final int teamIdx){
+//        try{
+//            return new ResponseEntity<>(teamService.readUserOfTeam(teamIdx), HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+//        }
+//    }
+
+    @GetMapping(path="/sendmail/{teamIdx}&{uid}")
+    @CrossOrigin
+    public ResponseEntity sendMail(@PathVariable(value = "teamIdx") final int teamIdx, @PathVariable(value = "uid") final String uid){
+        try{
+
+            return new ResponseEntity<>(teamService.sendMail(teamIdx, uid), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
+    }
+
+
+
 
 }

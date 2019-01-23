@@ -152,5 +152,18 @@
     "status": 400,
     "message": "멤버 비활성화 실패",
     "description": "Fail Deactive User"
+  },
+
+
+
+  "5207": {
+    "status": 200,
+    "message": "초대 인증 메일 전송",
+    "description": "Success Send Auth Mail"
+  },
+  "5407": {
+    "status": 400,
+    "message": "초대 메일 전송",
+    "description": "Success Deactive User"
   }
 }

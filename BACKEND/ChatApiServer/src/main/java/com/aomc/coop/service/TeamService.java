@@ -13,8 +13,11 @@ import com.aomc.coop.response.Status_5000;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
+import com.aomc.coop.utils.mail.TempKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -39,6 +42,9 @@ public class TeamService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private MailSender sender;
+
     private JwtService jwtService;
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
@@ -52,7 +58,7 @@ public class TeamService {
     public ResponseType createTeam(final Team team) {
         try {
             List<User> users = team.getUsers();
-            team.setOwner(users.get(0).getIdx());
+            team.setOwner(users.get(0).getUid());
 
             Channel channel = new Channel();
             channel.setName("general");
@@ -75,7 +81,7 @@ public class TeamService {
             messageMapper.createMessage(message, channel.getIdx(), users.get(0).getIdx());
 
             for (User user : users) {
-                if(user.getIdx()==team.getOwner()){
+                if(user.getUid().equals(team.getOwner())){
                     teamMapper.createUserHasTeam(team.getIdx(), user.getIdx(),1);
                 }else{
                     teamMapper.createUserHasTeam(team.getIdx(), user.getIdx(),0);
@@ -93,13 +99,13 @@ public class TeamService {
 
     }
 
-    //팀조회
-    public ResponseType readTeam(final int teamIdx) {
+    //팀 상세조회
+    public ResponseType readTeamDetail(final int teamIdx) {
 
-            Team team = teamMapper.readTeam(teamIdx);
+            Team team = teamMapper.readTeamDetail(teamIdx);
 
             if(team == null){
-                return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ.getStatus());
+                return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
             }
             return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), team);
 
@@ -110,10 +116,10 @@ public class TeamService {
     public ResponseType updateTeam(final Team team) {
         try {
 
-            Team temp = teamMapper.readTeam(team.getIdx());
+            Team temp = teamMapper.readTeamDetail(team.getIdx());
 
             if(temp == null){
-                return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ.getStatus());
+                return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
             }
             if(temp.getStatus()==0){
                 return codeJsonParser.codeJsonParser(Status_5000.DEACTIVE_TEAM.getStatus());
@@ -133,10 +139,10 @@ public class TeamService {
     @Transactional
     public ResponseType deleteTeam(final int teamIdx) {
 
-        Team temp = teamMapper.readTeam(teamIdx);
+        Team temp = teamMapper.readTeamDetail(teamIdx);
 
         if(temp == null){
-            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ.getStatus());
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
         }
 
         if(temp.getStatus()==0){
@@ -158,7 +164,7 @@ public class TeamService {
 
         User userTemp = userMapper.findBysUserid(uid);
         if(userTemp ==null){
-            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ.getStatus());
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
         }
 
         int flag = teamMapper.createUserHasTeam(teamIdx, userTemp.getIdx(), 0);
@@ -175,7 +181,7 @@ public class TeamService {
         List<Channel> channels= channelMapper.readChannel(teamIdx, userIdx);
 
         if(channels == null){
-            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ.getStatus());
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_CHANNEL.getStatus());
         }
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_CHANNEL.getStatus(), channels);
     }
@@ -199,6 +205,76 @@ public class TeamService {
             return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_DEACVITE_USER.getStatus());
         else
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_DEACVITE_USER.getStatus());
+    }
+
+
+    //유저의 팀조회
+    public ResponseType readTeamOfUser(final int userIdx) {
+
+        User user = userMapper.findByUserIdx(userIdx);
+        if(user == null){
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
+        }
+
+        List<Team> teams = teamMapper.readTeamOfUser(userIdx);
+        List<Team> sendteams = new ArrayList<>();
+
+        for(Team team : teams){
+            if(team.getStatus()==1){
+                sendteams.add(team);
+            }
+
+        }
+
+        if(teams == null){
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
+        }
+        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), sendteams);
+
+    }
+
+//
+//    //팀의 유저조회
+//    public ResponseType readUserOfTeam(final int teamIdx) {
+//
+//        Team team = teamMapper.readTeamDetail(teamIdx);
+//        if(team==null){
+//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
+//        }
+//
+//        List<User> = teamMapper
+//
+//        if(users == null){
+//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
+//        }
+//        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus());
+//
+//    }
+
+
+    //메일보내기
+    public ResponseType sendMail(final int teamIdx, final String uid) {
+
+
+        User user = userMapper.findBysUserid(uid);
+        System.out.println(user.getIdx());
+        if(user==null){
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
+        }
+
+        String key = new TempKey().getKey(50, false); // 인증키 생성
+        teamMapper.sendAuthEmail(key, teamIdx, user.getIdx());
+
+
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setFrom("dmsal2525@gmail.com");
+        msg.setTo(user.getUid());
+        msg.setSubject("[COOP Team 초대 이메일 인증]");
+        msg.setText(new StringBuffer().append("<h1>메일인증</h1>").append("<a href='http://localhost:8083/api/team/auth?user_email=").append(user.getUid()).append("&key=").append(key).append("' target='_blenk'>이메일 인증 확인</a>").toString());
+        this.sender.send(msg);
+
+        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_SEND_MAIL.getStatus());
+
     }
 
 }

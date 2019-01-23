@@ -1,0 +1,262 @@
+\hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller}{}\section{com.\+aomc.\+coop.\+controller.\+Team\+Controller Class Reference}
+\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller}\index{com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}}
+
+
+A\+PI \href{http://localhost:8083/api/team}{\texttt{ http\+://localhost\+:8083/api/team}}.  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a128b7d4b135cf66f6615c584ca55a40a}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a128b7d4b135cf66f6615c584ca55a40a}} 
+{\bfseries Team\+Controller} (final Team\+Service team\+Service)
+\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a5ffe7bc4c7dd609d828848bae014440f}{make\+Team}} (@Request\+Body final Team team)
+\begin{DoxyCompactList}\small\item\em Post \href{http://localhost:8083/api/team}{\texttt{ http\+://localhost\+:8083/api/team}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_ae58612664e52e32d503efa3008565826}{read\+Team}} (@Path\+Variable(value=\char`\"{}team\+Idx\char`\"{}) final int team\+Idx)
+\begin{DoxyCompactList}\small\item\em Get \href{http://localhost:8083/api/team/{teamIdx}}{\texttt{ http\+://localhost\+:8083/api/team/\{team\+Idx\}}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_ad03a0ca2d1d0680848a5efef33934941}{update\+Team}} (@Request\+Body final Team team)
+\begin{DoxyCompactList}\small\item\em Put \href{http://localhost:8083/api/team}{\texttt{ http\+://localhost\+:8083/api/team}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_ad91980399a0c2439032d93aaa5131077}{delete\+Team}} (@Path\+Variable(value=\char`\"{}team\+Idx\char`\"{}) final int team\+Idx)
+\begin{DoxyCompactList}\small\item\em Delete \href{http://localhost:8083/api/team/{teamIdx}}{\texttt{ http\+://localhost\+:8083/api/team/\{team\+Idx\}}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_af2a1d085dd55682cfeb5c9932436270f}{invite\+Team}} (@Path\+Variable(value=\char`\"{}team\+Idx\char`\"{}) final int team\+Idx, @Path\+Variable(value=\char`\"{}uid\char`\"{}) final String uid)
+\begin{DoxyCompactList}\small\item\em Get \href{http://localhost:8083/api/team/invite/{teamIdx}&{uid}}{\texttt{ http\+://localhost\+:8083/api/team/invite/\{team\+Idx\}\&\{uid\}}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a890d22a6a53400482037c0587483b67d}{read\+Channel}} (@Path\+Variable(value=\char`\"{}team\+Idx\char`\"{}) final int team\+Idx, @Path\+Variable(value=\char`\"{}user\+Idx\char`\"{}) final int user\+Idx)
+\begin{DoxyCompactList}\small\item\em Get \href{http://localhost:8083/api/team/channel/{teamIdx}&{userIdx}}{\texttt{ http\+://localhost\+:8083/api/team/channel/\{team\+Idx\}\&\{user\+Idx\}}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a0458b6213d34ba925524eaf1471961fd}{deactive\+User}} (@Path\+Variable(value=\char`\"{}team\+Idx\char`\"{}) final int team\+Idx, @Path\+Variable(value=\char`\"{}user\+Idx\char`\"{}) final int user\+Idx)
+\begin{DoxyCompactList}\small\item\em Put \href{http://localhost:8083/api/team/manage/{teamIdx}&{userIdx}}{\texttt{ http\+://localhost\+:8083/api/team/manage/\{team\+Idx\}\&\{user\+Idx\}}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A\+PI \href{http://localhost:8083/api/team}{\texttt{ http\+://localhost\+:8083/api/team}}. 
+
+Team생성, Team조회, Team수정, Team비활성화, Team에 멤버초대, Team멤버관리, Channel조회 \begin{DoxyAuthor}{Author}
+Lee\+Eunmi 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2019-\/01-\/23 
+\end{DoxyDate}
+\begin{DoxyVersion}{Version}
+1.\+0.\+0 
+\end{DoxyVersion}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a0458b6213d34ba925524eaf1471961fd}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a0458b6213d34ba925524eaf1471961fd}} 
+\index{com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}!deactiveUser@{deactiveUser}}
+\index{deactiveUser@{deactiveUser}!com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}}
+\subsubsection{\texorpdfstring{deactiveUser()}{deactiveUser()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Team\+Controller.\+deactive\+User (\begin{DoxyParamCaption}\item[{@Path\+Variable(value=\char`\"{}team\+Idx\char`\"{}) final int}]{team\+Idx,  }\item[{@Path\+Variable(value=\char`\"{}user\+Idx\char`\"{}) final int}]{user\+Idx }\end{DoxyParamCaption})}
+
+
+
+Put \href{http://localhost:8083/api/team/manage/{teamIdx}&{userIdx}}{\texttt{ http\+://localhost\+:8083/api/team/manage/\{team\+Idx\}\&\{user\+Idx\}}}. 
+
+Team의 멤버 비활성화
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path\+Variable(value} & = \char`\"{}team\+Idx\char`\"{}) final int team\+Idx, Path\+Variable(value = \char`\"{}user\+Idx\char`\"{}) final int user\+Idx\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시 \{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}멤버 비활성화 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Deactive User\char`\"{} \}
+
+실패시 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}멤버 비활성화 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Deactive User\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_ad91980399a0c2439032d93aaa5131077}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_ad91980399a0c2439032d93aaa5131077}} 
+\index{com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}!deleteTeam@{deleteTeam}}
+\index{deleteTeam@{deleteTeam}!com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}}
+\subsubsection{\texorpdfstring{deleteTeam()}{deleteTeam()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Team\+Controller.\+delete\+Team (\begin{DoxyParamCaption}\item[{@Path\+Variable(value=\char`\"{}team\+Idx\char`\"{}) final int}]{team\+Idx }\end{DoxyParamCaption})}
+
+
+
+Delete \href{http://localhost:8083/api/team/{teamIdx}}{\texttt{ http\+://localhost\+:8083/api/team/\{team\+Idx\}}}. 
+
+Team 삭제(비활성화)
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path\+Variable(value} & = \char`\"{}team\+Idx\char`\"{}) final int team\+Idx\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시 \{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}팀 삭제 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Team Delete\char`\"{} \}
+
+실패시 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}팀 삭제 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Team Delete\char`\"{} \}
+
+팀정보가 없으면 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}정보 없음\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Read\char`\"{} \}
+
+비활성화된 팀이면 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}삭제된 팀입니다\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Team Deactive\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_af2a1d085dd55682cfeb5c9932436270f}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_af2a1d085dd55682cfeb5c9932436270f}} 
+\index{com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}!inviteTeam@{inviteTeam}}
+\index{inviteTeam@{inviteTeam}!com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}}
+\subsubsection{\texorpdfstring{inviteTeam()}{inviteTeam()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Team\+Controller.\+invite\+Team (\begin{DoxyParamCaption}\item[{@Path\+Variable(value=\char`\"{}team\+Idx\char`\"{}) final int}]{team\+Idx,  }\item[{@Path\+Variable(value=\char`\"{}uid\char`\"{}) final String}]{uid }\end{DoxyParamCaption})}
+
+
+
+Get \href{http://localhost:8083/api/team/invite/{teamIdx}&{uid}}{\texttt{ http\+://localhost\+:8083/api/team/invite/\{team\+Idx\}\&\{uid\}}}. 
+
+Team의 멤버초대
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path\+Variable(value} & = \char`\"{}team\+Idx\char`\"{}) final int team\+Idx, Path\+Variable(value = \char`\"{}uid\char`\"{}) final String uid\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시 \{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}팀 초대 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Invite\char`\"{} \}
+
+실패시 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}멤버 초대 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Team Invite\char`\"{} \}
+
+없는 User인 경우 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}정보 없음\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Read\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a5ffe7bc4c7dd609d828848bae014440f}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a5ffe7bc4c7dd609d828848bae014440f}} 
+\index{com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}!makeTeam@{makeTeam}}
+\index{makeTeam@{makeTeam}!com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}}
+\subsubsection{\texorpdfstring{makeTeam()}{makeTeam()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Team\+Controller.\+make\+Team (\begin{DoxyParamCaption}\item[{@Request\+Body final Team}]{team }\end{DoxyParamCaption})}
+
+
+
+Post \href{http://localhost:8083/api/team}{\texttt{ http\+://localhost\+:8083/api/team}}. 
+
+Team 생성 test json \{ \char`\"{}name\char`\"{}\+:\char`\"{}aomc\char`\"{}, \char`\"{}users\char`\"{}\+:\mbox{[} \{\char`\"{}idx\char`\"{}\+:6\}, \{\char`\"{}idx\char`\"{}\+:4\}, \{\char`\"{}idx\char`\"{}\+:5\} \mbox{]} \}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Request\+Body} & final Team team\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시 \{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}팀 생성 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Channel Create\char`\"{} \}
+
+실패시 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}팀 생성 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Team Create\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a890d22a6a53400482037c0587483b67d}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_a890d22a6a53400482037c0587483b67d}} 
+\index{com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}!readChannel@{readChannel}}
+\index{readChannel@{readChannel}!com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}}
+\subsubsection{\texorpdfstring{readChannel()}{readChannel()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Team\+Controller.\+read\+Channel (\begin{DoxyParamCaption}\item[{@Path\+Variable(value=\char`\"{}team\+Idx\char`\"{}) final int}]{team\+Idx,  }\item[{@Path\+Variable(value=\char`\"{}user\+Idx\char`\"{}) final int}]{user\+Idx }\end{DoxyParamCaption})}
+
+
+
+Get \href{http://localhost:8083/api/team/channel/{teamIdx}&{userIdx}}{\texttt{ http\+://localhost\+:8083/api/team/channel/\{team\+Idx\}\&\{user\+Idx\}}}. 
+
+Team의 Channel 조회
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path\+Variable(value} & = \char`\"{}team\+Idx\char`\"{}) final int team\+Idx, Path\+Variable(value = \char`\"{}user\+Idx\char`\"{}) final int user\+Idx\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시 \{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}채널 조회 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Channel Read\char`\"{}, \char`\"{}data\char`\"{}\+: \mbox{[} \{ \char`\"{}idx\char`\"{}\+: 7, \char`\"{}name\char`\"{}\+: \char`\"{}general\char`\"{}, \char`\"{}star\+\_\+flag\char`\"{}\+: 0, \char`\"{}status\char`\"{}\+: 0, \char`\"{}team\+Idx\char`\"{}\+: 0 \}, \{ \char`\"{}idx\char`\"{}\+: 9, \char`\"{}name\char`\"{}\+: \char`\"{}love\char`\"{}, \char`\"{}star\+\_\+flag\char`\"{}\+: 0, \char`\"{}status\char`\"{}\+: 0, \char`\"{}team\+Idx\char`\"{}\+: 0 \} \mbox{]} \}
+
+실패시 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}정보 없음\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Read\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_ae58612664e52e32d503efa3008565826}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_ae58612664e52e32d503efa3008565826}} 
+\index{com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}!readTeam@{readTeam}}
+\index{readTeam@{readTeam}!com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}}
+\subsubsection{\texorpdfstring{readTeam()}{readTeam()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Team\+Controller.\+read\+Team (\begin{DoxyParamCaption}\item[{@Path\+Variable(value=\char`\"{}team\+Idx\char`\"{}) final int}]{team\+Idx }\end{DoxyParamCaption})}
+
+
+
+Get \href{http://localhost:8083/api/team/{teamIdx}}{\texttt{ http\+://localhost\+:8083/api/team/\{team\+Idx\}}}. 
+
+Team 조회
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path\+Variable(value} & = \char`\"{}team\+Idx\char`\"{}) final int team\+Idx\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시 \{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}팀 조회 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Channel Create\char`\"{}, \char`\"{}data\char`\"{}\+: \{ \char`\"{}idx\char`\"{}\+: 15, \char`\"{}name\char`\"{}\+: \char`\"{}aomc\char`\"{}, \char`\"{}status\char`\"{}\+: 1, \char`\"{}owner\char`\"{}\+: 0 \} \}
+
+실패시 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}정보 없음\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Read\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_ad03a0ca2d1d0680848a5efef33934941}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_team_controller_ad03a0ca2d1d0680848a5efef33934941}} 
+\index{com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}!updateTeam@{updateTeam}}
+\index{updateTeam@{updateTeam}!com.aomc.coop.controller.TeamController@{com.aomc.coop.controller.TeamController}}
+\subsubsection{\texorpdfstring{updateTeam()}{updateTeam()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Team\+Controller.\+update\+Team (\begin{DoxyParamCaption}\item[{@Request\+Body final Team}]{team }\end{DoxyParamCaption})}
+
+
+
+Put \href{http://localhost:8083/api/team}{\texttt{ http\+://localhost\+:8083/api/team}}. 
+
+Team 수정 test json \{ \char`\"{}idx\char`\"{}\+: 19, \char`\"{}name\char`\"{}\+:\char`\"{}winterdevcamp\char`\"{} \}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Request\+Body} & final Team team\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시 \{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}팀 수정 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Team Update\char`\"{} \}
+
+실패시 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}팀 수정 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Team Update\char`\"{} \}
+
+팀정보가 없으면 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}정보 없음\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Read\char`\"{} \}
+
+비활성화된 팀이면 \{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}삭제된 팀입니다\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Team Deactive\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+/\+Users/iyunjae/\+L\+E\+E\+Y\+U\+N\+J\+A\+E/smilegate/workspace/\+A\+O\+M\+C/\+B\+A\+C\+K\+E\+N\+D/\+Chat\+Api\+Server/src/main/java/com/aomc/coop/controller/Team\+Controller.\+java\end{DoxyCompactItemize}

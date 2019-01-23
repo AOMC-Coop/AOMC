@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  *
  * @brief API http://localhost:8083/api/team
- * @details Team생성, Team조회, Team수정, Team비활성화, Team멤버관리, Team에 멤버초대, Channel조회
+ * @details Team생성, Team조회, Team수정, Team비활성화, Team에 멤버초대, Team멤버관리,  Channel조회
  * @author LeeEunmi
  * @date 2019-01-23
  * @version 1.0.0
@@ -37,7 +37,7 @@ public class TeamController {
 
     /**
      *
-     *        @brief POST http://localhost:8083/api/team
+     *        @brief Post http://localhost:8083/api/team
      *
      *        @details Team 생성
      *        test json
@@ -125,7 +125,48 @@ public class TeamController {
         }
     }
 
-    //팀수정
+    /**
+     *
+     *        @brief Put http://localhost:8083/api/team
+     *
+     *        @details Team 수정
+     *
+     *
+     *        @param RequestBody final Team team
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *           "status": 200,
+     *           "message": "팀 수정 성공",
+     *           "description": "Success Team Update"
+     *        }
+     *
+     *        실패시
+     *        {
+     *           "status": 400,
+     *           "message": "팀 수정 실패",
+     *           "description": "Fail Team Update"
+     *        }
+     *
+     *        팀정보가 없으면
+     *        {
+     *            "status": 400,
+     *            "message": "정보 없음",
+     *            "description": "Fail Read"
+     *        }
+     *
+     *        비활성화된 팀이면
+     *        {
+     *             "status": 400,
+     *             "message": "삭제된 팀입니다",
+     *             "description": "Fail Team Deactive"
+     *        }
+     *
+     *        @throws
+     *
+     */
     @PutMapping
     @CrossOrigin
     public ResponseEntity updateTeam(@RequestBody final Team team){
@@ -136,7 +177,48 @@ public class TeamController {
         }
     }
 
-    //팀비활성화
+    /**
+     *
+     *        @brief Delete http://localhost:8083/api/team/{teamIdx}
+     *
+     *        @details Team 삭제(비활성화)
+     *
+     *
+     *        @param int teamIdx
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *           "status": 200,
+     *           "message": "팀 삭제 성공",
+     *           "description": "Success Team Delete"
+     *        }
+     *
+     *        실패시
+     *        {
+     *           "status": 400,
+     *           "message": "팀 삭제 실패",
+     *           "description": "Fail Team Delete"
+     *        }
+     *
+     *        팀정보가 없으면
+     *        {
+     *            "status": 400,
+     *            "message": "정보 없음",
+     *            "description": "Fail Read"
+     *        }
+     *
+     *        비활성화된 팀이면
+     *        {
+     *             "status": 400,
+     *             "message": "삭제된 팀입니다",
+     *             "description": "Fail Team Deactive"
+     *        }
+     *
+     *        @throws
+     *
+     */
     @DeleteMapping(path="/{teamIdx}")
     @CrossOrigin
     public ResponseEntity deleteTeam(@PathVariable(value = "teamIdx") final int teamIdx){
@@ -147,7 +229,41 @@ public class TeamController {
         }
     }
 
-    //팀원초대
+    /**
+     *
+     *        @brief Get http://localhost:8083/api/team/invite/{teamIdx}&{uid}
+     *
+     *        @details Team의 멤버초대
+     *
+     *
+     *        @param int teamIdx, String uid
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *           "status": 200,
+     *           "message": "팀 초대 성공",
+     *           "description": "Success Invite"
+     *        }
+     *
+     *        실패시
+     *        {
+     *           "status": 400,
+     *           "message": "멤버 초대 실패",
+     *           "description": "Fail Team Invite"
+     *        }
+     *
+     *        없는 User인 경우
+     *        {
+     *            "status": 400,
+     *            "message": "정보 없음",
+     *            "description": "Fail Read"
+     *        }
+     *
+     *        @throws
+     *
+     */
     @GetMapping(path="/invite/{teamIdx}&{uid}")
     @CrossOrigin
     public ResponseEntity inviteTeam(@PathVariable(value = "teamIdx") final int teamIdx, @PathVariable(value = "uid") final String uid){
@@ -158,7 +274,50 @@ public class TeamController {
         }
     }
 
-    //채널조회
+    /**
+     *
+     *        @brief Get http://localhost:8083/api/team/channel/{teamIdx}&{userIdx}
+     *
+     *        @details Team의 Channel 조회
+     *
+     *
+     *        @param int teamIdx, int userIdx
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *           "status": 200,
+     *           "message": "채널 조회 성공",
+     *           "description": "Success Channel Read",
+     *           "data": [
+     *           {
+     *             "idx": 7,
+     *             "name": "general",
+     *             "star_flag": 0,
+     *             "status": 0,
+     *             "teamIdx": 0
+     *           },
+     *           {
+     *             "idx": 9,
+     *             "name": "love",
+     *             "star_flag": 0,
+     *             "status": 0,
+     *             "teamIdx": 0
+     *           }
+     *          ]
+     *        }
+     *
+     *        실패시
+     *        {
+     *           "status": 400,
+     *           "message": "정보 없음",
+     *           "description": "Fail Read"
+     *        }
+     *
+     *        @throws
+     *
+     */
     @GetMapping(path="/channel/{teamIdx}&{userIdx}")
     @CrossOrigin
     public ResponseEntity readChannel(@PathVariable(value = "teamIdx") final int teamIdx, @PathVariable(value = "userIdx") final int userIdx){
@@ -169,7 +328,34 @@ public class TeamController {
         }
     }
 
-    //ownwe만 팀에있는 멤버 비활성화
+    /**
+     *
+     *        @brief Put http://localhost:8083/api/team/manage/{teamIdx}&{userIdx}
+     *
+     *        @details Team의 멤버 비활성화
+     *
+     *
+     *        @param int teamIdx, int userIdx
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *           "status": 200,
+     *           "message": "멤버 비활성화 성공",
+     *           "description": "Success Deactive User"
+     *        }
+     *
+     *        실패시
+     *        {
+     *           "status": 400,
+     *           "message": "멤버 비활성화 실패",
+     *           "description": "Fail Deactive User"
+     *        }
+     *
+     *        @throws
+     *
+     */
     @PutMapping(path="/manage/{teamIdx}&{userIdx}")
     @CrossOrigin
     public ResponseEntity deactiveUser(@PathVariable(value = "teamIdx") final int teamIdx, @PathVariable(value = "userIdx") final int userIdx){

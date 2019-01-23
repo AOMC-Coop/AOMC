@@ -23,7 +23,11 @@ public enum Status_5000 {
     SUCCESS_SEND_MAIL("5207"),
     FAIL_SEND_MAIL("5407"),
 
-    FAIL_READ_USER("5502"),;
+    SUCCESS_READ_USER("5208"),
+    FAIL_READ_USER("5502"),
+
+    SUCCESS_ACCEPT_INVITE("5209"),
+    FAIL_INCORRECT_AUTHKEY("5409");
 
     final private String status;
 

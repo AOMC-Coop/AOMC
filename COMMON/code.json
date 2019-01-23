@@ -74,12 +74,6 @@
     "description": "Success Channel User Invite"
   },
 
-  "1306": {
-    "status": 401,
-    "message": "채널에 이미 멤버가 있음",
-    "description": "Channel Already Has User"
-  },
-
   "1405": {
     "status": 400,
     "message": "채널 멤버 초대 실패",
@@ -128,6 +122,23 @@
     "message": "멤버 비활성화 성공",
     "description": "Success Deactive User"
   },
+  "5207": {
+    "status": 200,
+    "message": "초대 인증 메일 전송",
+    "description": "Success Send Auth Mail"
+  },
+  "5208": {
+    "status": 200,
+    "message": "멤버 조회 성공",
+    "description": "Success Read User"
+  },
+  "5209": {
+    "status": 200,
+    "message": "초대 승낙 성공",
+    "description": "Success Accept Invitation"
+  },
+
+
 
   "5401": {
     "status": 400,
@@ -138,11 +149,6 @@
     "status": 400,
     "message": "팀 삭제 실패",
     "description": "Fail Team Delete"
-  },
-  "5403": {
-    "status": 400,
-    "message": "정보 없음",
-    "description": "Fail Read"
   },
   "5404": {
     "status": 400,
@@ -159,17 +165,32 @@
     "message": "멤버 비활성화 실패",
     "description": "Fail Deactive User"
   },
-
-
-
-  "5207": {
-    "status": 200,
-    "message": "초대 인증 메일 전송",
-    "description": "Success Send Auth Mail"
-  },
   "5407": {
     "status": 400,
     "message": "초대 메일 전송",
     "description": "Success Deactive User"
+  },
+  "5409": {
+    "status": 200,
+    "message": "인증 키가 올바르지 않습니다",
+    "description": "Incorrect Authkey"
+  },
+
+  
+
+  "5500": {
+    "status": 400,
+    "message": "멤버 정보 없음",
+    "description": "Fail Read User"
+  },
+  "5501": {
+    "status": 400,
+    "message": "채널 정보 없음",
+    "description": "Fail Read Channel"
+  },
+  "5502": {
+    "status": 400,
+    "message": "팀 정보 없음",
+    "description": "Fail Read Team"
   }
 }

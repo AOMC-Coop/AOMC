@@ -10,21 +10,22 @@ import com.aomc.coop.model.Team;
 import com.aomc.coop.model.User;
 import com.aomc.coop.response.Status_1000;
 import com.aomc.coop.response.Status_5000;
-import com.aomc.coop.response.Status_common;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
-import com.aomc.coop.utils.mail.TempKey;
+import com.aomc.coop.utils.mail.MailsendUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -42,15 +43,19 @@ public class TeamService {
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired
-    private MailSender sender;
-
     private JwtService jwtService;
+
+    @Autowired
+    static private MailSender sender;
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
-//    @Resource(name="redisTemplate")
-//    private HashOperations<String, String, String> values;
+    @Resource(name="redisTemplate")
+    private HashOperations<String, String, String> values;
+
+    public TeamService(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
 
 
     //팀생성
@@ -58,7 +63,7 @@ public class TeamService {
     public ResponseType createTeam(final Team team) {
         try {
             List<User> users = team.getUsers();
-            team.setOwner(users.get(0).getUid());
+            team.setOwner(users.get(0).getIdx());
 
             Channel channel = new Channel();
             channel.setName("general");
@@ -81,10 +86,28 @@ public class TeamService {
             messageMapper.createMessage(message, channel.getIdx(), users.get(0).getIdx());
 
             for (User user : users) {
-                if(user.getUid().equals(team.getOwner())){
+                if(user.getIdx()== team.getOwner()){
                     teamMapper.createUserHasTeam(team.getIdx(), user.getIdx(),1);
+
+//                    final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(team.getIdx(), user.getIdx()));
+//
+//                    SimpleMailMessage msg = new SimpleMailMessage();
+//                    msg.setFrom("CoopDeveloper");
+//                    msg.setTo(user.getUid());
+//                    msg.setSubject("[COOP Team 초대 이메일 인증]");
+//                    msg.setText(new StringBuffer().append("<h1>메일인증</h1>").append("<a href='http://localhost:8083/api/team/accept/").append(token.getToken()).append("' target='_blenk'>이메일 인증 확인</a>").toString());
+//                    this.sender.send(msg);
+//
+//                    HashMap hashMap = new HashMap();
+//                    hashMap.put("teamIdx", team.getIdx());
+//                    hashMap.put("userIdx", user.getIdx());
+//                    values.putAll(token.getToken(), hashMap);
+
                 }else{
                     teamMapper.createUserHasTeam(team.getIdx(), user.getIdx(),0);
+
+
+
                 }
                 channelMapper.createUserHasChannel(channel.getIdx(), user.getIdx());
             }
@@ -233,47 +256,71 @@ public class TeamService {
 
     }
 
-//
-//    //팀의 유저조회
-//    public ResponseType readUserOfTeam(final int teamIdx) {
-//
-//        Team team = teamMapper.readTeamDetail(teamIdx);
-//        if(team==null){
-//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
-//        }
-//
-//        List<User> = teamMapper
-//
-//        if(users == null){
-//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
-//        }
-//        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus());
-//
-//    }
+
+    //팀의 유저조회
+    public ResponseType readUserOfTeam(final int teamIdx) {
+
+        Team team = teamMapper.readTeamDetail(teamIdx);
+        if(team==null){
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
+        }
+
+        List<User> users = teamMapper.readUserOfTeam(teamIdx);
+
+        if(users == null){
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
+        }
+        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_USER.getStatus(), users);
+
+    }
 
 
     //메일보내기
     public ResponseType sendMail(final int teamIdx, final String uid) {
 
-
         User user = userMapper.findBysUserid(uid);
-        System.out.println(user.getIdx());
         if(user==null){
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
         }
 
-        String key = new TempKey().getKey(50, false); // 인증키 생성
-        teamMapper.sendAuthEmail(key, teamIdx, user.getIdx());
+
+        final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(teamIdx, user.getIdx()));
 
 
         SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setFrom("dmsal2525@gmail.com");
+        msg.setFrom("CoopDeveloper");
         msg.setTo(user.getUid());
-        msg.setSubject("[COOP Team 초대 이메일 인증]");
-        msg.setText(new StringBuffer().append("<h1>메일인증</h1>").append("<a href='http://localhost:8083/api/team/auth?user_email=").append(user.getUid()).append("&key=").append(key).append("' target='_blenk'>이메일 인증 확인</a>").toString());
+        msg.setSubject("[Invite you to join a Coop workspace]");
+        msg.setText(new StringBuffer().append("<h1>메일인증</h1>").append("<a href='http://localhost:8083/api/team/accept/").append(token.getToken()).append("' target='_blenk'>이메일 인증 확인</a>").toString());
         this.sender.send(msg);
 
+        HashMap hashMap = new HashMap();
+        hashMap.put("teamIdx", teamIdx);
+        hashMap.put("userIdx", user.getIdx());
+        values.putAll(token.getToken(), hashMap);
+
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_SEND_MAIL.getStatus());
+
+    }
+
+    //초대 승낙
+    public ResponseType acceptInvite(final String token) {
+
+        String string_teamIdx = (String) values.get(token, "teamIdx");
+        String string_userIdx = (String)values.get(token, "userIdx");
+
+        int teamIdx = Integer.parseInt(string_teamIdx);
+        int userIdx = Integer.parseInt(string_userIdx);
+
+        System.out.println(teamIdx);
+        System.out.println(userIdx);
+
+        if(teamIdx==-1||userIdx==-1){
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
+        }
+        teamMapper.updateAuthFlag(teamIdx, userIdx);
+        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_ACCEPT_INVITE.getStatus());
+
 
     }
 

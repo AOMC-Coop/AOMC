@@ -435,15 +435,95 @@ public class TeamController {
     }
 
 
-//    @GetMapping(path="/{teamIdx}")
-//    @CrossOrigin
-//    public ResponseEntity readUserOfTeam(@PathVariable(value = "teamIdx") final int teamIdx){
-//        try{
-//            return new ResponseEntity<>(teamService.readUserOfTeam(teamIdx), HttpStatus.OK);
-//        }catch (Exception e){
-//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+    /**
+     *
+     *        @brief get http://localhost:8083/api/team/{teamIdx}
+     *
+     *        @details Team의 User 목록 조회
+     *
+     *
+     *        @param PathVariable(value = "teamIdx") final int teamIdx
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *     "status": 200,
+     *     "message": "팀 조회 성공",
+     *     "description": "Success Team Read",
+     *     "data": [
+     *         {
+     *             "idx": 15,
+     *             "name": "winterdev",
+     *             "status": 1
+     *         },
+     *         {
+     *             "idx": 16,
+     *             "name": "aomc",
+     *             "status": 1
+     *         }
+     *     ]
+     * }
+     *
+     *        실패시
+     *        User정보없으면
+     *        {
+     *     "status": 400,
+     *     "message": "사용자 정보 없음",
+     *     "description": "Fail Read User"
+     *   }
+     *
+     *   Team 정보 없으면
+     *   {
+     *     "status": 400,
+     *     "message": "팀 정보 없음",
+     *     "description": "Fail Read Team"
+     *   }
+     *
+     *
+     *        @throws
+     *
+     */
+
+
+    //    {
+//        "status": 200,
+//            "message": "팀 조회 성공",
+//            "description": "Success Team Read",
+//            "data": [
+//        {
+//            "idx": 4,
+//                "uid": "dmsal7325@naver.com",
+//                "nickname": "mooming"
+//        },
+//        {
+//            "idx": 5,
+//                "uid": "yunjae",
+//                "nickname": "yunyun"
+//        },
+//        {
+//            "idx": 6,
+//                "uid": "garamda",
+//                "nickname": "catman"
+//        },
+//        {
+//            "idx": 7,
+//                "uid": "love",
+//                "nickname": "love"
 //        }
+//    ]
 //    }
+//
+
+    @GetMapping(path="/{teamIdx}")
+    @CrossOrigin
+    public ResponseEntity readUserOfTeam(@PathVariable(value = "teamIdx") final int teamIdx){
+        try{
+            return new ResponseEntity<>(teamService.readUserOfTeam(teamIdx), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
+    }
 
     @GetMapping(path="/sendmail/{teamIdx}&{uid}")
     @CrossOrigin
@@ -455,6 +535,18 @@ public class TeamController {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
     }
+
+    @GetMapping(path="/accept/{token}")
+    @CrossOrigin
+    public ResponseEntity sendMail(@PathVariable(value = "token") final String token){
+        try{
+
+            return new ResponseEntity<>(teamService.acceptInvite(token), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
+    }
+
 
 
 

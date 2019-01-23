@@ -17,5 +17,5 @@ public class Team implements Serializable {
 
     private List<User> users;
     private List<Channel> channels;
-    private String owner;
+    private int owner;
 }

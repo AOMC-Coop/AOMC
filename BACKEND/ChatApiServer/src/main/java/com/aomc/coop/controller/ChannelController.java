@@ -14,6 +14,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+
+ *
+
+ * @brief API http://localhost:8083/api/channel
+
+ * @details 채널을 생성, 수정, 삭제, 메세지 조회, 멤버초대 하는 클래스이다.
+
+ * @author 이윤재
+
+ * @date 2018-01-23
+
+ * @version 1.0.0
+
+ *
+
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/channel")
@@ -24,6 +41,47 @@ public class ChannelController {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
+    /**
+
+     *
+
+     *        @brief POST http://localhost:8083/api/channel
+
+     *        @details 채널을 생성하는 함수
+     *        test json
+     *
+     *        {
+     * 	        "name" : "aomc-1",
+     * 	        "teamIdx" : 23
+     *        }
+
+     *        @param RequestBody final Channel channel
+
+     *        @return ResponseEntity<>
+
+     *        성공시
+     *
+     *        {
+     *          "status": 200,
+     *          "message": "채널 생성 성공",
+     *          "description": "Success Channel Create"
+     *        }
+
+     *        실패시
+
+     *        {
+     *           "status": 400,
+     *           "message": "채널 생성 실패",
+     *           "description": "Fail Channel Create"
+     *        }
+
+     *
+
+     *        @throws
+
+     *
+
+     */
     @PostMapping
     @CrossOrigin
     public ResponseEntity makeChannel(@RequestBody final Channel channel){
@@ -35,6 +93,46 @@ public class ChannelController {
         }
     }
 
+     /**
+
+     *
+
+     *        @brief PUT http://localhost:8083/api/channel
+
+     *        @details 채널을 수정하는 함수
+     *        test json
+     *
+     *        {
+     * 	        "idx" : 22
+     *        }
+
+     *        @param RequestBody final Channel channel
+
+     *        @return ResponseEntity<>
+
+     *        성공시
+     *
+     *        {
+     *           "status": 200,
+     *           "message": "채널 수정 성공",
+     *           "description": "Success Channel Update"
+     *        }
+
+     *        실패시
+
+     *        {
+     *           "status": 400,
+     *           "message": "채널 수정 실패",
+     *           "description": "Fail Channel Update"
+     *        }
+
+     *
+
+     *        @throws
+
+     *
+
+     */
     @PutMapping
     @CrossOrigin
     public ResponseEntity updateChannel(@RequestBody final Channel channel){
@@ -45,6 +143,51 @@ public class ChannelController {
         }
     }
 
+    /**
+
+     *
+
+     *        @brief GET http://localhost:8083/api/channel/message?channelIdx=21
+
+     *        @details 채널의 메세지를 가져오는 함수
+
+     *        @param RequestParam("channelIdx") final int channelIdx
+
+     *        @return ResponseEntity<>
+
+     *        성공시
+     *
+     *        {
+     *           "status": 200,
+     *           "message": "메세지 조회 성공",
+     *           "description": "Success Message Get"
+     *           "data": [
+     *              {
+     *             "idx": 14,
+     *             "content": "hello"
+     *              },
+     *              {
+     *             "idx": 15,
+     *             "content": "hello2"
+     *              }
+     *           ]
+     *        }
+
+     *        실패시
+
+     *        {
+     *           "status": 400,
+     *           "message": "메세지 조회 실패",
+     *           "description": "Fail Message Get"
+     *        }
+
+     *
+
+     *        @throws
+
+     *
+
+     */
     @GetMapping
     @CrossOrigin
     @RequestMapping("/message")
@@ -56,6 +199,59 @@ public class ChannelController {
         }
     }
 
+    /**
+
+     *
+
+     *        @brief GET http://localhost:8083/api/channel/users?channelIdx=19
+
+     *        @details 채널의 멤버를 모두 가져오는 함수
+
+     *        @param RequestParam("channelIdx") final int channelIdx
+
+     *        @return ResponseEntity<>
+
+     *        성공시
+     *
+     *        {
+     *           "status": 200,
+     *          "message": "채널 멤버 조회 성공",
+     *          "description": "Success Channel Users Get",
+     *          "data": [
+     *              {
+     *                   "idx": 4,
+     *                  "uid": "dmsal",
+     *                  "nickname": "mooming",
+     *                  "gender": 0,
+     *                  "role": 0,
+     *                   "status": "1"
+     *               },
+     *              {
+     *                   "idx": 5,
+     *                   "uid": "yunjae",
+     *                   "nickname": "yunyun",
+     *                   "gender": 0,
+     *                   "role": 0,
+     *                   "status": "1"
+     *               }
+     *          ]
+     *      }
+
+     *        실패시
+
+     *        {
+     *           "status": 400,
+     *           "message": "채널 멤버 조회 실패",
+     *           "description": "Fail Channel Users Get"
+     *        }
+
+     *
+
+     *        @throws
+
+     *
+
+     */
     @GetMapping
     @CrossOrigin
     @RequestMapping("/users")
@@ -67,6 +263,51 @@ public class ChannelController {
         }
     }
 
+    /**
+
+     *
+
+     *        @brief GET http://localhost:8083/api/channel/invite/19/6
+
+     *        @details 채널에 멤버를 초대하는 함수
+
+     *        @param PathVariable(value = "channelIdx") int channelIdx
+
+     *        @param PathVariable(value = "userIdx") int userIdx
+
+     *        @return ResponseEntity<>
+
+     *        성공시
+     *
+     *        {
+     *          "status": 200,
+     *          "message": "채널 멤버 초대 성공",
+     *          "description": "Success Channel User Invite"
+     *        }
+     *
+     *        이미 멤버가 있을시
+     *
+     *        {
+     *          "status": 401,
+     *          "message": "채널에 이미 멤버가 있음",
+     *          "description": "Channel Already Has User"
+     *       }
+
+     *        실패시
+
+     *        {
+     *           "status": 400,
+     *           "message": "채널 멤버 초대 실패",
+     *           "description": "Fail Channel User Invite"
+     *        }
+
+     *
+
+     *        @throws
+
+     *
+
+     */
     @GetMapping
     @CrossOrigin
     @RequestMapping("/invite/{channelIdx}/{userIdx}")
@@ -79,6 +320,43 @@ public class ChannelController {
         }
     }
 
+    /**
+
+     *
+
+     *        @brief DELETE http://localhost:8083/api/channel/invite/19/6
+
+     *        @details 멤버가 채널 나가기 하는 함수
+
+     *        @param PathVariable(value = "channelIdx") int channelIdx
+
+     *        @param PathVariable(value = "userIdx") int userIdx
+
+     *        @return ResponseEntity<>
+
+     *        성공시
+     *
+     *        {
+     *          "status": 200,
+     *          "message": "채널 나가기 성공",
+     *          "description": "Success Channel User Delete"
+     *        }
+
+     *        실패시
+
+     *        {
+     *           "status": 400,
+     *           "message": "채널 나가기 실패",
+     *           "description": "Fail Channel User Delete"
+     *        }
+
+     *
+
+     *        @throws
+
+     *
+
+     */
     @DeleteMapping
     @CrossOrigin
     @RequestMapping("/{channelIdx}/{userIdx}")

@@ -18,6 +18,7 @@ public enum Status_1000 {
     FAIL_Get_Channel_Users("1404"),
 
     SUCCESS_Invite_Channel_User("1206"),
+    Channel_Already_Has_User("1306"),
     FAIL_Invite_Channel_User("1405"),
 
     SUCCESS_Delete_Channel_User("1207"),

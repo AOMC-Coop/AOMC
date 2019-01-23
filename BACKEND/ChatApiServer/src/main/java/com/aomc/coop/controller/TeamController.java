@@ -10,6 +10,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
+/**
+ *
+ * @brief API http://localhost:8083/api/team
+ * @details Team생성, Team조회, Team수정, Team비활성화, Team멤버관리, Team에 멤버초대, Channel조회
+ * @author LeeEunmi
+ * @date 2019-01-23
+ * @version 1.0.0
+ *
+ */
+
+
+
 @Slf4j
 @RestController
 @RequestMapping("/api/team")
@@ -22,7 +35,42 @@ public class TeamController {
         this.teamService = teamService;
     }
 
-    //팀 생성
+    /**
+     *
+     *        @brief POST http://localhost:8083/api/team
+     *
+     *        @details Team 생성
+     *        test json
+     *        {
+     * 	        "name":"aomc",
+     * 	        "users":[
+     * 		        {"idx":6},
+     * 		        {"idx":4},
+     * 		        {"idx":5}
+     * 	        ]
+     *        }
+     *
+     *        @param RequestBody final Team team
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *           "status": 200,
+     *           "message": "팀 생성 성공",
+     *           "description": "Success Channel Create"
+     *        }
+     *
+     *        실패시
+     *        {
+     *           "status": 400,
+     *           "message": "팀 생성 실패",
+     *           "description": "Fail Team Create"
+     *        }
+     *
+     *        @throws
+     *
+     */
     @PostMapping
     @CrossOrigin
     public ResponseEntity makeTeam(@RequestBody final Team team){
@@ -33,7 +81,40 @@ public class TeamController {
         }
     }
 
-    //팀조회
+    /**
+     *
+     *        @brief Get http://localhost:8083/api/team/{teamIdx}
+     *
+     *        @details Team 조회
+     *
+     *
+     *        @param PathVariable(value = "teamIdx") final int teamIdx
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *           "status": 200,
+     *           "message": "팀 조회 성공",
+     *           "description": "Success Channel Create",
+     *           "data": {
+     *              "idx": 15,
+     *              "name": "aomc",
+     *              "status": 1,
+     *              "owner": 0
+     *            }
+     *        }
+     *
+     *        실패시
+     *        {
+     *           "status": 400,
+     *           "message": "정보 없음",
+     *           "description": "Fail Read"
+     *        }
+     *
+     *        @throws
+     *
+     */
     @GetMapping(path="/{teamIdx}")
     @CrossOrigin
     public ResponseEntity makeTeam(@PathVariable(value = "teamIdx") final int teamIdx){

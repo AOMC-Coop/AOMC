@@ -15,7 +15,7 @@
     "description": "Success Team Create"
   },
   "1400": {
-    "status": 403,
+    "status": 400,
     "message": "팀 생성 실패",
     "description": "Fail Team Create"
   },
@@ -27,7 +27,7 @@
   },
 
   "1401": {
-    "status": 403,
+    "status": 400,
     "message": "채널 생성 실패",
     "description": "Fail Channel Create"
   },
@@ -39,7 +39,7 @@
   },
 
   "1402": {
-    "status": 403,
+    "status": 400,
     "message": "채널 수정 실패",
     "description": "Fail Channel Update"
   },
@@ -51,7 +51,7 @@
   },
 
   "1403": {
-    "status": 403,
+    "status": 400,
     "message": "메세지 조회 실패",
     "description": "Fail Message Get"
   },
@@ -63,7 +63,7 @@
   },
 
   "1404": {
-    "status": 403,
+    "status": 400,
     "message": "채널 멤버 조회 실패",
     "description": "Fail Channel Users Get"
   },
@@ -75,7 +75,7 @@
   },
 
   "1405": {
-    "status": 403,
+    "status": 400,
     "message": "채널 멤버 초대 실패",
     "description": "Fail Channel User Invite"
   },
@@ -87,7 +87,7 @@
   },
 
   "1406": {
-    "status": 403,
+    "status": 400,
     "message": "채널 나가기 실패",
     "description": "Fail Channel User Delete"
   },

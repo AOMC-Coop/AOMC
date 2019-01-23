@@ -7,8 +7,61 @@
       fixed
       app
     >
+    <!-- <v-flex xs6>
+      <v-subheader class="white--text">
+         <v-text style = "fontSize : 30px">{{}}</v-text> 
+         <v-icon @click="" class="white--text" style = "fontSize : 30px">keyboard_arrow_down</v-icon>
+      </v-subheader>
+    </v-flex> -->
+
+    <v-list dense class="white--text">
+        <template v-for="item in teams">
+          <v-layout
+            v-if="item.heading"
+            :key="item.heading"
+            row
+            align-center
+          >
+          </v-layout>
+          <v-list-group
+            v-else-if="item.children"
+            v-model="item.model"
+            class="white--text"
+            :key="item.text"
+          >
+            <v-list-tile slot="activator">
+              <v-list-tile-content >
+                <v-list-tile-title style = "fontSize : 30px">
+                  {{ item.text }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile
+              v-for="(child, i) in item.children"
+              :key="i"
+              @click=""
+            >
+              <v-list-tile-action >
+                <v-icon class="white--text" >widgets</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title class="white--text">
+                  {{ child.name }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+        </template>
+      </v-list> 
+    
+
+     <v-flex xs6>
+      <v-subheader class="white--text">
+         <v-text style = "fontSize : 18px"> Members </v-text>
+      </v-subheader>
+
       <v-list dense class="white--text">
-        <template v-for="item in items">
+        <template v-for="item in members">
           <v-layout
             v-if="item.heading"
             :key="item.heading"
@@ -60,12 +113,155 @@
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
-                {{ item.text }}
+                 {{ item.text }}
               </v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
         </template>
       </v-list>
+    </v-flex>
+
+     <v-flex xs6>
+      <v-subheader class="white--text">
+        <v-text style = "fontSize : 18px">  Channels </v-text>
+      </v-subheader>
+      <v-list dense class="white--text">
+        <template v-for="item in channels">
+          <v-layout
+            v-if="item.heading"
+            :key="item.heading"
+            row
+            align-center
+          >
+            <v-flex xs6>
+              <v-subheader v-if="item.heading">
+                {{ item.heading }}
+              </v-subheader>
+            </v-flex>
+            <v-flex xs6 class="text-xs-center">
+              <a href="#!" class="body-2 black--text">EDIT</a>
+            </v-flex>
+          </v-layout>
+          <v-list-group
+            v-else-if="item.children"
+            v-model="item.model"
+            class="white--text"
+            :key="item.text"
+            :prepend-icon="item.model ? item.icon : item['icon-alt']"
+            append-icon=""
+          >
+            <v-list-tile slot="activator">
+              <v-list-tile-content >
+                <v-list-tile-title >
+                  {{ item.text }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile
+              v-for="(child, i) in item.children"
+              :key="i"
+              @click=""
+            >
+              <v-list-tile-action v-if="child.icon" >
+                <v-icon class="white--text">{{ child.icon }}</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title class="white--text">
+                  {{ child.text }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+          <v-list-tile v-else :key="item.text" @click="">
+            <!-- <v-list-tile-action>
+              <v-icon class="white--text">{{ item.icon }}</v-icon>
+            </v-list-tile-action> -->
+            <v-list-tile-content>
+              <v-list-tile-title>
+                # {{ item.text }}
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </template>
+      </v-list>
+    </v-flex>
+
+    <v-flex xs6 >
+      <v-subheader class="white--text" >
+        <v-icon class="white--text" @click="">add</v-icon> 
+        <v-text style = "fontSize : 15px">invite people</v-text>
+      </v-subheader>
+    </v-flex>
+
+
+
+
+
+
+      <!-- <v-list dense class="white--text">
+        <template v-for="item in items">
+          <v-layout
+            v-if="item.heading"
+            :key="item.heading"
+            row
+            align-center
+          >
+            <v-flex xs6>
+              <v-subheader v-if="item.heading">
+                {{ item.heading }}
+              </v-subheader>
+            </v-flex> -->
+            <!-- <v-flex xs6 class="text-xs-center">
+              <a href="#!" class="body-2 black--text">EDIT</a>
+            </v-flex>
+          </v-layout>
+          <v-list-group
+            v-else-if="item.children"
+            v-model="item.model"
+            class="white--text"
+            :key="item.text"
+            :prepend-icon="item.model ? item.icon : item['icon-alt']"
+            append-icon=""
+          >
+            <v-list-tile slot="activator">
+              <v-list-tile-content >
+                <v-list-tile-title >
+                  {{ item.text }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+            <v-list-tile
+              v-for="(child, i) in item.children"
+              :key="i"
+              @click=""
+            >
+              <v-list-tile-action v-if="child.icon" >
+                <v-icon class="white--text">{{ child.icon }}</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title class="white--text">
+                  {{ child.text }}
+                </v-list-tile-title>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+          <v-list-tile v-else :key="item.text" @click="">
+            <v-list-tile-action>
+              <v-icon class="white--text">{{ item.icon }}</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>
+                {{ item.text }}
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </template>
+      </v-list>  -->
+
+
+
+
+
     </v-navigation-drawer>
     <v-toolbar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
@@ -103,10 +299,7 @@
       </v-btn>
     </v-toolbar>
     
-
     <Content></Content>
-
-
 
     <v-btn
       fab
@@ -187,6 +380,7 @@
 
 <script>
 import Content from './Content.vue'
+import axios from "axios";
 
 
   export default {
@@ -196,23 +390,20 @@ import Content from './Content.vue'
     data: () => ({
       dialog: false,
       drawer: null,
-      items: [
-        { icon: 'contacts', text: 'Contacts' },
-        { icon: 'history', text: 'Frequently contacted' },
-        { icon: 'content_copy', text: 'Duplicates' },
+      members: [ //test => 즐겨찾기 된 사용자를 서버에서 받아서 띄워야됨
+        { icon: 'people', text: 'Garam' },
+        { icon: 'people', text: 'Eunme' },
+        { icon: 'people', text: 'Yunjae' }
+      ],
+      channels: [ //test => 팀의 채널을 서버에서 받아서 띄워야됨
+        { text: 'general' },
+        { text: 'test' }
+      ],
+      teamNames: [
         {
           icon: 'keyboard_arrow_up',
           'icon-alt': 'keyboard_arrow_down',
-          text: 'Labels',
-          model: true,
-          children: [
-            { icon: 'add', text: 'Create label' }
-          ]
-        },
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: 'More',
+          text: 'TeamName',
           model: false,
           children: [
             { text: 'Import' },
@@ -222,22 +413,109 @@ import Content from './Content.vue'
             { text: 'Other contacts' }
           ]
         },
-        { icon: 'settings', text: 'Settings' },
-        { icon: 'chat_bubble', text: 'Send feedback' },
-        { icon: 'help', text: 'Help' },
-        { icon: 'phonelink', text: 'App downloads' },
-        { icon: 'keyboard', text: 'Go to the old version' }
+        { text: 'Started' },
+        { text: 'Channels' },
+        { icon: 'add', text: 'Create label' },
+      ],
+      items: [
+        {
+          icon: 'keyboard_arrow_up',
+          'icon-alt': 'keyboard_arrow_down',
+          text: 'TeamName',
+          model: false,
+          children: [
+            { text: 'Import' },
+            { text: 'Export' },
+            { text: 'Print' },
+            { text: 'Undo changes' },
+            { text: 'Other contacts' }
+          ]
+        },
+        { text: 'Started' },
+        { text: 'Channels' },
+        { icon: 'add', text: 'Create label' },
+      ],
+    teams: [
+        {
+          icon: 'keyboard_arrow_up',
+          'icon-alt': 'keyboard_arrow_down',
+          text: 'aaa',
+          model: false,
+          children: [ // 서버에서 받아온 팀 리스트를 저장
+            { idx: '', name: '', status: '', owner: '' }
+          ]
+        }
+      ],
+    teamsFromServer: [ // 서버에서 받아온 팀 리스트를 저장
+        { 
+          idx: '' ,
+          name: '',
+          status: '',
+          owner: ''
+        }
       ]
     }),
+    
+    
+    //    currentTeam: { //현재 팀 저장
+    //       idx: '' ,
+    //       name: '',
+    //       status: '',
+    //       owner: ''
+    //   },
     props: {
-      source: String
-    }
+      source: String,
+      teamsFromServer: Array
+    },
+
+    method: {
+      setData(data) {
+        this.teams.children = data;
+    }},
+
+    created() {
+      localStorage.setItem("userId", "yunjae"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
+      debugger;
+      axios
+        .get("http://localhost:8083/api/team/user/" + "5")
+        .then(response => {
+          debugger;
+            if(response.data) {
+              debugger;
+              this.teamsFromServer = response.data.data;
+              this.setData(response.data.data);
+              console.log("server data = " + this.teamsFromServer);
+              console.log("response.data = " + response.data);
+              console.log("response.data['data'] = " + response.data.data);
+              this.teams.children = this.teamsFromServer;
+              console.log("teams.children" + this.teams.children);
+              // this.teams.text = response.data.get(0).name; //?
+              // location.href = './home';
+              
+            } else {
+            //   app.renderNotification('Successfully Singed Up');
+            //   app.toggleSignUp();
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          // location.href = './';
+          this.errors.push(e);
+        });
+
+    } 
   }
+
+  
 </script>
 
 <style>
 .v-navigation-drawer {
 background-color: aqua;
 color: brown;
+}
+
+.teamName {
+  font-size: 50px;
 }
 </style>

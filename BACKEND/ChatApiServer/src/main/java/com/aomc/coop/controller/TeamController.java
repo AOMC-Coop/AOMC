@@ -117,7 +117,7 @@ public class TeamController {
      */
     @GetMapping(path="/{teamIdx}")
     @CrossOrigin
-    public ResponseEntity makeTeam(@PathVariable(value = "teamIdx") final int teamIdx){
+    public ResponseEntity readTeam(@PathVariable(value = "teamIdx") final int teamIdx){
         try{
             return new ResponseEntity<>(teamService.readTeam(teamIdx), HttpStatus.OK);
         }catch (Exception e){
@@ -130,6 +130,11 @@ public class TeamController {
      *        @brief Put http://localhost:8083/api/team
      *
      *        @details Team 수정
+     *        test json
+     *        {
+     * 	        "idx": 19,
+     * 	        "name":"winterdevcamp"
+     *        }
      *
      *
      *        @param RequestBody final Team team
@@ -184,7 +189,7 @@ public class TeamController {
      *        @details Team 삭제(비활성화)
      *
      *
-     *        @param int teamIdx
+     *        @param PathVariable(value = "teamIdx") final int teamIdx
      *
      *        @return ResponseEntity<>
      *
@@ -236,7 +241,7 @@ public class TeamController {
      *        @details Team의 멤버초대
      *
      *
-     *        @param int teamIdx, String uid
+     *        @param PathVariable(value = "teamIdx") final int teamIdx, PathVariable(value = "uid") final String uid
      *
      *        @return ResponseEntity<>
      *
@@ -281,7 +286,7 @@ public class TeamController {
      *        @details Team의 Channel 조회
      *
      *
-     *        @param int teamIdx, int userIdx
+     *        @param PathVariable(value = "teamIdx") final int teamIdx, PathVariable(value = "userIdx") final int userIdx
      *
      *        @return ResponseEntity<>
      *
@@ -335,7 +340,7 @@ public class TeamController {
      *        @details Team의 멤버 비활성화
      *
      *
-     *        @param int teamIdx, int userIdx
+     *        @param PathVariable(value = "teamIdx") final int teamIdx, PathVariable(value = "userIdx") final int userIdx
      *
      *        @return ResponseEntity<>
      *

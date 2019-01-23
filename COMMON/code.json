@@ -74,6 +74,12 @@
     "description": "Success Channel User Invite"
   },
 
+  "1306": {
+    "status": 401,
+    "message": "채널에 이미 멤버가 있음",
+    "description": "Channel Already Has User"
+  },
+
   "1405": {
     "status": 400,
     "message": "채널 멤버 초대 실패",

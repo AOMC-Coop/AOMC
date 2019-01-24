@@ -538,7 +538,7 @@ public class TeamController {
 
     @GetMapping(path="/accept/{token}")
     @CrossOrigin
-    public ResponseEntity sendMail(@PathVariable(value = "token") final String token){
+    public ResponseEntity acceptInvite(@PathVariable(value = "token") final String token){
         try{
 
             return new ResponseEntity<>(teamService.acceptInvite(token), HttpStatus.OK);

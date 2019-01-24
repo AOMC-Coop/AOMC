@@ -27,7 +27,7 @@ public class JwtService {
     private String SECRET;
 
 
-    public String create(final int teamIdx, final int userIdx) {
+    public String create(final int teamIdx, final String uid) {
         try {
             //토큰 생성 빌더 객체 생성
             JWTCreator.Builder b = JWT.create();
@@ -35,7 +35,7 @@ public class JwtService {
             b.withIssuer(ISSUER);
             //토큰 payload 작성, key - value 형식, 객체도 가능
             b.withClaim("teamIdx", teamIdx);
-            b.withClaim("userIdx", userIdx);
+            b.withClaim("uid", uid);
             //만료날짜지정, 1달로
             b.withExpiresAt(expireAt());
             //토큰 해싱해서 반환
@@ -63,7 +63,7 @@ public class JwtService {
             DecodedJWT decodedJWT = jwtVerifier.verify(token);
 
             //토큰 payload 반환, 정상적인 토큰이라면 토큰 주인(사용자) 고유 ID, 아니라면 -1
-            return new Token(decodedJWT.getClaim("teamIdx").asLong().intValue(), decodedJWT.getClaim("userIdx").asLong().intValue());
+            return new Token(decodedJWT.getClaim("teamIdx").asLong().intValue(), decodedJWT.getClaim("uid").asLong().toString());
         } catch (JWTVerificationException jve) {
             log.error(jve.getMessage());
         } catch (Exception e) {
@@ -76,20 +76,20 @@ public class JwtService {
         //토큰에 담길 정보 필드
         //초기값을 -1로 설정함으로써 로그인 실패시 -1반환
         private int teamIdx = -1;
-        private int userIdx = -1;
+        private String uid = "";
 
         public Token() {
         }
 
-        public Token(final int teamIdx, final int userIdx) {
-            this.teamIdx = teamIdx; this.userIdx = userIdx;
+        public Token(final int teamIdx, final String uid) {
+            this.teamIdx = teamIdx; this.uid = uid;
         }
 
         public int getTeamIdx() {
             return teamIdx;
         }
-        public int getUserIdx() {
-            return userIdx;
+        public String getUserIdx() {
+            return uid;
         }
 
     }

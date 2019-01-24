@@ -460,21 +460,42 @@ public class TeamController {
 
     /**
      *
-     *        @brief Get http://localhost:8083/api/team/invite/{teamIdx}&{uid}
+     *        @brief Get http://localhost:8083/api/team/invite
      *
      *        @details Team의 멤버초대(메일전송)
      *
      *
-     *        @param PathVariable(value = "teamIdx") final int teamIdx, PathVariable(value = "uid") final String uid
+     *        @param RequestBody final Team team
+     *        test json
+     *        {
+     * 	        "idx": 46,
+     * 	        "users":[
+     * 		        {"uid":"dmsal7325@naver.com"},
+     * 		        {"uid":"yunjea0312@naver.com"}
+     * 	        ],
+     * 	        "channels":[
+     * 		        {"idx":39}
+     * 	        ]
+     *       }
      *
      *        @return ResponseEntity<>
      *
      *        성공시
      *        {
-     *           "status": 200,
-     *           "message": "팀 초대 성공",
-     *           "description": "Success Invite"
-     *        }
+     *          "status": 200,
+     *          "message": "팀 초대 성공",
+     *          "description": "Success Invite",
+     *          "data": [
+     *               {
+     *                  "uid": "yunjea0312@naver.com"
+     *              }
+     *          ],
+     *          "plusData": [
+     *              {
+     *                  "uid": "dmsal7325@naver.com"
+     *              }
+     *          ]
+     *      }
      *
      *        실패시
      *        {

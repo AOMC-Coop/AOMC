@@ -289,13 +289,15 @@ public class TeamService {
         List<User> existUsers = new ArrayList<>();
 
 
+        for(User inviteUser : inviteUsers){
+            for(User userOfTeam : usersOfTeam){
 
-        for(User userOfTeam : usersOfTeam){
-            for(User inviteUser : inviteUsers){
-                if(userOfTeam.getUid().equals(inviteUser.getUid())){
+                if(inviteUser.getUid().equals(userOfTeam.getUid())){
                     existUsers.add(inviteUser);
+                    break;
                 }else{
                     firstUsers.add(inviteUser);
+                    break;
                 }
             }
         }
@@ -310,7 +312,6 @@ public class TeamService {
             HashMap hashMap = new HashMap();
             hashMap.put("teamIdx", team.getIdx());
             hashMap.put("uid", user.getUid());
-
 
 
             //초대받은팀원이 User가 아닌 경우 - userIdx에 0 넣기
@@ -337,28 +338,6 @@ public class TeamService {
 
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_INVITE.getStatus(), firstUsers, existUsers);
 
-
-
-
-//        User user = userMapper.findBysUserid(uid);
-//
-//        final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(teamIdx, uid));
-//        HashMap hashMap = new HashMap();
-//        hashMap.put("teamIdx", teamIdx);
-//        hashMap.put("uid", uid);
-//
-//        if (user != null) {
-//            hashMap.put("userIdx", user.getIdx());
-//        }
-//
-//        values.putAll(token.getToken(), hashMap);
-//
-//        mailSend.mailsend(mailSender, uid, token.getToken());
-
-
-
-
-
     }
 
     //초대 승낙
@@ -382,24 +361,5 @@ public class TeamService {
 
     }
 
-
-
-    //    //팀초대
-//    @Transactional
-//    public ResponseType inviteTeam(final int teamIdx, final String uid) {
-//
-//
-//        User userTemp = userMapper.findBysUserid(uid);
-//        if(userTemp ==null){
-//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
-//        }
-//
-//        int flag = teamMapper.createUserHasTeam(teamIdx, userTemp.getIdx(), 0);
-//
-//        if(flag==1)
-//            return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_INVITE.getStatus());
-//        else
-//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INVITE.getStatus());
-//    }
 
 }

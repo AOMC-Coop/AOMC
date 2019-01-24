@@ -14,12 +14,14 @@ public class ResponseType<T> {
     private String message;
     private String description;
     private T data;
+    private T plusData;
 
     public ResponseType(final int status, final String message, String description) {
         this.status = status;
         this.message = message;
         this.description = description;
         this.data = null;
+        this.plusData = null;
     }
 
     public static<T> ResponseType<T> res(final int status, final String message, String description) {
@@ -34,6 +36,17 @@ public class ResponseType<T> {
                 .description(description)
                 .build();
     }
+
+    public static<T> ResponseType<T> res(final int status, final String message, String description, final T data, final T plusData) {
+        return ResponseType.<T>builder()
+                .data(data)
+                .plusData(plusData)
+                .status(status)
+                .message(message)
+                .description(description)
+                .build();
+    }
+
 
 
 }

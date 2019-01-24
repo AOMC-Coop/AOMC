@@ -2,8 +2,6 @@
   <v-app id="inspire">
     <v-navigation-drawer 
       class="primary"
-      :clipped="$vuetify.breakpoint.lgAndUp"
-      v-model="drawer"
       fixed
       app
     >
@@ -31,15 +29,18 @@
           >
             <v-list-tile slot="activator">
               <v-list-tile-content >
-                <v-list-tile-title style = "fontSize : 30px">
+                <v-list-tile-title style = "fontSize : 25px">
                   {{ teamName }}
+                </v-list-tile-title>
+                <v-list-tile-title style = "fontSize : 15px">
+                  {{ userName }}
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
             <v-list-tile
               v-for="(child, i) in teamsFromServer"
               :key="i"
-              @click=""
+              @click="clickTeamName(child.idx, child.name)"
             >
               <v-list-tile-action >
                 <v-icon class="white--text" >widgets</v-icon>
@@ -62,58 +63,14 @@
 
       <v-list dense class="white--text">
         <template v-for="item in teamMembers">
-          <v-layout
-            v-if="item.heading"
-            :key="item.heading"
-            row
-            align-center
-          >
-            <v-flex xs6>
-              <v-subheader v-if="item.heading">
-                {{ item.heading }}
-              </v-subheader>
-            </v-flex>
-            <v-flex xs6 class="text-xs-center">
-              <a href="#!" class="body-2 black--text">EDIT</a>
-            </v-flex>
-          </v-layout>
-          <v-list-group
-            v-else-if="item.children"
-            v-model="item.model"
-            class="white--text"
-            :key="item.text"
-            :prepend-icon="item.model ? item.icon : item['icon-alt']"
-            append-icon=""
-          >
-            <v-list-tile slot="activator">
-              <v-list-tile-content >
-                <v-list-tile-title >
-                  {{ item.name }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile
-              v-for="(child, i) in item.children"
-              :key="i"
-              @click=""
-            >
-              <v-list-tile-action v-if="child.icon" >
-                <v-icon class="white--text">{{ child.icon }}</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title class="white--text">
-                  {{ child.text }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list-group>
-          <v-list-tile v-else :key="item.text" @click="">
+          
+          <v-list-tile v-if :key="item.text" @click="">
             <v-list-tile-action>
-              <v-icon class="white--text">{{ item.icon }}</v-icon>
+              <v-icon class="white--text">people</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
-                 {{ item.text }}
+                 {{ item.nickname }}
               </v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
@@ -124,61 +81,18 @@
      <v-flex xs6>
       <v-subheader class="white--text">
         <v-text style = "fontSize : 18px">  Channels </v-text>
+        <v-icon @click="" class="white--text" right fab>add</v-icon>
       </v-subheader>
       <v-list dense class="white--text">
         <template v-for="item in channels">
-          <v-layout
-            v-if="item.heading"
-            :key="item.heading"
-            row
-            align-center
-          >
-            <v-flex xs6>
-              <v-subheader v-if="item.heading">
-                {{ item.heading }}
-              </v-subheader>
-            </v-flex>
-            <v-flex xs6 class="text-xs-center">
-              <a href="#!" class="body-2 black--text">EDIT</a>
-            </v-flex>
-          </v-layout>
-          <v-list-group
-            v-else-if="item.children"
-            v-model="item.model"
-            class="white--text"
-            :key="item.text"
-            :prepend-icon="item.model ? item.icon : item['icon-alt']"
-            append-icon=""
-          >
-            <v-list-tile slot="activator">
-              <v-list-tile-content >
-                <v-list-tile-title >
-                  {{ item.text }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile
-              v-for="(child, i) in item.children"
-              :key="i"
-              @click=""
-            >
-              <v-list-tile-action v-if="child.icon" >
-                <v-icon class="white--text">{{ child.icon }}</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title class="white--text">
-                  {{ child.text }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list-group>
-          <v-list-tile v-else :key="item.text" @click="">
+          
+          <v-list-tile v-if :key="item.text" @click="">
             <!-- <v-list-tile-action>
               <v-icon class="white--text">{{ item.icon }}</v-icon>
             </v-list-tile-action> -->
             <v-list-tile-content>
               <v-list-tile-title>
-                # {{ item.text }}
+               <v-text> # {{ item.name }} </v-text>
               </v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
@@ -188,13 +102,10 @@
 
     <v-flex xs6 >
       <v-subheader class="white--text" >
-        <v-icon class="white--text" @click="">add</v-icon> 
+        <v-icon class="white--text" @click="dialog = !dialog" >add</v-icon> 
         <v-text style = "fontSize : 15px">invite people</v-text>
       </v-subheader>
     </v-flex>
-
-
-
 
 
 
@@ -258,11 +169,8 @@
         </template>
       </v-list>  -->
 
-
-
-
-
     </v-navigation-drawer>
+    
     <!-- <v-toolbar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       color="primary lighten-2"
@@ -301,7 +209,7 @@
     
     <Content></Content>
 
-    <v-btn
+    <!-- <v-btn
       fab
       bottom
       right
@@ -311,7 +219,8 @@
       @click="dialog = !dialog"
     >
       <v-icon>add</v-icon>
-    </v-btn>
+    </v-btn> -->
+
     <v-dialog v-model="dialog" width="800px">
       <v-card>
         <v-card-title
@@ -395,10 +304,10 @@ import axios from "axios";
         { icon: 'people', text: 'Eunme' },
         { icon: 'people', text: 'Yunjae' }
       ],
-      channels: [ //test => 팀의 채널을 서버에서 받아서 띄워야됨
-        { text: 'general' },
-        { text: 'test' }
-      ],
+      // channels: [ //test => 팀의 채널을 서버에서 받아서 띄워야됨
+      //   { text: 'general' },
+      //   { text: 'test' }
+      // ],
       teamNames: [
         {
           icon: 'keyboard_arrow_up',
@@ -436,6 +345,7 @@ import axios from "axios";
         { icon: 'add', text: 'Create label' },
       ],
     teamName: '',
+    userName:'',
     teams: [
         {
           icon: 'keyboard_arrow_up',
@@ -457,19 +367,21 @@ import axios from "axios";
       teamMembers: [
         {
           idx: '' ,
+          uid: '',
+          nickname: ''
+        }
+      ],
+      channels: [
+        {
+          idx: '',
           name: '',
-          status: ''
+          star_flag: '',
+          status: '',
+          teamIdx: ''
         }
       ]
     }),
     
-    
-    //    currentTeam: { //현재 팀 저장
-    //       idx: '' ,
-    //       name: '',
-    //       status: '',
-    //       owner: ''
-    //   },
     props: {
       source: String
     },
@@ -489,6 +401,45 @@ import axios from "axios";
         .catch(e => {
           this.errors.push(e);
         });
+      },
+      getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
+        axios
+        .get("http://localhost:8083/api/team/channel/" + teamIdx + "&" + userIdx)
+        .then(response => {
+          debugger;
+            if(response.data) {
+              this.channels = response.data.data;
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+      },
+      clickTeamName(teamIdx, teamName) {
+        axios
+        .get("http://localhost:8083/api/team/user/" + teamIdx)
+        .then(response => {
+          debugger;
+            if(response.data) {
+              debugger;
+              //this.teamsFromServer = response.data.data;
+              this.teamName = teamName;
+              this.userName = "yunjae"; //userName 받기
+              this.getMemberByTeamId(teamIdx);
+              this.getChannelsByTeamIdxAndUserIdx(teamIdx, 5); // 5->userId로 받아야 함
+              
+            } else {
+            //   app.renderNotification('Successfully Singed Up');
+            //   app.toggleSignUp();
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          // location.href = './';
+          this.errors.push(e);
+        });
       }
     },
 
@@ -504,7 +455,9 @@ import axios from "axios";
               debugger;
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;
+              this.userName = "yunjae"; //로그인 한 후 userName 받기 -> localStorage에서 받기 
               this.getMemberByTeamId(response.data.data[0].idx);
+              this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
               
             } else {
             //   app.renderNotification('Successfully Singed Up');

@@ -1,5 +1,6 @@
 package com.aomc.coop.service;
 
+import com.aomc.coop.config.MailConfig;
 import com.aomc.coop.mapper.ChannelMapper;
 import com.aomc.coop.mapper.MessageMapper;
 import com.aomc.coop.mapper.TeamMapper;
@@ -10,14 +11,16 @@ import com.aomc.coop.model.Team;
 import com.aomc.coop.model.User;
 import com.aomc.coop.response.Status_1000;
 import com.aomc.coop.response.Status_5000;
+import com.aomc.coop.response.Status_common;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
-import com.aomc.coop.utils.mail.MailsendUtil;
+import com.aomc.coop.utils.mail.MailSend;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -45,16 +48,19 @@ public class TeamService {
 
     private JwtService jwtService;
 
-    @Autowired
-    static private MailSender sender;
-
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
+
+    private JavaMailSender mailSender;
+
+    MailSend mailSend = new MailSend();
+
 
     @Resource(name="redisTemplate")
     private HashOperations<String, String, String> values;
 
-    public TeamService(JwtService jwtService) {
+    public TeamService(JwtService jwtService, JavaMailSender mailSender) {
         this.jwtService = jwtService;
+        this.mailSender = mailSender;
     }
 
 
@@ -63,7 +69,7 @@ public class TeamService {
     public ResponseType createTeam(final Team team) {
         try {
             List<User> users = team.getUsers();
-            team.setOwner(users.get(0).getIdx());
+            team.setOwner(users.get(0).getUid());
 
             Channel channel = new Channel();
             channel.setName("general");
@@ -83,35 +89,48 @@ public class TeamService {
 
             teamMapper.createTeam(team);
             channelMapper.createChannel(channel, team.getIdx());
-            messageMapper.createMessage(message, channel.getIdx(), users.get(0).getIdx());
+
+            User ownerUserInfo = userMapper.findBysUserid(users.get(0).getUid());
+            messageMapper.createMessage(message, channel.getIdx(), ownerUserInfo.getIdx());
 
             for (User user : users) {
-                if(user.getIdx()== team.getOwner()){
-                    teamMapper.createUserHasTeam(team.getIdx(), user.getIdx(),1);
 
-//                    final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(team.getIdx(), user.getIdx()));
-//
-//                    SimpleMailMessage msg = new SimpleMailMessage();
-//                    msg.setFrom("CoopDeveloper");
-//                    msg.setTo(user.getUid());
-//                    msg.setSubject("[COOP Team 초대 이메일 인증]");
-//                    msg.setText(new StringBuffer().append("<h1>메일인증</h1>").append("<a href='http://localhost:8083/api/team/accept/").append(token.getToken()).append("' target='_blenk'>이메일 인증 확인</a>").toString());
-//                    this.sender.send(msg);
-//
-//                    HashMap hashMap = new HashMap();
-//                    hashMap.put("teamIdx", team.getIdx());
-//                    hashMap.put("userIdx", user.getIdx());
-//                    values.putAll(token.getToken(), hashMap);
+                User userTemp = userMapper.findBysUserid(user.getUid());
 
+                final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(team.getIdx(), user.getUid()));
+
+                HashMap hashMap = new HashMap();
+                hashMap.put("teamIdx", team.getIdx());
+
+                //방장인 경우 메일 안보냄
+                if(user.getUid().equals(team.getOwner())){
+                    teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(),1);
                 }else{
-                    teamMapper.createUserHasTeam(team.getIdx(), user.getIdx(),0);
 
+                    //초대받은팀원이 User가 아닌 경우 - userID만 넣기
+                    if(userTemp==null){
+                        hashMap.put("uid", user.getUid());
+                        hashMap.put("userIdx", 0);
 
+                    }else{//초대받은팀원이 User인 경우
+                        //각테이블에 생성 데이터넣기
+                        System.out.println(userTemp.getIdx());
+                        teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(),0);
+                        channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
+
+                        //Redis에 정보 저장
+                        hashMap.put("uid", user.getUid());
+                        hashMap.put("userIdx", userTemp.getIdx());
+                    }
+
+                    values.putAll(token.getToken(), hashMap);
+
+                    mailSend.mailsend(mailSender, user.getUid(), token.getToken());
 
                 }
-                channelMapper.createUserHasChannel(channel.getIdx(), user.getIdx());
-            }
 
+
+            }
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_TEAM.getStatus());
 
@@ -279,27 +298,23 @@ public class TeamService {
     public ResponseType sendMail(final int teamIdx, final String uid) {
 
         User user = userMapper.findBysUserid(uid);
-        if(user==null){
-            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
-        }
 
-
-        final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(teamIdx, user.getIdx()));
-
-
-        SimpleMailMessage msg = new SimpleMailMessage();
-        msg.setFrom("CoopDeveloper");
-        msg.setTo(user.getUid());
-        msg.setSubject("[Invite you to join a Coop workspace]");
-        msg.setText(new StringBuffer().append("<h1>메일인증</h1>").append("<a href='http://localhost:8083/api/team/accept/").append(token.getToken()).append("' target='_blenk'>이메일 인증 확인</a>").toString());
-        this.sender.send(msg);
-
+        final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(teamIdx, uid));
         HashMap hashMap = new HashMap();
         hashMap.put("teamIdx", teamIdx);
-        hashMap.put("userIdx", user.getIdx());
+        hashMap.put("uid", uid);
+
+        if (user != null) {
+            hashMap.put("userIdx", user.getIdx());
+        }
+
         values.putAll(token.getToken(), hashMap);
 
+        mailSend.mailsend(mailSender, uid, token.getToken());
+
+
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_SEND_MAIL.getStatus());
+
 
     }
 
@@ -315,8 +330,11 @@ public class TeamService {
         System.out.println(teamIdx);
         System.out.println(userIdx);
 
-        if(teamIdx==-1||userIdx==-1){
+        if(teamIdx==-1){
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
+        }
+        if(userIdx==0){
+            return codeJsonParser.codeJsonParser(Status_5000.PLEASE_SIGNUP.getStatus(), token);
         }
         teamMapper.updateAuthFlag(teamIdx, userIdx);
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_ACCEPT_INVITE.getStatus());

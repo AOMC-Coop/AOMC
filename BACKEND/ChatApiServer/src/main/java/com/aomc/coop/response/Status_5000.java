@@ -27,7 +27,8 @@ public enum Status_5000 {
     FAIL_READ_USER("5502"),
 
     SUCCESS_ACCEPT_INVITE("5209"),
-    FAIL_INCORRECT_AUTHKEY("5409");
+    FAIL_INCORRECT_AUTHKEY("5409"),
+    PLEASE_SIGNUP("5410");
 
     final private String status;
 

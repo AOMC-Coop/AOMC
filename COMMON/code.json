@@ -167,14 +167,20 @@
   },
   "5407": {
     "status": 400,
-    "message": "초대 메일 전송",
-    "description": "Success Deactive User"
+    "message": "초대 메일 전송 실패",
+    "description": "Fail Send Mail"
   },
   "5409": {
-    "status": 200,
+    "status": 400,
     "message": "인증 키가 올바르지 않습니다",
     "description": "Incorrect Authkey"
   },
+  "5410": {
+    "status": 400,
+    "message": "회원가입이 필요합니다",
+    "description": "Please Signup"
+  },
+  
 
   
 

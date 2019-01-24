@@ -32,12 +32,12 @@
             <v-list-tile slot="activator">
               <v-list-tile-content >
                 <v-list-tile-title style = "fontSize : 30px">
-                  {{ item.text }}
+                  {{ teamName }}
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
             <v-list-tile
-              v-for="(child, i) in item.children"
+              v-for="(child, i) in teamsFromServer"
               :key="i"
               @click=""
             >
@@ -61,7 +61,7 @@
       </v-subheader>
 
       <v-list dense class="white--text">
-        <template v-for="item in members">
+        <template v-for="item in teamMembers">
           <v-layout
             v-if="item.heading"
             :key="item.heading"
@@ -88,7 +88,7 @@
             <v-list-tile slot="activator">
               <v-list-tile-content >
                 <v-list-tile-title >
-                  {{ item.text }}
+                  {{ item.name }}
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
@@ -263,7 +263,7 @@
 
 
     </v-navigation-drawer>
-    <v-toolbar
+    <!-- <v-toolbar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       color="primary lighten-2"
       dark
@@ -297,7 +297,7 @@
           >
         </v-avatar>
       </v-btn>
-    </v-toolbar>
+    </v-toolbar> -->
     
     <Content></Content>
 
@@ -387,7 +387,7 @@ import axios from "axios";
     components : {
     'Content' : Content
   },
-    data: () => ({
+  data: () => ({
       dialog: false,
       drawer: null,
       members: [ //test => 즐겨찾기 된 사용자를 서버에서 받아서 띄워야됨
@@ -435,6 +435,7 @@ import axios from "axios";
         { text: 'Channels' },
         { icon: 'add', text: 'Create label' },
       ],
+    teamName: '',
     teams: [
         {
           icon: 'keyboard_arrow_up',
@@ -442,7 +443,7 @@ import axios from "axios";
           text: 'aaa',
           model: false,
           children: [ // 서버에서 받아온 팀 리스트를 저장
-            { idx: '', name: '', status: '', owner: '' }
+            { idx: '', name: '', status: ''}
           ]
         }
       ],
@@ -450,8 +451,14 @@ import axios from "axios";
         { 
           idx: '' ,
           name: '',
-          status: '',
-          owner: ''
+          status: ''
+        }
+      ],
+      teamMembers: [
+        {
+          idx: '' ,
+          name: '',
+          status: ''
         }
       ]
     }),
@@ -464,14 +471,27 @@ import axios from "axios";
     //       owner: ''
     //   },
     props: {
-      source: String,
-      teamsFromServer: Array
+      source: String
     },
 
-    method: {
-      setData(data) {
-        this.teams.children = data;
-    }},
+    methods: {
+      getMemberByTeamId(teamIdx){
+        axios
+        .get("http://localhost:8083/api/team/" + teamIdx)
+        .then(response => {
+          debugger;
+            if(response.data) {
+              this.teamMembers = response.data.data;
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+      }
+    },
+
 
     created() {
       localStorage.setItem("userId", "yunjae"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
@@ -483,14 +503,8 @@ import axios from "axios";
             if(response.data) {
               debugger;
               this.teamsFromServer = response.data.data;
-              this.setData(response.data.data);
-              console.log("server data = " + this.teamsFromServer);
-              console.log("response.data = " + response.data);
-              console.log("response.data['data'] = " + response.data.data);
-              this.teams.children = this.teamsFromServer;
-              console.log("teams.children" + this.teams.children);
-              // this.teams.text = response.data.get(0).name; //?
-              // location.href = './home';
+              this.teamName = response.data.data[0].name;
+              this.getMemberByTeamId(response.data.data[0].idx);
               
             } else {
             //   app.renderNotification('Successfully Singed Up');
@@ -503,8 +517,10 @@ import axios from "axios";
           this.errors.push(e);
         });
 
+        
+
     } 
-  }
+  };
 
   
 </script>

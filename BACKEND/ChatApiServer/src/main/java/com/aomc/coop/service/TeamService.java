@@ -149,7 +149,7 @@ public class TeamService {
             if(team == null){
                 return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
             }
-            return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), team);
+            return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), team); // team 데이터 보낼때
 
     }
 

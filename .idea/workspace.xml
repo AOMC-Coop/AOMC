@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dbde70fa-270b-414d-a3f7-a52d8efb0129" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_3000.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/service/TeamService.java" beforeDir="false" afterPath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/service/TeamService.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -10,12 +12,77 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/service/TeamService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="632">
+              <caret line="151" column="114" selection-start-line="151" selection-start-column="114" selection-end-line="151" selection-end-column="114" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_3000.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_5000.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="380">
+              <caret line="20" column="31" lean-forward="true" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_1000.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="304">
+              <caret line="16" column="38" lean-forward="true" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_common.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="228">
+              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
-    <option name="x" value="144" />
-    <option name="y" value="9" />
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/service/TeamService.java" />
+        <option value="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_3000.js" />
+        <option value="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_3000.java" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="290" />
+    <option name="y" value="7" />
     <option name="width" value="1607" />
     <option name="height" value="1026" />
   </component>
@@ -44,6 +111,46 @@
               <item name="BACKEND" type="462c0819:PsiDirectoryNode" />
               <item name="AuthServer" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="AOMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="AOMC" type="462c0819:PsiDirectoryNode" />
+              <item name="BACKEND" type="462c0819:PsiDirectoryNode" />
+              <item name="AuthServer" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="AOMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="AOMC" type="462c0819:PsiDirectoryNode" />
+              <item name="BACKEND" type="462c0819:PsiDirectoryNode" />
+              <item name="AuthServer" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="AOMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="AOMC" type="462c0819:PsiDirectoryNode" />
+              <item name="BACKEND" type="462c0819:PsiDirectoryNode" />
+              <item name="AuthServer" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="AOMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="AOMC" type="462c0819:PsiDirectoryNode" />
+              <item name="BACKEND" type="462c0819:PsiDirectoryNode" />
+              <item name="AuthServer" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="AOMC" type="b2602c69:ProjectViewProjectNode" />
+              <item name="AOMC" type="462c0819:PsiDirectoryNode" />
+              <item name="BACKEND" type="462c0819:PsiDirectoryNode" />
+              <item name="ChatApiServer" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -53,6 +160,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1548320449465" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/BACKEND/AuthServer" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -80,16 +188,15 @@
       <option name="presentableId" value="Default" />
       <updated>1548317154075</updated>
       <workItem from="1548317156399" duration="1069000" />
-      <workItem from="1548318311097" duration="598000" />
+      <workItem from="1548318311097" duration="1137000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="1667000" />
+    <option name="totallyTimeSpent" value="2206000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="144" y="9" width="1607" height="1026" extended-state="1" />
-    <editor active="true" />
+    <frame x="290" y="7" width="1607" height="1026" extended-state="0" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25274727" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -123,5 +230,45 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_3000.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/service/TeamService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="632">
+          <caret line="151" column="114" selection-start-line="151" selection-start-column="114" selection-end-line="151" selection-end-column="114" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_5000.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="20" column="31" lean-forward="true" selection-start-line="20" selection-start-column="31" selection-end-line="20" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_1000.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="304">
+          <caret line="16" column="38" lean-forward="true" selection-start-line="16" selection-start-column="38" selection-end-line="16" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_common.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_3000.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>

@@ -9,7 +9,6 @@ import com.aomc.coop.utils.CodeJsonParser;
 @RestController
 public class HomeController {
 
-
     //test 주석입니다
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public void home() { //test function
@@ -19,5 +18,4 @@ public class HomeController {
     }
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
-
 }

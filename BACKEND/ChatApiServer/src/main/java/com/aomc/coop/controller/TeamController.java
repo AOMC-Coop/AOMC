@@ -2,6 +2,7 @@ package com.aomc.coop.controller;
 
 import com.aomc.coop.model.Team;
 import com.aomc.coop.model.User;
+import com.aomc.coop.response.Status_5000;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.TeamService;
 import com.aomc.coop.utils.CodeJsonParser;
@@ -48,9 +49,9 @@ public class TeamController {
      *        {
      * 	        "name":"aomc",
      * 	        "users":[
-     * 		        {"idx":6},
-     * 		        {"idx":4},
-     * 		        {"idx":5}
+     * 		        {"uid":"dmsal7325@naver.com"},
+     * 		        {"uid":"Starever222@gmail.com"},
+     * 		        {"uid":"yunjea031296@gmail.com"}
      * 	        ]
      *        }
      *
@@ -98,24 +99,22 @@ public class TeamController {
      *
      *        성공시
      *        {
-     *           "status": 200,
-     *           "message": "팀 조회 성공",
-     *           "description": "Success Channel Create",
-     *           "data": {
-     *              "idx": 15,
-     *              "name": "aomc",
-     *              "status": 1,
-     *              "owner": 0
-     *            }
-     *        }
+     *     "status": 200,
+     *     "message": "팀 조회 성공",
+     *     "description": "Success Team Read",
+     *     "data": {
+     *         "idx": 15,
+     *         "name": "winterdev",
+     *         "status": 1
+     *     }
+     * }
      *
      *        실패시
      *        {
-     *           "status": 400,
-     *           "message": "정보 없음",
-     *           "description": "Fail Read"
-     *        }
-     *
+     *     "status": 400,
+     *     "message": "팀 정보 없음",
+     *     "description": "Fail Read Team"
+     *   }
      *        @throws
      *
      */
@@ -160,11 +159,11 @@ public class TeamController {
      *        }
      *
      *        팀정보가 없으면
-     *        {
-     *            "status": 400,
-     *            "message": "정보 없음",
-     *            "description": "Fail Read"
-     *        }
+     *       {
+     *     "status": 400,
+     *     "message": "팀 정보 없음",
+     *     "description": "Fail Read Team"
+     *   }
      *
      *        비활성화된 팀이면
      *        {
@@ -213,9 +212,9 @@ public class TeamController {
      *
      *        팀정보가 없으면
      *        {
-     *            "status": 400,
-     *            "message": "정보 없음",
-     *            "description": "Fail Read"
+     *           "status": 400,
+     *           "message": "팀 정보 없음",
+     *           "description": "Fail Read Team"
      *        }
      *
      *        비활성화된 팀이면
@@ -238,50 +237,6 @@ public class TeamController {
         }
     }
 
-    /**
-     *
-     *        @brief Get http://localhost:8083/api/team/invite/{teamIdx}&{uid}
-     *
-     *        @details Team의 멤버초대
-     *
-     *
-     *        @param PathVariable(value = "teamIdx") final int teamIdx, PathVariable(value = "uid") final String uid
-     *
-     *        @return ResponseEntity<>
-     *
-     *        성공시
-     *        {
-     *           "status": 200,
-     *           "message": "팀 초대 성공",
-     *           "description": "Success Invite"
-     *        }
-     *
-     *        실패시
-     *        {
-     *           "status": 400,
-     *           "message": "멤버 초대 실패",
-     *           "description": "Fail Team Invite"
-     *        }
-     *
-     *        없는 User인 경우
-     *        {
-     *            "status": 400,
-     *            "message": "정보 없음",
-     *            "description": "Fail Read"
-     *        }
-     *
-     *        @throws
-     *
-     */
-    @GetMapping(path="/invite/{teamIdx}&{uid}")
-    @CrossOrigin
-    public ResponseEntity inviteTeam(@PathVariable(value = "teamIdx") final int teamIdx, @PathVariable(value = "uid") final String uid){
-        try{
-            return new ResponseEntity<>(teamService.inviteTeam(teamIdx, uid), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
-    }
 
     /**
      *
@@ -295,34 +250,28 @@ public class TeamController {
      *        @return ResponseEntity<>
      *
      *        성공시
-     *        {
-     *           "status": 200,
-     *           "message": "채널 조회 성공",
-     *           "description": "Success Channel Read",
-     *           "data": [
-     *           {
-     *             "idx": 7,
-     *             "name": "general",
-     *             "star_flag": 0,
-     *             "status": 0,
-     *             "teamIdx": 0
-     *           },
-     *           {
-     *             "idx": 9,
-     *             "name": "love",
-     *             "star_flag": 0,
-     *             "status": 0,
-     *             "teamIdx": 0
-     *           }
-     *          ]
-     *        }
+            {
+                "status": 200,
+                "message": "채널 조회 성공",
+                "description": "Success Channel Read",
+                "data": [
+                    {
+                        "idx": 7,
+                        "name": "general"
+                    },
+                    {
+                        "idx": 9,
+                        "name": "love"
+                    }
+                ]
+            }
      *
      *        실패시
-     *        {
-     *           "status": 400,
-     *           "message": "정보 없음",
-     *           "description": "Fail Read"
-     *        }
+     *       {
+     *        "status": 400,
+     *        "message": "채널 정보 없음",
+     *        "description": "Fail Read Channel"
+     *       }
      *
      *        @throws
      *
@@ -388,37 +337,37 @@ public class TeamController {
      *
      *        성공시
      *        {
-     *     "status": 200,
-     *     "message": "팀 조회 성공",
-     *     "description": "Success Team Read",
-     *     "data": [
-     *         {
+     *          "status": 200,
+     *          "message": "팀 조회 성공",
+     *          "description": "Success Team Read",
+     *          "data": [
+     *          {
      *             "idx": 15,
      *             "name": "winterdev",
      *             "status": 1
-     *         },
-     *         {
+     *          },
+     *          {
      *             "idx": 16,
      *             "name": "aomc",
      *             "status": 1
-     *         }
-     *     ]
-     * }
+     *          }
+     *         ]
+     *       }
      *
      *        실패시
      *        User정보없으면
      *        {
-     *     "status": 400,
-     *     "message": "사용자 정보 없음",
-     *     "description": "Fail Read User"
-     *   }
+     *           "status": 400,
+     *           "message": "사용자 정보 없음",
+     *           "description": "Fail Read User"
+     *         }
      *
-     *   Team 정보 없으면
-     *   {
-     *     "status": 400,
-     *     "message": "팀 정보 없음",
-     *     "description": "Fail Read Team"
-     *   }
+     *      Team 정보 없으면
+     *      {
+     *          "status": 400,
+     *          "message": "팀 정보 없음",
+     *          "description": "Fail Read Team"
+     *      }
      *
      *
      *        @throws
@@ -448,73 +397,57 @@ public class TeamController {
      *
      *        성공시
      *        {
-     *     "status": 200,
-     *     "message": "팀 조회 성공",
-     *     "description": "Success Team Read",
-     *     "data": [
+     *         "status": 200,
+     *             "message": "팀 조회 성공",
+     *             "description": "Success Team Read",
+     *             "data": [
      *         {
-     *             "idx": 15,
-     *             "name": "winterdev",
-     *             "status": 1
+     *             "idx": 4,
+     *                 "uid": "dmsal7325@naver.com",
+     *                 "nickname": "mooming"
      *         },
      *         {
-     *             "idx": 16,
-     *             "name": "aomc",
-     *             "status": 1
+     *             "idx": 5,
+     *                 "uid": "yunjae",
+     *                 "nickname": "yunyun"
+     *         },
+     *         {
+     *             "idx": 6,
+     *                 "uid": "garamda",
+     *                 "nickname": "catman"
+     *         },
+     *         {
+     *             "idx": 7,
+     *                 "uid": "love",
+     *                 "nickname": "love"
      *         }
      *     ]
-     * }
+     *     }
      *
      *        실패시
      *        User정보없으면
      *        {
-     *     "status": 400,
-     *     "message": "사용자 정보 없음",
-     *     "description": "Fail Read User"
-     *   }
+     *           "status": 400,
+     *           "message": "사용자 정보 없음",
+     *           "description": "Fail Read User"
+     *          }
      *
-     *   Team 정보 없으면
-     *   {
-     *     "status": 400,
-     *     "message": "팀 정보 없음",
-     *     "description": "Fail Read Team"
-     *   }
-     *
+     *       Team 정보 없으면
+     *      {
+     *          "status": 400,
+     *          "message": "팀 정보 없음",
+     *          "description": "Fail Read Team"
+     *      }
+     *      오류나면
+     *      {
+     *          "status": 500,
+     *          "message": "서버 오류",
+     *          "description": "Internal Server Error"
+     *      }
      *
      *        @throws
      *
      */
-
-
-    //    {
-//        "status": 200,
-//            "message": "팀 조회 성공",
-//            "description": "Success Team Read",
-//            "data": [
-//        {
-//            "idx": 4,
-//                "uid": "dmsal7325@naver.com",
-//                "nickname": "mooming"
-//        },
-//        {
-//            "idx": 5,
-//                "uid": "yunjae",
-//                "nickname": "yunyun"
-//        },
-//        {
-//            "idx": 6,
-//                "uid": "garamda",
-//                "nickname": "catman"
-//        },
-//        {
-//            "idx": 7,
-//                "uid": "love",
-//                "nickname": "love"
-//        }
-//    ]
-//    }
-//
-
     @GetMapping(path="/{teamIdx}")
     @CrossOrigin
     public ResponseEntity readUserOfTeam(@PathVariable(value = "teamIdx") final int teamIdx){
@@ -525,17 +458,83 @@ public class TeamController {
         }
     }
 
-    @GetMapping(path="/sendmail/{teamIdx}&{uid}")
+    /**
+     *
+     *        @brief Get http://localhost:8083/api/team/invite/{teamIdx}&{uid}
+     *
+     *        @details Team의 멤버초대(메일전송)
+     *
+     *
+     *        @param PathVariable(value = "teamIdx") final int teamIdx, PathVariable(value = "uid") final String uid
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *           "status": 200,
+     *           "message": "팀 초대 성공",
+     *           "description": "Success Invite"
+     *        }
+     *
+     *        실패시
+     *        {
+     *           "status": 400,
+     *           "message": "멤버 초대 실패",
+     *           "description": "Fail Team Invite"
+     *        }
+     *
+     *
+     *        @throws
+     *
+     */
+    @PostMapping(path="/invite")
     @CrossOrigin
-    public ResponseEntity sendMail(@PathVariable(value = "teamIdx") final int teamIdx, @PathVariable(value = "uid") final String uid){
+    public ResponseEntity inviteTeam(@RequestBody final Team team){
         try{
 
-            return new ResponseEntity<>(teamService.sendMail(teamIdx, uid), HttpStatus.OK);
+            return new ResponseEntity<>(teamService.inviteTeam(team), HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_5000.FAIL_INVITE.getStatus()), HttpStatus.OK);
         }
     }
 
+    /**
+     *
+     *        @brief Get http://localhost:8083/api/team/accept/{token}
+     *
+     *        @details 초대수락
+     *
+     *
+     *        @param PathVariable(value = "token") final String token
+     *
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *          "status": 200,
+     *          "message": "초대 승낙 성공",
+     *          "description": "Success Accept Invitation"
+     *        }
+     *
+     *        실패시
+     *        {
+     *          "status": 400,
+     *          "message": "인증 키가 올바르지 않습니다",
+     *          "description": "Incorrect Authkey"
+     *        }
+     *
+     *        회원가입이 필요한 초대회원일때
+     *        {
+     *           "status": 400,
+     *          "message": "회원가입이 필요합니다",
+     *          "description": "Please Signup",
+     *          "data": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiJ5dW5qZWEwMzEyQG5hdmVyLmNvbSIsInRlYW1JZHgiOjQ3LCJpc3MiOiJtb29taW5nIiwiZXhwIjoxNTQ4MzA3NDI4fQ.VsEd1X_5vpcwgoLR2RBUmsBKaiFWDfC7XOaGds0pwZc"
+     *        }
+     *
+     *
+     *        @throws
+     *
+     */
     @GetMapping(path="/accept/{token}")
     @CrossOrigin
     public ResponseEntity acceptInvite(@PathVariable(value = "token") final String token){
@@ -546,8 +545,6 @@ public class TeamController {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
     }
-
-
 
 
 

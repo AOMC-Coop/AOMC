@@ -199,23 +199,6 @@ public class TeamService {
 
     }
 
-    //팀초대
-    @Transactional
-    public ResponseType inviteTeam(final int teamIdx, final String uid) {
-
-
-        User userTemp = userMapper.findBysUserid(uid);
-        if(userTemp ==null){
-            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
-        }
-
-        int flag = teamMapper.createUserHasTeam(teamIdx, userTemp.getIdx(), 0);
-
-        if(flag==1)
-            return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_INVITE.getStatus());
-        else
-            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INVITE.getStatus());
-    }
 
     //채널조회
     public ResponseType readChannel(final int teamIdx, final int userIdx) {
@@ -294,26 +277,86 @@ public class TeamService {
     }
 
 
-    //메일보내기
-    public ResponseType sendMail(final int teamIdx, final String uid) {
+    //팀에 초대하기, 메일보내기
+    public ResponseType inviteTeam(final Team team) {
 
-        User user = userMapper.findBysUserid(uid);
+        List<User> inviteUsers = team.getUsers();
+        List<Channel> channels = team.getChannels();
 
-        final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(teamIdx, uid));
-        HashMap hashMap = new HashMap();
-        hashMap.put("teamIdx", teamIdx);
-        hashMap.put("uid", uid);
+        List<User> usersOfTeam = teamMapper.readUserOfTeam(team.getIdx());
 
-        if (user != null) {
-            hashMap.put("userIdx", user.getIdx());
+        List<User> firstUsers = new ArrayList<>();
+        List<User> existUsers = new ArrayList<>();
+
+
+
+        for(User userOfTeam : usersOfTeam){
+            for(User inviteUser : inviteUsers){
+                if(userOfTeam.getUid().equals(inviteUser.getUid())){
+                    existUsers.add(inviteUser);
+                }else{
+                    firstUsers.add(inviteUser);
+                }
+            }
         }
 
-        values.putAll(token.getToken(), hashMap);
 
-        mailSend.mailsend(mailSender, uid, token.getToken());
+        for (User user : firstUsers) {
+
+            User userTemp = userMapper.findBysUserid(user.getUid());
+
+            final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(team.getIdx(), user.getUid()));
+
+            HashMap hashMap = new HashMap();
+            hashMap.put("teamIdx", team.getIdx());
+            hashMap.put("uid", user.getUid());
 
 
-        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_SEND_MAIL.getStatus());
+
+            //초대받은팀원이 User가 아닌 경우 - userIdx에 0 넣기
+            if(userTemp==null){
+
+                hashMap.put("userIdx", 0);
+
+            }else{//초대받은팀원이 User인 경우 - userIdx 넣기
+                //각테이블에 UserHasTeam 생성 데이터넣기
+
+                hashMap.put("userIdx", userTemp.getIdx());
+
+                teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(),0);
+
+                channelMapper.createUserHasChannel(channels.get(0).getIdx(), userTemp.getIdx());
+
+            }
+
+                values.putAll(token.getToken(), hashMap);
+
+                mailSend.mailsend(mailSender, user.getUid(), token.getToken());
+
+            }
+
+        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_INVITE.getStatus(), firstUsers, existUsers);
+
+
+
+
+//        User user = userMapper.findBysUserid(uid);
+//
+//        final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(teamIdx, uid));
+//        HashMap hashMap = new HashMap();
+//        hashMap.put("teamIdx", teamIdx);
+//        hashMap.put("uid", uid);
+//
+//        if (user != null) {
+//            hashMap.put("userIdx", user.getIdx());
+//        }
+//
+//        values.putAll(token.getToken(), hashMap);
+//
+//        mailSend.mailsend(mailSender, uid, token.getToken());
+
+
+
 
 
     }
@@ -327,9 +370,6 @@ public class TeamService {
         int teamIdx = Integer.parseInt(string_teamIdx);
         int userIdx = Integer.parseInt(string_userIdx);
 
-        System.out.println(teamIdx);
-        System.out.println(userIdx);
-
         if(teamIdx==-1){
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
         }
@@ -341,5 +381,25 @@ public class TeamService {
 
 
     }
+
+
+
+    //    //팀초대
+//    @Transactional
+//    public ResponseType inviteTeam(final int teamIdx, final String uid) {
+//
+//
+//        User userTemp = userMapper.findBysUserid(uid);
+//        if(userTemp ==null){
+//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
+//        }
+//
+//        int flag = teamMapper.createUserHasTeam(teamIdx, userTemp.getIdx(), 0);
+//
+//        if(flag==1)
+//            return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_INVITE.getStatus());
+//        else
+//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INVITE.getStatus());
+//    }
 
 }

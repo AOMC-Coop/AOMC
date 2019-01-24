@@ -52,7 +52,10 @@ public class ChannelController {
      *
      *        {
      * 	        "name" : "aomc-1",
-     * 	        "teamIdx" : 23
+     * 	        "teamIdx" : 23,
+     * 	        "users":[
+     *     	        {"idx":5}
+     *     	    ]
      *        }
 
      *        @param RequestBody final Channel channel

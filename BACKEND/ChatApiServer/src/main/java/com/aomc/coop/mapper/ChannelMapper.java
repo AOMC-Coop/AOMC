@@ -16,16 +16,17 @@ public interface ChannelMapper {
     //channels 테이블
     @Insert("INSERT INTO channels(name, team_idx) VALUES(#{channel.name}, #{team_idx})")
     @Options(useGeneratedKeys = true, keyProperty = "channel.idx")
-    int createChannel(@Param("channel") final Channel channel, @Param("team_idx") final int team_idx);
+    void createChannel(@Param("channel") final Channel channel, @Param("team_idx") final int team_idx);
 
     //channels 테이블
     @Insert("INSERT INTO user_has_channel(channel_idx, user_idx) VALUES(#{channelIdx}, #{userIdx})")
+    @Options(useGeneratedKeys = true, keyProperty = "idx")
     int createUserHasChannel(final int channelIdx, final int userIdx);
 
     @Update("UPDATE channels SET name=#{name}, update_date=now() WHERE idx = #{idx}")
     void updateChannel(final Channel channel);
 
-    @Select("SELECT * FROM messages WHERE channel_idx = #{channelIdx}")
+    @Select("SELECT m.idx, content, channel_idx, u.nickname, DATE_FORMAT(send_date, '%W %M %Y') as send_date, DATE_FORMAT(send_date, '%H:%i:%s') as send_time FROM messages m, users u WHERE m.user_idx=u.idx AND channel_idx = #{channelIdx}")
     List<Message> getChannelMessage(int channelIdx);
 
     //채널의 멤버 조회

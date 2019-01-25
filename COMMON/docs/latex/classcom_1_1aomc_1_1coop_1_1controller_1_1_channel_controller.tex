@@ -1,0 +1,256 @@
+\hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller}{}\section{com.\+aomc.\+coop.\+controller.\+Channel\+Controller Class Reference}
+\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller}\index{com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}}
+
+
+A\+PI \href{http://localhost:8083/api/channel}{\texttt{ http\+://localhost\+:8083/api/channel}}.  
+
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_a6eec06a26ab08812025e22eb5e8005a9}{make\+Channel}} (@Request\+Body final Channel channel)
+\begin{DoxyCompactList}\small\item\em P\+O\+ST \href{http://localhost:8083/api/channel}{\texttt{ http\+://localhost\+:8083/api/channel}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_adbe3375ab0a4097aa0dd80ff02a19690}{update\+Channel}} (@Request\+Body final Channel channel)
+\begin{DoxyCompactList}\small\item\em P\+UT \href{http://localhost:8083/api/channel}{\texttt{ http\+://localhost\+:8083/api/channel}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_a536772003bd832f07fbbf36d4ee20a33}{get\+Channel\+Message}} (@Request\+Param(\char`\"{}channel\+Idx\char`\"{}) final int channel\+Idx)
+\begin{DoxyCompactList}\small\item\em G\+ET \href{http://localhost:8083/api/channel/message?channelIdx=21}{\texttt{ http\+://localhost\+:8083/api/channel/message?channel\+Idx=21}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_afd9fae1d2ded0204fa895480dc8ce9b2}{get\+Channel\+Users}} (@Request\+Param(\char`\"{}channel\+Idx\char`\"{}) final int channel\+Idx)
+\begin{DoxyCompactList}\small\item\em G\+ET \href{http://localhost:8083/api/channel/users?channelIdx=19}{\texttt{ http\+://localhost\+:8083/api/channel/users?channel\+Idx=19}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_ac77a77fea57ead2a28ca054029fabba9}{invite\+Channel\+User}} (@Path\+Variable(value=\char`\"{}channel\+Idx\char`\"{}) int channel\+Idx, @Path\+Variable(value=\char`\"{}user\+Idx\char`\"{}) int user\+Idx)
+\begin{DoxyCompactList}\small\item\em G\+ET \href{http://localhost:8083/api/channel/invite/19/6}{\texttt{ http\+://localhost\+:8083/api/channel/invite/19/6}}. \end{DoxyCompactList}\item 
+Response\+Entity \mbox{\hyperlink{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_afc894dd365c724ec7dfbf6c75f0d430c}{delete\+Channel\+User}} (@Path\+Variable(value=\char`\"{}channel\+Idx\char`\"{}) int channel\+Idx, @Path\+Variable(value=\char`\"{}user\+Idx\char`\"{}) int user\+Idx)
+\begin{DoxyCompactList}\small\item\em D\+E\+L\+E\+TE \href{http://localhost:8083/api/channel/invite/19/6}{\texttt{ http\+://localhost\+:8083/api/channel/invite/19/6}}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A\+PI \href{http://localhost:8083/api/channel}{\texttt{ http\+://localhost\+:8083/api/channel}}. 
+
+채널을 생성, 수정, 삭제, 메세지 조회, 멤버초대 하는 클래스이다.
+
+\begin{DoxyAuthor}{Author}
+이윤재
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2018-\/01-\/23
+\end{DoxyDate}
+\begin{DoxyVersion}{Version}
+1.\+0.\+0 
+\end{DoxyVersion}
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_afc894dd365c724ec7dfbf6c75f0d430c}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_afc894dd365c724ec7dfbf6c75f0d430c}} 
+\index{com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}!deleteChannelUser@{deleteChannelUser}}
+\index{deleteChannelUser@{deleteChannelUser}!com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}}
+\subsubsection{\texorpdfstring{deleteChannelUser()}{deleteChannelUser()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Channel\+Controller.\+delete\+Channel\+User (\begin{DoxyParamCaption}\item[{@Path\+Variable(value=\char`\"{}channel\+Idx\char`\"{}) int}]{channel\+Idx,  }\item[{@Path\+Variable(value=\char`\"{}user\+Idx\char`\"{}) int}]{user\+Idx }\end{DoxyParamCaption})}
+
+
+
+D\+E\+L\+E\+TE \href{http://localhost:8083/api/channel/invite/19/6}{\texttt{ http\+://localhost\+:8083/api/channel/invite/19/6}}. 
+
+멤버가 채널 나가기 하는 함수
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path\+Variable(value} & = \char`\"{}channel\+Idx\char`\"{}) int channel\+Idx\\
+\hline
+{\em Path\+Variable(value} & = \char`\"{}user\+Idx\char`\"{}) int user\+Idx\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시
+
+\{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}채널 나가기 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Channel User Delete\char`\"{} \}
+
+실패시
+
+\{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}채널 나가기 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Channel User Delete\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_a536772003bd832f07fbbf36d4ee20a33}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_a536772003bd832f07fbbf36d4ee20a33}} 
+\index{com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}!getChannelMessage@{getChannelMessage}}
+\index{getChannelMessage@{getChannelMessage}!com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}}
+\subsubsection{\texorpdfstring{getChannelMessage()}{getChannelMessage()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Channel\+Controller.\+get\+Channel\+Message (\begin{DoxyParamCaption}\item[{@Request\+Param(\char`\"{}channel\+Idx\char`\"{}) final int}]{channel\+Idx }\end{DoxyParamCaption})}
+
+
+
+G\+ET \href{http://localhost:8083/api/channel/message?channelIdx=21}{\texttt{ http\+://localhost\+:8083/api/channel/message?channel\+Idx=21}}. 
+
+채널의 메세지를 가져오는 함수
+
+
+\begin{DoxyParams}{Parameters}
+{\em Request\+Param(\char`\"{}channel\+Idx\char`\"{})} & final int channel\+Idx\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시
+
+\{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}메세지 조회 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Message Get\char`\"{} \char`\"{}data\char`\"{}\+: \mbox{[} \{ \char`\"{}idx\char`\"{}\+: 14, \char`\"{}content\char`\"{}\+: \char`\"{}hello\char`\"{} \}, \{ \char`\"{}idx\char`\"{}\+: 15, \char`\"{}content\char`\"{}\+: \char`\"{}hello2\char`\"{} \} \mbox{]} \}
+
+실패시
+
+\{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}메세지 조회 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Message Get\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_afd9fae1d2ded0204fa895480dc8ce9b2}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_afd9fae1d2ded0204fa895480dc8ce9b2}} 
+\index{com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}!getChannelUsers@{getChannelUsers}}
+\index{getChannelUsers@{getChannelUsers}!com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}}
+\subsubsection{\texorpdfstring{getChannelUsers()}{getChannelUsers()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Channel\+Controller.\+get\+Channel\+Users (\begin{DoxyParamCaption}\item[{@Request\+Param(\char`\"{}channel\+Idx\char`\"{}) final int}]{channel\+Idx }\end{DoxyParamCaption})}
+
+
+
+G\+ET \href{http://localhost:8083/api/channel/users?channelIdx=19}{\texttt{ http\+://localhost\+:8083/api/channel/users?channel\+Idx=19}}. 
+
+채널의 멤버를 모두 가져오는 함수
+
+
+\begin{DoxyParams}{Parameters}
+{\em Request\+Param(\char`\"{}channel\+Idx\char`\"{})} & final int channel\+Idx\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시
+
+\{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}채널 멤버 조회 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Channel Users Get\char`\"{}, \char`\"{}data\char`\"{}\+: \mbox{[} \{ \char`\"{}idx\char`\"{}\+: 4, \char`\"{}uid\char`\"{}\+: \char`\"{}dmsal\char`\"{}, \char`\"{}nickname\char`\"{}\+: \char`\"{}mooming\char`\"{}, \char`\"{}gender\char`\"{}\+: 0, \char`\"{}role\char`\"{}\+: 0, \char`\"{}status\char`\"{}\+: \char`\"{}1\char`\"{} \}, \{ \char`\"{}idx\char`\"{}\+: 5, \char`\"{}uid\char`\"{}\+: \char`\"{}yunjae\char`\"{}, \char`\"{}nickname\char`\"{}\+: \char`\"{}yunyun\char`\"{}, \char`\"{}gender\char`\"{}\+: 0, \char`\"{}role\char`\"{}\+: 0, \char`\"{}status\char`\"{}\+: \char`\"{}1\char`\"{} \} \mbox{]} \}
+
+실패시
+
+\{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}채널 멤버 조회 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Channel Users Get\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_ac77a77fea57ead2a28ca054029fabba9}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_ac77a77fea57ead2a28ca054029fabba9}} 
+\index{com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}!inviteChannelUser@{inviteChannelUser}}
+\index{inviteChannelUser@{inviteChannelUser}!com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}}
+\subsubsection{\texorpdfstring{inviteChannelUser()}{inviteChannelUser()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Channel\+Controller.\+invite\+Channel\+User (\begin{DoxyParamCaption}\item[{@Path\+Variable(value=\char`\"{}channel\+Idx\char`\"{}) int}]{channel\+Idx,  }\item[{@Path\+Variable(value=\char`\"{}user\+Idx\char`\"{}) int}]{user\+Idx }\end{DoxyParamCaption})}
+
+
+
+G\+ET \href{http://localhost:8083/api/channel/invite/19/6}{\texttt{ http\+://localhost\+:8083/api/channel/invite/19/6}}. 
+
+채널에 멤버를 초대하는 함수
+
+
+\begin{DoxyParams}{Parameters}
+{\em Path\+Variable(value} & = \char`\"{}channel\+Idx\char`\"{}) int channel\+Idx\\
+\hline
+{\em Path\+Variable(value} & = \char`\"{}user\+Idx\char`\"{}) int user\+Idx\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시
+
+\{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}채널 멤버 초대 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Channel User Invite\char`\"{} \}
+
+이미 멤버가 있을시
+
+\{ \char`\"{}status\char`\"{}\+: 401, \char`\"{}message\char`\"{}\+: \char`\"{}채널에 이미 멤버가 있음\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Channel Already Has User\char`\"{} \}
+
+실패시
+
+\{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}채널 멤버 초대 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Channel User Invite\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_a6eec06a26ab08812025e22eb5e8005a9}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_a6eec06a26ab08812025e22eb5e8005a9}} 
+\index{com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}!makeChannel@{makeChannel}}
+\index{makeChannel@{makeChannel}!com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}}
+\subsubsection{\texorpdfstring{makeChannel()}{makeChannel()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Channel\+Controller.\+make\+Channel (\begin{DoxyParamCaption}\item[{@Request\+Body final Channel}]{channel }\end{DoxyParamCaption})}
+
+
+
+P\+O\+ST \href{http://localhost:8083/api/channel}{\texttt{ http\+://localhost\+:8083/api/channel}}. 
+
+채널을 생성하는 함수 test json
+
+\{ \char`\"{}name\char`\"{} \+: \char`\"{}aomc-\/1\char`\"{}, \char`\"{}team\+Idx\char`\"{} \+: 23, \char`\"{}users\char`\"{}\+:\mbox{[} \{\char`\"{}idx\char`\"{}\+:5\} \mbox{]} \}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Request\+Body} & final Channel channel\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시
+
+\{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}채널 생성 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Channel Create\char`\"{} \}
+
+실패시
+
+\{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}채널 생성 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Channel Create\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+\mbox{\Hypertarget{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_adbe3375ab0a4097aa0dd80ff02a19690}\label{classcom_1_1aomc_1_1coop_1_1controller_1_1_channel_controller_adbe3375ab0a4097aa0dd80ff02a19690}} 
+\index{com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}!updateChannel@{updateChannel}}
+\index{updateChannel@{updateChannel}!com.aomc.coop.controller.ChannelController@{com.aomc.coop.controller.ChannelController}}
+\subsubsection{\texorpdfstring{updateChannel()}{updateChannel()}}
+{\footnotesize\ttfamily Response\+Entity com.\+aomc.\+coop.\+controller.\+Channel\+Controller.\+update\+Channel (\begin{DoxyParamCaption}\item[{@Request\+Body final Channel}]{channel }\end{DoxyParamCaption})}
+
+
+
+P\+UT \href{http://localhost:8083/api/channel}{\texttt{ http\+://localhost\+:8083/api/channel}}. 
+
+채널을 수정하는 함수 test json
+
+\{ \char`\"{}idx\char`\"{} \+: 22 \}
+
+
+\begin{DoxyParams}{Parameters}
+{\em Request\+Body} & final Channel channel\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Response\+Entity$<$$>$
+\end{DoxyReturn}
+성공시
+
+\{ \char`\"{}status\char`\"{}\+: 200, \char`\"{}message\char`\"{}\+: \char`\"{}채널 수정 성공\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Success Channel Update\char`\"{} \}
+
+실패시
+
+\{ \char`\"{}status\char`\"{}\+: 400, \char`\"{}message\char`\"{}\+: \char`\"{}채널 수정 실패\char`\"{}, \char`\"{}description\char`\"{}\+: \char`\"{}\+Fail Channel Update\char`\"{} \}
+
+
+\begin{DoxyExceptions}{Exceptions}
+{\em } & \\
+\hline
+\end{DoxyExceptions}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+C\+:/\+Users/user/\+Desktop/\+A\+O\+M\+C/\+B\+A\+C\+K\+E\+N\+D/\+Chat\+Api\+Server/src/main/java/com/aomc/coop/controller/Channel\+Controller.\+java\end{DoxyCompactItemize}

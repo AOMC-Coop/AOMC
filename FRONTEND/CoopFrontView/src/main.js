@@ -3,9 +3,16 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+
 // index.js or main.js
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
+import VModal from 'vue-js-modal'
+import Directives from './plugins/directives'
+
+
+Vue.use(VModal, { dynamic: true })
+Vue.use(Directives)
 
 Vue.config.productionTip = false
 

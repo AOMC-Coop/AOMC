@@ -4,6 +4,7 @@
       class="primary"
       fixed
       app
+      permanent
     >
     <!-- <v-flex xs6>
       <v-subheader class="white--text">
@@ -66,7 +67,7 @@
           
           <v-list-tile v-if :key="item.text" @click="">
             <v-list-tile-action>
-              <v-icon class="white--text">people</v-icon>
+              <v-icon class="white--text" >people</v-icon>
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
@@ -81,7 +82,7 @@
      <v-flex xs6>
       <v-subheader class="white--text">
         <v-text style = "fontSize : 18px">  Channels </v-text>
-        <v-icon @click="" class="white--text" right fab>add</v-icon>
+        <v-icon @click="doc_del_rendar()" class="white--text" right fab>add</v-icon>
       </v-subheader>
       <v-list dense class="white--text">
         <template v-for="item in channels">
@@ -102,7 +103,7 @@
 
     <v-flex xs6 >
       <v-subheader class="white--text" >
-        <v-icon class="white--text" @click="dialog = !dialog" >add</v-icon> 
+        <v-icon class="white--text" @click="dialog = !dialog">add</v-icon> 
         <v-text style = "fontSize : 15px">invite people</v-text>
       </v-subheader>
     </v-flex>
@@ -169,8 +170,11 @@
         </template>
       </v-list>  -->
 
+
+
+
+
     </v-navigation-drawer>
-    
     <!-- <v-toolbar
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       color="primary lighten-2"
@@ -220,7 +224,7 @@
     >
       <v-icon>add</v-icon>
     </v-btn> -->
-
+    
     <v-dialog v-model="dialog" width="800px">
       <v-card>
         <v-card-title
@@ -284,18 +288,35 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
+     <modals-container />
+
+    <!-- <create-channel
+      title="This is modal"
+      :visible.sync="visible">
+      <div>
+        This is modal body
+      </div>
+    </create-channel> -->
+
+    
+
   </v-app>
 </template>
 
 <script>
 import Content from './Content.vue'
+import CreateChannel from './CreateChannel.vue'
 import axios from "axios";
 
 
   export default {
     components : {
-    'Content' : Content
+    'Content' : Content,
+    'CreateChannel' : CreateChannel
   },
+
+ 
   data: () => ({
       dialog: false,
       drawer: null,
@@ -379,14 +400,27 @@ import axios from "axios";
           status: '',
           teamIdx: ''
         }
-      ]
+      ],
+      visible: false
     }),
     
     props: {
-      source: String
+      source: String,
+      teamMembers: Array
     },
 
     methods: {
+      doc_del_rendar(){
+                this.$modal.show(CreateChannel,{
+                    teamMembers : this.teamMembers,
+                    modal : this.$modal },{
+                        name: 'dynamic-modal',
+                        width : '800px',
+                        height : '500px',
+                        draggable: true
+            })
+            
+      },
       getMemberByTeamId(teamIdx){
         axios
         .get("http://localhost:8083/api/team/" + teamIdx)
@@ -440,7 +474,10 @@ import axios from "axios";
           // location.href = './';
           this.errors.push(e);
         });
-      }
+      },
+      handleClickButton(){
+      this.visible = !this.visible
+    } 
     },
 
 
@@ -474,7 +511,9 @@ import axios from "axios";
 
     } 
   };
-
+//  Vue.components('CreateChannel', {
+//    props: [teamMembers]
+//   });
   
 </script>
 

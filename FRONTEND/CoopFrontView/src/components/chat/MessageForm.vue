@@ -29,20 +29,20 @@
 </template>
 
 <script>
-// export default {
-//   name: 'MessageForm',
-//   data() {
-//     return {
-//       msg: '',
-//     };
-//   },
-//   methods: {
-//     submitMessageFunc() {
-//       if (this.msg.length === 0) return false;
-//       this.$emit('submitMessage', this.msg);
-//       this.msg = '';
-//       return true;
-//     },
-//   },
-// };
+export default {
+  name: 'MessageForm',
+  data() {
+    return {
+      msg: '',
+    };
+  },
+  methods: {
+    submitMessageFunc() {
+      if (this.msg.length === 0) return false;
+      this.$emit('submitMessage', this.msg);
+      this.msg = '';
+      return true;
+    },
+  },
+};
 </script>

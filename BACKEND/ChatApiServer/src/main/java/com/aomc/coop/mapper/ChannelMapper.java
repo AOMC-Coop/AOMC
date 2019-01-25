@@ -26,7 +26,7 @@ public interface ChannelMapper {
     @Update("UPDATE channels SET name=#{name}, update_date=now() WHERE idx = #{idx}")
     void updateChannel(final Channel channel);
 
-    @Select("SELECT * FROM messages WHERE channel_idx = #{channelIdx}")
+    @Select("SELECT m.idx, content, channel_idx, u.nickname, DATE_FORMAT(send_date, '%W %M %Y') as send_date, DATE_FORMAT(send_date, '%H:%i:%s') as send_time FROM messages m, users u WHERE m.user_idx=u.idx AND channel_idx = #{channelIdx}")
     List<Message> getChannelMessage(int channelIdx);
 
     //채널의 멤버 조회

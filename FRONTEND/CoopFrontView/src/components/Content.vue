@@ -1,7 +1,6 @@
 <template>
 <v-content>
 
-      <v-container fluid fill-height>
   <div class="inner-wrap" fluid fill-height inner-wrap>
     <Message-List class="msg-list"></Message-List>
     <!-- <Message-List :msgs="msgDatas" class="msg-list"></Message-List> -->
@@ -19,7 +18,6 @@
               placeholder="대화를 입력하세요."
               outline
             ></v-text-field>
-          </v-flex>
           </v-flex> -->
 
           <!-- <v-tooltip right>
@@ -42,11 +40,9 @@
           </v-tooltip> -->
 
           
-        </v-layout>
         <!-- </v-layout> -->
 
         
-      </v-container>
       <!-- </v-container> -->
     </v-content>
 
@@ -62,13 +58,8 @@ import MessageForm from '@/components/Chat/MessageForm.vue';
 
 export default {
   name: 'Content',
-  data () {
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
-    }
-  }
-}
-</script>
       datas: [],
       msgs: '',
     };
@@ -82,16 +73,16 @@ export default {
     
     sendMessage(msg) {
       console.log(msg);
-      this.pushMsgData({
-        from: {
-          name: '나',
-        },
-        msg,
-      });
-      this.$sendMessage({
-        name: this.$route.params.username,
-        msg,
-      });
+      // this.pushMsgData({
+      //   from: {
+      //     name: '나',
+      //   },
+      //   msg,
+      // });
+      // this.$sendMessage({
+      //   name: this.$route.params.username,
+      //   msg,
+      // });
     }
   },
 };

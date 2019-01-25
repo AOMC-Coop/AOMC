@@ -19,6 +19,7 @@
                 <v-text-field
                   prepend-icon="notes"
                   placeholder="ChannelName"
+                  v-model="channel.name"
                 ></v-text-field>
               </v-layout>
             </v-flex>
@@ -99,7 +100,16 @@ export default {
   name: 'CreateChannel',
   data:function(){
       return {
-          del_password:''
+          del_password:'',
+          channel:{
+            name:'',
+            teamIdx: localStorage.getItem(teamIdx),
+            users:[
+              {
+                idx: ''
+              }
+            ]
+          }
       } 
   },props : [
       // 'hot_table',
@@ -117,7 +127,9 @@ export default {
         console.log(log);
       },
       clickInviteUserInChannel(userIdx) {
-        
+          this.channel.users.pop(userIdx);
+          console.log("userIdx=" + userIdx);
+
       }
   },
   created() {

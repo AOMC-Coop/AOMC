@@ -452,6 +452,7 @@ import axios from "axios";
         });
       },
       clickTeamName(teamIdx, teamName) {
+        localStorage.setItem("teamIdx", teamIdx);
         axios
         .get("http://localhost:8083/api/team/user/" + teamIdx)
         .then(response => {
@@ -493,6 +494,7 @@ import axios from "axios";
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;
               this.userName = "yunjae"; //로그인 한 후 userName 받기 -> localStorage에서 받기 
+              localStorage.setItem("teamIdx", response.data.data[0].idx);
               this.getMemberByTeamId(response.data.data[0].idx);
               this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
               

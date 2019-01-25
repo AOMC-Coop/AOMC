@@ -76,7 +76,7 @@ public class TeamService {
 
             Message message = new Message();
             message.setContent("joined #general");
-            message.setUser(users.get(0));
+            message.setNickname(users.get(0).getNickname());
             List<Message> messages = new ArrayList<>();
             messages.add(message);
 

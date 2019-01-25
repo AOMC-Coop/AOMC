@@ -63,8 +63,12 @@ public class ChannelService {
     }
 
     public ResponseType getChannelMessage(int channelIdx) {
+
+
+
         if (channelIdx >= 0) {
             List<Message> messages = channelMapper.getChannelMessage(channelIdx);
+
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);
         } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

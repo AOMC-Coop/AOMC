@@ -59,7 +59,7 @@
                 </v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action>
-              <v-icon right fab @click="">add</v-icon>
+              <v-icon right fab @click="clickInviteUserInChannel(child.idx)">add</v-icon>
             </v-list-tile-action>
             
             </v-layout>
@@ -115,6 +115,9 @@ export default {
       },
       printLog(log) {
         console.log(log);
+      },
+      clickInviteUserInChannel(userIdx) {
+        
       }
   },
   created() {

@@ -62,7 +62,6 @@ import Constant from '@/Constant';
 export default {
   name: 'Content',
   data () {
-  data() {
     return {
       msg: 'Welcome to Your Vue.js App'
     }

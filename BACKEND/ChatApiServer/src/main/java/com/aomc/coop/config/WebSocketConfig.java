@@ -23,7 +23,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     //클라이언트에서 웹소켓을 연결할 api설정
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry){
-        registry.addEndpoint("/chat")
+        registry.addEndpoint("/socketconnect")
+                .setAllowedOrigins("*")
                 .withSockJS();
 //        registry.addEndpoint("/chat")
 ////                .setAllowedOrigins("http://localhost:8081")

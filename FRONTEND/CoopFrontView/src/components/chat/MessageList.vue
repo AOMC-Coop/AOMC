@@ -1,8 +1,10 @@
 <template>
 <div>
-    <v-list v-auto-bottom="contents">
-    <transition-group name="list">
-      <div v-for="msg in contents" v-bind:key="msg">
+    <v-list subheader three-line>
+    <!-- <transition-group name="list"> -->
+      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
+        <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
+        <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
         <v-list-tile>
           <v-list-tile-action>
             <v-avatar size="42px" class="mr-3">
@@ -13,13 +15,13 @@
                 </v-avatar>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title><h5>{{msg.nickname}} {{msg.send_time}}</h5></v-list-tile-title>
-            <v-list-tile-title>{{msg.content}}</v-list-tile-title>
+            <v-list-tile-title><h5>{{item.nickname}} {{item.send_time}}</h5></v-list-tile-title>
+            <v-list-tile-title>{{item.content}}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
         <!-- <v-divider inset></v-divider> -->
       </div>
-    </transition-group>
+    <!-- </transition-group> -->
   </v-list>
 </div>
 
@@ -28,11 +30,11 @@
 
 <script>
 import axios from "axios";
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'MessageList',
-//   contents: [],
-  props: ['contents'],
+
 
     created() {
       
@@ -42,7 +44,7 @@ export default {
           debugger;
             if(response.data) {
               
-              this.contents = response.data.data;
+              this.$store.state.received_messages = response.data.data;
               debugger;
             //   console.log(msgs);
               
@@ -56,7 +58,14 @@ export default {
           // location.href = './';
           this.errors.push(e);
         });
-    } 
+    },
+    computed:{
+        ...mapGetters([
+      'getReceivedMessages'
+    ])
+    }
+    
+     
 };
 </script>
 

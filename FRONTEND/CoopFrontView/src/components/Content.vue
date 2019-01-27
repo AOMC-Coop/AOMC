@@ -72,7 +72,7 @@ export default {
   methods: {
     
     sendMessage(msg) {
-      console.log(msg);
+      // console.log(msg);
       // this.pushMsgData({
       //   from: {
       //     name: '나',
@@ -93,14 +93,18 @@ export default {
 .msg-form {
   /* float:initial; */
    /* position:fixed; */
-
+   display: table;
+   /* position: absolute; */
+   min-width: 800px;
+	 min-height: 150px;
     bottom:0;
-
+    top: 0;
+    height: 100%;
     width:100%;
-
     height:70px;   
    position: static;
 }
+
 .msg-list {
   position: static;
   bottom:10;

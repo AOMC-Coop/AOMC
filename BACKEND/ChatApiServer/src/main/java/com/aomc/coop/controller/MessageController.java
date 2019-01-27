@@ -3,15 +3,14 @@ package com.aomc.coop.controller;
 import com.aomc.coop.model.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+//방 아이디에 따라 메세지 나누기
 @RestController
 public class MessageController {
     @MessageMapping("/chat2")
     @SendTo("/topic/message")
-    @CrossOrigin
-    public String broadcasting(String msg) throws Exception{
+    public Message broadcasting(Message msg){
         System.out.println("요청이 왔습니다" + msg);
         //큐에보냄
         return  msg;

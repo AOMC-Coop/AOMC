@@ -1,6 +1,7 @@
 package com.aomc.coop.model;
 
-public class User extends TimeStampClass{ // User가 TimeStampClass를 extends하는 구조가 맞을까? 코드 리팩토링 시 바꿀 필요가 있어 보인다.
+public class User extends TimeStampClass{
+// *** User가 TimeStampClass를 extends하는 구조가 맞을까? 코드 리팩토링 시 바꿀 필요가 있어 보인다.
 
     private String userId;
     private String name;

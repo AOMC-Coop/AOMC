@@ -1,5 +1,6 @@
 package com.aomc.coop.util;
 
+// *** 이건 삭제할게?
 public class Base62 {
 
     final private static int RADIX = 62;

@@ -1,4 +1,4 @@
-<template>
+<template >
   <v-app id="inspire">
     <v-navigation-drawer 
       class="primary"
@@ -225,16 +225,16 @@
       <v-icon>add</v-icon>
     </v-btn> -->
     
-    <v-dialog v-model="dialog" width="800px">
+    <v-dialog v-model="dialog" width="800px" id="chat">
       <v-card>
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
-          Create contact
+        Invite People
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
-            <v-flex xs12 align-center justify-space-between>
+            <!-- <v-flex xs12 align-center justify-space-between>
               <v-layout align-center>
                 <v-avatar size="40px" class="mr-3">
                   <img
@@ -246,25 +246,34 @@
                   placeholder="Name"
                 ></v-text-field>
               </v-layout>
-            </v-flex>
-            <v-flex xs6>
+            </v-flex> -->
+            <!-- <v-flex xs6>
               <v-text-field
                 prepend-icon="business"
                 placeholder="Company"
               ></v-text-field>
-            </v-flex>
-            <v-flex xs6>
+            </v-flex> -->
+            <!-- <v-flex xs6>
               <v-text-field
                 placeholder="Job title"
               ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
+            </v-flex> -->
+            <v-text>invite member</v-text><v-icon right @click="inviteMember">add</v-icon>
+            <!-- <my-component v-for="item in buttons" :is="item"></my-component> -->
+          
+            <!-- <v-flex xs12>
               <v-text-field
                 prepend-icon="mail"
                 placeholder="Email"
               ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
+            </v-flex> -->
+
+            <my-component v-bind:users="users" v-bind:is="currentView" v-for="item in inviteUsers" v-bind:key="currentView">
+           <!-- vm.currentView가 변경되면 컴포넌트가 변경됩니다! -->
+            </my-component>
+
+            
+            <!-- <v-flex xs12>
               <v-text-field
                 type="tel"
                 prepend-icon="phone"
@@ -277,13 +286,13 @@
                 prepend-icon="notes"
                 placeholder="Notes"
               ></v-text-field>
-            </v-flex>
+            </v-flex> -->
           </v-layout>
         </v-container>
         <v-card-actions>
           <v-btn flat color="primary">More</v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
+          <v-btn flat color="primary" @click="clickCancel">Cancel</v-btn>
           <v-btn flat @click="dialog = false">Save</v-btn>
         </v-card-actions>
       </v-card>
@@ -309,8 +318,21 @@ import Content from './Content.vue'
 import CreateChannel from './CreateChannel.vue'
 import axios from "axios";
 
+var Home = {
+  template: '<v-flex xs12> <v-text-field prepend-icon="mail" placeholder="Email" v-model="uid"></v-text-field> </v-flex>',
+  data:{
+    uid:''
+  },
+  props: [
+    'users'
+  ],
+  update() {
+    this.users.push(this.uid);
+  }
+}
 
   export default {
+    el: "Chat",
     components : {
     'Content' : Content,
     'CreateChannel' : CreateChannel
@@ -318,6 +340,11 @@ import axios from "axios";
 
  
   data: () => ({
+      currentView: Home,
+      inviteUsers: [],
+      users: [
+        {uid:''}
+      ],
       dialog: false,
       drawer: null,
       members: [ //test => 즐겨찾기 된 사용자를 서버에서 받아서 띄워야됨
@@ -401,22 +428,42 @@ import axios from "axios";
           teamIdx: ''
         }
       ],
+      // users: [
+      //   {uid:''}
+      // ],
       visible: false
     }),
     
     props: {
       source: String,
-      teamMembers: Array
+      teamMembers: Array,
+      channels: Array,
+      users: Array
     },
 
     methods: {
+      clickCancel() {
+        debugger;
+        for(item in this.inviteUsers) {
+          console.log(item.uid)
+          debugger;
+          this.inviteUsers.pop();
+        }
+        this.dialog = false
+      },
+      inviteMember() {
+        
+        this.inviteUsers.push('my-component')
+      },
       doc_del_rendar(){
                 this.$modal.show(CreateChannel,{
                     teamMembers : this.teamMembers,
+                    channels: this.channels,
+                    teamIdx : localStorage.getItem("teamIdx"),
                     modal : this.$modal },{
                         name: 'dynamic-modal',
                         width : '800px',
-                        height : '500px',
+                        height : '80%',
                         draggable: true
             })
             
@@ -481,8 +528,8 @@ import axios from "axios";
     } 
     },
 
-
     created() {
+      this.inviteUsers.pop(); //users에 기본적으로 한개가 들어가있음 ??
       localStorage.setItem("userId", "yunjae"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
       debugger;
       axios
@@ -513,9 +560,7 @@ import axios from "axios";
 
     } 
   };
-//  Vue.components('CreateChannel', {
-//    props: [teamMembers]
-//   });
+
   
 </script>
 
@@ -527,5 +572,8 @@ color: brown;
 
 .teamName {
   font-size: 50px;
+}
+v-dialog {
+  overflow-y: scroll;
 }
 </style>

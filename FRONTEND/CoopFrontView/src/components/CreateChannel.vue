@@ -1,5 +1,7 @@
 <template>
-    <div  >
+
+
+    <div class="div">
       <v-card >
         <v-card-title
           class="grey lighten-4 py-4 title"
@@ -19,7 +21,7 @@
                 <v-text-field
                   prepend-icon="notes"
                   placeholder="ChannelName"
-                  v-model="channel.name"
+                  v-model="channelName"
                 ></v-text-field>
               </v-layout>
             </v-flex>
@@ -60,7 +62,7 @@
                 </v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action>
-              <v-icon right fab @click="clickInviteUserInChannel(child.idx)">add</v-icon>
+              <v-icon right fab @click="clickInviteUserInChannel(child.idx, child.nickname)">add</v-icon>
             </v-list-tile-action>
             
             </v-layout>
@@ -84,6 +86,29 @@
               ></v-text-field>
             </v-flex> -->
           </v-layout>
+
+      <v-subheader >
+        <v-text style = "fontSize : 18px">  초대할 멤버 </v-text>
+      </v-subheader>
+      <hr>
+       
+
+          <v-list dense class="list">
+        <template v-for="item in channel.users" 
+        >
+          
+          <v-list-tile v-if :key="item.text">
+            <!-- <v-list-tile-action>
+              <v-icon class="white--text">{{ item.icon }}</v-icon>
+            </v-list-tile-action> -->
+            <v-list-tile-content>
+              <v-list-tile-title>
+               <v-text>  {{ item.nickname }} </v-text>
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </template>
+      </v-list>
           
         </v-container>
         <v-card-actions>
@@ -96,45 +121,91 @@
     </div>
 </template>
 <script>
+import axios from "axios";
+
 export default {
   name: 'CreateChannel',
   data:function(){
       return {
           del_password:'',
+          channelName:'',
           channel:{
-            name:'',
-            teamIdx: localStorage.getItem(teamIdx),
+            name: '',
+            teamIdx:'',
             users:[
               {
-                idx: ''
+                idx: '',
+                nickname:''
               }
             ]
           }
       } 
   },props : [
       // 'hot_table',
-      'teamMembers'
+      'teamMembers',
+      'teamIdx',
+      'channels'
   ],methods : {
       del_data(){
           
           this.$emit('close')
       },
       save_data() {
+        axios
+        .post("http://localhost:8083/api/channel/", this.channel)
+        .then(response => {
+          debugger;
+            if(response.data) {
+              // this.teamMembers = response.data.data;
+              console.log(response.data);
+              this.channels.push(this.channel);
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+      
 
         this.$emit('close')
       },
       printLog(log) {
         console.log(log);
       },
-      clickInviteUserInChannel(userIdx) {
-          this.channel.users.pop(userIdx);
+      clickInviteUserInChannel(userIdx, nickname) {
+          debugger;
+          this.channel.name = this.channelName;
+          
+          console.log("users = " + this.channel.users);
+          // let user = {idx: userIdx, nickname: nickname};
+
+          // if(!this.channel.users.find(userIdx)) {
+          this.channel.users.push({idx: userIdx, nickname: nickname});
+          // }
+          
           console.log("userIdx=" + userIdx);
+          console.log("users = " + this.channel.users);
+          console.log("teamIdx = " + this.channel.teamIdx);
 
       }
   },
   created() {
     debugger;
+    this.channel.teamIdx = this.teamIdx
+    this.channel.users.pop(); // 왜 유저가 한개 들어있을까?ㅁ
+    // this.channel.teamIdx = localStorage.getItem(teamIdx);
     this.printLog(this.teamMembers)
-  }
+    window.addEventListener('scroll', this.handleScroll); 
+  },
+  destroyed() { 
+    window.removeEventListener('scroll', this.handleScroll); 
+  } 
 }
 </script>
+
+<style>
+.div {
+  overflow-y : scroll;
+}
+</style>

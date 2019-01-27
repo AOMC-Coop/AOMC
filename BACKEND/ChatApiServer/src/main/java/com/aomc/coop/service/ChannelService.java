@@ -42,9 +42,14 @@ public class ChannelService {
         }
 
         channelMapper.createChannel(channel, channel.getTeamIdx());
-        int idx2 = channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(0).getIdx());
+        for(int i=0; i<channel.getUsers().size(); i++) {
+            System.out.println("채널 생성 함수의 user index = " + channel.getUsers().get(i).getIdx());
+            channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(i).getIdx());
 
-        if (channel.getIdx() >= 0 || idx2>=0) {
+        }
+        //int idx2 = channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(0).getIdx());
+
+        if (channel.getIdx() >= 0) {
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_Channel.getStatus());
         } else {
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_Channel.getStatus());

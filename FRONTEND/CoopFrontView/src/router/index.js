@@ -21,7 +21,7 @@ Vue.use(Vuetify, {
 
 Vue.use(Router)
 
-export default new Router({
+export default new Router({ // 모르면 공부
   mode: 'history',
   routes: [
     {

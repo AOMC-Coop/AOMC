@@ -3,15 +3,18 @@ package com.aomc.coop.controller;
 import com.aomc.coop.model.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class MessageController {
-    @MessageMapping("/chat")
+    @MessageMapping("/chat2")
     @SendTo("/topic/message")
-    public Message broadcasting(Message message) throws Exception{
-        System.out.println(message);
-        return  message;
+    @CrossOrigin
+    public String broadcasting(String msg) throws Exception{
+        System.out.println("요청이 왔습니다" + msg);
+        //큐에보냄
+        return  msg;
     }
 }
 

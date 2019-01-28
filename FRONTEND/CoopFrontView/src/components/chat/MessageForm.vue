@@ -56,7 +56,7 @@ export default {
 
       if (this.stompClient) {
         const sendMessage = { content: this.msg , nickname: 'mooming', send_date: send_date, send_time:send_time};//레디스에서 받은 사용자의 nickname을 세팅
-        this.stompClient.send("/app/chat", JSON.stringify(sendMessage), {}); //채널번호 붙이고 싶음
+        this.stompClient.send("/app/chat", JSON.stringify(sendMessage)); //채널번호 붙이고 싶음
       }
 
       this.msg = '';

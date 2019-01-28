@@ -3,8 +3,7 @@
 
   <!-- <div class="inner-wrap" fluid fill-height inner-wrap> -->
     <div>
-    <Message-List class="msg-list"></Message-List>
-    <!-- <Message-List :msgs="msgDatas" class="msg-list"></Message-List> -->
+    <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages"></Message-List>
     <Message-From v-on:submitMessage="sendMessage" class="msg-form"></Message-From>
 
   </div>
@@ -88,6 +87,9 @@ export default {
   },
 };
 
+// var objDiv = document.getElementById("mydiv"); 
+
+//  objDiv.scrollTop = objDiv.scrollHeight;
 </script>
 
 <style>

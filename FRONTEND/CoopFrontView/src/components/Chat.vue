@@ -6,12 +6,6 @@
       app
       permanent
     >
-    <!-- <v-flex xs6>
-      <v-subheader class="white--text">
-         <v-text style = "fontSize : 30px">{{}}</v-text> 
-         <v-icon @click="" class="white--text" style = "fontSize : 30px">keyboard_arrow_down</v-icon>
-      </v-subheader>
-    </v-flex> -->
 
     <v-list dense class="white--text">
         <template v-for="item in teams">

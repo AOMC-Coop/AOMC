@@ -11,6 +11,12 @@ import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 import VModal from 'vue-js-modal'
 import Directives from './plugins/directives.js'
 
+import SmoothScrollbar from 'vue-smooth-scrollbar'
+import VuePullInfiniteScroller from 'vue-pull-infinite-scroller'
+
+Vue.use(VuePullInfiniteScroller)
+Vue.use(SmoothScrollbar)
+
 
 Vue.use(VModal, { dynamic: true })
 Vue.use(Directives)

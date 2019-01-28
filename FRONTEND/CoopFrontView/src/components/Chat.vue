@@ -1,4 +1,4 @@
-<template>
+<template >
   <v-app id="inspire">
     <v-navigation-drawer 
       class="primary"
@@ -225,16 +225,16 @@
       <v-icon>add</v-icon>
     </v-btn> -->
     
-    <v-dialog v-model="dialog" width="800px">
+    <v-dialog v-model="dialog" width="800px" id="chat">
       <v-card>
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
-          Create contact
+        Invite People
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
-            <v-flex xs12 align-center justify-space-between>
+            <!-- <v-flex xs12 align-center justify-space-between>
               <v-layout align-center>
                 <v-avatar size="40px" class="mr-3">
                   <img
@@ -246,25 +246,34 @@
                   placeholder="Name"
                 ></v-text-field>
               </v-layout>
-            </v-flex>
-            <v-flex xs6>
+            </v-flex> -->
+            <!-- <v-flex xs6>
               <v-text-field
                 prepend-icon="business"
                 placeholder="Company"
               ></v-text-field>
-            </v-flex>
-            <v-flex xs6>
+            </v-flex> -->
+            <!-- <v-flex xs6>
               <v-text-field
                 placeholder="Job title"
               ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
+            </v-flex> -->
+            <v-text>invite member</v-text><v-icon right @click="inviteMember">add</v-icon>
+            <!-- <my-component v-for="item in buttons" :is="item"></my-component> -->
+          
+            <!-- <v-flex xs12>
               <v-text-field
                 prepend-icon="mail"
                 placeholder="Email"
               ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
+            </v-flex> -->
+
+            <my-component v-bind:invite-users="inviteUsers" v-bind:is="currentView" v-for="item in components" v-bind:key="currentView">
+           <!-- vm.currentView가 변경되면 컴포넌트가 변경됩니다! -->
+            </my-component>
+
+            
+            <!-- <v-flex xs12>
               <v-text-field
                 type="tel"
                 prepend-icon="phone"
@@ -277,13 +286,13 @@
                 prepend-icon="notes"
                 placeholder="Notes"
               ></v-text-field>
-            </v-flex>
+            </v-flex> -->
           </v-layout>
         </v-container>
         <v-card-actions>
           <v-btn flat color="primary">More</v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
+          <v-btn flat color="primary" @click="clickCancel">Cancel</v-btn>
           <v-btn flat @click="dialog = false">Save</v-btn>
         </v-card-actions>
       </v-card>
@@ -309,8 +318,44 @@ import Content from './Content.vue'
 import CreateChannel from './CreateChannel.vue'
 import axios from "axios";
 
+var Home = {
+  template: '<v-flex xs12> <v-text-field prepend-icon="mail" placeholder="Email" v-model="uid"></v-text-field> </v-flex>',
+  data:() => ({
+     uid:''
+  }),
+  props: [
+    'inviteUsers'
+  ],
+  beforeUpdate() {
+    debugger;
+    console.log("home - beforeUpdate");
+    // users.push({uid: this.uid});
+  },
+  updated() {
+    debugger;
+    console.log("home - updated");
+    this.$emit('show-log');
+    // this.users.push({uid: this.uid});
+  },
+  mounted() {
+    debugger;
+    console.log("home - mounted");
+    // this.users.push({uid: this.uid});
+  },
+  created() {
+    console.log("home-created " + this.inviteUsers);
+    
+  },
+  destroyed() {
+    debugger;
+    console.log("home-destroyed " + this.inviteUsers);
+
+    // this.my-users.push({uid: this.uid});
+  }
+}
 
   export default {
+    el: "Chat",
     components : {
     'Content' : Content,
     'CreateChannel' : CreateChannel
@@ -318,53 +363,58 @@ import axios from "axios";
 
  
   data: () => ({
+      currentView: Home,
+      components: [],
+      inviteUsers: [
+        {uid:''}, //email
+      ],
       dialog: false,
       drawer: null,
-      members: [ //test => 즐겨찾기 된 사용자를 서버에서 받아서 띄워야됨
-        { icon: 'people', text: 'Garam' },
-        { icon: 'people', text: 'Eunme' },
-        { icon: 'people', text: 'Yunjae' }
-      ],
+      // members: [ //test => 즐겨찾기 된 사용자를 서버에서 받아서 띄워야됨
+      //   { icon: 'people', text: 'Garam' },
+      //   { icon: 'people', text: 'Eunme' },
+      //   { icon: 'people', text: 'Yunjae' }
+      // ],
       // channels: [ //test => 팀의 채널을 서버에서 받아서 띄워야됨
       //   { text: 'general' },
       //   { text: 'test' }
       // ],
-      teamNames: [
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: 'TeamName',
-          model: false,
-          children: [
-            { text: 'Import' },
-            { text: 'Export' },
-            { text: 'Print' },
-            { text: 'Undo changes' },
-            { text: 'Other contacts' }
-          ]
-        },
-        { text: 'Started' },
-        { text: 'Channels' },
-        { icon: 'add', text: 'Create label' },
-      ],
-      items: [
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: 'TeamName',
-          model: false,
-          children: [
-            { text: 'Import' },
-            { text: 'Export' },
-            { text: 'Print' },
-            { text: 'Undo changes' },
-            { text: 'Other contacts' }
-          ]
-        },
-        { text: 'Started' },
-        { text: 'Channels' },
-        { icon: 'add', text: 'Create label' },
-      ],
+      // teamNames: [
+      //   {
+      //     icon: 'keyboard_arrow_up',
+      //     'icon-alt': 'keyboard_arrow_down',
+      //     text: 'TeamName',
+      //     model: false,
+      //     children: [
+      //       { text: 'Import' },
+      //       { text: 'Export' },
+      //       { text: 'Print' },
+      //       { text: 'Undo changes' },
+      //       { text: 'Other contacts' }
+      //     ]
+      //   },
+      //   { text: 'Started' },
+      //   { text: 'Channels' },
+      //   { icon: 'add', text: 'Create label' },
+      // ],
+      // items: [
+      //   {
+      //     icon: 'keyboard_arrow_up',
+      //     'icon-alt': 'keyboard_arrow_down',
+      //     text: 'TeamName',
+      //     model: false,
+      //     children: [
+      //       { text: 'Import' },
+      //       { text: 'Export' },
+      //       { text: 'Print' },
+      //       { text: 'Undo changes' },
+      //       { text: 'Other contacts' }
+      //     ]
+      //   },
+      //   { text: 'Started' },
+      //   { text: 'Channels' },
+      //   { icon: 'add', text: 'Create label' },
+      // ],
     teamName: '',
     userName:'',
     teams: [
@@ -406,17 +456,34 @@ import axios from "axios";
     
     props: {
       source: String,
-      teamMembers: Array
+      teamMembers: Array,
+      channels: Array,
+      inviteUsers: Array
     },
 
     methods: {
+      clickCancel() {
+        debugger;
+        // for(item in this.inviteUsers) {
+        //   console.log(item.uid)
+        //   debugger;
+        //   this.inviteUsers.pop();
+        // }
+        this.dialog = false
+      },
+      inviteMember() {
+        
+        this.components.push('component')
+      },
       doc_del_rendar(){
                 this.$modal.show(CreateChannel,{
                     teamMembers : this.teamMembers,
+                    channels: this.channels,
+                    teamIdx : localStorage.getItem("teamIdx"),
                     modal : this.$modal },{
                         name: 'dynamic-modal',
                         width : '800px',
-                        height : '500px',
+                        height : '80%',
                         draggable: true
             })
             
@@ -452,6 +519,7 @@ import axios from "axios";
         });
       },
       clickTeamName(teamIdx, teamName) {
+        localStorage.setItem("teamIdx", teamIdx);
         axios
         .get("http://localhost:8083/api/team/user/" + teamIdx)
         .then(response => {
@@ -480,8 +548,14 @@ import axios from "axios";
     } 
     },
 
+    updated() {
+      debugger;
+      console.log("Chat - update");
+      console.log(this.users);
+    },
 
     created() {
+      // this.inviteUsers.pop(); //users에 기본적으로 한개가 들어가있음 ??
       localStorage.setItem("userId", "yunjae"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
       debugger;
       axios
@@ -493,6 +567,7 @@ import axios from "axios";
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;
               this.userName = "yunjae"; //로그인 한 후 userName 받기 -> localStorage에서 받기 
+              localStorage.setItem("teamIdx", response.data.data[0].idx);
               this.getMemberByTeamId(response.data.data[0].idx);
               this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
               
@@ -511,9 +586,7 @@ import axios from "axios";
 
     } 
   };
-//  Vue.components('CreateChannel', {
-//    props: [teamMembers]
-//   });
+
   
 </script>
 
@@ -525,5 +598,8 @@ color: brown;
 
 .teamName {
   font-size: 50px;
+}
+v-dialog {
+  overflow-y: scroll;
 }
 </style>

@@ -98,9 +98,6 @@ export default {
      
 };
 
-// var objDiv = document.getElementById("mydiv"); 
-
-// objDiv.scrollTop = objDiv.scrollHeight;
 </script>
 
 <style>

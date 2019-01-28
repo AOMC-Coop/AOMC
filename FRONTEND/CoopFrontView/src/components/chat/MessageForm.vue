@@ -4,7 +4,6 @@
 
           <v-flex xs12>
             <v-textarea class="area"
-            
             :rules="[(v) => v.length <= 500 || 'Max 500 characters']"
             :counter = 500
             placeholder="대화를 입력하세요."

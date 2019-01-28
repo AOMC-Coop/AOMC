@@ -268,9 +268,9 @@
               ></v-text-field>
             </v-flex> -->
 
-            <my-component v-bind:invite-users="inviteUsers" v-bind:is="currentView" v-for="item in components" v-bind:key="currentView">
+            <InviteUserEmail v-for="item in this.$store.state.components" v-bind:key="InviteUserEmail">
            <!-- vm.currentView가 변경되면 컴포넌트가 변경됩니다! -->
-            </my-component>
+            </InviteUserEmail>
 
             
             <!-- <v-flex xs12>
@@ -293,7 +293,7 @@
           <v-btn flat color="primary">More</v-btn>
           <v-spacer></v-spacer>
           <v-btn flat color="primary" @click="clickCancel">Cancel</v-btn>
-          <v-btn flat @click="dialog = false">Save</v-btn>
+          <v-btn flat @click="clickSave">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -312,109 +312,26 @@
 
   </v-app>
 </template>
-
 <script>
 import Content from './Content.vue'
 import CreateChannel from './CreateChannel.vue'
+import InviteUserEmail from './InviteUserEmail.vue'
 import axios from "axios";
-
-var Home = {
-  template: '<v-flex xs12> <v-text-field prepend-icon="mail" placeholder="Email" v-model="uid"></v-text-field> </v-flex>',
-  data:() => ({
-     uid:''
-  }),
-  props: [
-    'inviteUsers'
-  ],
-  beforeUpdate() {
-    debugger;
-    console.log("home - beforeUpdate");
-    // users.push({uid: this.uid});
-  },
-  updated() {
-    debugger;
-    console.log("home - updated");
-    this.$emit('show-log');
-    // this.users.push({uid: this.uid});
-  },
-  mounted() {
-    debugger;
-    console.log("home - mounted");
-    // this.users.push({uid: this.uid});
-  },
-  created() {
-    console.log("home-created " + this.inviteUsers);
-    
-  },
-  destroyed() {
-    debugger;
-    console.log("home-destroyed " + this.inviteUsers);
-
-    // this.my-users.push({uid: this.uid});
-  }
-}
 
   export default {
     el: "Chat",
     components : {
     'Content' : Content,
-    'CreateChannel' : CreateChannel
+    'CreateChannel' : CreateChannel,
+    'InviteUserEmail' : InviteUserEmail
   },
 
  
   data: () => ({
-      currentView: Home,
-      components: [],
-      inviteUsers: [
-        {uid:''}, //email
-      ],
-      dialog: false,
-      drawer: null,
-      // members: [ //test => 즐겨찾기 된 사용자를 서버에서 받아서 띄워야됨
-      //   { icon: 'people', text: 'Garam' },
-      //   { icon: 'people', text: 'Eunme' },
-      //   { icon: 'people', text: 'Yunjae' }
-      // ],
-      // channels: [ //test => 팀의 채널을 서버에서 받아서 띄워야됨
-      //   { text: 'general' },
-      //   { text: 'test' }
-      // ],
-      // teamNames: [
-      //   {
-      //     icon: 'keyboard_arrow_up',
-      //     'icon-alt': 'keyboard_arrow_down',
-      //     text: 'TeamName',
-      //     model: false,
-      //     children: [
-      //       { text: 'Import' },
-      //       { text: 'Export' },
-      //       { text: 'Print' },
-      //       { text: 'Undo changes' },
-      //       { text: 'Other contacts' }
-      //     ]
-      //   },
-      //   { text: 'Started' },
-      //   { text: 'Channels' },
-      //   { icon: 'add', text: 'Create label' },
-      // ],
-      // items: [
-      //   {
-      //     icon: 'keyboard_arrow_up',
-      //     'icon-alt': 'keyboard_arrow_down',
-      //     text: 'TeamName',
-      //     model: false,
-      //     children: [
-      //       { text: 'Import' },
-      //       { text: 'Export' },
-      //       { text: 'Print' },
-      //       { text: 'Undo changes' },
-      //       { text: 'Other contacts' }
-      //     ]
-      //   },
-      //   { text: 'Started' },
-      //   { text: 'Channels' },
-      //   { icon: 'add', text: 'Create label' },
-      // ],
+      
+    dialog: false,
+    drawer: null,
+      
     teamName: '',
     userName:'',
     teams: [
@@ -451,17 +368,47 @@ var Home = {
           teamIdx: ''
         }
       ],
+      inviteTeam: { //팀의 멤버 초대 
+        idx:'',
+        users:[],
+        channels:[
+          {idx:''}
+        ]
+      },
       visible: false
     }),
     
     props: {
       source: String,
       teamMembers: Array,
-      channels: Array,
-      inviteUsers: Array
+      channels: Array
     },
 
     methods: {
+      clickSave() {
+        debugger;
+        console.log(this.$store.state.inviteUsers);
+        this.inviteTeam.idx = localStorage.getItem("teamIdx");
+        this.inviteTeam.users = this.$store.state.inviteUsers;
+        this.inviteTeam.channels.push({idx: this.channels[0].idx});//general idx 채널을 넣어줘야함
+
+        axios
+        .post("http://localhost:8083/api/team/invite", this.inviteTeam)
+        .then(response => {
+          debugger;
+            if(response.data) {
+              // this.teamMembers = response.data.data;
+              console.log(response.data);
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+        
+        this.dialog = false;
+      },
       clickCancel() {
         debugger;
         // for(item in this.inviteUsers) {
@@ -469,11 +416,13 @@ var Home = {
         //   debugger;
         //   this.inviteUsers.pop();
         // }
-        this.dialog = false
+        // components.splice(0);
+        this.$store.state.components.splice(0);
+        this.dialog = false;
       },
       inviteMember() {
         
-        this.components.push('component')
+        this.$store.state.components.push('component');
       },
       doc_del_rendar(){
                 this.$modal.show(CreateChannel,{
@@ -551,11 +500,12 @@ var Home = {
     updated() {
       debugger;
       console.log("Chat - update");
-      console.log(this.users);
+      // console.log(this.users);
     },
 
     created() {
-      // this.inviteUsers.pop(); //users에 기본적으로 한개가 들어가있음 ??
+      this.$store.state.inviteUsers.splice(0);
+      this.inviteTeam.channels.splice(0);
       localStorage.setItem("userId", "yunjae"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
       debugger;
       axios

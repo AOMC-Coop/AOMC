@@ -13,6 +13,7 @@ import Directives from './plugins/directives.js'
 
 import SmoothScrollbar from 'vue-smooth-scrollbar'
 import VuePullInfiniteScroller from 'vue-pull-infinite-scroller'
+import VeeValidate from 'vee-validate'
 
 Vue.use(VuePullInfiniteScroller)
 Vue.use(SmoothScrollbar)
@@ -20,6 +21,7 @@ Vue.use(SmoothScrollbar)
 
 Vue.use(VModal, { dynamic: true })
 Vue.use(Directives)
+Vue.use(VeeValidate)
 
 Vue.config.productionTip = false
 

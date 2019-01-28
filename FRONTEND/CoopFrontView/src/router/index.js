@@ -10,6 +10,9 @@ import '../assets/stylus/main.styl'
 
 // Helpers
 import colors from 'vuetify/es5/util/colors'
+// import validator from './validator'
+
+// Vue.use(validator)
 
 Vue.use(Vuetify, {
   theme: {

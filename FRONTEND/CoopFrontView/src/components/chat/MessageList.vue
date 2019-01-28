@@ -1,6 +1,6 @@
 <template>
-<div>
-  <v-list class="card" v-auto-bottom="this.$store.state.received_messages">
+<div id="mydiv">
+  <v-list class="card">
     <v-card-title>
       <v-icon large left>#</v-icon>
       <span class="title font-weight-light">여기가 팀이름</span>
@@ -97,6 +97,10 @@ export default {
     
      
 };
+
+// var objDiv = document.getElementById("mydiv"); 
+
+// objDiv.scrollTop = objDiv.scrollHeight;
 </script>
 
 <style>

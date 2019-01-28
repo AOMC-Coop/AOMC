@@ -11,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
     @MessageMapping("/chat")
     @SendTo("/topic/message")
-    public Message broadcasting(Message msg){
+    public Message broadcasting(Message msg) throws Exception{
         System.out.println("요청이 왔습니다" + msg);
+//        System.out.println("channelIdx는 " + channelIdx);
         //큐에보냄
         return  msg;
     }

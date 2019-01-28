@@ -35,7 +35,10 @@ export default new Router({ // 모르면 공부
       name: 'Chat',
       component: Chat
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    return { x: 100, y: 100 }
+  }
 })
 
 Vue.use(Router)

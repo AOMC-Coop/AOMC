@@ -9,7 +9,7 @@ import {store}  from './store/store.js'
 import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
 import VModal from 'vue-js-modal'
-import Directives from './plugins/directives'
+import Directives from './plugins/directives.js'
 
 import SmoothScrollbar from 'vue-smooth-scrollbar'
 import VuePullInfiniteScroller from 'vue-pull-infinite-scroller'
@@ -24,6 +24,11 @@ Vue.use(Directives)
 Vue.use(VeeValidate)
 
 Vue.config.productionTip = false
+
+
+import VueScrollFocus from 'vue-scroll-focus'
+ 
+Vue.use(VueScrollFocus)
 
 /* eslint-disable no-new */
 new Vue({

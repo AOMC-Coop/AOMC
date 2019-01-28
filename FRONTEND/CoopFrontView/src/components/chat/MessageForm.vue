@@ -3,8 +3,8 @@
         <v-layout justify-center align-end>
 
           <v-flex xs12>
-            <v-text-field
-            multi-line
+            <v-textarea class="area"
+            
             :rules="[(v) => v.length <= 500 || 'Max 500 characters']"
             :counter = 500
             placeholder="대화를 입력하세요."
@@ -13,7 +13,7 @@
             @keyup.13="submitMessageFunc"
             prepend-icon="add"
             clearable
-            ></v-text-field>
+            ></v-textarea>
           </v-flex>
         </v-layout>
       </v-container>
@@ -89,12 +89,14 @@ export default {
           this.stompClient.subscribe("/topic/message", tick => { //채널번호 붙이고싶음
             // console.log(tick);
             this.$store.state.received_messages.push(JSON.parse(tick.body));
-            console.log("마지막값"+this.$store.state.received_messages.slice(-2)[0].send_date)
-            console.log("방금들어감"+this.$store.state.received_messages.slice(-1)[0].send_date)
 
-            console.log("마지막값"+this.$store.state.received_messages[this.$store.state.received_messages.length - 3].send_date)
-            console.log("방금들어감"+this.$store.state.received_messages[this.$store.state.received_messages.length - 1].send_date)
+            var newValue= this.$store.state.received_messages.slice(-1)[0].send_date;
 
+            for(var i=0; i<this.$store.state.received_messages.length-1;i++){
+              if(this.$store.state.received_messages[i].send_date===newValue){
+                this.$store.state.received_messages.slice(-1)[0].send_date = ''
+              }
+            }
           });
         },
         error => {
@@ -107,5 +109,7 @@ export default {
 };
 </script>
 <style>
-
+.area {
+  padding-top: 50
+}
 </style>

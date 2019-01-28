@@ -1,7 +1,37 @@
 <template>
 <div>
-    <v-list subheader three-line>
-    <!-- <transition-group name="list"> -->
+  <v-list class="card" v-auto-bottom="this.$store.state.received_messages">
+    <v-card-title>
+      <v-icon large left>#</v-icon>
+      <span class="title font-weight-light">여기가 팀이름</span>
+    </v-card-title>
+      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
+        <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
+        <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
+         
+        <!-- <v-list-tile> -->
+          <v-card-actions>
+            <v-avatar size="42px" class="mr-3">
+              <v-img
+            class="elevation-6"
+            src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+          ></v-img>
+                  <!-- <v-img src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png" alt=""/> -->
+            </v-avatar>
+          
+          <v-list-tile-content>
+            <v-list-tile-title><h5>{{item.nickname}} {{item.send_time}}</h5></v-list-tile-title>
+            <v-card-text>{{item.content}}</v-card-text>
+          </v-list-tile-content>
+        <!-- </v-list-tile> -->
+        </v-card-actions>
+      </div>
+  </v-list>
+
+
+
+    <!-- <v-list subheader three-line>
+     <transition-group name="list">
       <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
         <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
@@ -20,10 +50,9 @@
             <v-list-tile-title>{{item.content}}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <!-- <v-divider inset></v-divider> -->
       </div>
-    <!-- </transition-group> -->
-  </v-list>
+    </transition-group> 
+  </v-list> -->
 </div>
 
   
@@ -82,5 +111,9 @@ export default {
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateX(30px);
+}
+.card{
+  padding-left: 2%;
+  background-color: aqua;
 }
 </style>

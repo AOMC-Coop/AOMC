@@ -1,7 +1,8 @@
 <template>
 <v-content>
 
-  <div class="inner-wrap" fluid fill-height inner-wrap>
+  <!-- <div class="inner-wrap" fluid fill-height inner-wrap> -->
+    <div>
     <Message-List class="msg-list"></Message-List>
     <!-- <Message-List :msgs="msgDatas" class="msg-list"></Message-List> -->
     <Message-From v-on:submitMessage="sendMessage" class="msg-form"></Message-From>
@@ -90,29 +91,42 @@ export default {
 </script>
 
 <style>
+.msg-list {
+  /* position: static; */
+  position: absolute;
+  /* bottom:10; */
+  top: 0%;
+  width:100%;
+  height: 80%;
+ 
+  /* left: 0;
+  right: 0; */
+  /* bottom: 60px; */
+  overflow-y: scroll;
+}
+
 .msg-form {
   /* float:initial; */
    /* position:fixed; */
-   display: table;
+   /* display: table; */
    /* position: absolute; */
-   min-width: 800px;
-	 min-height: 150px;
-    bottom:0;
-    top: 0;
-    height: 100%;
-    width:100%;
-    height:70px;   
-   position: static;
-}
+   /* min-width: 800px; */
+	 /* min-height: 150px; */
+  /* bottom:0; */
+  /* top: 0; */
+  /* height: 10%;
+  width:100%; */
+    /* height:70px;    */
+  /* position: static; */
+  background-color:white; 
 
-.msg-list {
-  position: static;
-  bottom:10;
-  width:100%;
- 
-  left: 0;
-  right: 0;
-  /* bottom: 60px; */
-  overflow-y: scroll;
+    position:absolute;
+
+    bottom:0;
+
+    width:100%;
+
+    height:20%;   
+  
 }
 </style>

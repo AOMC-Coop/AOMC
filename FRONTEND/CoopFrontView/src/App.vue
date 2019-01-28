@@ -1,9 +1,12 @@
 <template>
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
-    <!-- <router-view/> -->
-<Login></Login>
-<!--<Chat></Chat>--> <!-- login이 와야할 자리 -->
+<!-- <Login></Login> -->
+<router-link to="/">login</router-link>
+<router-link to="/chat">chat</router-link>
+<router-view/>
+
+<!-- <Chat></Chat> -->
   </div>
 </template>
 
@@ -21,14 +24,13 @@ export default {
 </script>
 
 <style>
-#app {
+/* #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
-}
+} */
 </style>
 
 <style lang="stylus">

@@ -5,6 +5,7 @@
       <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
         <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
+         
         <v-list-tile>
           <v-list-tile-action>
             <v-avatar size="42px" class="mr-3">

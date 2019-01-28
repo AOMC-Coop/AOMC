@@ -66,7 +66,7 @@ public class ChannelService {
 
         if (channelIdx >= 0) {
             List<Message> messages = channelMapper.getChannelMessage(channelIdx);
-            
+
             String sendDate = messages.get(0).getSend_date();
             for(int i=1;i<messages.size();i++){
                 if(messages.get(i).getSend_date().equals(sendDate)){

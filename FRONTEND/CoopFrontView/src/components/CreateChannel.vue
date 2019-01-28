@@ -44,6 +44,7 @@
               <v-list-tile
               v-for="(child, i) in teamMembers"
               :key="i"
+              v-if="child.idx !== userIdx"
               
             >
             <v-flex xs12 align-center justify-space-between>
@@ -58,7 +59,7 @@
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title justify-space-between>
-                  {{ child.nickname }}
+                  {{ child.nickname }} 
                 </v-list-tile-title>
               </v-list-tile-content>
               <v-list-tile-action>
@@ -94,10 +95,10 @@
        
 
           <v-list dense class="list">
-        <template v-for="item in channel.users" 
+        <template v-for="item in channel.users" v-if="item.idx !== userIdx"
         >
           
-          <v-list-tile v-if :key="item.text">
+          <v-list-tile v-if :key="item.text" >
             <!-- <v-list-tile-action>
               <v-icon class="white--text">{{ item.icon }}</v-icon>
             </v-list-tile-action> -->
@@ -127,6 +128,8 @@ export default {
   name: 'CreateChannel',
   data:function(){
       return {
+          userIdx: this.$store.state.userIdx,
+          userNickName: this.$store.state.userNickName,
           del_password:'',
           channelName:'',
           channel:{
@@ -179,10 +182,22 @@ export default {
           
           console.log("users = " + this.channel.users);
           // let user = {idx: userIdx, nickname: nickname};
-
-          // if(!this.channel.users.find(userIdx)) {
-          this.channel.users.push({idx: userIdx, nickname: nickname});
-          // }
+          var check = false;
+          if(this.channel.users.length == 0) {
+            this.channel.users.push({idx: userIdx, nickname: nickname});
+          }else {
+            for(var i=0; i<this.channel.users.length; i++) {
+              if(this.channel.users[i].idx == userIdx) {
+                // alert("이미 추가된 사용자 입니다."); //?
+                break;
+              }
+              if(i == this.channel.users.length-1) {
+                this.channel.users.push({idx: userIdx, nickname: nickname});
+              }
+          }
+          }
+          
+          
           
           console.log("userIdx=" + userIdx);
           console.log("users = " + this.channel.users);
@@ -195,6 +210,7 @@ export default {
     console.log(this.channels);
     this.channel.teamIdx = this.teamIdx
     this.channel.users.pop(); // 왜 유저가 한개 들어있을까?ㅁ
+    this.channel.users.push({idx: this.userIdx, nickname: this.userNickName});
     // this.channel.teamIdx = localStorage.getItem(teamIdx);
     this.printLog(this.teamMembers)
     window.addEventListener('scroll', this.handleScroll); 

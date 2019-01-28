@@ -51,7 +51,7 @@
       </v-list> 
     
 
-     <v-flex xs6>
+     <v-flex xs12>
       <v-subheader class="white--text">
          <v-text style = "fontSize : 18px"> Members </v-text>
       </v-subheader>
@@ -65,8 +65,11 @@
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
-                 {{ item.nickname }}
+                 {{ item.nickname }} {{item.you}}
               </v-list-tile-title>
+              <!-- <v-list-tile-title v-if="item.idx === this.userIdx">
+                 (you)
+              </v-list-tile-title> -->
             </v-list-tile-content>
           </v-list-tile>
         </template>
@@ -325,6 +328,8 @@ import axios from "axios";
       
     dialog: false,
     drawer: null,
+
+    userIdx: '',
       
     teamName: '',
     userName:'',
@@ -350,7 +355,8 @@ import axios from "axios";
         {
           idx: '' ,
           uid: '',
-          nickname: ''
+          nickname: '',
+          you:''
         }
       ],
       channels: [
@@ -444,6 +450,13 @@ import axios from "axios";
           debugger;
             if(response.data) {
               this.teamMembers = response.data.data;
+              console.log(this.teamMembers);
+              for(var i=0; i<this.teamMembers.length; i++) {
+                if(this.teamMembers[i].idx == this.userIdx) {
+                  console.log("if");
+                  this.teamMembers[i].you = "(you)";
+                }
+              }
             } else {
             this.errors.push(e);
             }
@@ -456,9 +469,7 @@ import axios from "axios";
         axios
         .get("http://localhost:8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
-          debugger;
             if(response.data) {
-              debugger;
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               console.log(this.$store.state.channelInfo.idx);
@@ -476,21 +487,15 @@ import axios from "axios";
 
       },
       getMessage() {
-        debugger;
         this.$store.state.received_messages.splice(0);
         axios
         .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
         .then(response => {
-          debugger;
             if(response.data) {
               
               this.$store.state.received_messages = response.data.data;
-              debugger;
-            //   console.log(msgs);
               
             } else {
-            //   app.renderNotification('Successfully Singed Up');
-            //   app.toggleSignUp();
             this.errors.push(e);
             }
           })
@@ -533,11 +538,7 @@ import axios from "axios";
     } 
     },
 
-    updated() {
-      debugger;
-      console.log("Chat - update");
-      // console.log(this.users);
-    },
+   
 
     created() {
       
@@ -545,13 +546,14 @@ import axios from "axios";
       this.$store.state.inviteUsers.splice(0);
       this.inviteTeam.channels.splice(0);
       localStorage.setItem("userId", "yunjae"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
-      debugger;
+      this.$store.state.userIdx = 5; //test용으로 넣어놈. 로그인 할때 받아야함
+      this.userIdx = this.$store.state.userIdx;
+      this.$store.state.userNickName = "yunyun"; //test용으로 넣어놈. 로그인 할때 받아야함
       axios
         .get("http://localhost:8083/api/team/user/" + "5")
         .then(response => {
           debugger;
             if(response.data) {
-              debugger;
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;
               this.userName = "yunjae"; //로그인 한 후 userName 받기 -> localStorage에서 받기 

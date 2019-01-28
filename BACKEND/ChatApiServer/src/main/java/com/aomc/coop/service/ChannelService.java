@@ -1,6 +1,7 @@
 package com.aomc.coop.service;
 
 import com.aomc.coop.mapper.ChannelMapper;
+import com.aomc.coop.mapper.MessageMapper;
 import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.model.Channel;
 import com.aomc.coop.model.Message;
@@ -28,6 +29,9 @@ public class ChannelService {
     private ChannelMapper channelMapper;
 
     @Autowired
+    private MessageMapper messageMapper;
+
+    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -40,10 +44,19 @@ public class ChannelService {
         if (channel == null) {
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_Channel.getStatus());
         }
+        Message message = new Message();
+        message.setContent("joined #" + channel.getName());
+        message.setNickname(channel.getUsers().get(0).getNickname());
+        List<Message> messages = new ArrayList<>();
+        messages.add(message);
+
+        channel.setMessages(messages);
 
         channelMapper.createChannel(channel, channel.getTeamIdx());
+        messageMapper.createMessage(message, channel.getIdx(), channel.getUsers().get(0).getIdx());
         for(int i=0; i<channel.getUsers().size(); i++) {
             System.out.println("채널 생성 함수의 user index = " + channel.getUsers().get(i).getIdx());
+
             channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(i).getIdx());
 
         }

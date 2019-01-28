@@ -390,8 +390,22 @@ import axios from "axios";
         console.log(this.$store.state.inviteUsers);
         this.inviteTeam.idx = localStorage.getItem("teamIdx");
         this.inviteTeam.users = this.$store.state.inviteUsers;
-        this.inviteTeam.channels.push({idx: this.channels[0]});//general idx 채널을 넣어줘야함
+        this.inviteTeam.channels.push({idx: this.channels[0].idx});//general idx 채널을 넣어줘야함
 
+        axios
+        .post("http://localhost:8083/api/team/invite", this.inviteTeam)
+        .then(response => {
+          debugger;
+            if(response.data) {
+              // this.teamMembers = response.data.data;
+              console.log(response.data);
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
         
         this.dialog = false;
       },

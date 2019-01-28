@@ -268,7 +268,7 @@
               ></v-text-field>
             </v-flex> -->
 
-            <my-component v-bind:users="users" v-bind:is="currentView" v-for="item in inviteUsers" v-bind:key="currentView">
+            <my-component v-bind:invite-users="inviteUsers" v-bind:is="currentView" v-for="item in components" v-bind:key="currentView">
            <!-- vm.currentView가 변경되면 컴포넌트가 변경됩니다! -->
             </my-component>
 
@@ -320,14 +320,37 @@ import axios from "axios";
 
 var Home = {
   template: '<v-flex xs12> <v-text-field prepend-icon="mail" placeholder="Email" v-model="uid"></v-text-field> </v-flex>',
-  data:{
-    uid:''
-  },
+  data:() => ({
+     uid:''
+  }),
   props: [
-    'users'
+    'inviteUsers'
   ],
-  update() {
-    this.users.push(this.uid);
+  beforeUpdate() {
+    debugger;
+    console.log("home - beforeUpdate");
+    // users.push({uid: this.uid});
+  },
+  updated() {
+    debugger;
+    console.log("home - updated");
+    this.$emit('show-log');
+    // this.users.push({uid: this.uid});
+  },
+  mounted() {
+    debugger;
+    console.log("home - mounted");
+    // this.users.push({uid: this.uid});
+  },
+  created() {
+    console.log("home-created " + this.inviteUsers);
+    
+  },
+  destroyed() {
+    debugger;
+    console.log("home-destroyed " + this.inviteUsers);
+
+    // this.my-users.push({uid: this.uid});
   }
 }
 
@@ -341,57 +364,57 @@ var Home = {
  
   data: () => ({
       currentView: Home,
-      inviteUsers: [],
-      users: [
-        {uid:''}
+      components: [],
+      inviteUsers: [
+        {uid:''}, //email
       ],
       dialog: false,
       drawer: null,
-      members: [ //test => 즐겨찾기 된 사용자를 서버에서 받아서 띄워야됨
-        { icon: 'people', text: 'Garam' },
-        { icon: 'people', text: 'Eunme' },
-        { icon: 'people', text: 'Yunjae' }
-      ],
+      // members: [ //test => 즐겨찾기 된 사용자를 서버에서 받아서 띄워야됨
+      //   { icon: 'people', text: 'Garam' },
+      //   { icon: 'people', text: 'Eunme' },
+      //   { icon: 'people', text: 'Yunjae' }
+      // ],
       // channels: [ //test => 팀의 채널을 서버에서 받아서 띄워야됨
       //   { text: 'general' },
       //   { text: 'test' }
       // ],
-      teamNames: [
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: 'TeamName',
-          model: false,
-          children: [
-            { text: 'Import' },
-            { text: 'Export' },
-            { text: 'Print' },
-            { text: 'Undo changes' },
-            { text: 'Other contacts' }
-          ]
-        },
-        { text: 'Started' },
-        { text: 'Channels' },
-        { icon: 'add', text: 'Create label' },
-      ],
-      items: [
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: 'TeamName',
-          model: false,
-          children: [
-            { text: 'Import' },
-            { text: 'Export' },
-            { text: 'Print' },
-            { text: 'Undo changes' },
-            { text: 'Other contacts' }
-          ]
-        },
-        { text: 'Started' },
-        { text: 'Channels' },
-        { icon: 'add', text: 'Create label' },
-      ],
+      // teamNames: [
+      //   {
+      //     icon: 'keyboard_arrow_up',
+      //     'icon-alt': 'keyboard_arrow_down',
+      //     text: 'TeamName',
+      //     model: false,
+      //     children: [
+      //       { text: 'Import' },
+      //       { text: 'Export' },
+      //       { text: 'Print' },
+      //       { text: 'Undo changes' },
+      //       { text: 'Other contacts' }
+      //     ]
+      //   },
+      //   { text: 'Started' },
+      //   { text: 'Channels' },
+      //   { icon: 'add', text: 'Create label' },
+      // ],
+      // items: [
+      //   {
+      //     icon: 'keyboard_arrow_up',
+      //     'icon-alt': 'keyboard_arrow_down',
+      //     text: 'TeamName',
+      //     model: false,
+      //     children: [
+      //       { text: 'Import' },
+      //       { text: 'Export' },
+      //       { text: 'Print' },
+      //       { text: 'Undo changes' },
+      //       { text: 'Other contacts' }
+      //     ]
+      //   },
+      //   { text: 'Started' },
+      //   { text: 'Channels' },
+      //   { icon: 'add', text: 'Create label' },
+      // ],
     teamName: '',
     userName:'',
     teams: [
@@ -428,9 +451,6 @@ var Home = {
           teamIdx: ''
         }
       ],
-      // users: [
-      //   {uid:''}
-      // ],
       visible: false
     }),
     
@@ -438,22 +458,22 @@ var Home = {
       source: String,
       teamMembers: Array,
       channels: Array,
-      users: Array
+      inviteUsers: Array
     },
 
     methods: {
       clickCancel() {
         debugger;
-        for(item in this.inviteUsers) {
-          console.log(item.uid)
-          debugger;
-          this.inviteUsers.pop();
-        }
+        // for(item in this.inviteUsers) {
+        //   console.log(item.uid)
+        //   debugger;
+        //   this.inviteUsers.pop();
+        // }
         this.dialog = false
       },
       inviteMember() {
         
-        this.inviteUsers.push('my-component')
+        this.components.push('component')
       },
       doc_del_rendar(){
                 this.$modal.show(CreateChannel,{
@@ -528,8 +548,14 @@ var Home = {
     } 
     },
 
+    updated() {
+      debugger;
+      console.log("Chat - update");
+      console.log(this.users);
+    },
+
     created() {
-      this.inviteUsers.pop(); //users에 기본적으로 한개가 들어가있음 ??
+      // this.inviteUsers.pop(); //users에 기본적으로 한개가 들어가있음 ??
       localStorage.setItem("userId", "yunjae"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
       debugger;
       axios

@@ -2,8 +2,8 @@
   <div id="app">
     <!-- <img src="./assets/logo.png"> -->
     <!-- <router-view/> -->
-<Login></Login>
-<!--<Chat></Chat>--> <!-- login이 와야할 자리 -->
+<!-- <Login></Login> -->
+<Chat></Chat> <!-- login이 와야할 자리 -->
   </div>
 </template>
 

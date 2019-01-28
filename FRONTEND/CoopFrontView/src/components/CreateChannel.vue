@@ -192,6 +192,7 @@ export default {
   },
   created() {
     debugger;
+    console.log(this.channels);
     this.channel.teamIdx = this.teamIdx
     this.channel.users.pop(); // 왜 유저가 한개 들어있을까?ㅁ
     // this.channel.teamIdx = localStorage.getItem(teamIdx);

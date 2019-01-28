@@ -2,7 +2,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-Vue.use(Vuex);
+Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   // 메세지 를 state 속성으로 추가
@@ -17,11 +17,15 @@ export const store = new Vuex.Store({
     ],
     inviteUsers: [
       {uid:''}, //email
-    ]
+    ],
+    components: []
   },
   getters: {
     getReceivedMessages: function (state) {
       return state.received_messages;
+    },
+    getInviteUsers: function (state) {
+      return state.inviteUsers;
     }
   },
   // // setter쓸때 mutations이용 / 비동기는 actions 이용 -> get 메소드 

@@ -290,14 +290,14 @@ public class TeamService {
 
 
         for(User inviteUser : inviteUsers){
-            for(User userOfTeam : usersOfTeam){
+            for(int i=0;i<usersOfTeam.size();i++){
 
-                if(inviteUser.getUid().equals(userOfTeam.getUid())){
+                if(inviteUser.getUid().equals(usersOfTeam.get(i).getUid())){
                     existUsers.add(inviteUser);
                     break;
-                }else{
+                }
+                if(usersOfTeam.size()-1 == i){
                     firstUsers.add(inviteUser);
-                    break;
                 }
             }
         }

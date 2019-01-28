@@ -81,7 +81,7 @@
       <v-list dense class="white--text">
         <template v-for="item in channels">
           
-          <v-list-tile v-if :key="item.text" @click="">
+          <v-list-tile v-if :key="item.text" @click="clickChannel(item.idx, item.name)">
             <!-- <v-list-tile-action>
               <v-icon class="white--text">{{ item.icon }}</v-icon>
             </v-list-tile-action> -->
@@ -379,6 +379,11 @@ import axios from "axios";
     },
 
     methods: {
+      clickChannel(itemIdx, channelName) {
+        this.$store.state.channelInfo.idx = itemIdx;
+        this.$store.state.channelInfo.channelName = channelName;
+        this.getMessage();
+      },
       clickSave() {
         debugger;
         console.log(this.$store.state.inviteUsers);
@@ -431,6 +436,7 @@ import axios from "axios";
             })
             
       },
+      
       getMemberByTeamId(teamIdx){
         axios
         .get("http://localhost:8083/api/team/" + teamIdx)
@@ -452,12 +458,44 @@ import axios from "axios";
         .then(response => {
           debugger;
             if(response.data) {
+              debugger;
               this.channels = response.data.data;
+              this.$store.state.channelInfo.idx = this.channels[0].idx;
+              console.log(this.$store.state.channelInfo.idx);
+              this.$store.state.channelInfo.channelName = this.channels[0].name;
+              console.log(this.$store.state.channelInfo.channelName);
+              this.getMessage();
+
             } else {
             this.errors.push(e);
             }
           })
         .catch(e => {
+          this.errors.push(e);
+        });
+
+      },
+      getMessage() {
+        debugger;
+        this.$store.state.received_messages.splice(0);
+        axios
+        .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
+        .then(response => {
+          debugger;
+            if(response.data) {
+              
+              this.$store.state.received_messages = response.data.data;
+              debugger;
+            //   console.log(msgs);
+              
+            } else {
+            //   app.renderNotification('Successfully Singed Up');
+            //   app.toggleSignUp();
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          // location.href = './';
           this.errors.push(e);
         });
       },
@@ -474,6 +512,10 @@ import axios from "axios";
               this.userName = "yunjae"; //userName 받기
               this.getMemberByTeamId(teamIdx);
               this.getChannelsByTeamIdxAndUserIdx(teamIdx, 5); // 5->userId로 받아야 함
+
+              this.$store.state.channelInfo.idx = response.data.data[0].idx;
+              this.$store.state.channelInfo.channelName = response.data.data[0].name;
+
               
             } else {
             //   app.renderNotification('Successfully Singed Up');
@@ -498,6 +540,8 @@ import axios from "axios";
     },
 
     created() {
+      
+
       this.$store.state.inviteUsers.splice(0);
       this.inviteTeam.channels.splice(0);
       localStorage.setItem("userId", "yunjae"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
@@ -514,6 +558,10 @@ import axios from "axios";
               localStorage.setItem("teamIdx", response.data.data[0].idx);
               this.getMemberByTeamId(response.data.data[0].idx);
               this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
+
+              // this.$store.state.channelInfo.idx = response.data.data[0].idx;
+              // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+              
               
             } else {
             //   app.renderNotification('Successfully Singed Up');
@@ -525,8 +573,7 @@ import axios from "axios";
           // location.href = './';
           this.errors.push(e);
         });
-
-        
+      
 
     } 
   };

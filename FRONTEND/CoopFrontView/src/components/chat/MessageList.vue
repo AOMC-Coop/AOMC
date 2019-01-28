@@ -3,7 +3,7 @@
   <v-list class="card">
     <v-card-title>
       <v-icon large left>#</v-icon>
-      <span class="title font-weight-light">여기가 팀이름</span>
+      <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
     </v-card-title>
       <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
@@ -67,27 +67,31 @@ export default {
 
 
     created() {
+      // debugger;
+      // this.$nextTick(function() {
+        // debugger;
+        // axios
+        // .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
+        // .then(response => {
+        //   debugger;
+        //     if(response.data) {
+              
+        //       this.$store.state.received_messages = response.data.data;
+        //       debugger;
+        //     //   console.log(msgs);
+              
+        //     } else {
+        //     //   app.renderNotification('Successfully Singed Up');
+        //     //   app.toggleSignUp();
+        //     this.errors.push(e);
+        //     }
+        //   })
+        // .catch(e => {
+        //   // location.href = './';
+        //   this.errors.push(e);
+        // });
+      // })
       
-      axios
-        .get("http://localhost:8083/api/channel/message?channelIdx=" + "40")
-        .then(response => {
-          debugger;
-            if(response.data) {
-              
-              this.$store.state.received_messages = response.data.data;
-              debugger;
-            //   console.log(msgs);
-              
-            } else {
-            //   app.renderNotification('Successfully Singed Up');
-            //   app.toggleSignUp();
-            this.errors.push(e);
-            }
-          })
-        .catch(e => {
-          // location.href = './';
-          this.errors.push(e);
-        });
     },
     computed:{
         ...mapGetters([

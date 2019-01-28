@@ -7,6 +7,10 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   // 메세지 를 state 속성으로 추가
   state: {
+    channelInfo: {
+      idx:'',
+      channelName:''
+    },
     received_messages:[
       {
         content : '',

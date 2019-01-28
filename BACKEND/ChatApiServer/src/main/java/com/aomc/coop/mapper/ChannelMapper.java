@@ -40,7 +40,7 @@ public interface ChannelMapper {
     void deleteChannelUser(int channelIdx, int userIdx);
 
     //channel 조회
-    @Select("SELECT c.idx, c.name, uhc.star_flag, uhc.status FROM channels c, user_has_channel uhc WHERE c.idx = uhc.channel_idx AND team_idx=#{teamIdx} AND user_idx=#{userIdx}")
+    @Select("SELECT DISTINCT c.idx, c.name, uhc.star_flag, uhc.status FROM channels c, user_has_channel uhc WHERE c.idx = uhc.channel_idx AND team_idx=#{teamIdx} AND user_idx=#{userIdx}")
     List<Channel> readChannel(final int teamIdx, final int userIdx);
 
     //팀에 있는 멤버 비활성화

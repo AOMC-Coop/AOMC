@@ -8,7 +8,7 @@
 <div class="field">
     <v-flex xs12 align-center justify-space-between> 
       <v-layout align-center>
-    <v-text-field justify-space-between prepend-icon="mail" type="email" name="email" placeholder="Email" v-validate="'required|email'" v-model="email">
+    <v-text-field clearable justify-space-between prepend-icon="mail" type="email" name="email" placeholder="Email" v-validate="'required|email'" v-model="email">
     </v-text-field>
     <v-icon right fab @click="add">add</v-icon>
     </v-layout>

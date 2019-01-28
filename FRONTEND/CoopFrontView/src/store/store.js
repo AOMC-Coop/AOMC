@@ -14,6 +14,9 @@ export const store = new Vuex.Store({
         send_date:'',
         send_time:''
       }
+    ],
+    inviteUsers: [
+      {uid:''}, //email
     ]
   },
   getters: {

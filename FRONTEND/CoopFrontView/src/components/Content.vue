@@ -4,7 +4,7 @@
   <div class="inner-wrap" fluid fill-height inner-wrap>
     <Message-List class="msg-list"></Message-List>
     <!-- <Message-List :msgs="msgDatas" class="msg-list"></Message-List> -->
-        <Message-From v-on:submitMessage="sendMessage" class="msg-form"></Message-From>
+    <Message-From v-on:submitMessage="sendMessage" class="msg-form"></Message-From>
 
   </div>
 
@@ -52,8 +52,8 @@
 
 <script>
 import axios from "axios";
-import MessageList from '@/components/Chat/MessageList.vue';
-import MessageForm from '@/components/Chat/MessageForm.vue';
+import MessageList from '@/components/chat/MessageList.vue';
+import MessageForm from '@/components/chat/MessageForm.vue';
 
 
 export default {
@@ -72,7 +72,7 @@ export default {
   methods: {
     
     sendMessage(msg) {
-      console.log(msg);
+      // console.log(msg);
       // this.pushMsgData({
       //   from: {
       //     name: '나',
@@ -91,18 +91,28 @@ export default {
 
 <style>
 .msg-form {
-  /* bottom: -28px; */
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
+  /* float:initial; */
+   /* position:fixed; */
+   display: table;
+   /* position: absolute; */
+   min-width: 800px;
+	 min-height: 150px;
+    bottom:0;
+    top: 0;
+    height: 100%;
+    width:100%;
+    height:70px;   
+   position: static;
 }
+
 .msg-list {
-  position: absolute;
-  top: 0;
+  position: static;
+  bottom:10;
+  width:100%;
+ 
   left: 0;
   right: 0;
   /* bottom: 60px; */
-  /* overflow-x: scroll; */
+  overflow-y: scroll;
 }
 </style>

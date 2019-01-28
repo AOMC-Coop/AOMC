@@ -69,10 +69,17 @@ public class ChannelService {
 
     public ResponseType getChannelMessage(int channelIdx) {
 
-
-
         if (channelIdx >= 0) {
             List<Message> messages = channelMapper.getChannelMessage(channelIdx);
+            
+            String sendDate = messages.get(0).getSend_date();
+            for(int i=1;i<messages.size();i++){
+                if(messages.get(i).getSend_date().equals(sendDate)){
+                    messages.get(i).setSend_date("");
+                }else{
+                    sendDate = messages.get(i).getSend_date();
+                }
+            }
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);
         } else {

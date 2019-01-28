@@ -5,13 +5,15 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.RestController;
 
+//방 아이디에 따라 메세지 나누기
 @RestController
 public class MessageController {
-    @MessageMapping("/chat")
+    @MessageMapping("/chat2")
     @SendTo("/topic/message")
-    public Message broadcasting(Message message) throws Exception{
-        System.out.println(message);
-        return  message;
+    public Message broadcasting(Message msg){
+        System.out.println("요청이 왔습니다" + msg);
+        //큐에보냄
+        return  msg;
     }
 }
 

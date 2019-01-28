@@ -24,9 +24,10 @@ export const store = new Vuex.Store({
       return state.received_messages;
     }
   },
-  //setter쓸때 mutations이용 / 비동기는 actions 이용 -> get 메소드 
+  // // setter쓸때 mutations이용 / 비동기는 actions 이용 -> get 메소드 
   // mutations: {
-  //   addCounter: function (state, payload) {
+  //   setReceivedMessages: function (state, payload) {
+  //     payload.slice(-1)[0]
   //     return state.counter++;
   //   }
   // }

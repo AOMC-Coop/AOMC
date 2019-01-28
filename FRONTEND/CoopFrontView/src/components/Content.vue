@@ -60,8 +60,8 @@ export default {
   name: 'Content',
   data() {
     return {
-      datas: [],
-      msgs: '',
+      // datas: [],
+      // msgs: '',
     };
   },
   components: {

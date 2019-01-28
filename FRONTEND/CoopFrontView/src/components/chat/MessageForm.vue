@@ -55,8 +55,8 @@ export default {
       
 
       if (this.stompClient) {
-        const msggggg = { content: this.msg , nickname: 'mooming', send_date: send_date, send_time:send_time};//레디스에서 받은 사용자의 nickname을 세팅
-        this.stompClient.send("/app/chat2", JSON.stringify(msggggg), {});
+        const sendMessage = { content: this.msg , nickname: 'mooming', send_date: send_date, send_time:send_time};//레디스에서 받은 사용자의 nickname을 세팅
+        this.stompClient.send("/app/chat", JSON.stringify(sendMessage), {}); //채널번호 붙이고 싶음
       }
 
       this.msg = '';
@@ -78,7 +78,7 @@ export default {
 
 
    created() {
-     this.msg = '';
+      this.msg = '';
       this.socket = new SockJS("http://localhost:8083/socketconnect");
       this.stompClient = Stomp.over(this.socket);
       this.stompClient.connect(
@@ -86,9 +86,14 @@ export default {
         frame => {
           // this.connected = true;
           // console.log("////////////////////////"+frame);
-          this.stompClient.subscribe("/topic/message", tick => {
+          this.stompClient.subscribe("/topic/message", tick => { //채널번호 붙이고싶음
             // console.log(tick);
             this.$store.state.received_messages.push(JSON.parse(tick.body));
+            console.log("마지막값"+this.$store.state.received_messages.slice(-2)[0].send_date)
+            console.log("방금들어감"+this.$store.state.received_messages.slice(-1)[0].send_date)
+
+            console.log("마지막값"+this.$store.state.received_messages[this.$store.state.received_messages.length - 3].send_date)
+            console.log("방금들어감"+this.$store.state.received_messages[this.$store.state.received_messages.length - 1].send_date)
 
           });
         },

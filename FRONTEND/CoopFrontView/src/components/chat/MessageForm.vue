@@ -28,6 +28,7 @@ import moment from 'moment'
 var now = new moment();
 var send_date = now.format("dddd, MMMM Do").toString()
 var send_time = now.format("LT").toString()
+var send_db_date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
 
 export default {
   name: 'MessageForm',
@@ -36,8 +37,12 @@ export default {
       msg: {
           content : '',
           nickname: '',
-          send_date:'',
-          send_time:''
+          send_date: '',
+          send_time: '',
+          send_db_date:''
+      },
+      channel: {
+        idx: this.$store.state.channelInfo.idx
       }
     
       // send_message: {
@@ -55,8 +60,12 @@ export default {
       
 
       if (this.stompClient) {
-        const sendMessage = { content: this.msg , nickname: 'mooming', send_date: send_date, send_time:send_time};//레디스에서 받은 사용자의 nickname을 세팅
-        this.stompClient.send("/app/chat", JSON.stringify(sendMessage)); //채널번호 붙이고 싶음
+        const sendMessage = { content: this.msg , nickname: this.$store.state.userNickName, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
+        const sendChannel = { idx: this.$store.state.channelInfo.idx};
+        console.log("channelInfo.idx = " + this.$store.state.channelInfo.idx);
+        console.log("this.channel.idx = " + this.channel.idx);
+        debugger;
+        this.stompClient.send("/app/chat/" + this.$store.state.channelInfo.idx, JSON.stringify(sendMessage)); //채널번호 붙이고 싶음
       }
 
       this.msg = '';

@@ -561,8 +561,8 @@ import axios from "axios";
               this.getMemberByTeamId(response.data.data[0].idx);
               this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
 
-              // this.$store.state.channelInfo.idx = response.data.data[0].idx;
-              // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+              this.$store.state.channelInfo.idx = response.data.data[0].idx;
+              this.$store.state.channelInfo.channelName = response.data.data[0].name;
               
               
             } else {

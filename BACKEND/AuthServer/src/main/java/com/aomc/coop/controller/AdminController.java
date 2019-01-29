@@ -1,3 +1,4 @@
+/*
 package com.aomc.coop.controller;
 
 import com.aomc.coop.model.User;
@@ -9,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// *** Auth Server 안의 Admin Controller와 Admin Server의 차이점?
-// *** Admin Controller 혹은 Server의 기능이 getAllUsers(), removeUser()가 전부야? 더 있을텐데
+// Admin 기능은 Admin Server로 분리할 것이므로, 지금은 건들지 말 것
+// *** 아직 Admin 기능이 완전하지 않음
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -66,3 +67,4 @@ public class AdminController {
         }
     }
 }
+*/

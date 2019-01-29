@@ -154,7 +154,9 @@ export default {
           this.$emit('close')
       },
       save_data() {
-        axios
+        if(this.channelName !== '') {
+          this.channel.name = this.channelName;
+          axios
         .post("http://localhost:8083/api/channel/", this.channel)
         .then(response => {
           debugger;
@@ -172,6 +174,10 @@ export default {
       
 
         this.$emit('close')
+        }else {
+          alert("채널 이름을 작성해 주세요.");
+        }
+        
       },
       printLog(log) {
         console.log(log);

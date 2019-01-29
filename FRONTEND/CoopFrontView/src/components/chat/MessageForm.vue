@@ -33,10 +33,10 @@ export default {
   data() {
     return {
       msg: {
-          content : '',
-          nickname: '',
-          send_date:'',
-          send_time:''
+        content : '',
+        nickname: '',
+        send_date:'',
+        send_time:''
       }
     
       // send_message: {

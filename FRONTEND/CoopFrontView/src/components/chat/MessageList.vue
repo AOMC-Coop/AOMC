@@ -1,16 +1,18 @@
 <template>
+<div>
 
-<!-- <div id="mydiv" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
-
-  <v-list class="card">
-    <v-card-title>
-      <v-icon large left>#</v-icon>
-      <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
-    </v-card-title>
+<!-- <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
 
       <!-- <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
 
-      <div v-for="(item,$index) in getReceivedMessages" v-bind:key="$index">
+   <v-list class="card">
+    <!--<v-card-title>
+      <v-icon large left>#</v-icon>
+      <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
+    </v-card-title> -->
+
+
+      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
         <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
     
@@ -60,100 +62,141 @@
   </v-list> -->
 </div>
 
+ 
   
 </template>
-
 <script>
 import axios from "axios";
 import { mapGetters } from 'vuex'
 import InfiniteLoading from 'vue-infinite-loading';
-
 
 export default {
   name: 'MessageList',
    data() {
     return {
       page: 1,
-      busy: false
+      busy: true,
+      start:5
     };
   },
   // components: {
   //   'infinite-loading':InfiniteLoading
   // },
+
   methods: {
-    loadMore: function() {
-      this.busy = true;
-      // alert("Hello")
- 
+    infiniteHandler($state) {
+
+      debugger
+      axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+        params: {
+          start: this.start
+        },
+      }).then((response) => {
+        if (response.data) {
+          debugger
+          this.start += 10;
+
+          // this.list.unshift(...data.hits.reverse());
+           this.$store.state.received_messages.unshift(response.data.data.reverse());
+          $state.loaded();
+        } else {
+          $state.complete();
+
+        }
+      });
+
+
+
+
+
+    }
+    //   axios
+    //   .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=40")
+    //   .then((response) => {
+    //     if (response.data) {
+
+    //       // this.$store.state.received_messages = response.data.data
+
+
+    //       alert('hello')
+    //       var result = response.data.data.reverse()
+
+
+    //       console.log(result[0])
+        
+    //       for(var i=0;i>result.length;i++){
+    //           this.$store.state.received_messages.unshift(result[i]);
+    //       }
+    //       console.log(this.$store.state.received_messages)
+
+    //       if(response.data.data.length<10){
+    //         $state.complete();
+    //       }
+
+
+    //       $state.loaded();
+    //     } else {
+    //       $state.complete();
+    //     }
+    //   });
+      
       
 
-        axios
-        .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
-        params: {
-          page: this.page,
-        },
-      })
-        .then(response => {
-            if(response.data) {
-              
-              this.$store.state.received_messages = response.data.data;
-              this.page += 1;
-              
-            } else {
-            this.errors.push(e);
-            }
-          })
-        .catch(e => {
-          this.errors.push(e);
-        });
-        
 
-
-
-
-        this.busy = false;
-     
-    }
+      // axios
+      // .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=5)
+      // .then((response) => {
+      //   if (response.data.) {
+      //     debugger
+      //     alert("들어옴");
+      //     // this.page += 1;
+      //   //   this.list.unshift(...data.hits.reverse());
+      //     $state.loaded();
+      //   } else {
+      //     alert("안들어옴");
+      //     $state.complete();
+      //   }
+      // });
+    
   },
+
+
+
   // methods: {
-  //   infiniteHandler($state) {
-  //     // alert('Hello')
-
-  //     axios.get("http://localhost:8083/api/channel/message?channelIdx=" + "40", {
-  //       params: {
-  //         page: this.page,
-  //       },
-  //     }).then(({ data }) => {
-  //       if (data.data) {
-
-  //         debugger
-  //         this.$store.state.received_messages = response.data.data;
-  //         this.page += 1;
-  //         // this.list.unshift(...data.hits.reverse());
-  //         $state.loaded();
-  //       } else {
-  //         $state.complete();
-  //       }
-  //     });
+  //   loadMore: function () {
+  //     this.busy = true // 무한 스크롤 기능 비활성화
+  //     this.getMessages()
+  //     alert("hello");
   //   },
-  // },
-  // methods: {
-  //   infiniteHandler($state) {
+  //   getMessages: function () {
+
   //     axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
-  //     .then(response => {
-  //       if(response.data) {
-  //         this.$store.state.received_messages = response.data.data;
+  //     .then((response) => {
+  //       if (response.data) {
+  //         alert("들어옴");
+  //         debugger
+
+  //         // if (response.data.length > 10) 
+  //         //   this.busy = false 
+    
+  //         // this.$store.state.received_messages = response.data.data;
+  //         // this.page += 1;
+  //         this.$store.state.received_messages.unshift(response.data.data.reverse());
+  //         console.log("길이는"+this.$store.state.received_messages[0])
+  //         // this.list.unshift(...data.hits.reverse());
+  //         // $state.loaded();
   //       } else {
-  //         this.errors.push(e);
+  //         // $state.complete();
   //       }
-  //     }).catch(e => {
-  //       this.errors.push(e);
   //     });
+      
   //   },
   // },
 
 
-    // created() {
+
+
+      // created() {
       // debugger;
       // this.$nextTick(function() {
         // debugger;
@@ -180,6 +223,7 @@ export default {
       // })
       
     // },
+
     computed:{
         ...mapGetters([
       'getReceivedMessages'

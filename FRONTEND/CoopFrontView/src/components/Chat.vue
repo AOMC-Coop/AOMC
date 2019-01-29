@@ -489,7 +489,7 @@ import axios from "axios";
       getMessage() {
         this.$store.state.received_messages.splice(0);
         axios
-        .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
+        .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=0")
         .then(response => {
             if(response.data) {
               

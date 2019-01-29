@@ -80,10 +80,10 @@ public class ChannelService {
         }
     }
 
-    public ResponseType getChannelMessage(int channelIdx) {
+    public ResponseType getChannelMessage(int channelIdx, int start) {
 
         if (channelIdx >= 0) {
-            List<Message> messages = channelMapper.getChannelMessage(channelIdx);
+            List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
 
             String sendDate = messages.get(0).getSend_date();
             for(int i=1;i<messages.size();i++){

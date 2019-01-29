@@ -3,7 +3,7 @@
 
 <!-- <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
 
-      <!-- <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
+      <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
 
    <v-list class="card">
     <!--<v-card-title>
@@ -90,15 +90,20 @@ export default {
       axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
         params: {
           start: this.start
+
         },
       }).then((response) => {
         if (response.data) {
           debugger
-          this.start += 10;
+          if(response.data.data['content'] != null) {
+            debugger
+            this.start += 10;
 
           // this.list.unshift(...data.hits.reverse());
            this.$store.state.received_messages.unshift(response.data.data.reverse());
           $state.loaded();
+          }
+          
         } else {
           $state.complete();
 

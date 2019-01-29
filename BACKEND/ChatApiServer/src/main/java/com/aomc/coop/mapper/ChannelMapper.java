@@ -24,7 +24,7 @@ public interface ChannelMapper {
     @Update("UPDATE channels SET name=#{name}, update_date=now() WHERE idx = #{idx}")
     void updateChannel(final Channel channel);
 
-    @Select("SELECT m.idx, content, channel_idx, u.nickname, DATE_FORMAT(send_date, '%W %M %Y') as send_date, DATE_FORMAT(send_date, '%H:%i:%s') as send_time FROM messages m, users u WHERE m.user_idx=u.idx AND channel_idx = #{channelIdx}")
+    @Select("SELECT m.idx, content, channel_idx, u.nickname, DATE_FORMAT(send_date, '%W, %M %D') as send_date, DATE_FORMAT(send_date, '%l:%i %p') as send_time FROM messages m, users u WHERE m.user_idx=u.idx AND channel_idx = #{channelIdx}")
     List<Message> getChannelMessage(int channelIdx);
 
     //채널의 멤버 조회
@@ -38,7 +38,7 @@ public interface ChannelMapper {
     void deleteChannelUser(int channelIdx, int userIdx);
 
     //channel 조회
-    @Select("SELECT c.idx, c.name, uhc.star_flag, uhc.status FROM channels c, user_has_channel uhc WHERE c.idx = uhc.channel_idx AND team_idx=#{teamIdx} AND user_idx=#{userIdx}")
+    @Select("SELECT DISTINCT c.idx, c.name, uhc.star_flag, uhc.status FROM channels c, user_has_channel uhc WHERE c.idx = uhc.channel_idx AND team_idx=#{teamIdx} AND user_idx=#{userIdx}")
     List<Channel> readChannel(final int teamIdx, final int userIdx);
 
     //팀에 있는 멤버 비활성화

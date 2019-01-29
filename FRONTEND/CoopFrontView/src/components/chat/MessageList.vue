@@ -1,21 +1,58 @@
 <template>
-<div>
-    <v-list v-auto-up="contents">
-    <transition-group name="list">
-      <div v-for="msg in contents" v-bind:key="msg">
+<div id="mydiv">
+  <v-list class="card">
+    <v-card-title>
+      <v-icon large left>#</v-icon>
+      <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
+    </v-card-title>
+      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
+        <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
+        <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
+         
+        <!-- <v-list-tile> -->
+          <v-card-actions>
+            <v-avatar size="42px" class="mr-3">
+              <v-img
+            class="elevation-6"
+            src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+          ></v-img>
+                  <!-- <v-img src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png" alt=""/> -->
+            </v-avatar>
+          
+          <v-list-tile-content>
+            <v-list-tile-title><h5>{{item.nickname}} {{item.send_time}}</h5></v-list-tile-title>
+            <v-card-text>{{item.content}}</v-card-text>
+          </v-list-tile-content>
+        <!-- </v-list-tile> -->
+        </v-card-actions>
+      </div>
+  </v-list>
+
+
+
+    <!-- <v-list subheader three-line>
+     <transition-group name="list">
+      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
+        <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
+        <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
+         
         <v-list-tile>
           <v-list-tile-action>
-            <span>{{msg.send_time}}</span>
+            <v-avatar size="42px" class="mr-3">
+                  <img
+                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                    alt=""
+                  >
+                </v-avatar>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title><h5>{{msg.nickname}} {{msg.send_time}}</h5></v-list-tile-title>
-            <v-list-tile-title>{{msg.content}}</v-list-tile-title>
+            <v-list-tile-title><h5>{{item.nickname}} {{item.send_time}}</h5></v-list-tile-title>
+            <v-list-tile-title>{{item.content}}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <!-- <v-divider inset></v-divider> -->
       </div>
-    </transition-group>
-  </v-list>
+    </transition-group> 
+  </v-list> -->
 </div>
 
   
@@ -23,42 +60,58 @@
 
 <script>
 import axios from "axios";
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'MessageList',
-//   contents: [],
-  props: ['contents'],
+
 
     created() {
+      // debugger;
+      // this.$nextTick(function() {
+        // debugger;
+        // axios
+        // .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
+        // .then(response => {
+        //   debugger;
+        //     if(response.data) {
+              
+        //       this.$store.state.received_messages = response.data.data;
+        //       debugger;
+        //     //   console.log(msgs);
+              
+        //     } else {
+        //     //   app.renderNotification('Successfully Singed Up');
+        //     //   app.toggleSignUp();
+        //     this.errors.push(e);
+        //     }
+        //   })
+        // .catch(e => {
+        //   // location.href = './';
+        //   this.errors.push(e);
+        // });
+      // })
       
-      axios
-        .get("http://localhost:8083/api/channel/message?channelIdx=" + "40")
-        .then(response => {
-          debugger;
-            if(response.data) {
-              
-              this.contents = response.data.data;
-              debugger;
-            //   console.log(msgs);
-              
-            } else {
-            //   app.renderNotification('Successfully Singed Up');
-            //   app.toggleSignUp();
-            this.errors.push(e);
-            }
-          })
-        .catch(e => {
-          // location.href = './';
-          this.errors.push(e);
-        });
-    } 
+    },
+    computed:{
+        ...mapGetters([
+      'getReceivedMessages'
+    ])
+    }
+    
+     
 };
+
+// var objDiv = document.getElementById("mydiv"); 
+
+// objDiv.scrollTop = objDiv.scrollHeight;
 </script>
 
 <style>
 .list-item {
   display: inline-block;
   margin-right: 10px;
+  margin-bottom: 50px;
 }
 .list-enter-active, .list-leave-active {
   transition: all 1s;
@@ -66,5 +119,9 @@ export default {
 .list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
   opacity: 0;
   transform: translateX(30px);
+}
+.card{
+  padding-left: 2%;
+  background-color: aqua;
 }
 </style>

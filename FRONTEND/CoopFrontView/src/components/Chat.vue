@@ -1,4 +1,4 @@
-<template>
+<template >
   <v-app id="inspire">
     <v-navigation-drawer 
       class="primary"
@@ -6,12 +6,6 @@
       app
       permanent
     >
-    <!-- <v-flex xs6>
-      <v-subheader class="white--text">
-         <v-text style = "fontSize : 30px">{{}}</v-text> 
-         <v-icon @click="" class="white--text" style = "fontSize : 30px">keyboard_arrow_down</v-icon>
-      </v-subheader>
-    </v-flex> -->
 
     <v-list dense class="white--text">
         <template v-for="item in teams">
@@ -57,7 +51,7 @@
       </v-list> 
     
 
-     <v-flex xs6>
+     <v-flex xs12>
       <v-subheader class="white--text">
          <v-text style = "fontSize : 18px"> Members </v-text>
       </v-subheader>
@@ -71,8 +65,11 @@
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
-                 {{ item.nickname }}
+                 {{ item.nickname }} {{item.you}}
               </v-list-tile-title>
+              <!-- <v-list-tile-title v-if="item.idx === this.userIdx">
+                 (you)
+              </v-list-tile-title> -->
             </v-list-tile-content>
           </v-list-tile>
         </template>
@@ -87,7 +84,7 @@
       <v-list dense class="white--text">
         <template v-for="item in channels">
           
-          <v-list-tile v-if :key="item.text" @click="">
+          <v-list-tile v-if :key="item.text" @click="clickChannel(item.idx, item.name)">
             <!-- <v-list-tile-action>
               <v-icon class="white--text">{{ item.icon }}</v-icon>
             </v-list-tile-action> -->
@@ -225,16 +222,16 @@
       <v-icon>add</v-icon>
     </v-btn> -->
     
-    <v-dialog v-model="dialog" width="800px">
+    <v-dialog v-model="dialog" width="800px" id="chat">
       <v-card>
         <v-card-title
           class="grey lighten-4 py-4 title"
         >
-          Create contact
+        Invite People
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
-            <v-flex xs12 align-center justify-space-between>
+            <!-- <v-flex xs12 align-center justify-space-between>
               <v-layout align-center>
                 <v-avatar size="40px" class="mr-3">
                   <img
@@ -246,25 +243,34 @@
                   placeholder="Name"
                 ></v-text-field>
               </v-layout>
-            </v-flex>
-            <v-flex xs6>
+            </v-flex> -->
+            <!-- <v-flex xs6>
               <v-text-field
                 prepend-icon="business"
                 placeholder="Company"
               ></v-text-field>
-            </v-flex>
-            <v-flex xs6>
+            </v-flex> -->
+            <!-- <v-flex xs6>
               <v-text-field
                 placeholder="Job title"
               ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
+            </v-flex> -->
+            <v-text>invite member</v-text><v-icon right @click="inviteMember">add</v-icon>
+            <!-- <my-component v-for="item in buttons" :is="item"></my-component> -->
+          
+            <!-- <v-flex xs12>
               <v-text-field
                 prepend-icon="mail"
                 placeholder="Email"
               ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
+            </v-flex> -->
+
+            <InviteUserEmail v-for="item in this.$store.state.components" v-bind:key="InviteUserEmail">
+           <!-- vm.currentView가 변경되면 컴포넌트가 변경됩니다! -->
+            </InviteUserEmail>
+
+            
+            <!-- <v-flex xs12>
               <v-text-field
                 type="tel"
                 prepend-icon="phone"
@@ -277,14 +283,14 @@
                 prepend-icon="notes"
                 placeholder="Notes"
               ></v-text-field>
-            </v-flex>
+            </v-flex> -->
           </v-layout>
         </v-container>
         <v-card-actions>
           <v-btn flat color="primary">More</v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat color="primary" @click="dialog = false">Cancel</v-btn>
-          <v-btn flat @click="dialog = false">Save</v-btn>
+          <v-btn flat color="primary" @click="clickCancel">Cancel</v-btn>
+          <v-btn flat @click="clickSave">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -303,68 +309,28 @@
 
   </v-app>
 </template>
-
 <script>
 import Content from './Content.vue'
 import CreateChannel from './CreateChannel.vue'
+import InviteUserEmail from './InviteUserEmail.vue'
 import axios from "axios";
 
-
   export default {
+    el: "Chat",
     components : {
     'Content' : Content,
-    'CreateChannel' : CreateChannel
+    'CreateChannel' : CreateChannel,
+    'InviteUserEmail' : InviteUserEmail
   },
 
  
   data: () => ({
-      dialog: false,
-      drawer: null,
-      members: [ //test => 즐겨찾기 된 사용자를 서버에서 받아서 띄워야됨
-        { icon: 'people', text: 'Garam' },
-        { icon: 'people', text: 'Eunme' },
-        { icon: 'people', text: 'Yunjae' }
-      ],
-      // channels: [ //test => 팀의 채널을 서버에서 받아서 띄워야됨
-      //   { text: 'general' },
-      //   { text: 'test' }
-      // ],
-      teamNames: [
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: 'TeamName',
-          model: false,
-          children: [
-            { text: 'Import' },
-            { text: 'Export' },
-            { text: 'Print' },
-            { text: 'Undo changes' },
-            { text: 'Other contacts' }
-          ]
-        },
-        { text: 'Started' },
-        { text: 'Channels' },
-        { icon: 'add', text: 'Create label' },
-      ],
-      items: [
-        {
-          icon: 'keyboard_arrow_up',
-          'icon-alt': 'keyboard_arrow_down',
-          text: 'TeamName',
-          model: false,
-          children: [
-            { text: 'Import' },
-            { text: 'Export' },
-            { text: 'Print' },
-            { text: 'Undo changes' },
-            { text: 'Other contacts' }
-          ]
-        },
-        { text: 'Started' },
-        { text: 'Channels' },
-        { icon: 'add', text: 'Create label' },
-      ],
+      
+    dialog: false,
+    drawer: null,
+
+    userIdx: '',
+      
     teamName: '',
     userName:'',
     teams: [
@@ -389,7 +355,8 @@ import axios from "axios";
         {
           idx: '' ,
           uid: '',
-          nickname: ''
+          nickname: '',
+          you:''
         }
       ],
       channels: [
@@ -401,26 +368,81 @@ import axios from "axios";
           teamIdx: ''
         }
       ],
+      inviteTeam: { //팀의 멤버 초대 
+        idx:'',
+        users:[],
+        channels:[
+          {idx:''}
+        ]
+      },
       visible: false
     }),
     
     props: {
       source: String,
-      teamMembers: Array
+      teamMembers: Array,
+      channels: Array
     },
 
     methods: {
+      clickChannel(itemIdx, channelName) {
+        this.$store.state.channelInfo.idx = itemIdx;
+        this.$store.state.channelInfo.channelName = channelName;
+        this.getMessage();
+      },
+      clickSave() {
+        debugger;
+        console.log(this.$store.state.inviteUsers);
+        this.inviteTeam.idx = localStorage.getItem("teamIdx");
+        this.inviteTeam.users = this.$store.state.inviteUsers;
+        this.inviteTeam.channels.push({idx: this.channels[0].idx});//general idx 채널을 넣어줘야함
+
+        axios
+        .post("http://localhost:8083/api/team/invite", this.inviteTeam)
+        .then(response => {
+          debugger;
+            if(response.data) {
+              // this.teamMembers = response.data.data;
+              console.log(response.data);
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+        
+        this.dialog = false;
+      },
+      clickCancel() {
+        debugger;
+        // for(item in this.inviteUsers) {
+        //   console.log(item.uid)
+        //   debugger;
+        //   this.inviteUsers.pop();
+        // }
+        // components.splice(0);
+        this.$store.state.components.splice(0);
+        this.dialog = false;
+      },
+      inviteMember() {
+        
+        this.$store.state.components.push('component');
+      },
       doc_del_rendar(){
                 this.$modal.show(CreateChannel,{
                     teamMembers : this.teamMembers,
+                    channels: this.channels,
+                    teamIdx : localStorage.getItem("teamIdx"),
                     modal : this.$modal },{
                         name: 'dynamic-modal',
                         width : '800px',
-                        height : '500px',
+                        height : '80%',
                         draggable: true
             })
             
       },
+      
       getMemberByTeamId(teamIdx){
         axios
         .get("http://localhost:8083/api/team/" + teamIdx)
@@ -428,6 +450,13 @@ import axios from "axios";
           debugger;
             if(response.data) {
               this.teamMembers = response.data.data;
+              console.log(this.teamMembers);
+              for(var i=0; i<this.teamMembers.length; i++) {
+                if(this.teamMembers[i].idx == this.userIdx) {
+                  console.log("if");
+                  this.teamMembers[i].you = "(you)";
+                }
+              }
             } else {
             this.errors.push(e);
             }
@@ -440,9 +469,14 @@ import axios from "axios";
         axios
         .get("http://localhost:8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
-          debugger;
             if(response.data) {
               this.channels = response.data.data;
+              this.$store.state.channelInfo.idx = this.channels[0].idx;
+              console.log(this.$store.state.channelInfo.idx);
+              this.$store.state.channelInfo.channelName = this.channels[0].name;
+              console.log(this.$store.state.channelInfo.channelName);
+              this.getMessage();
+
             } else {
             this.errors.push(e);
             }
@@ -450,8 +484,28 @@ import axios from "axios";
         .catch(e => {
           this.errors.push(e);
         });
+
+      },
+      getMessage() {
+        this.$store.state.received_messages.splice(0);
+        axios
+        .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
+        .then(response => {
+            if(response.data) {
+              
+              this.$store.state.received_messages = response.data.data;
+              
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          // location.href = './';
+          this.errors.push(e);
+        });
       },
       clickTeamName(teamIdx, teamName) {
+        localStorage.setItem("teamIdx", teamIdx);
         axios
         .get("http://localhost:8083/api/team/user/" + teamIdx)
         .then(response => {
@@ -463,6 +517,10 @@ import axios from "axios";
               this.userName = "yunjae"; //userName 받기
               this.getMemberByTeamId(teamIdx);
               this.getChannelsByTeamIdxAndUserIdx(teamIdx, 5); // 5->userId로 받아야 함
+
+              this.$store.state.channelInfo.idx = response.data.data[0].idx;
+              this.$store.state.channelInfo.channelName = response.data.data[0].name;
+
               
             } else {
             //   app.renderNotification('Successfully Singed Up');
@@ -480,21 +538,32 @@ import axios from "axios";
     } 
     },
 
+   
 
     created() {
+      
+
+      this.$store.state.inviteUsers.splice(0);
+      this.inviteTeam.channels.splice(0);
       localStorage.setItem("userId", "yunjae"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
-      debugger;
+      this.$store.state.userIdx = 5; //test용으로 넣어놈. 로그인 할때 받아야함
+      this.userIdx = this.$store.state.userIdx;
+      this.$store.state.userNickName = "yunyun"; //test용으로 넣어놈. 로그인 할때 받아야함
       axios
         .get("http://localhost:8083/api/team/user/" + "5")
         .then(response => { //
           debugger;
             if(response.data) {
-              debugger;
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;
               this.userName = "yunjae"; //로그인 한 후 userName 받기 -> localStorage에서 받기 
+              localStorage.setItem("teamIdx", response.data.data[0].idx);
               this.getMemberByTeamId(response.data.data[0].idx);
               this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
+
+              // this.$store.state.channelInfo.idx = response.data.data[0].idx;
+              // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+              
               
             } else {
             //   app.renderNotification('Successfully Singed Up');
@@ -506,14 +575,11 @@ import axios from "axios";
           // location.href = './';
           this.errors.push(e);
         });
-
-        
+      
 
     } 
   };
-//  Vue.components('CreateChannel', {
-//    props: [teamMembers]
-//   });
+
   
 </script>
 
@@ -525,5 +591,8 @@ color: brown;
 
 .teamName {
   font-size: 50px;
+}
+v-dialog {
+  overflow-y: scroll;
 }
 </style>

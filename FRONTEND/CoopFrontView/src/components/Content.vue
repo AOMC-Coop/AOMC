@@ -1,10 +1,10 @@
 <template>
 <v-content>
 
-  <div class="inner-wrap" fluid fill-height inner-wrap>
-    <Message-List class="msg-list"></Message-List>
-    <!-- <Message-List :msgs="msgDatas" class="msg-list"></Message-List> -->
-        <Message-From v-on:submitMessage="sendMessage" class="msg-form"></Message-From>
+  <!-- <div class="inner-wrap" fluid fill-height inner-wrap> -->
+    <div>
+    <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages"></Message-List>
+    <Message-From v-on:submitMessage="sendMessage" class="msg-form"></Message-From>
 
   </div>
 
@@ -52,16 +52,16 @@
 
 <script>
 import axios from "axios";
-import MessageList from '@/components/Chat/MessageList.vue';
-import MessageForm from '@/components/Chat/MessageForm.vue';
+import MessageList from '@/components/chat/MessageList.vue';
+import MessageForm from '@/components/chat/MessageForm.vue';
 
 
 export default {
   name: 'Content',
   data() {
     return {
-      datas: [],
-      msgs: '',
+      // datas: [],
+      // msgs: '',
     };
   },
   components: {
@@ -72,7 +72,7 @@ export default {
   methods: {
     
     sendMessage(msg) {
-      console.log(msg);
+      // console.log(msg);
       // this.pushMsgData({
       //   from: {
       //     name: '나',
@@ -87,22 +87,48 @@ export default {
   },
 };
 
+// var objDiv = document.getElementById("mydiv"); 
+
+//  objDiv.scrollTop = objDiv.scrollHeight;
 </script>
 
 <style>
-.msg-form {
-  /* bottom: -28px; */
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-}
 .msg-list {
+  /* position: static; */
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+  /* bottom:10; */
+  top: 0%;
+  width:100%;
+  height: 80%;
+ 
+  /* left: 0;
+  right: 0; */
   /* bottom: 60px; */
-  /* overflow-x: scroll; */
+  overflow-y: scroll;
+}
+
+.msg-form {
+  /* float:initial; */
+   /* position:fixed; */
+   /* display: table; */
+   /* position: absolute; */
+   /* min-width: 800px; */
+	 /* min-height: 150px; */
+  /* bottom:0; */
+  /* top: 0; */
+  /* height: 10%;
+  width:100%; */
+    /* height:70px;    */
+  /* position: static; */
+  background-color:white; 
+
+    position:absolute;
+
+    bottom:0;
+
+    width:100%;
+
+    height:20%;   
+  
 }
 </style>

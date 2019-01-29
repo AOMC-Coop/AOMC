@@ -1,6 +1,7 @@
 package com.aomc.coop.service;
 
 import com.aomc.coop.mapper.ChannelMapper;
+import com.aomc.coop.mapper.MessageMapper;
 import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.model.Channel;
 import com.aomc.coop.model.Message;
@@ -28,6 +29,9 @@ public class ChannelService {
     private ChannelMapper channelMapper;
 
     @Autowired
+    private MessageMapper messageMapper;
+
+    @Autowired
     private UserMapper userMapper;
 
     @Autowired
@@ -40,11 +44,25 @@ public class ChannelService {
         if (channel == null) {
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_Channel.getStatus());
         }
+        Message message = new Message();
+        message.setContent("joined #" + channel.getName());
+        message.setNickname(channel.getUsers().get(0).getNickname());
+        List<Message> messages = new ArrayList<>();
+        messages.add(message);
+
+        channel.setMessages(messages);
 
         channelMapper.createChannel(channel, channel.getTeamIdx());
-        int idx2 = channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(0).getIdx());
+        messageMapper.createMessage(message, channel.getIdx(), channel.getUsers().get(0).getIdx());
+        for(int i=0; i<channel.getUsers().size(); i++) {
+            System.out.println("채널 생성 함수의 user index = " + channel.getUsers().get(i).getIdx());
 
-        if (channel.getIdx() >= 0 || idx2>=0) {
+            channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(i).getIdx());
+
+        }
+        //int idx2 = channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(0).getIdx());
+
+        if (channel.getIdx() >= 0) {
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_Channel.getStatus());
         } else {
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_Channel.getStatus());
@@ -66,6 +84,15 @@ public class ChannelService {
 
         if (channelIdx >= 0) {
             List<Message> messages = channelMapper.getChannelMessage(channelIdx);
+
+            String sendDate = messages.get(0).getSend_date();
+            for(int i=1;i<messages.size();i++){
+                if(messages.get(i).getSend_date().equals(sendDate)){
+                    messages.get(i).setSend_date("");
+                }else{
+                    sendDate = messages.get(i).getSend_date();
+                }
+            }
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);
         } else {

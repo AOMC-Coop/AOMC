@@ -195,6 +195,7 @@ public class ChannelController {
     @CrossOrigin
     @RequestMapping("/message")
     public ResponseEntity getChannelMessage(@RequestParam("channelIdx") final int channelIdx){
+        System.out.println("channelIdx = " + channelIdx);
         if(channelIdx >= 0) {
             return new ResponseEntity<>(channelService.getChannelMessage(channelIdx), HttpStatus.OK);
         }else {

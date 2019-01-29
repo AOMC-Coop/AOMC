@@ -3,15 +3,19 @@ package com.aomc.coop.controller;
 import com.aomc.coop.model.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+//방 아이디에 따라 메세지 나누기
 @RestController
 public class MessageController {
     @MessageMapping("/chat")
     @SendTo("/topic/message")
-    public Message broadcasting(Message message) throws Exception{
-        System.out.println(message);
-        return  message;
+    public Message broadcasting(Message msg) throws Exception{
+        System.out.println("요청이 왔습니다" + msg);
+//        System.out.println("channelIdx는 " + channelIdx);
+        //큐에보냄
+        return  msg;
     }
 }
 

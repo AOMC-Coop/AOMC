@@ -27,8 +27,14 @@ Vue.config.productionTip = false
 
 
 import VueScrollFocus from 'vue-scroll-focus'
- 
+
 Vue.use(VueScrollFocus)
+
+import InfiniteLoading from 'vue-infinite-loading';
+Vue.use(InfiniteLoading, { /* options */ });
+
+var infiniteScroll =  require('vue-infinite-scroll');
+Vue.use(infiniteScroll)
 
 /* eslint-disable no-new */
 new Vue({

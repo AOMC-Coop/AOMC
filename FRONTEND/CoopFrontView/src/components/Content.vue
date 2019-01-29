@@ -96,6 +96,7 @@ export default {
 .msg-list {
   /* position: static; */
   position: absolute;
+  background-color:white; 
   /* bottom:10; */
   top: 0%;
   width:100%;

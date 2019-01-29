@@ -1,14 +1,19 @@
 <template>
-<div id="mydiv">
+
+<!-- <div id="mydiv" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
+
   <v-list class="card">
     <v-card-title>
       <v-icon large left>#</v-icon>
       <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
     </v-card-title>
-      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
+
+      <!-- <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading> -->
+
+      <div v-for="(item,$index) in getReceivedMessages" v-bind:key="$index">
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
         <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
-         
+    
         <!-- <v-list-tile> -->
           <v-card-actions>
             <v-avatar size="42px" class="mr-3">
@@ -61,12 +66,94 @@
 <script>
 import axios from "axios";
 import { mapGetters } from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading';
+
 
 export default {
   name: 'MessageList',
+   data() {
+    return {
+      page: 1,
+      busy: false
+    };
+  },
+  // components: {
+  //   'infinite-loading':InfiniteLoading
+  // },
+  methods: {
+    loadMore: function() {
+      this.busy = true;
+      // alert("Hello")
+ 
+      
+
+        axios
+        .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+        params: {
+          page: this.page,
+        },
+      })
+        .then(response => {
+            if(response.data) {
+              
+              this.$store.state.received_messages = response.data.data;
+              this.page += 1;
+              
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+        
 
 
-    created() {
+
+
+        this.busy = false;
+     
+    }
+  },
+  // methods: {
+  //   infiniteHandler($state) {
+  //     // alert('Hello')
+
+  //     axios.get("http://localhost:8083/api/channel/message?channelIdx=" + "40", {
+  //       params: {
+  //         page: this.page,
+  //       },
+  //     }).then(({ data }) => {
+  //       if (data.data) {
+
+  //         debugger
+  //         this.$store.state.received_messages = response.data.data;
+  //         this.page += 1;
+  //         // this.list.unshift(...data.hits.reverse());
+  //         $state.loaded();
+  //       } else {
+  //         $state.complete();
+  //       }
+  //     });
+  //   },
+  // },
+  // methods: {
+  //   infiniteHandler($state) {
+  //     axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
+  //     .then(response => {
+  //       if(response.data) {
+  //         this.$store.state.received_messages = response.data.data;
+  //       } else {
+  //         this.errors.push(e);
+  //       }
+  //     }).catch(e => {
+  //       this.errors.push(e);
+  //     });
+  //   },
+  // },
+
+
+    // created() {
       // debugger;
       // this.$nextTick(function() {
         // debugger;
@@ -92,7 +179,7 @@ export default {
         // });
       // })
       
-    },
+    // },
     computed:{
         ...mapGetters([
       'getReceivedMessages'
@@ -119,6 +206,6 @@ export default {
 }
 .card{
   padding-left: 2%;
-  background-color: aqua;
+  /* background-color: aqua; */
 }
 </style>

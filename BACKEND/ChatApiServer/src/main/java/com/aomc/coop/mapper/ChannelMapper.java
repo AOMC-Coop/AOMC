@@ -1,12 +1,10 @@
 package com.aomc.coop.mapper;
 
 import com.aomc.coop.model.Channel;
-
 import com.aomc.coop.model.Message;
 import com.aomc.coop.model.User;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Mapper

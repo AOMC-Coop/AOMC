@@ -12,16 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.aomc.coop.model.User;
 import com.aomc.coop.service.UserService;
 import com.aomc.coop.util.SHA256;
-
-// 보는 순서
-// 1. controller : 1) register, 2) login, // 3) admin
-// 2. service
-// 3. dao
-// 그 다음부터는 내 마음대로 보기
 
 @RestController
 // response를 json으로 주겠다
@@ -34,8 +27,10 @@ import com.aomc.coop.util.SHA256;
 @RequestMapping("/api")
 public class RegisterController {
 
+    // ***** 초대 : 이메일 인증
+    // ***** 초대 할 유저들 배열 받기 -> redis에 저장 -> (redis에 저장이 안 된 회원이면, 회원가입이 필요하다고 에러메시지와 함께)redis 토큰 줌 -> user_has_channel user_has_team 둘 다에 정보를 넣어주고, 둘 다의 certification을 1로 바꿔야 함(초대 했다는 뜻)
     @Autowired // 주입 대상이되는 bean을 컨테이너에 찾아 주입하는 어노테이션
-    private UserService userService; // 접근 진행 순서 : Controller -> Service -> Repository
+    private UserService userService; // 접근 진행 순서 : Controller -> Service -> Mapper
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @CrossOrigin // 웹 서버 도메인간 액세스 제어 기능을 제공, 도메인간 데이터 전송을 가능하게 함
@@ -64,13 +59,13 @@ public class RegisterController {
         System.out.println("salt : "+ salt);
 
         // 3. salt를 통해 hash된 password를 구하기
-        String newPassword = salt + user.getPassword();
+        String newPassword = salt + user.getPwd();
         String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
 
         // 4. salt와 hash된 password를 user 데이터에 저장, user role까지 설정
         user.setSalt(salt);
-        user.setPassword(hashPassword);
-        if(user.getUserId().equals("admin")) {
+        user.setPwd(hashPassword);
+        if(user.getUid().equals("admin")) {
             user.setRole("admin_role");
         }else {
             user.setRole("user_role");
@@ -82,19 +77,12 @@ public class RegisterController {
         if (userService.insertUser(user)) {
             System.out.println("Successfully Registered");
         // 7. Http Response를 줌
-// *** -> 이 return 값이 어디로 가는지 확인할 것
             return new ResponseEntity<Void>(HttpStatus.OK);
+// 이 return 값은, ex) Chat.vue -> created().get.then.(response)의 response로 감 // 토큰도 ResponseEntity에 담아서 보낼것
         } else {
             return new ResponseEntity<Void>(HttpStatus.FORBIDDEN);
-
         }
-// *** User 클래스의 모든 (아래) 데이터 타입이 set으로 입력되지 않는데, (@RequestBody User user)를 통해 프론트에서 입력한 정보들이 자동으로 넘어오기 때문에 그런건지, 아니면 윤재가 구현을 아직 안한건지
-//        private String userId;
-//        private String name;
-//        private String password;
-//        private String email;
-//        private String salt;
-//        private String role;
-//        private String status;
+// setter로 설정되지 않은 이외의 User 클래스 데이터들 -> (@RequestBody User user)를 통해 프론트에서 입력한 정보들이 자동으로 넘어와서 저장됨
+
     }
 }

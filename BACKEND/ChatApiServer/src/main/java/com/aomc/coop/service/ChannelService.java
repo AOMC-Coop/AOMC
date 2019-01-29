@@ -64,8 +64,6 @@ public class ChannelService {
 
     public ResponseType getChannelMessage(int channelIdx) {
 
-
-
         if (channelIdx >= 0) {
             List<Message> messages = channelMapper.getChannelMessage(channelIdx);
 

@@ -9,6 +9,8 @@ module.exports = (Vue) => {
   });
 };
 
+
+
 // module.exports = function(Vue) {
 //   Vue.directive('auto-bottom', {
 //     update: function() {

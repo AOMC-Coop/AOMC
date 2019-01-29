@@ -14,6 +14,8 @@ import Directives from './plugins/directives.js'
 import SmoothScrollbar from 'vue-smooth-scrollbar'
 import VuePullInfiniteScroller from 'vue-pull-infinite-scroller'
 import VeeValidate from 'vee-validate'
+import VueScrollFocus from 'vue-scroll-focus'
+import InfiniteLoading from 'vue-infinite-loading'
 
 Vue.use(VuePullInfiniteScroller)
 Vue.use(SmoothScrollbar)
@@ -26,15 +28,15 @@ Vue.use(VeeValidate)
 Vue.config.productionTip = false
 
 
-import VueScrollFocus from 'vue-scroll-focus'
+
 
 Vue.use(VueScrollFocus)
 
-import InfiniteLoading from 'vue-infinite-loading';
-Vue.use(InfiniteLoading, { /* options */ });
 
-var infiniteScroll =  require('vue-infinite-scroll');
-Vue.use(infiniteScroll)
+Vue.use(InfiniteLoading)
+
+// var infiniteScroll =  require('vue-infinite-scroll');
+// Vue.use(infiniteScroll)
 
 /* eslint-disable no-new */
 new Vue({

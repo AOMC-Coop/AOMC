@@ -3,9 +3,11 @@
 
   <!-- <div class="inner-wrap" fluid fill-height inner-wrap> -->
     <div>
-    <Message-List class="msg-list"></Message-List>
+    
+    
+    <!-- <Message-List class="msg-list"></Message-List> -->
 
-    <!-- <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages"></Message-List> -->
+    <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages"></Message-List>
     <Message-From v-on:submitMessage="sendMessage" class="msg-form"></Message-From>
 
   </div>
@@ -62,7 +64,7 @@ export default {
   name: 'Content',
   data() {
     return {
-      busy: true
+      // start:10
       // datas: [],
       // msgs: '',
     };
@@ -85,7 +87,7 @@ export default {
       //   name: this.$route.params.username,
       //   msg,
       // });
-    }
+    },
   },
 };
 

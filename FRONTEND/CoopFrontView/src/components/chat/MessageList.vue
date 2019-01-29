@@ -1,11 +1,17 @@
 <template>
-<div>
+<div class="div">
 
 <!-- <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
 
-      <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots"></infinite-loading>
+<div infinite-wrapper>
+  <div style="overflow: auto;">
+    <!-- <infinite-loading force-use-infinite-wrapper="true"></infinite-loading> -->
+  
 
-   <v-list class="card">
+  <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots" force-use-infinite-wrapper="true"></infinite-loading>
+
+  
+   <v-list class="card" >
     <!--<v-card-title>
       <v-icon large left>#</v-icon>
       <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
@@ -60,6 +66,9 @@
       </div>
     </transition-group> 
   </v-list> -->
+  </div>
+</div>
+
 </div>
 
  
@@ -72,17 +81,14 @@ import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   name: 'MessageList',
+  // components: {
+  //   InfiniteLoading,
+  // },
    data() {
     return {
-      page: 1,
-      busy: true,
-      start:5
+      start:10
     };
   },
-  // components: {
-  //   'infinite-loading':InfiniteLoading
-  // },
-
   methods: {
     infiniteHandler($state) {
 
@@ -90,144 +96,30 @@ export default {
       axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
         params: {
           start: this.start
-
         },
       }).then((response) => {
         if (response.data) {
           debugger
-          if(response.data.data['content'] != null) {
-            debugger
-            this.start += 10;
+          this.start += 10;
+          var result = response.data.data.reverse();
 
-          // this.list.unshift(...data.hits.reverse());
-           this.$store.state.received_messages.unshift(response.data.data.reverse());
-          $state.loaded();
+          for(var i=0;i<result.length;i++){
+              this.$store.state.received_messages.unshift(result[i]);
           }
+          if(result.length<10){
+            $state.complete();
+          }
+          $state.loaded();
           
         } else {
           $state.complete();
-
         }
-      });
-
-
-
-
+        // // // //
+      }); 
 
     }
-    //   axios
-    //   .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=40")
-    //   .then((response) => {
-    //     if (response.data) {
-
-    //       // this.$store.state.received_messages = response.data.data
-
-
-    //       alert('hello')
-    //       var result = response.data.data.reverse()
-
-
-    //       console.log(result[0])
-        
-    //       for(var i=0;i>result.length;i++){
-    //           this.$store.state.received_messages.unshift(result[i]);
-    //       }
-    //       console.log(this.$store.state.received_messages)
-
-    //       if(response.data.data.length<10){
-    //         $state.complete();
-    //       }
-
-
-    //       $state.loaded();
-    //     } else {
-    //       $state.complete();
-    //     }
-    //   });
-      
-      
-
-
-      // axios
-      // .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=5)
-      // .then((response) => {
-      //   if (response.data.) {
-      //     debugger
-      //     alert("들어옴");
-      //     // this.page += 1;
-      //   //   this.list.unshift(...data.hits.reverse());
-      //     $state.loaded();
-      //   } else {
-      //     alert("안들어옴");
-      //     $state.complete();
-      //   }
-      // });
     
   },
-
-
-
-  // methods: {
-  //   loadMore: function () {
-  //     this.busy = true // 무한 스크롤 기능 비활성화
-  //     this.getMessages()
-  //     alert("hello");
-  //   },
-  //   getMessages: function () {
-
-  //     axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
-  //     .then((response) => {
-  //       if (response.data) {
-  //         alert("들어옴");
-  //         debugger
-
-  //         // if (response.data.length > 10) 
-  //         //   this.busy = false 
-    
-  //         // this.$store.state.received_messages = response.data.data;
-  //         // this.page += 1;
-  //         this.$store.state.received_messages.unshift(response.data.data.reverse());
-  //         console.log("길이는"+this.$store.state.received_messages[0])
-  //         // this.list.unshift(...data.hits.reverse());
-  //         // $state.loaded();
-  //       } else {
-  //         // $state.complete();
-  //       }
-  //     });
-      
-  //   },
-  // },
-
-
-
-
-      // created() {
-      // debugger;
-      // this.$nextTick(function() {
-        // debugger;
-        // axios
-        // .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
-        // .then(response => {
-        //   debugger;
-        //     if(response.data) {
-              
-        //       this.$store.state.received_messages = response.data.data;
-        //       debugger;
-        //     //   console.log(msgs);
-              
-        //     } else {
-        //     //   app.renderNotification('Successfully Singed Up');
-        //     //   app.toggleSignUp();
-        //     this.errors.push(e);
-        //     }
-        //   })
-        // .catch(e => {
-        //   // location.href = './';
-        //   this.errors.push(e);
-        // });
-      // })
-      
-    // },
 
     computed:{
         ...mapGetters([
@@ -256,5 +148,8 @@ export default {
 .card{
   padding-left: 2%;
   /* background-color: aqua; */
+}
+.div{
+  /* overflow-y: auto|scroll; */
 }
 </style>

@@ -551,7 +551,7 @@ import axios from "axios";
       this.$store.state.userNickName = "yunyun"; //test용으로 넣어놈. 로그인 할때 받아야함
       axios
         .get("http://localhost:8083/api/team/user/" + "5")
-        .then(response => {
+        .then(response => { //
           debugger;
             if(response.data) {
               this.teamsFromServer = response.data.data;
@@ -561,8 +561,8 @@ import axios from "axios";
               this.getMemberByTeamId(response.data.data[0].idx);
               this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
 
-              // this.$store.state.channelInfo.idx = response.data.data[0].idx;
-              // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+              this.$store.state.channelInfo.idx = response.data.data[0].idx;
+              this.$store.state.channelInfo.channelName = response.data.data[0].name;
               
               
             } else {

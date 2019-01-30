@@ -1,9 +1,9 @@
 package com.aomc.coop.response;
 
-public enum Status_3000 {
+public enum Status_common {
 
-    SUCCESS_Signup("3201"),
-    FAIL_Signup("3401");
+    BAD_REQUEST("400"),
+    INTERNAL_SERVER_ERROR("500");
 
     final private String status;
 
@@ -11,7 +11,7 @@ public enum Status_3000 {
         return status;
     }
 
-    private Status_3000(String status) {
+    private Status_common(String status) {
         this.status = status;
     }
 

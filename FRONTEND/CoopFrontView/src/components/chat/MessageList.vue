@@ -5,17 +5,14 @@
 
 <div infinite-wrapper>
   <div style="overflow: auto;">
-    <!-- <infinite-loading force-use-infinite-wrapper="true"></infinite-loading> -->
   
-
-  <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots" force-use-infinite-wrapper="true"></infinite-loading>
-
-  
-   <v-list class="card" >
-    <!--<v-card-title>
+   <v-list class="card">
+    <v-card-title>
       <v-icon large left>#</v-icon>
       <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
-    </v-card-title> -->
+    </v-card-title>
+      <infinite-loading :distanse=0 direction="top" @infinite="infiniteHandler" spinner="waveDots" ref="infiniteLoading" force-use-infinite-wrapper="false"></infinite-loading>
+
 
 
       <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
@@ -86,22 +83,26 @@ export default {
   // },
    data() {
     return {
-      start:10
+      start:0
     };
   },
   methods: {
     infiniteHandler($state) {
+      // alert('hello')
 
       debugger
-      axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      axios.get("http://localhost:8083/api/channel/message?channelIdx=" + 8, {
         params: {
           start: this.start
         },
       }).then((response) => {
-        if (response.data) {
+        if (response.data.status==200) {
           debugger
           this.start += 10;
-          var result = response.data.data.reverse();
+
+           var result = response.data.data;
+
+          // this.$store.state.received_messages = result
 
           for(var i=0;i<result.length;i++){
               this.$store.state.received_messages.unshift(result[i]);
@@ -118,7 +119,41 @@ export default {
       }); 
 
     }
-    
+  },
+  created() {
+    this.$store.state.received_messages=''
+
+    axios.get("http://localhost:8083/api/channel/message?channelIdx=" + 8, {
+        params: {
+          start: this.start
+        },
+      }).then((response) => {
+        if (response.data.status==200) {
+          debugger
+          this.start += 10;
+          var result = response.data.data.reverse();
+
+          this.$store.state.received_messages = result
+
+          // console.log("배열의 길이는"+result.length)
+
+          // for(var i=0;i<result.length;i++){
+          //     // console.log("배열의 길이는"+result[i].content)
+          //     this.$store.state.received_messages.push(result[i]);
+          //     console.log(i+"배열은"+this.$store.state.received_messages[i].content)
+          // }
+
+          
+        } else {
+          alert(response.data.message)
+        }
+        // // // //
+      }); 
+
+
+
+
+
   },
 
     computed:{
@@ -147,7 +182,6 @@ export default {
 }
 .card{
   padding-left: 2%;
-  /* background-color: aqua; */
 }
 .div{
   /* overflow-y: auto|scroll; */

@@ -59,7 +59,7 @@ export default {
       
 
       if (this.stompClient) {
-        const sendMessage = { content: this.msg , nickname: this.$store.state.userNickName, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
+        const sendMessage = { content: this.msg , channel_idx: this.$store.state.channelInfo.idx, user_idx: this.$store.state.userIdx, nickname: this.$store.state.userNickName, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
         const sendChannel = { idx: this.$store.state.channelInfo.idx};
         console.log("channelInfo.idx = " + this.$store.state.channelInfo.idx);
         console.log("this.channel.idx = " + this.channel.idx);

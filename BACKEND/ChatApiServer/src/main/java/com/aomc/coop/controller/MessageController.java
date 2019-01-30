@@ -31,13 +31,13 @@ public class MessageController {
 
     @MessageMapping("/chat/{channelIdx}")
     @SendTo("/topic/message")
-    public Message broadcasting(@DestinationVariable int channelIdx, Message msg) throws Exception{
-        System.out.println("요청이 왔습니다" + msg + " channeIdx = " + channelIdx);
+    public Message broadcasting(@DestinationVariable(value = "channelIdx") int channelIdx, Message msg) throws Exception{
+        System.out.println("요청이 왔습니다" + msg);
 //        System.out.println("channelIdx는 " + channelIdx);
 
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Message> map = new HashMap<>();
         map.put("msg", msg);
-        map.put("channelIdx", channelIdx);
+//        map.put("channelIdx", ms);
 
         //큐에보냄
         if(msg != null) {

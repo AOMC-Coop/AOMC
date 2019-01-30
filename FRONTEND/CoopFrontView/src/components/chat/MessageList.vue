@@ -1,14 +1,27 @@
 <template>
-<div id="mydiv">
-  <v-list class="card">
-    <v-card-title>
+<div class="div">
+
+<!-- <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
+
+<div infinite-wrapper>
+  <div style="overflow: auto;">
+    <!-- <infinite-loading force-use-infinite-wrapper="true"></infinite-loading> -->
+  
+
+  <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots" force-use-infinite-wrapper="true"></infinite-loading>
+
+  
+   <v-list class="card" >
+    <!--<v-card-title>
       <v-icon large left>#</v-icon>
       <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
-    </v-card-title>
+    </v-card-title> -->
+
+
       <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
         <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
-         
+    
         <!-- <v-list-tile> -->
           <v-card-actions>
             <v-avatar size="42px" class="mr-3">
@@ -53,46 +66,61 @@
       </div>
     </transition-group> 
   </v-list> -->
+  </div>
 </div>
 
+</div>
+
+ 
   
 </template>
-
 <script>
 import axios from "axios";
 import { mapGetters } from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   name: 'MessageList',
+  // components: {
+  //   InfiniteLoading,
+  // },
+   data() {
+    return {
+      start:10
+    };
+  },
+  methods: {
+    infiniteHandler($state) {
 
+      debugger
+      axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+        params: {
+          start: this.start
+        },
+      }).then((response) => {
+        if (response.data) {
+          debugger
+          this.start += 10;
+          var result = response.data.data.reverse();
 
-    created() {
-      // debugger;
-      // this.$nextTick(function() {
-        // debugger;
-        // axios
-        // .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
-        // .then(response => {
-        //   debugger;
-        //     if(response.data) {
-              
-        //       this.$store.state.received_messages = response.data.data;
-        //       debugger;
-        //     //   console.log(msgs);
-              
-        //     } else {
-        //     //   app.renderNotification('Successfully Singed Up');
-        //     //   app.toggleSignUp();
-        //     this.errors.push(e);
-        //     }
-        //   })
-        // .catch(e => {
-        //   // location.href = './';
-        //   this.errors.push(e);
-        // });
-      // })
-      
-    },
+          for(var i=0;i<result.length;i++){
+              this.$store.state.received_messages.unshift(result[i]);
+          }
+          if(result.length<10){
+            $state.complete();
+          }
+          $state.loaded();
+          
+        } else {
+          $state.complete();
+        }
+        // // // //
+      }); 
+
+    }
+    
+  },
+
     computed:{
         ...mapGetters([
       'getReceivedMessages'
@@ -102,9 +130,6 @@ export default {
      
 };
 
-// var objDiv = document.getElementById("mydiv"); 
-
-// objDiv.scrollTop = objDiv.scrollHeight;
 </script>
 
 <style>
@@ -122,6 +147,9 @@ export default {
 }
 .card{
   padding-left: 2%;
-  background-color: aqua;
+  /* background-color: aqua; */
+}
+.div{
+  /* overflow-y: auto|scroll; */
 }
 </style>

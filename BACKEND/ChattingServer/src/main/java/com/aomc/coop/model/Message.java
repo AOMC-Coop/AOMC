@@ -1,9 +1,10 @@
 package com.aomc.coop.model;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @Data
 public class Message implements Serializable {
@@ -14,8 +15,9 @@ public class Message implements Serializable {
     private int user_idx;
     private String send_date;
     private String send_time;
-    private String send_db_date;
 
     private File file;
     private Reply reply;
+
+
 }

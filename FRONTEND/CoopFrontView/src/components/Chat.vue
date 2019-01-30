@@ -489,7 +489,7 @@ import axios from "axios";
       getMessage() {
         this.$store.state.received_messages.splice(0);
         axios
-        .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx)
+        .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=0")
         .then(response => {
             if(response.data) {
               
@@ -561,8 +561,8 @@ import axios from "axios";
               this.getMemberByTeamId(response.data.data[0].idx);
               this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
 
-              // this.$store.state.channelInfo.idx = response.data.data[0].idx;
-              // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+              this.$store.state.channelInfo.idx = response.data.data[0].idx;
+              this.$store.state.channelInfo.channelName = response.data.data[0].name;
               
               
             } else {

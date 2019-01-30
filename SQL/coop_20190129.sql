@@ -58,7 +58,7 @@ CREATE TABLE `channels` (
   PRIMARY KEY (`idx`),
   KEY `channels_team_idx_idx` (`team_idx`),
   CONSTRAINT `channels_team_idx` FOREIGN KEY (`team_idx`) REFERENCES `teams` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +67,7 @@ CREATE TABLE `channels` (
 
 LOCK TABLES `channels` WRITE;
 /*!40000 ALTER TABLE `channels` DISABLE KEYS */;
-INSERT INTO `channels` VALUES (7,'general',15,'2019-01-22 13:30:29','2019-01-22 13:30:29'),(8,'general',16,'2019-01-22 13:30:39','2019-01-22 13:30:39'),(9,'love',15,'2019-01-22 15:42:52','2019-01-22 15:42:52'),(16,'general',23,'2019-01-23 21:25:16','2019-01-23 21:25:16'),(22,'general',29,'2019-01-23 21:31:26','2019-01-23 21:31:26'),(26,'general',33,'2019-01-24 10:06:26','2019-01-24 10:06:26'),(32,'general',39,'2019-01-24 12:45:56','2019-01-24 12:45:56'),(36,'general',43,'2019-01-24 12:57:36','2019-01-24 12:57:36'),(38,'general',45,'2019-01-24 13:11:21','2019-01-24 13:11:21'),(39,'general',46,'2019-01-24 13:13:08','2019-01-24 13:13:08'),(40,'general',47,'2019-01-24 13:23:48','2019-01-24 13:23:48');
+INSERT INTO `channels` VALUES (7,'general',15,'2019-01-22 13:30:29','2019-01-22 13:30:29'),(8,'general',16,'2019-01-22 13:30:39','2019-01-22 13:30:39'),(9,'love',15,'2019-01-22 15:42:52','2019-01-22 15:42:52'),(40,'general',47,'2019-01-24 13:23:48','2019-01-24 13:23:48'),(42,'aomc-test',16,'2019-01-28 18:31:13','2019-01-28 18:31:13'),(44,'aomc-test2',16,'2019-01-28 19:06:08','2019-01-28 19:06:08'),(45,'aomc-test3',16,'2019-01-28 19:54:14','2019-01-28 19:54:14'),(48,'aomc-test4',16,'2019-01-29 09:51:54','2019-01-29 09:51:54');
 /*!40000 ALTER TABLE `channels` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -147,7 +147,7 @@ CREATE TABLE `messages` (
   CONSTRAINT `message_channel_idx` FOREIGN KEY (`channel_idx`) REFERENCES `channels` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `message_file_idx` FOREIGN KEY (`file_idx`) REFERENCES `file` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `message_user_idx` FOREIGN KEY (`user_idx`) REFERENCES `users` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,7 +156,7 @@ CREATE TABLE `messages` (
 
 LOCK TABLES `messages` WRITE;
 /*!40000 ALTER TABLE `messages` DISABLE KEYS */;
-INSERT INTO `messages` VALUES (1,'joined #general',7,6,'2019-01-22 13:30:29',NULL),(2,'joined #general',8,6,'2019-01-22 13:30:39',NULL),(3,'joined #general',7,4,'2019-01-22 14:45:14',NULL),(10,'joined #general',16,6,'2019-01-23 21:25:16',NULL),(16,'joined #general',22,6,'2019-01-23 21:31:26',NULL),(20,'joined #general',26,4,'2019-01-24 10:06:26',NULL),(26,'joined #general',32,4,'2019-01-24 12:45:56',NULL),(30,'joined #general',36,4,'2019-01-24 12:57:36',NULL),(31,'joined #general',38,4,'2019-01-24 13:11:21',NULL),(32,'joined #general',39,4,'2019-01-24 13:13:08',NULL),(33,'joined #general',40,4,'2019-01-24 13:23:48',NULL);
+INSERT INTO `messages` VALUES (1,'joined #general',7,5,'2019-01-22 13:30:29',NULL),(2,'joined #general',8,6,'2019-01-22 13:30:39',NULL),(33,'joined #general',40,4,'2019-01-24 13:23:48',NULL),(34,'hi',9,4,'2019-01-25 16:12:04',NULL),(78,'hi',40,4,'2019-01-25 19:11:12',NULL),(91,'joined #aomc-test',42,4,'2019-01-28 18:31:13',NULL),(93,'joined #aomc-test2',44,5,'2019-01-28 19:06:08',NULL),(94,'joined #aomc-test3',45,5,'2019-01-28 19:54:14',NULL),(97,'joined #aomc-test4',48,5,'2019-01-29 09:51:54',NULL),(98,'hello1',8,4,'2019-01-29 10:48:13',NULL),(99,'helloo2',8,4,'2019-01-29 10:48:30',NULL),(100,'helloo3',8,4,'2019-01-29 10:48:34',NULL),(101,'helloo4',8,4,'2019-01-29 10:48:35',NULL),(102,'hellooooo5',8,4,'2019-01-29 10:48:40',NULL),(103,'helloooooooooooo6',8,5,'2019-01-29 13:54:59',NULL),(104,'helloooooooooooo7',8,5,'2019-01-29 13:57:51',NULL),(105,'helloooooooooooo8',8,5,'2019-01-29 13:57:56',NULL),(106,'helloooooooooooo9',8,5,'2019-01-29 13:57:56',NULL),(107,'helloooooooooooo10',8,5,'2019-01-29 13:57:56',NULL),(108,'helloooooooooooo11',8,5,'2019-01-29 13:57:56',NULL),(109,'helloooooooooooo12',8,5,'2019-01-29 13:57:56',NULL),(110,'helloooooooooooo13',8,5,'2019-01-29 13:57:57',NULL),(111,'helloooooooooooo14',8,5,'2019-01-29 13:57:57',NULL),(112,'helloooooooooooo15',8,5,'2019-01-29 13:57:57',NULL),(113,'helloooooooooooo16',8,5,'2019-01-29 13:57:57',NULL),(114,'helloooooooooooo17',8,5,'2019-01-29 13:57:58',NULL),(115,'helloooooooooooo18',8,5,'2019-01-29 13:57:58',NULL),(116,'helloooooooooooo19',8,5,'2019-01-29 13:57:58',NULL),(117,'helloooooooooooo20',8,5,'2019-01-29 13:57:58',NULL),(118,'helloooooooooooo21',8,5,'2019-01-29 13:57:58',NULL),(119,'helloooooooooooo22',8,5,'2019-01-29 13:57:59',NULL),(120,'helloooooooooooo23',8,5,'2019-01-29 13:57:59',NULL),(121,'helloooooooooooo24',8,5,'2019-01-29 13:57:59',NULL),(122,'helloooooooooooo25',8,5,'2019-01-29 13:57:59',NULL),(123,'helloooooooooooo26',8,5,'2019-01-29 13:58:00',NULL),(124,'helloooooooooooo27',8,5,'2019-01-29 13:58:00',NULL),(125,'helloooooooooooo28',8,5,'2019-01-29 13:58:00',NULL),(126,'helloooooooooooo29',8,5,'2019-01-29 13:58:00',NULL),(127,'helloooooooooooo30',8,5,'2019-01-29 13:58:01',NULL),(128,'helloooooooooooo31',8,5,'2019-01-29 13:58:01',NULL),(129,'helloooooooooooo32',8,5,'2019-01-29 13:58:01',NULL),(130,'helloooooooooooo33',8,5,'2019-01-29 13:58:01',NULL),(131,'helloooooooooooo34',8,5,'2019-01-29 13:58:01',NULL),(132,'helloooooooooooo35',8,5,'2019-01-29 13:58:02',NULL),(133,'helloooooooooooo36',8,5,'2019-01-29 13:58:02',NULL),(134,'helloooooooooooo37',8,5,'2019-01-29 13:58:02',NULL),(135,'helloooooooooooo38',8,5,'2019-01-29 13:58:02',NULL),(136,'helloooooooooooo39',8,5,'2019-01-29 13:58:02',NULL),(137,'helloooooooooooo40',8,5,'2019-01-29 13:58:02',NULL),(138,'41',8,5,'2019-01-29 13:58:03',NULL),(139,'helloooooooooooo42',8,5,'2019-01-29 13:58:03',NULL);
 /*!40000 ALTER TABLE `messages` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -183,7 +183,7 @@ CREATE TABLE `teams` (
 
 LOCK TABLES `teams` WRITE;
 /*!40000 ALTER TABLE `teams` DISABLE KEYS */;
-INSERT INTO `teams` VALUES (15,'winterdev','2019-01-22 13:30:29','2019-01-22 14:27:04',1),(16,'aomc','2019-01-22 13:30:39','2019-01-22 14:27:01',1),(23,'testTeam','2019-01-23 21:25:16','2019-01-23 21:25:16',1),(29,'testTeam','2019-01-23 21:31:26','2019-01-23 21:31:26',1),(33,'testTeam','2019-01-24 10:06:26','2019-01-24 10:06:26',1),(39,'testTeam','2019-01-24 12:45:56','2019-01-24 12:45:56',1),(43,'testTeam','2019-01-24 12:57:36','2019-01-24 12:57:36',1),(45,'testTeam','2019-01-24 13:11:21','2019-01-24 13:11:21',1),(46,'testTeam','2019-01-24 13:13:08','2019-01-24 13:13:08',1),(47,'testTeam','2019-01-24 13:23:48','2019-01-24 13:23:48',1);
+INSERT INTO `teams` VALUES (15,'winterdev','2019-01-22 13:30:29','2019-01-22 14:27:04',1),(16,'aomc','2019-01-22 13:30:39','2019-01-22 14:27:01',1),(47,'testTeam','2019-01-24 13:23:48','2019-01-24 13:23:48',1);
 /*!40000 ALTER TABLE `teams` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -205,7 +205,7 @@ CREATE TABLE `user_has_channel` (
   KEY `user_has_channel_user_idx_idx` (`user_idx`),
   CONSTRAINT `user_has_channel_channel_idx` FOREIGN KEY (`channel_idx`) REFERENCES `channels` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_has_channel_user_idx` FOREIGN KEY (`user_idx`) REFERENCES `users` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -214,7 +214,7 @@ CREATE TABLE `user_has_channel` (
 
 LOCK TABLES `user_has_channel` WRITE;
 /*!40000 ALTER TABLE `user_has_channel` DISABLE KEYS */;
-INSERT INTO `user_has_channel` VALUES (1,7,6,0,1),(2,7,4,0,0),(3,7,5,0,1),(4,8,6,0,1),(5,8,4,0,1),(6,8,5,0,1),(7,9,4,0,0),(8,9,5,0,1),(10,16,6,0,1),(11,16,4,0,1),(12,16,5,0,1),(16,22,6,0,1),(17,22,4,0,1),(18,22,5,0,1),(21,26,4,0,1),(22,26,5,0,1),(23,32,4,0,1),(28,36,5,0,1),(29,38,5,0,1),(30,39,5,0,1);
+INSERT INTO `user_has_channel` VALUES (1,7,6,0,1),(2,7,4,0,0),(3,7,5,0,1),(4,8,6,0,1),(5,8,4,0,1),(6,8,5,0,1),(7,9,4,0,0),(8,9,5,0,1),(42,7,5,0,1),(43,7,6,0,1),(44,7,7,0,1),(45,42,4,0,1),(46,42,5,0,1),(50,44,5,0,1),(51,44,4,0,1),(52,44,6,0,1),(53,45,5,0,1),(54,45,4,0,1),(55,45,6,0,1),(60,48,5,0,1),(61,48,4,0,1);
 /*!40000 ALTER TABLE `user_has_channel` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -238,7 +238,7 @@ CREATE TABLE `user_has_team` (
   KEY `user_has_team_team_idx_idx` (`team_idx`),
   CONSTRAINT `user_has_team_team_idx` FOREIGN KEY (`team_idx`) REFERENCES `teams` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `user_has_team_user_idx` FOREIGN KEY (`user_idx`) REFERENCES `users` (`idx`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -247,7 +247,7 @@ CREATE TABLE `user_has_team` (
 
 LOCK TABLES `user_has_team` WRITE;
 /*!40000 ALTER TABLE `user_has_team` DISABLE KEYS */;
-INSERT INTO `user_has_team` VALUES (8,15,6,'2019-01-22 13:30:29',1,1,0),(9,15,4,'2019-01-22 13:30:29',0,1,1),(10,15,5,'2019-01-22 13:30:29',0,1,0),(11,16,6,'2019-01-22 13:30:39',1,1,0),(12,16,4,'2019-01-22 13:30:39',0,1,0),(13,16,5,'2019-01-22 13:30:39',0,1,0),(14,15,7,'2019-01-22 15:34:01',0,1,0),(19,23,6,'2019-01-23 21:25:16',1,1,0),(20,23,4,'2019-01-23 21:25:16',0,1,0),(21,23,5,'2019-01-23 21:25:16',0,1,0),(30,29,6,'2019-01-23 21:31:26',1,1,0),(31,29,4,'2019-01-23 21:31:26',0,1,0),(32,29,5,'2019-01-23 21:31:26',0,1,0),(37,33,4,'2019-01-24 10:06:26',1,1,0),(38,33,5,'2019-01-24 10:06:26',0,1,0),(39,39,4,'2019-01-24 12:45:56',1,1,0),(40,39,4,'2019-01-24 12:45:56',0,1,0),(48,43,4,'2019-01-24 12:57:36',1,1,0),(49,43,5,'2019-01-24 12:57:36',0,1,0),(50,45,4,'2019-01-24 13:11:21',1,1,0),(51,45,5,'2019-01-24 13:11:21',0,1,0),(52,46,4,'2019-01-24 13:13:08',1,1,0),(53,46,5,'2019-01-24 13:13:08',0,1,0),(54,47,4,'2019-01-24 13:23:48',1,1,0);
+INSERT INTO `user_has_team` VALUES (8,15,6,'2019-01-22 13:30:29',1,1,0),(9,15,4,'2019-01-22 13:30:29',0,1,1),(11,16,6,'2019-01-22 13:30:39',1,1,0),(12,16,4,'2019-01-22 13:30:39',0,1,0),(13,16,5,'2019-01-22 13:30:39',0,1,0),(14,15,7,'2019-01-22 15:34:01',0,1,1),(54,47,4,'2019-01-24 13:23:48',1,1,0),(69,15,5,'2019-01-28 14:51:51',0,1,1),(70,15,6,'2019-01-28 15:09:10',0,1,0),(71,15,7,'2019-01-28 15:09:14',0,1,1);
 /*!40000 ALTER TABLE `user_has_team` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -265,7 +265,7 @@ CREATE TABLE `users` (
   `salt` varchar(45) NOT NULL,
   `nickname` varchar(45) NOT NULL,
   `gender` tinyint(4) NOT NULL,
-  `role` char(5) NOT NULL,
+  `role` tinyint(4) NOT NULL DEFAULT '0',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   `reg_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `access_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -280,7 +280,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (4,'dmsal7325@naver.com','1234','1234','mooming',0,'0',1,'2019-01-22 10:34:16','2019-01-22 10:34:16','2019-01-22 10:34:16'),(5,'yunjea031296@gmail.com','1234','1234','yunyun',1,'0',1,'2019-01-22 10:35:08','2019-01-22 10:35:08','2019-01-22 10:35:08'),(6,'garamdaStarever222@gmail.com ','1234','1234','catman',1,'0',1,'2019-01-22 10:35:29','2019-01-22 10:35:29','2019-01-22 10:35:29'),(7,'dmsal2525@gmail.com','1234','1234','love',1,'0',1,'2019-01-22 14:51:27','2019-01-22 14:51:27','2019-01-22 14:51:27');
+INSERT INTO `users` VALUES (4,'dmsal7325@naver.com','1234','1234','mooming',0,0,1,'2019-01-22 10:34:16','2019-01-22 10:34:16','2019-01-22 10:34:16'),(5,'yunjea0312@naver.com','1234','1234','yunyun',1,0,1,'2019-01-22 10:35:08','2019-01-22 10:35:08','2019-01-22 10:35:08'),(6,'garamdaStarever222@gmail.com ','1234','1234','catman',1,0,1,'2019-01-22 10:35:29','2019-01-22 10:35:29','2019-01-22 10:35:29'),(7,'dmsal2525@gmail.com','1234','1234','love',1,0,1,'2019-01-22 14:51:27','2019-01-22 14:51:27','2019-01-22 14:51:27');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -293,4 +293,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-01-29 10:16:02
+-- Dump completed on 2019-01-29 19:00:30

@@ -80,19 +80,27 @@ public class ChannelService {
         }
     }
 
-    public ResponseType getChannelMessage(int channelIdx) {
+    public ResponseType getChannelMessage(int channelIdx, int start) {
 
         if (channelIdx >= 0) {
-            List<Message> messages = channelMapper.getChannelMessage(channelIdx);
+            List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
 
-            String sendDate = messages.get(0).getSend_date();
-            for(int i=1;i<messages.size();i++){
-                if(messages.get(i).getSend_date().equals(sendDate)){
-                    messages.get(i).setSend_date("");
-                }else{
-                    sendDate = messages.get(i).getSend_date();
+            String sendDate = "";
+            if(messages.size() > 0) {
+                sendDate = messages.get(0).getSend_date();
+
+                for(int i=1;i<messages.size();i++){
+                    if(messages.get(i).getSend_date().equals(sendDate)){
+                        messages.get(i).setSend_date("");
+                    }else{
+                        sendDate = messages.get(i).getSend_date();
+                    }
                 }
+            }else {
+                return codeJsonParser.codeJsonParser(Status_1000.FAIL_Get_Message.getStatus()); //에러코드 수정하기
             }
+
+
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);
         } else {

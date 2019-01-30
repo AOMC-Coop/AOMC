@@ -29,6 +29,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -331,6 +332,7 @@ public class TeamService {
             }
 
                 values.putAll(token.getToken(), hashMap);
+                values.getOperations().expire(token.getToken(), 1L, TimeUnit.HOURS);
 
                 mailSend.mailsend(mailSender, user.getUid(), token.getToken());
 

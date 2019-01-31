@@ -126,7 +126,10 @@ public class TeamService {
 
                     values.putAll(token.getToken(), hashMap);
 
-                    mailSend.mailsend(mailSender, user.getUid(), token.getToken());
+                    //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
+
+                    SendMailTreand sendMailTreand = new SendMailTreand(mailSender, user.getUid(), token.getToken());
+                    sendMailTreand.start();
 
                 }
 
@@ -334,7 +337,10 @@ public class TeamService {
                 values.putAll(token.getToken(), hashMap);
                 values.getOperations().expire(token.getToken(), 1L, TimeUnit.HOURS);
 
-                mailSend.mailsend(mailSender, user.getUid(), token.getToken());
+                //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
+
+                SendMailTreand sendMailTreand = new SendMailTreand(mailSender, user.getUid(), token.getToken());
+                sendMailTreand.start();
 
             }
 
@@ -361,6 +367,23 @@ public class TeamService {
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_ACCEPT_INVITE.getStatus());
 
 
+    }
+
+    class SendMailTreand extends Thread {
+
+        JavaMailSender mailSender;
+        String userId;
+        String token;
+
+        public SendMailTreand(JavaMailSender mailSender, String userId, String token) {
+                this.mailSender = mailSender;
+                this.userId = userId;
+                this.token = token;
+        }
+
+        public void run() {
+            mailSend.mailsend(mailSender, userId, token);
+        }
     }
 
 

@@ -208,7 +208,7 @@
       </v-btn>
     </v-toolbar> -->
     
-    <Content :key="somevalueunderyourcontrol"></Content>
+    <ChatRoom :key="somevalueunderyourcontrol"></ChatRoom>
 
     <!-- <v-btn
       fab
@@ -310,7 +310,7 @@
   </v-app>
 </template>
 <script>
-import Content from './Content.vue'
+import ChatRoom from './ChatRoom.vue'
 import CreateChannel from './CreateChannel.vue'
 import InviteUserEmail from './InviteUserEmail.vue'
 import axios from "axios";
@@ -318,7 +318,7 @@ import axios from "axios";
   export default {
     el: "Chat",
     components : {
-    'Content' : Content,
+    'ChatRoom' : ChatRoom,
     'CreateChannel' : CreateChannel,
     'InviteUserEmail' : InviteUserEmail
   },

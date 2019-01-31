@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import Chat from './components/Chat.vue' 
+import Chat from './components/chat/ChatHome.vue' 
 import Login from './components/Auth/Login.vue' // + Login.vue 컴포넌트를 추가할 것
 
 export default {

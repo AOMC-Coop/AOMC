@@ -46,6 +46,14 @@
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+
+             <v-flex xs6 >
+              <v-subheader class="white--text" >
+              <v-icon class="white--text" @click="">add</v-icon> 
+              <v-text style = "fontSize : 15px">create Team</v-text>
+              </v-subheader>
+          </v-flex>
+
           </v-list-group>
         </template>
       </v-list> 

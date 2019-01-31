@@ -7,7 +7,7 @@
       permanent
     >
 
-    <v-list dense class="white--text">
+    <v-list class="white--text">
         <template v-for="item in teams">
           <v-layout
             v-if="item.heading"
@@ -23,8 +23,8 @@
             :key="item.text"
           >
             <v-list-tile slot="activator">
-              <v-list-tile-content >
-                <v-list-tile-title style = "fontSize : 25px">
+              <v-list-tile-content>
+                <v-list-tile-title style = "fontSize : 33px">
                   {{ teamName }}
                 </v-list-tile-title>
                 <v-list-tile-title style = "fontSize : 15px">
@@ -41,7 +41,7 @@
                 <v-icon class="white--text" >widgets</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title class="white--text">
+                <v-list-tile-title class="white--text" style = "fontSize : 20px">
                   {{ child.name }}
                 </v-list-tile-title>
               </v-list-tile-content>

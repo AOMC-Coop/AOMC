@@ -72,12 +72,14 @@ public class TeamService {
             List<User> users = team.getUsers();
             team.setOwner(users.get(0).getUid());
 
+            User ownerUserInfo = userMapper.findBysUserid(users.get(0).getUid());
+
             Channel channel = new Channel();
             channel.setName("general");
 
             Message message = new Message();
             message.setContent("joined #general");
-            message.setNickname(users.get(0).getNickname());
+            message.setNickname(ownerUserInfo.getNickname());
             List<Message> messages = new ArrayList<>();
             messages.add(message);
 
@@ -91,7 +93,7 @@ public class TeamService {
             teamMapper.createTeam(team);
             channelMapper.createChannel(channel, team.getIdx());
 
-            User ownerUserInfo = userMapper.findBysUserid(users.get(0).getUid());
+
             messageMapper.createMessage(message, channel.getIdx(), ownerUserInfo.getIdx());
 
             for (User user : users) {
@@ -128,7 +130,7 @@ public class TeamService {
 
                     //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
 
-                    SendMailTreand sendMailTreand = new SendMailTreand(mailSender, user.getUid(), token.getToken());
+                    SendMailTreand sendMailTreand = new SendMailTreand(mailSender, user.getUid(), token.getToken(), team.getName(), team.getOwner());
                     sendMailTreand.start();
 
                 }
@@ -294,7 +296,7 @@ public class TeamService {
 
 
         for(User inviteUser : inviteUsers){
-            for(int i=0;i<usersOfTeam.size();i++){
+            for(int i=1;i<usersOfTeam.size();i++){
 
                 if(inviteUser.getUid().equals(usersOfTeam.get(i).getUid())){
                     existUsers.add(inviteUser);
@@ -339,7 +341,7 @@ public class TeamService {
 
                 //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
 
-                SendMailTreand sendMailTreand = new SendMailTreand(mailSender, user.getUid(), token.getToken());
+                SendMailTreand sendMailTreand = new SendMailTreand(mailSender, user.getUid(), token.getToken(), team.getName(), inviteUsers.get(0).getUid());
                 sendMailTreand.start();
 
             }
@@ -374,15 +376,19 @@ public class TeamService {
         JavaMailSender mailSender;
         String userId;
         String token;
+        String teamName;
+        String teamOwner;
 
-        public SendMailTreand(JavaMailSender mailSender, String userId, String token) {
+        public SendMailTreand(JavaMailSender mailSender, String userId, String token, String teamName, String teamOwner) {
                 this.mailSender = mailSender;
                 this.userId = userId;
                 this.token = token;
+                this.teamName = teamName;
+                this.teamOwner = teamOwner;
         }
 
         public void run() {
-            mailSend.mailsend(mailSender, userId, token);
+            mailSend.mailsend(mailSender, userId, token, teamName, teamOwner);
         }
     }
 

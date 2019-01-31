@@ -1,18 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Auth/Login'
-import Chat from '@/components/Chat'
+import ChatHome from '@/components/chat/ChatHome'
 import Vuetify from 'vuetify'
-
-// src/index.js
-
 import '../assets/stylus/main.styl'
-
-// Helpers
 import colors from 'vuetify/es5/util/colors'
-// import validator from './validator'
 
-// Vue.use(validator)
 
 Vue.use(Vuetify, {
   theme: {
@@ -32,13 +25,13 @@ export default new Router({ // 모르면 공부
     },
     {
       path: '/chat',
-      name: 'Chat',
-      component: Chat
+      name: 'ChatHome',
+      component: ChatHome
     }
   ],
-  scrollBehavior (to, from, savedPosition) {
-    return { x: 100, y: 100 }
-  }
+  // scrollBehavior (to, from, savedPosition) {
+  //   return { x: 100, y: 100 }
+  // }
 })
 
 Vue.use(Router)

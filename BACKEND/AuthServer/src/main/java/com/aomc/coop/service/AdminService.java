@@ -1,5 +1,5 @@
 /*
-package com.aomc.coop.controller;
+package com.aomc.coop.service;
 
 import com.aomc.coop.model.User;
 import com.aomc.coop.service.UserService;

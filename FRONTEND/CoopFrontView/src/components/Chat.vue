@@ -391,7 +391,7 @@ import axios from "axios";
         this.getMessage();
       },
       clickSave() {
-        debugger;
+        // debugger;
         console.log(this.$store.state.inviteUsers);
         this.inviteTeam.idx = localStorage.getItem("teamIdx");
         this.inviteTeam.users = this.$store.state.inviteUsers;
@@ -400,7 +400,7 @@ import axios from "axios";
         axios
         .post("http://localhost:8083/api/team/invite", this.inviteTeam)
         .then(response => {
-          debugger;
+          // debugger;
             if(response.data) {
               // this.teamMembers = response.data.data;
               console.log(response.data);
@@ -447,13 +447,11 @@ import axios from "axios";
         axios
         .get("http://localhost:8083/api/team/" + teamIdx)
         .then(response => {
-          debugger;
+          // debugger;
             if(response.data) {
               this.teamMembers = response.data.data;
-              console.log(this.teamMembers);
               for(var i=0; i<this.teamMembers.length; i++) {
                 if(this.teamMembers[i].idx == this.userIdx) {
-                  console.log("if");
                   this.teamMembers[i].you = "(you)";
                 }
               }
@@ -466,16 +464,15 @@ import axios from "axios";
         });
       },
       getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
+        debugger
         axios
         .get("http://localhost:8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
             if(response.data) {
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
-              console.log(this.$store.state.channelInfo.idx);
               this.$store.state.channelInfo.channelName = this.channels[0].name;
-              console.log(this.$store.state.channelInfo.channelName);
-              this.getMessage();
+              // this.getMessage();
 
             } else {
             this.errors.push(e);
@@ -486,24 +483,27 @@ import axios from "axios";
         });
 
       },
-      getMessage() {
-        this.$store.state.received_messages.splice(0);
-        axios
-        .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=0")
-        .then(response => {
-            if(response.data) {
+      // getMessage() {
+      //   debugger
+      //   this.$store.state.received_messages.splice(0);
+      //   axios
+      //   .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=0")
+      //   .then(response => {
+      //       if(response.data) {
               
-              this.$store.state.received_messages = response.data.data;
+      //         this.$store.state.received_messages = response.data.data;
+      //         console.log(this.$store.state.received_messages)
+
               
-            } else {
-            this.errors.push(e);
-            }
-          })
-        .catch(e => {
-          // location.href = './';
-          this.errors.push(e);
-        });
-      },
+      //       } else {
+      //       this.errors.push(e);
+      //       }
+      //     })
+      //   .catch(e => {
+      //     // location.href = './';
+      //     this.errors.push(e);
+      //   });
+      // },
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
         axios
@@ -552,7 +552,7 @@ import axios from "axios";
       axios
         .get("http://localhost:8083/api/team/user/" + "5")
         .then(response => { //
-          debugger;
+          // debugger;
             if(response.data) {
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;

@@ -76,10 +76,16 @@
             <artifactId>jedis</artifactId>
             <version>2.9.1</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.security</groupId>-->
+            <!--<artifactId>spring-security-config</artifactId>-->
+            <!--<version>5.1.2.RELEASE</version>-->
+        <!--</dependency>-->
+        <!-- JWT -->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
-            <version>5.1.2.RELEASE</version>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.4.0</version>
         </dependency>
     </dependencies>
 

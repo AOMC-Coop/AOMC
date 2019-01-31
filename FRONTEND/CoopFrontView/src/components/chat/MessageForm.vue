@@ -59,12 +59,12 @@ export default {
       
 
       if (this.stompClient) {
-        const sendMessage = { content: this.msg , nickname: this.$store.state.userNickName, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
+        const sendMessage = { content: this.msg , channel_idx: this.$store.state.channelInfo.idx, user_idx: this.$store.state.userIdx, nickname: this.$store.state.userNickName, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
         const sendChannel = { idx: this.$store.state.channelInfo.idx};
         console.log("channelInfo.idx = " + this.$store.state.channelInfo.idx);
         console.log("this.channel.idx = " + this.channel.idx);
         debugger;
-        this.stompClient.send("/app/chat/" + this.$store.state.channelInfo.idx, JSON.stringify(sendMessage)); //채널번호 붙이고 싶음
+        this.stompClient.send("/app/chat", JSON.stringify(sendMessage)); //채널번호 붙이고 싶음
       }
 
       this.msg = '';
@@ -92,11 +92,15 @@ export default {
       this.stompClient.connect(
         {},
         frame => {
+          debugger
           // this.connected = true;
-          // console.log("////////////////////////"+frame);
+          console.log("////////////////////////"+frame);
           this.stompClient.subscribe("/topic/message", tick => { //채널번호 붙이고싶음
             // console.log(tick);
+            debugger
             this.$store.state.received_messages.push(JSON.parse(tick.body));
+
+            console.log("subcribe = " + tick.body);
 
             var newValue= this.$store.state.received_messages.slice(-1)[0].send_date;
 
@@ -111,7 +115,10 @@ export default {
           console.log(error);
           this.connected = false;
         }
-      );
+      )
+      // this.stompClient.disconnect(distick => {
+      //   console.log("socket disconnect");
+      // });
     }
 
 };

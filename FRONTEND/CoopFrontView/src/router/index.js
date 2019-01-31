@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/components/Login'
+import Login from '@/components/Auth/Login'
 import Chat from '@/components/Chat'
 import Vuetify from 'vuetify'
 

@@ -208,7 +208,7 @@
       </v-btn>
     </v-toolbar> -->
     
-    <Content></Content>
+    <Content :key="somevalueunderyourcontrol"></Content>
 
     <!-- <v-btn
       fab

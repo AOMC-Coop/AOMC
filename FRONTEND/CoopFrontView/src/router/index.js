@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/components/Login'
+import Login from '@/components/auth/Login'
+import Signup from '@/components/auth/Signup'
+import Signin from '@/components/auth/Signin'
 import Chat from '@/components/Chat'
 import Vuetify from 'vuetify'
 
@@ -27,8 +29,8 @@ export default new Router({ // 모르면 공부
   routes: [
     {
       path: '/',
-      name: 'Login',
-      component: Login
+      name: 'Signin',
+      component: Signin
     },
     {
       path: '/chat',

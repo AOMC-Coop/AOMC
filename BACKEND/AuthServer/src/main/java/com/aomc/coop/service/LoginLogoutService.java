@@ -41,12 +41,15 @@ import com.aomc.coop.util.SHA256;
 @Slf4j
 @Service
 @Transactional
-public class LoginService {
+public class LoginLogoutService {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired // 이렇게 하는거 맞나?
+    private JwtService jwtService;
 
     @Resource(name="redisTemplate") // @Resource : 일단 @Autowired와 비슷한 것으로 알고 있기
     private HashOperations<String, String, String> hashOperations; // HashOperations : Redis map specific operations working on a hash
@@ -77,22 +80,20 @@ public class LoginService {
 //                token = token.replace("=", "").replace('/', '_').replace('+', '-');
 //                System.out.println("token = " + token);
 
-                final JwtService.TokenRes token = new JwtService.TokenRes(JwtService.create(myUser.getIdx()));
+                final JwtService.TokenRes token = new JwtService.TokenRes(jwtService.create(myUser.getIdx()));
 
                 HashMap hashMap = new HashMap();
                 hashMap.put("uid", myUser.getUid());
                 hashMap.put("nickname", myUser.getNickname());
 
                 hashOperations.putAll(token.getToken(), hashMap);
-//                String idxxx = (String)hashOperations.get(token.getToken(), "uid");
-//                System.out.println("id는"+idxxx);
 
 //                String value = (String)redisTemplate.opsForValue().get(key);
 //                Assert.assertEquals("token", value);
 //                values.leftPush("key:auth", tokenDto.getToken());
 
                 // 3. redis에 토큰 보내기
-                String key = token;
+                String key = token.getToken();
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 SimpleDateFormat sdf = new SimpleDateFormat( "yy-MM-dd HH:mm:ss" , Locale.KOREA );
                 String time = sdf.format( new Date( timestamp.getTime( ) ) );
@@ -108,7 +109,7 @@ public class LoginService {
                 hashOperations.putAll(key, map);
                 // key는 redis token, map은 <user id, ip, time>
                 //            hashOperations<String, String, String>
-                hashOperations.getOperations().expire(token, 5L, TimeUnit.MINUTES);
+                hashOperations.getOperations().expire(token.getToken(), 5L, TimeUnit.MINUTES);
 
                 // test -> 조회해보기
                 // String userId = hashOperations.get(token, "userId");
@@ -118,13 +119,13 @@ public class LoginService {
                 // System.out.println(userId + " " + ip + " " + timeStamp);
 
                 // 4. 토큰을 client에 보내기
-                myUser.setPwd(token);
-// ***** password 대신 token을 보냄 -> 1. 원래는 JWT 토큰을 바디에 보내야 함  2. 그 다음부터는 헤더에 담아서 통신 : 은미 코드 보자
+                // myUser.setPwd(token.getToken()); -> 이 부분은 return 파라미터에 token을 담은 것으로 대체
+// ***** password 대신 token을 보냄 -> 1. 원래는 JWT 토큰을 바디에 보내야 함  2. 그 다음부터는 헤더에 담아서 통신 -> 다른 service들에 영향 : 은미 코드 보자
 
 //				HttpHeaders headers = new HttpHeaders();
 //				headers.add("auth_token", token);
                 // 제대로 로그인이 되었다면
-                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus());
+                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), token.getToken()); // ,로 파라미터에 token값 넘기기 (String으로)
             } else {
                 // Http request로 들어온 user와 db상의 user가 다르다면
                 System.out.println("Wrong Password");
@@ -136,4 +137,15 @@ public class LoginService {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login.getStatus());
         }
     }
+
+//    public ResponseType logoutUser(@RequestBody User user) {
+//
+//        try
+//        {
+//
+//        }
+//        catch (Exception e) {
+//
+//        }
+//    }
 }

@@ -7,7 +7,7 @@
       permanent
     >
 
-    <v-list dense class="white--text">
+    <v-list class="white--text">
         <template v-for="item in teams">
           <v-layout
             v-if="item.heading"
@@ -23,8 +23,8 @@
             :key="item.text"
           >
             <v-list-tile slot="activator">
-              <v-list-tile-content >
-                <v-list-tile-title style = "fontSize : 25px">
+              <v-list-tile-content>
+                <v-list-tile-title style = "fontSize : 33px">
                   {{ teamName }}
                 </v-list-tile-title>
                 <v-list-tile-title style = "fontSize : 15px">
@@ -41,11 +41,19 @@
                 <v-icon class="white--text" >widgets</v-icon>
               </v-list-tile-action>
               <v-list-tile-content>
-                <v-list-tile-title class="white--text">
+                <v-list-tile-title class="white--text" style = "fontSize : 20px">
                   {{ child.name }}
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+
+             <v-flex xs6 >
+              <v-subheader class="white--text" >
+              <v-icon class="white--text" @click="addCreateTeamDialog">add</v-icon> 
+              <v-text style = "fontSize : 15px">create Team</v-text>
+              </v-subheader>
+          </v-flex>
+
           </v-list-group>
         </template>
       </v-list> 
@@ -67,9 +75,6 @@
               <v-list-tile-title>
                  {{ item.nickname }} {{item.you}}
               </v-list-tile-title>
-              <!-- <v-list-tile-title v-if="item.idx === this.userIdx">
-                 (you)
-              </v-list-tile-title> -->
             </v-list-tile-content>
           </v-list-tile>
         </template>
@@ -85,9 +90,6 @@
         <template v-for="item in channels">
           
           <v-list-tile v-if :key="item.text" @click="clickChannel(item.idx, item.name)">
-            <!-- <v-list-tile-action>
-              <v-icon class="white--text">{{ item.icon }}</v-icon>
-            </v-list-tile-action> -->
             <v-list-tile-content>
               <v-list-tile-title>
                <v-text> # {{ item.name }} </v-text>
@@ -105,122 +107,10 @@
       </v-subheader>
     </v-flex>
 
-
-
-      <!-- <v-list dense class="white--text">
-        <template v-for="item in items">
-          <v-layout
-            v-if="item.heading"
-            :key="item.heading"
-            row
-            align-center
-          >
-            <v-flex xs6>
-              <v-subheader v-if="item.heading">
-                {{ item.heading }}
-              </v-subheader>
-            </v-flex> -->
-            <!-- <v-flex xs6 class="text-xs-center">
-              <a href="#!" class="body-2 black--text">EDIT</a>
-            </v-flex>
-          </v-layout>
-          <v-list-group
-            v-else-if="item.children"
-            v-model="item.model"
-            class="white--text"
-            :key="item.text"
-            :prepend-icon="item.model ? item.icon : item['icon-alt']"
-            append-icon=""
-          >
-            <v-list-tile slot="activator">
-              <v-list-tile-content >
-                <v-list-tile-title >
-                  {{ item.text }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-            <v-list-tile
-              v-for="(child, i) in item.children"
-              :key="i"
-              @click=""
-            >
-              <v-list-tile-action v-if="child.icon" >
-                <v-icon class="white--text">{{ child.icon }}</v-icon>
-              </v-list-tile-action>
-              <v-list-tile-content>
-                <v-list-tile-title class="white--text">
-                  {{ child.text }}
-                </v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list-group>
-          <v-list-tile v-else :key="item.text" @click="">
-            <v-list-tile-action>
-              <v-icon class="white--text">{{ item.icon }}</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-content>
-              <v-list-tile-title>
-                {{ item.text }}
-              </v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </template>
-      </v-list>  -->
-
-
-
-
-
+   
     </v-navigation-drawer>
-    <!-- <v-toolbar
-      :clipped-left="$vuetify.breakpoint.lgAndUp"
-      color="primary lighten-2"
-      dark
-      app
-      fixed
-    >
-      <v-toolbar-title style="width: 300px" class="ml-0 pl-3">
-        <v-toolbar-side-icon  @click.stop="drawer = !drawer" ></v-toolbar-side-icon>
-        <span class="hidden-sm-and-down">Cooperation</span>
-      </v-toolbar-title>
-      <v-text-field
-        flat
-        solo-inverted
-        hide-details
-        prepend-inner-icon="search"
-        label="Search"
-        class="hidden-sm-and-down" 
-      ></v-text-field>
-      <v-spacer></v-spacer>
-      <v-btn icon >
-        <v-icon>apps</v-icon>
-      </v-btn>
-      <v-btn icon>
-        <v-icon>notifications</v-icon>
-      </v-btn>
-      <v-btn icon large>
-        <v-avatar size="32px" tile>
-          <img
-            src="https://cdn.vuetifyjs.com/images/logos/logo.svg"
-            alt="Vuetify"
-          >
-        </v-avatar>
-      </v-btn>
-    </v-toolbar> -->
-    
-    <Content></Content>
-
-    <!-- <v-btn
-      fab
-      bottom
-      right
-      color="#3F0E40"
-      dark
-      fixed
-      @click="dialog = !dialog"
-    >
-      <v-icon>add</v-icon>
-    </v-btn> -->
+        
+    <ChatRoom :key="somevalueunderyourcontrol"></ChatRoom>
     
     <v-dialog v-model="dialog" width="800px" id="chat">
       <v-card>
@@ -231,59 +121,14 @@
         </v-card-title>
         <v-container grid-list-sm class="pa-4">
           <v-layout row wrap>
-            <!-- <v-flex xs12 align-center justify-space-between>
-              <v-layout align-center>
-                <v-avatar size="40px" class="mr-3">
-                  <img
-                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
-                    alt=""
-                  >
-                </v-avatar>
-                <v-text-field
-                  placeholder="Name"
-                ></v-text-field>
-              </v-layout>
-            </v-flex> -->
-            <!-- <v-flex xs6>
-              <v-text-field
-                prepend-icon="business"
-                placeholder="Company"
-              ></v-text-field>
-            </v-flex> -->
-            <!-- <v-flex xs6>
-              <v-text-field
-                placeholder="Job title"
-              ></v-text-field>
-            </v-flex> -->
+            
             <v-text>invite member</v-text><v-icon right @click="inviteMember">add</v-icon>
-            <!-- <my-component v-for="item in buttons" :is="item"></my-component> -->
-          
-            <!-- <v-flex xs12>
-              <v-text-field
-                prepend-icon="mail"
-                placeholder="Email"
-              ></v-text-field>
-            </v-flex> -->
+            
 
             <InviteUserEmail v-for="item in this.$store.state.components" v-bind:key="InviteUserEmail">
            <!-- vm.currentView가 변경되면 컴포넌트가 변경됩니다! -->
             </InviteUserEmail>
 
-            
-            <!-- <v-flex xs12>
-              <v-text-field
-                type="tel"
-                prepend-icon="phone"
-                placeholder="(000) 000 - 0000"
-                mask="phone"
-              ></v-text-field>
-            </v-flex>
-            <v-flex xs12>
-              <v-text-field
-                prepend-icon="notes"
-                placeholder="Notes"
-              ></v-text-field>
-            </v-flex> -->
           </v-layout>
         </v-container>
         <v-card-actions>
@@ -295,22 +140,51 @@
       </v-card>
     </v-dialog>
 
+    <v-dialog v-model="createTeamDialog" width="800px" id="chat">
+      <v-card>
+        <v-card-title
+          class="grey lighten-4 py-4 title"
+        >
+        Create Team
+        </v-card-title>
+        <v-container grid-list-sm class="pa-4">
+          <v-layout row wrap>
+            <v-flex xs12 align-center justify-space-between>
+              <v-layout align-center>
+
+                <v-text-field
+                  prepend-icon="notes"
+                  placeholder="TeamName"
+                  v-model="createTeamName"
+                ></v-text-field>
+              </v-layout>
+            </v-flex>
+            
+            <v-text>invite member</v-text><v-icon right @click="inviteMember">add</v-icon>
+            
+
+            <InviteUserEmail v-for="item in this.$store.state.components" v-bind:key="InviteUserEmail">
+           <!-- vm.currentView가 변경되면 컴포넌트가 변경됩니다! -->
+            </InviteUserEmail>
+
+          </v-layout>
+        </v-container>
+        <v-card-actions>
+          <v-btn flat color="primary">More</v-btn>
+          <v-spacer></v-spacer>
+          <v-btn flat color="primary" @click="createTeamDialog = !createTeamDialog">Cancel</v-btn>
+          <v-btn flat @click="saveTeam">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
      <modals-container />
-
-    <!-- <create-channel
-      title="This is modal"
-      :visible.sync="visible">
-      <div>
-        This is modal body
-      </div>
-    </create-channel> -->
-
-    
 
   </v-app>
 </template>
+
 <script>
-import Content from './Content.vue'
+import ChatRoom from './ChatRoom.vue'
 import CreateChannel from './CreateChannel.vue'
 import InviteUserEmail from './InviteUserEmail.vue'
 import axios from "axios";
@@ -318,7 +192,7 @@ import axios from "axios";
   export default {
     el: "Chat",
     components : {
-    'Content' : Content,
+    'ChatRoom' : ChatRoom,
     'CreateChannel' : CreateChannel,
     'InviteUserEmail' : InviteUserEmail
   },
@@ -327,6 +201,8 @@ import axios from "axios";
   data: () => ({
       
     dialog: false,
+    createTeamDialog: false,
+    createTeamName:'',
     drawer: null,
 
     userIdx: '',
@@ -375,6 +251,12 @@ import axios from "axios";
           {idx:''}
         ]
       },
+      createTeam: {
+        name:'',
+        users:[
+          {uid:''}
+        ]
+      },
       visible: false
     }),
     
@@ -385,13 +267,38 @@ import axios from "axios";
     },
 
     methods: {
+      saveTeam() {
+        this.createTeam.name = this.createTeamName;
+        this.createTeam.users = this.$store.state.inviteUsers;
+
+        axios
+        .post("http://localhost:8083/api/team", this.createTeam)
+        .then(response => {
+          // debugger;
+            if(response.data) {
+              // this.teamMembers = response.data.data;
+              console.log(response.data);
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+        
+        this.createTeamDialog = false;
+      },
+      addCreateTeamDialog() {
+        this.createTeamDialog = !this.createTeamDialog;
+        this.$store.state.inviteUsers.push({uid:this.$store.state.userId});
+      },
       clickChannel(itemIdx, channelName) {
         this.$store.state.channelInfo.idx = itemIdx;
         this.$store.state.channelInfo.channelName = channelName;
         this.getMessage();
       },
       clickSave() {
-        debugger;
+        // debugger;
         console.log(this.$store.state.inviteUsers);
         this.inviteTeam.idx = localStorage.getItem("teamIdx");
         this.inviteTeam.users = this.$store.state.inviteUsers;
@@ -400,7 +307,7 @@ import axios from "axios";
         axios
         .post("http://localhost:8083/api/team/invite", this.inviteTeam)
         .then(response => {
-          debugger;
+          // debugger;
             if(response.data) {
               // this.teamMembers = response.data.data;
               console.log(response.data);
@@ -447,13 +354,11 @@ import axios from "axios";
         axios
         .get("http://localhost:8083/api/team/" + teamIdx)
         .then(response => {
-          debugger;
+          // debugger;
             if(response.data) {
               this.teamMembers = response.data.data;
-              console.log(this.teamMembers);
               for(var i=0; i<this.teamMembers.length; i++) {
                 if(this.teamMembers[i].idx == this.userIdx) {
-                  console.log("if");
                   this.teamMembers[i].you = "(you)";
                 }
               }
@@ -466,16 +371,15 @@ import axios from "axios";
         });
       },
       getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
+        debugger
         axios
         .get("http://localhost:8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
             if(response.data) {
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
-              console.log(this.$store.state.channelInfo.idx);
               this.$store.state.channelInfo.channelName = this.channels[0].name;
-              console.log(this.$store.state.channelInfo.channelName);
-              this.getMessage();
+              // this.getMessage();
 
             } else {
             this.errors.push(e);
@@ -486,24 +390,27 @@ import axios from "axios";
         });
 
       },
-      getMessage() {
-        this.$store.state.received_messages.splice(0);
-        axios
-        .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=0")
-        .then(response => {
-            if(response.data) {
+      // getMessage() {
+      //   debugger
+      //   this.$store.state.received_messages.splice(0);
+      //   axios
+      //   .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=0")
+      //   .then(response => {
+      //       if(response.data) {
               
-              this.$store.state.received_messages = response.data.data;
+      //         this.$store.state.received_messages = response.data.data;
+      //         console.log(this.$store.state.received_messages)
+
               
-            } else {
-            this.errors.push(e);
-            }
-          })
-        .catch(e => {
-          // location.href = './';
-          this.errors.push(e);
-        });
-      },
+      //       } else {
+      //       this.errors.push(e);
+      //       }
+      //     })
+      //   .catch(e => {
+      //     // location.href = './';
+      //     this.errors.push(e);
+      //   });
+      // },
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
         axios
@@ -545,14 +452,15 @@ import axios from "axios";
 
       this.$store.state.inviteUsers.splice(0);
       this.inviteTeam.channels.splice(0);
-      localStorage.setItem("userId", "yunjae"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
+      localStorage.setItem("userId", "yunjea0312@naver.com"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
+      this.$store.state.userId = "yunjea0312@naver.com";
       this.$store.state.userIdx = 5; //test용으로 넣어놈. 로그인 할때 받아야함
       this.userIdx = this.$store.state.userIdx;
       this.$store.state.userNickName = "yunyun"; //test용으로 넣어놈. 로그인 할때 받아야함
       axios
         .get("http://localhost:8083/api/team/user/" + "5")
         .then(response => { //
-          debugger;
+          // debugger;
             if(response.data) {
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;

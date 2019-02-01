@@ -1,20 +1,18 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+<<<<<<< HEAD
 import Login from '@/components/auth/Login'
 import Signup from '@/components/auth/Signup'
 import Signin from '@/components/auth/Signin'
 import Chat from '@/components/Chat'
+=======
+import Login from '@/components/Auth/Login'
+import ChatHome from '@/components/chat/ChatHome'
+>>>>>>> 5930582238c9abc8167e8f6498c289904bf0eec0
 import Vuetify from 'vuetify'
-
-// src/index.js
-
 import '../assets/stylus/main.styl'
-
-// Helpers
 import colors from 'vuetify/es5/util/colors'
-// import validator from './validator'
 
-// Vue.use(validator)
 
 Vue.use(Vuetify, {
   theme: {
@@ -34,13 +32,13 @@ export default new Router({ // 모르면 공부
     },
     {
       path: '/chat',
-      name: 'Chat',
-      component: Chat
+      name: 'ChatHome',
+      component: ChatHome
     }
   ],
-  scrollBehavior (to, from, savedPosition) {
-    return { x: 100, y: 100 }
-  }
+  // scrollBehavior (to, from, savedPosition) {
+  //   return { x: 100, y: 100 }
+  // }
 })
 
 Vue.use(Router)

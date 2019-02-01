@@ -19,24 +19,13 @@ import InfiniteLoading from 'vue-infinite-loading'
 
 Vue.use(VuePullInfiniteScroller)
 Vue.use(SmoothScrollbar)
-
-
 Vue.use(VModal, { dynamic: true })
 Vue.use(Directives)
 Vue.use(VeeValidate)
-
 Vue.config.productionTip = false
-
-
-
-
 Vue.use(VueScrollFocus)
-
-
 Vue.use(InfiniteLoading)
 
-// var infiniteScroll =  require('vue-infinite-scroll');
-// Vue.use(infiniteScroll)
 
 /* eslint-disable no-new */
 new Vue({

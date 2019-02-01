@@ -21,6 +21,8 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig { //monitoring -> http://localhost:15672
     public static final String QUEUE_NAME = "queue";
 
+    public static final String RECEIVE_QUEUE_NAME = "receieve_queue";
+
     private static final String EXCHANGE = QUEUE_NAME + "-exchange";
 
     @Bean

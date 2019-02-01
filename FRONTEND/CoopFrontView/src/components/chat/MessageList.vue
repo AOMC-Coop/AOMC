@@ -1,27 +1,15 @@
 <template>
-<div class="div">
-
-<!-- <div v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10"> -->
-
-<div infinite-wrapper>
-  <div style="overflow: auto;">
-    <!-- <infinite-loading force-use-infinite-wrapper="true"></infinite-loading> -->
-  
-
-  <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots" force-use-infinite-wrapper="true"></infinite-loading>
-
-  
-   <v-list class="card" >
-    <!--<v-card-title>
+<div class="div" infinite-wrapper  style="overflow: auto;">
+    <v-card-title>
       <v-icon large left>#</v-icon>
       <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
-    </v-card-title> -->
+    </v-card-title>
+    <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots" v-if="flag" force-use-infinite-wrapper="true"></infinite-loading>
 
-
+   <v-list class="card">   
       <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
         <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
-    
         <!-- <v-list-tile> -->
           <v-card-actions>
             <v-avatar size="42px" class="mr-3">
@@ -40,8 +28,6 @@
         </v-card-actions>
       </div>
   </v-list>
-
-
 
     <!-- <v-list subheader three-line>
      <transition-group name="list">
@@ -66,8 +52,6 @@
       </div>
     </transition-group> 
   </v-list> -->
-  </div>
-</div>
 
 </div>
 
@@ -77,32 +61,34 @@
 <script>
 import axios from "axios";
 import { mapGetters } from 'vuex'
-import InfiniteLoading from 'vue-infinite-loading';
 
 export default {
   name: 'MessageList',
-  // components: {
-  //   InfiniteLoading,
-  // },
    data() {
     return {
-      start:10
+      start:0,
+      flag:true
     };
   },
+  computed:{
+        ...mapGetters([
+      'getReceivedMessages'
+    ])
+    },
   methods: {
     infiniteHandler($state) {
+      // alert('hello')
 
       debugger
-      axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      axios.get("http://localhost:8083/api/channel/message?channelIdx=" + 8, {
         params: {
           start: this.start
         },
       }).then((response) => {
-        if (response.data) {
+        if (response.data.status==200) {
           debugger
           this.start += 10;
-          var result = response.data.data.reverse();
-
+          var result = response.data.data;
           for(var i=0;i<result.length;i++){
               this.$store.state.received_messages.unshift(result[i]);
           }
@@ -110,23 +96,30 @@ export default {
             $state.complete();
           }
           $state.loaded();
-          
         } else {
           $state.complete();
         }
-        // // // //
       }); 
 
     }
-    
   },
+  created() {
+    this.$store.state.received_messages=''
 
-    computed:{
-        ...mapGetters([
-      'getReceivedMessages'
-    ])
-    }
-    
+    axios.get("http://localhost:8083/api/channel/message?channelIdx=" + 8, {
+      params: {
+        start: this.start
+      },
+    }).then((response) => {
+      if (response.data.status==200) {
+        this.start += 10;
+        var result = response.data.data.reverse();
+        this.$store.state.received_messages = result          
+        } else {
+          alert(response.data.message)
+        }
+      });
+  },
      
 };
 
@@ -147,9 +140,9 @@ export default {
 }
 .card{
   padding-left: 2%;
-  /* background-color: aqua; */
 }
 .div{
-  /* overflow-y: auto|scroll; */
+   overflow-y: scroll;
 }
+
 </style>

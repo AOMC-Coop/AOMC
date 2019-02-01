@@ -64,7 +64,7 @@ export default {
         console.log("channelInfo.idx = " + this.$store.state.channelInfo.idx);
         console.log("this.channel.idx = " + this.channel.idx);
         debugger;
-        this.stompClient.send("/app/chat/" + this.$store.state.channelInfo.idx, JSON.stringify(sendMessage)); //채널번호 붙이고 싶음
+        this.stompClient.send("/app/chat", JSON.stringify(sendMessage)); //채널번호 붙이고 싶음
       }
 
       this.msg = '';
@@ -92,11 +92,15 @@ export default {
       this.stompClient.connect(
         {},
         frame => {
+          debugger
           // this.connected = true;
-          // console.log("////////////////////////"+frame);
+          console.log("////////////////////////"+frame);
           this.stompClient.subscribe("/topic/message", tick => { //채널번호 붙이고싶음
             // console.log(tick);
+            debugger
             this.$store.state.received_messages.push(JSON.parse(tick.body));
+
+            console.log("subcribe = " + tick.body);
 
             var newValue= this.$store.state.received_messages.slice(-1)[0].send_date;
 
@@ -111,7 +115,10 @@ export default {
           console.log(error);
           this.connected = false;
         }
-      );
+      )
+      // this.stompClient.disconnect(distick => {
+      //   console.log("socket disconnect");
+      // });
     }
 
 };

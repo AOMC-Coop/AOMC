@@ -24,7 +24,7 @@ public interface ChannelMapper {
     @Update("UPDATE channels SET name=#{name}, update_date=now() WHERE idx = #{idx}")
     void updateChannel(final Channel channel);
 
-    @Select("SELECT m.idx, content, channel_idx, u.nickname, DATE_FORMAT(send_date, '%W, %M %D') as send_date, DATE_FORMAT(send_date, '%l:%i %p') as send_time FROM messages m, users u WHERE m.user_idx=u.idx AND channel_idx = #{channelIdx} ORDER BY m.idx LIMIT #{start}, 10")
+    @Select("SELECT m.idx, content, channel_idx, u.nickname, DATE_FORMAT(send_date, '%W, %M %D') as send_date, DATE_FORMAT(send_date, '%l:%i %p') as send_time FROM messages m, users u WHERE m.user_idx=u.idx AND channel_idx = #{channelIdx} ORDER BY m.idx desc LIMIT #{start}, 10")
     List<Message> getChannelMessage(int channelIdx, int start);
 
     //채널의 멤버 조회

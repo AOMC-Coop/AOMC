@@ -14,6 +14,7 @@
 
 
 <script>
+<<<<<<< HEAD
 import Chat from './components/Chat.vue'
 import Login from './components/auth/Login.vue'
 import Signup from './components/auth/Signup.vue'
@@ -24,6 +25,10 @@ import Signin from './components/auth/Signin.vue'
 // Register.vue : 회원가입 email인증 (Login.vue위에)
 // Mypage.vue : 마이페이지 회원수정 회원탈퇴 비밀번호 찾기 (Chat.vue 위에)
 
+=======
+import Chat from './components/chat/ChatHome.vue' 
+import Login from './components/Auth/Login.vue' // + Login.vue 컴포넌트를 추가할 것
+>>>>>>> 5930582238c9abc8167e8f6498c289904bf0eec0
 
 export default {
   name: 'App',

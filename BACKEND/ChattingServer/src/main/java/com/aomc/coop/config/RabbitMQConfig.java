@@ -1,7 +1,6 @@
 package com.aomc.coop.config;
 
 
-
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -19,14 +18,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @EnableRabbit
 public class RabbitMQConfig { //monitoring -> http://localhost:15672
+
     public static final String QUEUE_NAME = "queue";
 
     private static final String EXCHANGE = QUEUE_NAME + "-exchange";
 
+    public static final String RECEIVE_QUEUE_NAME = "receieve_queue";
+
+
     @Bean
     public RabbitTemplate rabbitTemplate() {
         RabbitTemplate template = new RabbitTemplate(connectionFactory());
-        template.setRoutingKey(QUEUE_NAME);
+        template.setRoutingKey(RECEIVE_QUEUE_NAME); //default
         template.setMessageConverter(jsonMessageConverter());
         return template;
     }
@@ -35,7 +38,7 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
     public SimpleMessageListenerContainer container() {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory());
-        container.setQueueNames(QUEUE_NAME);
+        container.setQueueNames(RECEIVE_QUEUE_NAME); //default
 //        container.setMessageListener(baseMesage());
         container.setMessageConverter(jsonMessageConverter());
         return container;
@@ -43,7 +46,7 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
 
     @Bean
     public Queue queue() {
-        return new Queue(QUEUE_NAME, false);
+        return new Queue(RECEIVE_QUEUE_NAME, false);
     }
 
     @Bean
@@ -53,7 +56,7 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
 
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(QUEUE_NAME);
+        return BindingBuilder.bind(queue).to(exchange).with(RECEIVE_QUEUE_NAME);
     }
 
     @Bean

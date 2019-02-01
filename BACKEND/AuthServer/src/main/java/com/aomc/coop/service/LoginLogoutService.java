@@ -74,7 +74,6 @@ public class LoginLogoutService {
                 // 1. Http request로 들어온 user와 db상의 user가 같다면
             if(hashPassword.equals(myUser.getPwd())) {
                 // 2. JWT(JSON Web Tokens) 토큰 생성
-// ***** JWT 토큰 생성은 은미 코드 보자
 //                <윤재 자체 토큰 생성 부분>
 //                String token = Base64.encodeBase64String(((SHA256.getInstance().encodeSHA256(myUser.getUid())).getBytes("UTF-8")));
 //                token = token.replace("=", "").replace('/', '_').replace('+', '-');

@@ -1,14 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-<<<<<<< HEAD
-import Login from '@/components/auth/Login'
 import Signup from '@/components/auth/Signup'
 import Signin from '@/components/auth/Signin'
-import Chat from '@/components/Chat'
-=======
-import Login from '@/components/Auth/Login'
+import Login from '@/components/auth/Login'
 import ChatHome from '@/components/chat/ChatHome'
->>>>>>> 5930582238c9abc8167e8f6498c289904bf0eec0
 import Vuetify from 'vuetify'
 import '../assets/stylus/main.styl'
 import colors from 'vuetify/es5/util/colors'

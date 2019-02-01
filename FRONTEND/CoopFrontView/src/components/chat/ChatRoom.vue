@@ -2,8 +2,8 @@
 <v-content>
 
     <div>
-    <!-- <Message-List class="msg-list"></Message-List> -->
-    <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages"></Message-List>
+    <Message-List class="msg-list"></Message-List>
+    <!-- <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages"></Message-List> -->
     <Message-From v-on:submitMessage="sendMessage" class="msg-form"></Message-From>
 
   </div>

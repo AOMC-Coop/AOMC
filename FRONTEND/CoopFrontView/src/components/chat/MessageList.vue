@@ -61,6 +61,11 @@
 <script>
 import axios from "axios";
 import { mapGetters } from 'vuex'
+import moment from 'moment'
+
+var now = new moment();
+var today = now.format("dddd, MMMM Do").toString()
+
 
 export default {
   name: 'MessageList',
@@ -79,27 +84,50 @@ export default {
     infiniteHandler($state) {
       // alert('hello')
 
-      debugger
+      // debugger
       axios.get("http://localhost:8083/api/channel/message?channelIdx=" + 8, {
         params: {
           start: this.start
         },
       }).then((response) => {
         if (response.data.status==200) {
-          debugger
-          this.start += 10;
-          var result = response.data.data;
-          for(var i=0;i<result.length;i++){
-              this.$store.state.received_messages.unshift(result[i]);
+
+        this.start += 10;
+        var result = response.data.data;
+
+        var firstValue= this.$store.state.received_messages[0].send_date;
+        console.log(firstValue)
+
+        // if(this.$store.state.received_messages[i].send_date===today||this.$store.state.received_messages[i].send_date==='today'){
+        //         this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
+        //         newValue='today'
+        //}
+
+        debugger
+        for(var i=0;i<result.length;i++){
+          if((result[i].send_date===today&&firstValue==='today')){
+            this.$store.state.received_messages[0].send_date=''
+            result[i].send_date = 'today'
           }
-          if(result.length<10){
-            $state.complete();
+         
+          if(result[i].send_date===firstValue){
+            this.$store.state.received_messages[0].send_date=''
+          }else{
+            firstValue = result[i].send_date
           }
-          $state.loaded();
-        } else {
+          this.$store.state.received_messages.unshift(result[i]);
+
+          console.log(i+"내용은 = "+result[i].content)
+          console.log(i+"날짜는 = "+result[i].send_date)
+        }
+        if(result.length<10){
           $state.complete();
         }
-      }); 
+        $state.loaded();
+      } else {
+        $state.complete();
+      }
+    }); 
 
     }
   },
@@ -113,7 +141,32 @@ export default {
     }).then((response) => {
       if (response.data.status==200) {
         this.start += 10;
+
+        var sendDate = "";
         var result = response.data.data.reverse();
+
+      if(result[0].send_date===today){
+        sendDate = 'today'
+        result[0].send_date = 'today'
+      }else{
+        sendDate = result[0].send_date
+      }
+
+        
+
+        // debugger
+        for(var i=1;i<result.length;i++){
+          if(result[i].send_date==today){
+            result[i].send_date='today'
+          }
+
+          if(result[i].send_date === sendDate){
+            result[i].send_date=''
+          }else{
+            sendDate = result[i].send_date
+          }
+        }
+        
         this.$store.state.received_messages = result          
         } else {
           alert(response.data.message)

@@ -15,6 +15,7 @@ public class Message implements Serializable {
     private int user_idx;
     private String send_date;
     private String send_time;
+    private String send_db_date;
 
     private File file;
     private Reply reply;

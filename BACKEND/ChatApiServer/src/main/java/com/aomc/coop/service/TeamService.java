@@ -56,7 +56,7 @@ public class TeamService {
     MailSend mailSend = new MailSend();
 
 
-    @Resource(name="redisTemplate")
+    @Resource(name = "redisTemplate")
     private HashOperations<String, String, String> values;
 
     public TeamService(JwtService jwtService, JavaMailSender mailSender) {
@@ -106,19 +106,20 @@ public class TeamService {
                 hashMap.put("teamIdx", team.getIdx());
 
                 //방장인 경우 메일 안보냄
-                if(user.getUid().equals(team.getOwner())){
-                    teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(),1);
-                }else{
+                if (user.getUid().equals(team.getOwner())) {
+                    teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 1);
+                    channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
+                } else {
 
                     //초대받은팀원이 User가 아닌 경우 - userID만 넣기
-                    if(userTemp==null){
+                    if (userTemp == null) {
                         hashMap.put("uid", user.getUid());
                         hashMap.put("userIdx", 0);
 
-                    }else{//초대받은팀원이 User인 경우
+                    } else {//초대받은팀원이 User인 경우
                         //각테이블에 생성 데이터넣기
                         System.out.println(userTemp.getIdx());
-                        teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(),0);
+                        teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0);
                         channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
 
                         //Redis에 정보 저장
@@ -134,13 +135,11 @@ public class TeamService {
                     sendMailTreand.start();
 
                 }
-
-
             }
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_TEAM.getStatus());
 
-        }catch(Exception e){
+        } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_TEAM.getStatus());
         }
@@ -150,12 +149,12 @@ public class TeamService {
     //팀 상세조회
     public ResponseType readTeamDetail(final int teamIdx) {
 
-            Team team = teamMapper.readTeamDetail(teamIdx);
+        Team team = teamMapper.readTeamDetail(teamIdx);
 
-            if(team == null){
-                return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
-            }
-            return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), team); // team 데이터 보낼때
+        if (team == null) {
+            return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
+        }
+        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), team); // team 데이터 보낼때
 
     }
 
@@ -166,17 +165,17 @@ public class TeamService {
 
             Team temp = teamMapper.readTeamDetail(team.getIdx());
 
-            if(temp == null){
+            if (temp == null) {
                 return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
             }
-            if(temp.getStatus()==0){
+            if (temp.getStatus() == 0) {
                 return codeJsonParser.codeJsonParser(Status_5000.DEACTIVE_TEAM.getStatus());
             }
 
             teamMapper.updateTeam(team);
             return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_UPDATE_TEAM.getStatus());
 
-        }catch(Exception e){
+        } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_UPDATE_TEAM.getStatus());
         }
@@ -189,16 +188,16 @@ public class TeamService {
 
         Team temp = teamMapper.readTeamDetail(teamIdx);
 
-        if(temp == null){
+        if (temp == null) {
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
         }
 
-        if(temp.getStatus()==0){
+        if (temp.getStatus() == 0) {
             return codeJsonParser.codeJsonParser(Status_5000.DEACTIVE_TEAM.getStatus());
         }
         int delete_flag = teamMapper.deleteTeam(teamIdx);
 
-        if(delete_flag!=0)
+        if (delete_flag != 0)
             return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_DELETE_TEAM.getStatus());
         else
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_DELETE_TEAM.getStatus());
@@ -209,9 +208,9 @@ public class TeamService {
     //채널조회
     public ResponseType readChannel(final int teamIdx, final int userIdx) {
 
-        List<Channel> channels= channelMapper.readChannel(teamIdx, userIdx);
+        List<Channel> channels = channelMapper.readChannel(teamIdx, userIdx);
 
-        if(channels == null){
+        if (channels == null) {
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_CHANNEL.getStatus());
         }
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_CHANNEL.getStatus(), channels);
@@ -223,16 +222,16 @@ public class TeamService {
 
         int teamFlag = teamMapper.deactiveUserOfTeam(teamIdx, userIdx);
 
-        List<Channel> channels= channelMapper.readChannel(teamIdx, userIdx);
+        List<Channel> channels = channelMapper.readChannel(teamIdx, userIdx);
 
         for (Channel channel : channels) {
             int channelFlag = channelMapper.deactiveUserOfChannel(channel.getIdx(), userIdx);
-            if(channelFlag!=1){ //예외처리
+            if (channelFlag != 1) { //예외처리
                 return codeJsonParser.codeJsonParser(Status_5000.FAIL_DEACVITE_USER.getStatus());
             }
         }
 
-        if(teamFlag==1)
+        if (teamFlag == 1)
             return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_DEACVITE_USER.getStatus());
         else
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_DEACVITE_USER.getStatus());
@@ -243,21 +242,21 @@ public class TeamService {
     public ResponseType readTeamOfUser(final int userIdx) {
 
         User user = userMapper.findByUserIdx(userIdx);
-        if(user == null){
+        if (user == null) {
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
         }
 
         List<Team> teams = teamMapper.readTeamOfUser(userIdx);
         List<Team> sendteams = new ArrayList<>();
 
-        for(Team team : teams){
-            if(team.getStatus()==1){
+        for (Team team : teams) {
+            if (team.getStatus() == 1) {
                 sendteams.add(team);
             }
 
         }
 
-        if(teams == null){
+        if (teams == null) {
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
         }
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), sendteams);
@@ -269,13 +268,13 @@ public class TeamService {
     public ResponseType readUserOfTeam(final int teamIdx) {
 
         Team team = teamMapper.readTeamDetail(teamIdx);
-        if(team==null){
+        if (team == null) {
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
         }
 
         List<User> users = teamMapper.readUserOfTeam(teamIdx);
 
-        if(users == null){
+        if (users == null) {
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_USER.getStatus());
         }
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_USER.getStatus(), users);
@@ -295,14 +294,14 @@ public class TeamService {
         List<User> existUsers = new ArrayList<>();
 
 
-        for(User inviteUser : inviteUsers){
-            for(int i=1;i<usersOfTeam.size();i++){
+        for (User inviteUser : inviteUsers) {
+            for (int i = 1; i < usersOfTeam.size(); i++) {
 
-                if(inviteUser.getUid().equals(usersOfTeam.get(i).getUid())){
+                if (inviteUser.getUid().equals(usersOfTeam.get(i).getUid())) {
                     existUsers.add(inviteUser);
                     break;
                 }
-                if(usersOfTeam.size()-1 == i){
+                if (usersOfTeam.size() - 1 == i) {
                     firstUsers.add(inviteUser);
                 }
             }
@@ -321,30 +320,30 @@ public class TeamService {
 
 
             //초대받은팀원이 User가 아닌 경우 - userIdx에 0 넣기
-            if(userTemp==null){
+            if (userTemp == null) {
 
                 hashMap.put("userIdx", 0);
 
-            }else{//초대받은팀원이 User인 경우 - userIdx 넣기
+            } else {//초대받은팀원이 User인 경우 - userIdx 넣기
                 //각테이블에 UserHasTeam 생성 데이터넣기
 
                 hashMap.put("userIdx", userTemp.getIdx());
 
-                teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(),0);
+                teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0);
 
                 channelMapper.createUserHasChannel(channels.get(0).getIdx(), userTemp.getIdx());
 
             }
 
-                values.putAll(token.getToken(), hashMap);
-                values.getOperations().expire(token.getToken(), 1L, TimeUnit.HOURS);
+            values.putAll(token.getToken(), hashMap);
+            values.getOperations().expire(token.getToken(), 1L, TimeUnit.HOURS);
 
-                //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
+            //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
 
-                SendMailTreand sendMailTreand = new SendMailTreand(mailSender, user.getUid(), token.getToken(), team.getName(), inviteUsers.get(0).getUid());
-                sendMailTreand.start();
+            SendMailTreand sendMailTreand = new SendMailTreand(mailSender, user.getUid(), token.getToken(), team.getName(), inviteUsers.get(0).getUid());
+            sendMailTreand.start();
 
-            }
+        }
 
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_INVITE.getStatus(), firstUsers, existUsers);
 
@@ -354,15 +353,15 @@ public class TeamService {
     public ResponseType acceptInvite(final String token) {
 
         String string_teamIdx = (String) values.get(token, "teamIdx");
-        String string_userIdx = (String)values.get(token, "userIdx");
+        String string_userIdx = (String) values.get(token, "userIdx");
 
         int teamIdx = Integer.parseInt(string_teamIdx);
         int userIdx = Integer.parseInt(string_userIdx);
 
-        if(teamIdx==-1){
+        if (teamIdx == -1) {
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
         }
-        if(userIdx==0){
+        if (userIdx == 0) {
             return codeJsonParser.codeJsonParser(Status_5000.PLEASE_SIGNUP.getStatus(), token);
         }
         teamMapper.updateAuthFlag(teamIdx, userIdx);
@@ -380,11 +379,11 @@ public class TeamService {
         String teamOwner;
 
         public SendMailTreand(JavaMailSender mailSender, String userId, String token, String teamName, String teamOwner) {
-                this.mailSender = mailSender;
-                this.userId = userId;
-                this.token = token;
-                this.teamName = teamName;
-                this.teamOwner = teamOwner;
+            this.mailSender = mailSender;
+            this.userId = userId;
+            this.token = token;
+            this.teamName = teamName;
+            this.teamOwner = teamOwner;
         }
 
         public void run() {

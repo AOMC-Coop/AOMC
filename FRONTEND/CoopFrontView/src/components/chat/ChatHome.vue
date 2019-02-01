@@ -466,6 +466,7 @@ import axios from "axios";
               this.teamName = response.data.data[0].name;
               this.userName = "yunjae"; //로그인 한 후 userName 받기 -> localStorage에서 받기 
               localStorage.setItem("teamIdx", response.data.data[0].idx);
+              console.log("teamIdx" + response.data.data[0].idx);
               this.getMemberByTeamId(response.data.data[0].idx);
               this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
 

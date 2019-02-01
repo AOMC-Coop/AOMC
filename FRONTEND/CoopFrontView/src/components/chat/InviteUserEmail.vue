@@ -36,7 +36,7 @@ export default{
       this.$validator.validateAll()
       debugger;
       if (!this.errors.any()) {
-        this.$store.state.inviteUsers.push({uid:this.email});
+        //this.$store.state.inviteUsers.push({uid:this.email});
         alert('추가 되었습니다.')
       }else {
         alert('잘못된 이메일 입니다.')

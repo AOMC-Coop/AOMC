@@ -124,6 +124,7 @@ public class LoginLogoutService {
 //				HttpHeaders headers = new HttpHeaders();
 //				headers.add("auth_token", token);
                 // 제대로 로그인이 되었다면
+                System.out.println("Successfully login!");
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), token.getToken()); // ,로 파라미터에 token값 넘기기 (String으로)
             } else {
                 // Http request로 들어온 user와 db상의 user가 다르다면

@@ -17,7 +17,7 @@
         <v-card>
           <v-card-text>
             <v-container>
-              <form @submit.prevent="onSignin"> 
+              <form @submit.prevent="signin"> 
                   <!-- Login 버튼 클릭시 LoginLogoutController로 uid와 password전달 : @Request User user에 담아서 -->
                 <v-layout row>
                   <v-flex xs12>
@@ -25,7 +25,7 @@
                       name="email"
                       label="E-mail"
                       id="email"
-                      v-model="email"
+                      v-model="userInfo.uid"
                       type="email"
                       required></v-text-field>
                   </v-flex>
@@ -36,7 +36,7 @@
                       name="password"
                       label="Password"
                       id="password"
-                      v-model="password"
+                      v-model="userInfo.pwd"
                       type="password"
                       required></v-text-field>
                   </v-flex>
@@ -56,12 +56,21 @@
 </template>
 
 <script>
+import axios from 'axios'
+const baseURI = localStorage.getItem('baseURI')
+
   export default {
+    name : 'Signin',
     data () {
       return {
-        email: '',
-        password: ''
+        userInfo: {
+          uid: '',
+          pwd: ''
+        },
       }
+    },
+    props: {
+      source: String
     },
     computed: {
       user () {
@@ -82,12 +91,29 @@
       }
     },
     methods: {
-      onSignin () {
-        this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
-      },
+      // onSignin () {
+      //   this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
+      // },
       onDismissed () {
         this.$store.dispatch('clearError')
-      }
+      },
+      signin: function () {
+        axios.post(`http://localhost:8082/api/login`, this.userInfo) 
+          .then(response => {
+            // debugger
+            this.info = response.data.data
+            localStorage.setItem('token', this.info.data.token)
+            console.log(this.info.data.token)
+            location.href = './api'
+          }
+          ).catch(e => {
+            console.log(e)
+            this.errors(e)
+            location.href = './login'
+          })
+      }   
     }
   }
+  // `${baseURI}/api/login`
 </script>
+

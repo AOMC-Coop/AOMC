@@ -94,7 +94,7 @@ public class ChannelService {
         if (channelIdx >= 0) {
             //redis에서 메세지 가져오기
             listOperations= redisTemplate.opsForList();
-            List<Message> redis_messageList = listOperations.range(RedisUtil.redisKey+ ":" + channelIdx, 0, -1);
+            List<Message> redis_messageList = listOperations.range(RedisUtil.redisKey + channelIdx, 0, -1);
             if(redis_messageList.size() > 0) {
                 Collections.reverse(redis_messageList);
             }

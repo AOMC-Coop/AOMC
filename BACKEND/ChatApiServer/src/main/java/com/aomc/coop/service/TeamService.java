@@ -80,6 +80,11 @@ public class TeamService {
             Message message = new Message();
             message.setContent("joined #general");
             message.setNickname(ownerUserInfo.getNickname());
+
+            //
+            message.setIdx(170);
+            //
+
             List<Message> messages = new ArrayList<>();
             messages.add(message);
 

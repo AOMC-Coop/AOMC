@@ -23,7 +23,7 @@ public class MessageController {
     private ListOperations<String, Message> listOperations;
 
     @Resource(name="redisTemplate")
-    private HashOperations<String, Integer, Integer> hashOperations_channelIdx; //String : key, Integer : channelIdx, Integer : lastIdx
+    private HashOperations<String, Integer, Integer> hashOperations_channelIdx; //String : key, Integer : channelIdx, Integer : lastMessageIdx
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -35,9 +35,9 @@ public class MessageController {
 
         //redis에 저장하기
         Map<Integer, Integer> channelInfo_map = new HashMap<>();
-//        channelInfo_map.put(map.get("msg").getChannel_idx(), )
-
+        channelInfo_map.put(map.get("msg").getChannel_idx(), 170);
         hashOperations_channelIdx.putAll(RedisUtil.ChannelInfoKey, channelInfo_map);
+
         listOperations.rightPush(RedisUtil.redisKey + ":" + map.get("msg").getChannel_idx(), map.get("msg"));
 
         //receive 큐에보냄

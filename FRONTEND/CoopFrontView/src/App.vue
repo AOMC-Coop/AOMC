@@ -11,7 +11,6 @@
 
 
 <script>
-import Login from './components/auth/Login.vue'
 import Signup from './components/auth/Signup.vue'
 import Signin from './components/auth/Signin.vue'
 
@@ -26,7 +25,6 @@ export default {
   name: 'App',
   components : {
     'Chat' : Chat,
-    'Login' : Login,
     'Signup' : Signup,
     'Signin' : Signin
   }

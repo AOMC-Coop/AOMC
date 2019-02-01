@@ -1,8 +1,7 @@
-package com.aomc.coop.util;
+package com.aomc.coop.utils.redis;
 
 public class RedisUtil {
 
 //    public static String redisKey = "channelIdx:channel";
       public static String redisKey = "channelIdx";
-      public static String ChannelInfoKey = "channelInfo";
 }

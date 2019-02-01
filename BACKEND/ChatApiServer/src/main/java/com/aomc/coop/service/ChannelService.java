@@ -8,16 +8,19 @@ import com.aomc.coop.model.Message;
 import com.aomc.coop.model.User;
 import com.aomc.coop.response.Status_1000;
 import com.aomc.coop.utils.CodeJsonParser;
+import com.aomc.coop.utils.redis.RedisUtil;
 import com.aomc.coop.utils.ResponseType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.sql.SQLException;
-import java.sql.SQLSyntaxErrorException;
+import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -36,6 +39,12 @@ public class ChannelService {
 
     @Autowired
     private JwtService jwtService;
+
+    @Resource(name="redisTemplate")
+    private ListOperations<String, Message> listOperations;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
@@ -83,6 +92,15 @@ public class ChannelService {
     public ResponseType getChannelMessage(int channelIdx, int start) {
 
         if (channelIdx >= 0) {
+            //redis에서 메세지 가져오기
+            listOperations= redisTemplate.opsForList();
+            List<Message> redis_messageList = listOperations.range(RedisUtil.redisKey+ ":" + channelIdx, 0, -1);
+            if(redis_messageList.size() > 0) {
+                Collections.reverse(redis_messageList);
+            }
+
+
+            //mysql에서 메세지 가져오기
             List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
 
 //            String sendDate = "";
@@ -99,7 +117,6 @@ public class ChannelService {
 ////            }else {
 ////                return codeJsonParser.codeJsonParser(Status_1000.FAIL_Get_Message.getStatus()); //에러코드 수정하기
 ////            }
-
 
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);

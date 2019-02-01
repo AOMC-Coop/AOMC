@@ -55,6 +55,7 @@ public class MessageController {
     public void broadCasting(Message message) throws Exception {
 
         System.out.println("rabbitMQ receive = " + message);
+        //SendTo("/topic/message")
         this.simpMessagingTemplate.convertAndSend("/topic/message", message);
 
     }

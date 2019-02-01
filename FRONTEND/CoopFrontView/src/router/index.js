@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '@/components/Auth/Login'
+import Signup from '@/components/auth/Signup'
+import Signin from '@/components/auth/Signin'
+import Login from '@/components/auth/Login'
 import ChatHome from '@/components/chat/ChatHome'
 import Vuetify from 'vuetify'
 import '../assets/stylus/main.styl'
@@ -20,8 +22,8 @@ export default new Router({ // 모르면 공부
   routes: [
     {
       path: '/',
-      name: 'Login',
-      component: Login
+      name: 'Signin',
+      component: Signin
     },
     {
       path: '/chat',

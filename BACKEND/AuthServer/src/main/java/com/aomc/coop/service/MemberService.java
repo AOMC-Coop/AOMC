@@ -24,7 +24,7 @@ import com.aomc.coop.util.SHA256;
 @Slf4j
 @Service
 @Transactional
-public class RegisterService{
+public class MemberService {
 
     // 접근 진행 순서 : Controller -> Service -> Mapper
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
@@ -32,6 +32,7 @@ public class RegisterService{
     @Autowired
     private UserMapper userMapper;
 
+    // 회원 가입
     public ResponseType register(@RequestBody User user) throws NoSuchAlgorithmException {
 
         String uid = user.getUid();
@@ -80,11 +81,13 @@ public class RegisterService{
         // 이미 가입되어 있는 uid(e-mail)이라면
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
         }
-
-
-
     }
 
+    // 회원 탈퇴
+//    public ResponseType withdrawal(@RequestBody User user){
+//        String uid = user.getUid();
+//        User myUser = userMapper.getUser(uid);
+//    }
 }
 
 // ResponseEntity : Response body와 함께 Http status를 전송하기 위해 사용

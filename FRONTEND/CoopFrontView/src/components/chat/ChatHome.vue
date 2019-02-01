@@ -371,7 +371,7 @@ import axios from "axios";
         });
       },
       getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
-        debugger
+        // debugger
         axios
         .get("http://localhost:8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {

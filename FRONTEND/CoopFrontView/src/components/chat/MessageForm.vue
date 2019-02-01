@@ -43,21 +43,13 @@ export default {
       channel: {
         idx: this.$store.state.channelInfo.idx
       }
-    
-      // send_message: {
-      //     content : '',
-      //     nickname: 'mooming'
-      // },
-      
-      // connected: false
-      }
+    }
   },
   methods: {
     submitMessageFunc() {
       if (this.msg.length === 0) return false;
       // this.$emit('submitMessage', this.msg);
       
-
       if (this.stompClient) {
         const sendMessage = { content: this.msg , channel_idx: this.$store.state.channelInfo.idx, user_idx: this.$store.state.userIdx, nickname: this.$store.state.userNickName, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
         const sendChannel = { idx: this.$store.state.channelInfo.idx};
@@ -94,17 +86,21 @@ export default {
         frame => {
           debugger
           // this.connected = true;
-          console.log("////////////////////////"+frame);
-          this.stompClient.subscribe("/topic/message", tick => { //채널번호 붙이고싶음
+          // console.log("////////////////////////"+frame);
+          this.stompClient.subscribe("/topic/message", tick => {
             // console.log(tick);
             debugger
             this.$store.state.received_messages.push(JSON.parse(tick.body));
 
-            console.log("subcribe = " + tick.body);
+            // console.log("subcribe = " + tick.body);
 
             var newValue= this.$store.state.received_messages.slice(-1)[0].send_date;
 
             for(var i=0; i<this.$store.state.received_messages.length-1;i++){
+              if(this.$store.state.received_messages[i].send_date===now.format("dddd, MMMM Do").toString()||this.$store.state.received_messages[i].send_date==='today'){
+                this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
+                newValue='today'
+              }
               if(this.$store.state.received_messages[i].send_date===newValue){
                 this.$store.state.received_messages.slice(-1)[0].send_date = ''
               }

@@ -104,6 +104,7 @@ public class TeamService {
 
                 HashMap hashMap = new HashMap();
                 hashMap.put("teamIdx", team.getIdx());
+                hashMap.put("channelIdx", channel.getIdx());
 
                 //방장인 경우 메일 안보냄
                 if (user.getUid().equals(team.getOwner())) {
@@ -131,8 +132,8 @@ public class TeamService {
 
                     //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
 
-                    SendMailTreand sendMailTreand = new SendMailTreand(mailSender, user.getUid(), token.getToken(), team.getName(), team.getOwner());
-                    sendMailTreand.start();
+                    SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), token.getToken(), team.getName(), team.getOwner());
+                    sendMailThread.start();
 
                 }
             }
@@ -316,6 +317,7 @@ public class TeamService {
 
             HashMap hashMap = new HashMap();
             hashMap.put("teamIdx", team.getIdx());
+            hashMap.put("channelIdx", channels.get(0).getIdx());
             hashMap.put("uid", user.getUid());
 
 
@@ -340,8 +342,9 @@ public class TeamService {
 
             //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
 
-            SendMailTreand sendMailTreand = new SendMailTreand(mailSender, user.getUid(), token.getToken(), team.getName(), inviteUsers.get(0).getUid());
-            sendMailTreand.start();
+
+            SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), token.getToken(), team.getName(), inviteUsers.get(0).getUid());
+                sendMailThread.start();
 
         }
 
@@ -370,7 +373,7 @@ public class TeamService {
 
     }
 
-    class SendMailTreand extends Thread {
+    class SendMailThread extends Thread {
 
         JavaMailSender mailSender;
         String userId;
@@ -378,12 +381,12 @@ public class TeamService {
         String teamName;
         String teamOwner;
 
-        public SendMailTreand(JavaMailSender mailSender, String userId, String token, String teamName, String teamOwner) {
-            this.mailSender = mailSender;
-            this.userId = userId;
-            this.token = token;
-            this.teamName = teamName;
-            this.teamOwner = teamOwner;
+        public SendMailThread(JavaMailSender mailSender, String userId, String token, String teamName, String teamOwner) {
+                this.mailSender = mailSender;
+                this.userId = userId;
+                this.token = token;
+                this.teamName = teamName;
+                this.teamOwner = teamOwner;
         }
 
         public void run() {

@@ -1,6 +1,6 @@
 //package com.aomc.coop.controller;
 //
-//import com.aomc.coop.service.InviteService;
+//import com.aomc.coop.later.InviteService;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.web.bind.annotation.RequestMapping;
 //import org.springframework.web.bind.annotation.RestController;

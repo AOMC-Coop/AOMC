@@ -9,11 +9,14 @@ import com.aomc.coop.utils.CodeJsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 
 /**
@@ -556,17 +559,29 @@ public class TeamController {
      *        @throws
      *
      */
-    @GetMapping(path="/accept/{token}")
-    @CrossOrigin
-    public String acceptInvite(@PathVariable(value = "token") final String token){
+//    @GetMapping(path="/accept/{token}")
+//    @CrossOrigin
+//    public ResponseEntity<Void> acceptInvite(@PathVariable(value = "token") final String token){
+//        response.sendRedirect("some-url");
 //        try{
 //             TeamService.acceptInvite(token);
 
-            return "redirect:/localhost:9999/chat";
+//            return "redirect:/localhost:9999/chat";
 
 //        }catch (Exception e){
 //            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
 //        }
+
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setLocation(URI.create("https://www.naver.com/"));
+
+//        return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
+        @GetMapping(path="/accept")
+        @CrossOrigin
+        public ResponseEntity<Void> acceptInvite(){
+            System.out.println("지나감");
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, "http://localhost:9999/chat").build();
+
     }
 
 

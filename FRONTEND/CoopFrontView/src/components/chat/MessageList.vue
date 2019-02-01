@@ -4,7 +4,7 @@
       <v-icon large left>#</v-icon>
       <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
     </v-card-title>
-    <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots" v-if="flag" force-use-infinite-wrapper="true"></infinite-loading>
+    <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots" v-if="this.$store.state.scrollFlag" force-use-infinite-wrapper="true"></infinite-loading>
 
    <v-list class="card">   
       <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
@@ -71,8 +71,8 @@ export default {
   name: 'MessageList',
    data() {
     return {
-      start:0,
-      flag:true
+      start:10,
+      // flag:false
     };
   },
   computed:{
@@ -82,9 +82,8 @@ export default {
     },
   methods: {
     infiniteHandler($state) {
-      // alert('hello')
-
-      // debugger
+      debugger
+     
       axios.get("http://localhost:8083/api/channel/message?channelIdx=" + 8, {
         params: {
           start: this.start
@@ -96,14 +95,7 @@ export default {
         var result = response.data.data;
 
         var firstValue= this.$store.state.received_messages[0].send_date;
-        console.log(firstValue)
 
-        // if(this.$store.state.received_messages[i].send_date===today||this.$store.state.received_messages[i].send_date==='today'){
-        //         this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
-        //         newValue='today'
-        //}
-
-        debugger
         for(var i=0;i<result.length;i++){
           if((result[i].send_date===today&&firstValue==='today')){
             this.$store.state.received_messages[0].send_date=''
@@ -117,8 +109,6 @@ export default {
           }
           this.$store.state.received_messages.unshift(result[i]);
 
-          console.log(i+"내용은 = "+result[i].content)
-          console.log(i+"날짜는 = "+result[i].send_date)
         }
         if(result.length<10){
           $state.complete();
@@ -132,46 +122,43 @@ export default {
     }
   },
   created() {
-    this.$store.state.received_messages=''
+    // this.$store.state.received_messages=''
 
-    axios.get("http://localhost:8083/api/channel/message?channelIdx=" + 8, {
-      params: {
-        start: this.start
-      },
-    }).then((response) => {
-      if (response.data.status==200) {
-        this.start += 10;
+    // axios.get("http://localhost:8083/api/channel/message?channelIdx=" + 8, {
+    //   params: {
+    //     start: this.start
+    //   },
+    // }).then((response) => {
+    //   if (response.data.status==200) {
+    //     this.start += 10;
 
-        var sendDate = "";
-        var result = response.data.data.reverse();
+    //     var sendDate = "";
+    //     var result = response.data.data.reverse();
 
-      if(result[0].send_date===today){
-        sendDate = 'today'
-        result[0].send_date = 'today'
-      }else{
-        sendDate = result[0].send_date
-      }
+    //   if(result[0].send_date===today){
+    //     sendDate = 'today'
+    //     result[0].send_date = 'today'
+    //   }else{
+    //     sendDate = result[0].send_date
+    //   }
+      
+    //     for(var i=1;i<result.length;i++){
+    //       if(result[i].send_date==today){
+    //         result[i].send_date='today'
+    //       }
 
+    //       if(result[i].send_date === sendDate){
+    //         result[i].send_date=''
+    //       }else{
+    //         sendDate = result[i].send_date
+    //       }
+    //     }
         
-
-        // debugger
-        for(var i=1;i<result.length;i++){
-          if(result[i].send_date==today){
-            result[i].send_date='today'
-          }
-
-          if(result[i].send_date === sendDate){
-            result[i].send_date=''
-          }else{
-            sendDate = result[i].send_date
-          }
-        }
-        
-        this.$store.state.received_messages = result          
-        } else {
-          alert(response.data.message)
-        }
-      });
+    //     this.$store.state.received_messages = result          
+    //     } else {
+    //       alert(response.data.message)
+    //     }
+    //   });
   },
      
 };

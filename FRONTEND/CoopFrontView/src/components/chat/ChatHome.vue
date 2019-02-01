@@ -188,6 +188,10 @@ import ChatRoom from './ChatRoom.vue'
 import CreateChannel from './CreateChannel.vue'
 import InviteUserEmail from './InviteUserEmail.vue'
 import axios from "axios";
+import moment from 'moment'
+
+var now = new moment();
+var today = now.format("dddd, MMMM Do").toString()
 
   export default {
     el: "Chat",
@@ -199,7 +203,7 @@ import axios from "axios";
 
  
   data: () => ({
-      
+    messageStart:0,
     dialog: false,
     createTeamDialog: false,
     createTeamName:'',
@@ -371,7 +375,7 @@ import axios from "axios";
         });
       },
       getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
-        // debugger
+        debugger
         axios
         .get("http://localhost:8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
@@ -379,7 +383,7 @@ import axios from "axios";
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
-              // this.getMessage();
+              this.getMessage();
 
             } else {
             this.errors.push(e);
@@ -390,27 +394,48 @@ import axios from "axios";
         });
 
       },
-      // getMessage() {
-      //   debugger
-      //   this.$store.state.received_messages.splice(0);
-      //   axios
-      //   .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=0")
-      //   .then(response => {
-      //       if(response.data) {
-              
-      //         this.$store.state.received_messages = response.data.data;
-      //         console.log(this.$store.state.received_messages)
+      getMessage() {
+        debugger
+        // this.$store.state.received_messages.splice(0);
+        this.$store.state.received_messages=''
 
-              
-      //       } else {
-      //       this.errors.push(e);
-      //       }
-      //     })
-      //   .catch(e => {
-      //     // location.href = './';
-      //     this.errors.push(e);
-      //   });
-      // },
+    axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      params: {
+        start: this.messageStart
+      },
+    }).then((response) => {
+      if (response.data.status==200) {
+        // this.start += 10;
+
+        var sendDate = "";
+        var result = response.data.data.reverse();
+
+      if(result[0].send_date===today){
+        sendDate = 'today'
+        result[0].send_date = 'today'
+      }else{
+        sendDate = result[0].send_date
+      }
+      
+        for(var i=1;i<result.length;i++){
+          if(result[i].send_date==today){
+            result[i].send_date='today'
+          }
+
+          if(result[i].send_date === sendDate){
+            result[i].send_date=''
+          }else{
+            sendDate = result[i].send_date
+          }
+        }
+        
+        this.$store.state.received_messages = result      
+        this.$store.state.scrollFlag=true
+        } else {
+          alert(response.data.message)
+        }
+      });
+      },
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
         axios

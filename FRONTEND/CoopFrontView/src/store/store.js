@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
   state: {
     userIdx:'',
     userNickName:'',
+    scrollFlag:false,
     channelInfo: {
       idx:'',
       channelName:''

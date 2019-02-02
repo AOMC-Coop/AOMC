@@ -558,13 +558,15 @@ public class TeamController {
      */
     @GetMapping(path="/accept/{token}")
     @CrossOrigin
-    public ResponseEntity acceptInvite(@PathVariable(value = "token") final String token){
-        try{
+    public String acceptInvite(@PathVariable(value = "token") final String token){
+//        try{
+//             TeamService.acceptInvite(token);
 
-            return new ResponseEntity<>(teamService.acceptInvite(token), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
+            return "redirect:/localhost:9999/chat";
+
+//        }catch (Exception e){
+//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+//        }
     }
 
 

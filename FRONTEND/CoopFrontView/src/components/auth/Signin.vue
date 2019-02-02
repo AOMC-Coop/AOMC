@@ -67,6 +67,7 @@ const baseURI = localStorage.getItem('baseURI')
           uid: '',
           pwd: ''
         },
+        info:'',
       }
     },
     props: {
@@ -98,13 +99,14 @@ const baseURI = localStorage.getItem('baseURI')
         this.$store.dispatch('clearError')
       },
       signin: function () {
-        axios.post(`http://localhost:8082/api/login`, this.userInfo) 
+        axios.post(`http://localhost:8082/login`, this.userInfo) 
           .then(response => {
-            // debugger
-            this.info = response.data.data
-            localStorage.setItem('token', this.info.data.token)
-            console.log(this.info.data.token)
-            location.href = './api'
+            this.info = response.data.data // this.info에 token String 저장
+            debugger
+            localStorage.setItem('token', this.info.data)
+            console.log('entered')
+            console.log(this.info.data)
+            location.href = './chat'
           }
           ).catch(e => {
             console.log(e)

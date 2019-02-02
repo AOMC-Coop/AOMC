@@ -53,6 +53,7 @@ public class LoginLogoutService {
 
     @Resource(name="redisTemplate") // @Resource : 일단 @Autowired와 비슷한 것으로 알고 있기
     private HashOperations<String, String, String> hashOperations; // HashOperations : Redis map specific operations working on a hash
+                                                                   // HashOperations <H,HK,HV>
 
     public ResponseType loginUser(@RequestBody User user) throws UnsupportedEncodingException { // header,body(json),HTTP.status //,
 
@@ -74,40 +75,24 @@ public class LoginLogoutService {
                 // 1. Http request로 들어온 user와 db상의 user가 같다면
             if(hashPassword.equals(myUser.getPwd())) {
                 // 2. JWT(JSON Web Tokens) 토큰 생성
-//                <윤재 자체 토큰 생성 부분>
-//                String token = Base64.encodeBase64String(((SHA256.getInstance().encodeSHA256(myUser.getUid())).getBytes("UTF-8")));
-//                token = token.replace("=", "").replace('/', '_').replace('+', '-');
-//                System.out.println("token = " + token);
-
                 final JwtService.TokenRes token = new JwtService.TokenRes(jwtService.create(myUser.getIdx()));
-
-                HashMap hashMap = new HashMap();
-                hashMap.put("uid", myUser.getUid());
-                hashMap.put("nickname", myUser.getNickname());
-
-                hashOperations.putAll(token.getToken(), hashMap);
-
-//                String value = (String)redisTemplate.opsForValue().get(key);
-//                Assert.assertEquals("token", value);
-//                values.leftPush("key:auth", tokenDto.getToken());
 
                 // 3. redis에 토큰 보내기
                 String key = token.getToken();
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 SimpleDateFormat sdf = new SimpleDateFormat( "yy-MM-dd HH:mm:ss" , Locale.KOREA );
                 String time = sdf.format( new Date( timestamp.getTime( ) ) );
-                System.out.println(Http.getIp() + " " + time);
 
-                HashMap<String, String> map = new HashMap<String, String>();
-                // Map : An object that maps keys to values. A map cannot contain duplicate keys; each key can map to at most one value.
-                // This interface takes the place of the Dictionary class.
-                // HashMap : Hash table based implementation of the Map interface.
-                map.put("userId", myUser.getUid());      // put(K key, V value)
-                map.put("ip", Http.getIp());
-                map.put("timeStamp", time);
-                hashOperations.putAll(key, map);
-                // key는 redis token, map은 <user id, ip, time>
-                //            hashOperations<String, String, String>
+                HashMap<String, String> hashMap = new HashMap<String, String>();
+                hashMap.put("userId", myUser.getUid());      // put(K key, V value)
+                hashMap.put("ip", Http.getIp());
+                hashMap.put("timeStamp", time);
+                hashOperations.putAll(key, hashMap);
+                // hashOperations  <String,            String,     String>
+                //                 [ key  ]            [      map       ]
+                //                  token             "userId",    myUser.getUid()
+                //                                    "ip",        Http.getIp()
+                //                                    "timeStamp", time]
                 hashOperations.getOperations().expire(token.getToken(), 5L, TimeUnit.MINUTES);
 
                 // test -> 조회해보기
@@ -138,14 +123,14 @@ public class LoginLogoutService {
         }
     }
 
-    public ResponseType logoutUser(@RequestBody User user) {
-
-        try
-        {
-
-        }
-        catch (Exception e) {
-
-        }
-    }
+//    public ResponseType logoutUser(@RequestBody User user) {
+//
+//        try
+//        {
+//
+//        }
+//        catch (Exception e) {
+//
+//        }
+//    }
 }

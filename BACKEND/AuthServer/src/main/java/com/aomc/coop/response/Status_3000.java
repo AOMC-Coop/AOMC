@@ -9,7 +9,10 @@ public enum Status_3000 {
     SUCCESS_Login("3203"),
     FAIL_Login("3403"),
     FAIL_Login_Wrong_ID("3404"),
-    FAIL_Login_Wrong_Password("3405");
+    FAIL_Login_Wrong_Password("3405"),
+
+    SUCCESS_Withdrawal("3206"),
+    FAIL_Withdrawal("3406");
 
 
     final private String status;

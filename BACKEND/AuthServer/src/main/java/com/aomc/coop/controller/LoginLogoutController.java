@@ -10,7 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping
+// *** 즉, 기본 URL 요청을 받으면 /login, /logout으로 넘어오게 됨
 public class LoginLogoutController {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();

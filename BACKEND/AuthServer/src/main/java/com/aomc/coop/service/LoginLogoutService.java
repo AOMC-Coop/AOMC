@@ -138,14 +138,14 @@ public class LoginLogoutService {
         }
     }
 
-//    public ResponseType logoutUser(@RequestBody User user) {
-//
-//        try
-//        {
-//
-//        }
-//        catch (Exception e) {
-//
-//        }
-//    }
+    public ResponseType logoutUser(@RequestBody User user) {
+
+        try
+        {
+
+        }
+        catch (Exception e) {
+
+        }
+    }
 }

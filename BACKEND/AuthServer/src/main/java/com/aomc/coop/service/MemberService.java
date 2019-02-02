@@ -33,6 +33,7 @@ public class MemberService {
     private UserMapper userMapper;
 
     // 회원 가입
+// *** 여기선 try...catch를 안 썼다. 그래도 되는걸까?
     public ResponseType register(@RequestBody User user) throws NoSuchAlgorithmException {
 
         String uid = user.getUid();
@@ -84,10 +85,17 @@ public class MemberService {
     }
 
     // 회원 탈퇴
-//    public ResponseType withdrawal(@RequestBody User user){
-//        String uid = user.getUid();
-//        User myUser = userMapper.getUser(uid);
-//    }
+    public ResponseType withdrawal(@RequestBody User user){
+        try {
+            String uid = user.getUid();
+            User myUser = userMapper.getUser(uid);
+            myUser.setStatus(0);
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
+        } catch (Exception e) {
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());
+        }
+
+    }
 }
 
 // ResponseEntity : Response body와 함께 Http status를 전송하기 위해 사용

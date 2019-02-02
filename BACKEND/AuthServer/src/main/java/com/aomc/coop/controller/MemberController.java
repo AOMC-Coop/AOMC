@@ -29,14 +29,14 @@ public class MemberController {
     }
 
     // 회원 탈퇴
-//    @PutMapping
-//    @CrossOrigin
-//    public ResponseEntity withdrawal(@RequestBody User user) { // header, body(json), HTTP.status //
-//        try {
-//            return new ResponseEntity(memberService.withdrawal(user), HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-//        }
-//    }
+    @PutMapping(path="/{idx}")
+    @CrossOrigin
+    public ResponseEntity withdrawal(@RequestBody User user) { // header, body(json), HTTP.status //
+        try {
+            return new ResponseEntity(memberService.withdrawal(user), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
+    }
 
 }

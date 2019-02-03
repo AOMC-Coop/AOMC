@@ -29,6 +29,7 @@ public class MemberController {
     }
 
     // 회원 탈퇴
+// ***** (path="/{idx}")를 활용하거나, 안해도 되나?
     @PutMapping(path="/{idx}")
     @CrossOrigin
     public ResponseEntity withdrawal(@RequestBody User user) { // header, body(json), HTTP.status //

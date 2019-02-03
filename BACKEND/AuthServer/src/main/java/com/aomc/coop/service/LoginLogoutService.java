@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.aomc.coop.mapper.UserMapper;
+import com.aomc.coop.model.UserWithToken;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
@@ -52,8 +53,10 @@ public class LoginLogoutService {
     private JwtService jwtService;
 
     @Resource(name="redisTemplate") // @Resource : 일단 @Autowired와 비슷한 것으로 알고 있기
-    private HashOperations<String, String, String> hashOperations; // HashOperations : Redis map specific operations working on a hash
+    private HashOperations<String, String, Object> hashOperations; // HashOperations : Redis map specific operations working on a hash
                                                                    // HashOperations <H,HK,HV>
+// *** 모든 User 정보를 넣기 위해 String -> Object로 바꾸었는데, Side effect 없겠지?
+
 
     public ResponseType loginUser(@RequestBody User user) throws UnsupportedEncodingException { // header,body(json),HTTP.status //,
 
@@ -79,28 +82,47 @@ public class LoginLogoutService {
 
                 // 3. redis에 토큰 보내기
                 String key = token.getToken();
+                System.out.println("token : " + key);
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 SimpleDateFormat sdf = new SimpleDateFormat( "yy-MM-dd HH:mm:ss" , Locale.KOREA );
                 String time = sdf.format( new Date( timestamp.getTime( ) ) );
 
-                HashMap<String, String> hashMap = new HashMap<String, String>();
-                hashMap.put("userId", myUser.getUid());      // put(K key, V value)
+                // Code Refactoring : 필요없는 User 정보는 redis에 저장하지 말자
+                HashMap<String, Object> hashMap = new HashMap<>();
+// *** 모든 User 정보를 넣기 위해 String -> Object로 바꾸었는데, Side effect 없겠지?
+                hashMap.put("idx", myUser.getIdx()); // put(K key, V value)
+                hashMap.put("uid", myUser.getUid());
+                hashMap.put("pwd", myUser.getPwd());
+                hashMap.put("salt", myUser.getSalt());
+                hashMap.put("nickname", myUser.getNickname());
+                hashMap.put("role", myUser.getRole());
+                hashMap.put("gender", myUser.getGender());
+                hashMap.put("status", myUser.getStatus());
+                hashMap.put("reg_date", myUser.getReg_date());
+                hashMap.put("access_date", myUser.getAccess_date());
+                hashMap.put("update_date", myUser.getUpdate_date());
                 hashMap.put("ip", Http.getIp());
                 hashMap.put("timeStamp", time);
                 hashOperations.putAll(key, hashMap);
                 // hashOperations  <String,            String,     String>
+                //                 <   H,                HK,         HV  >
                 //                 [ key  ]            [      map       ]
-                //                  token             "userId",    myUser.getUid()
+                //                  token             "uid",    myUser.getUid()
                 //                                    "ip",        Http.getIp()
                 //                                    "timeStamp", time]
-                hashOperations.getOperations().expire(token.getToken(), 5L, TimeUnit.MINUTES);
+                //                 ...                ...
 
-                // test -> 조회해보기
-                // String userId = hashOperations.get(token, "userId");
-                // String ip = hashOperations.get(token, "ip");
-                // String timeStamp = hashOperations.get(token, "timeStamp");
+                // 테스트를 위해 토큰 유지 시간을 5시간으로 바꿈
+                hashOperations.getOperations().expire(token.getToken(), 5L, TimeUnit.HOURS);
 
-                // System.out.println(userId + " " + ip + " " + timeStamp);
+                // <test>
+                // Object userId = hashOperations.get(key, "uid");
+                // Object ip = hashOperations.get(key, "ip");
+                // Object timeStamp = hashOperations.get(key, "timeStamp");
+                // Object role = hashOperations.get(key, "role");
+                // Object access_date = hashOperations.get(key, "access_date");
+
+                // System.out.println(userId + " " + ip + " " + timeStamp + " " + role + " " + access_date);
 
                 // 4. 토큰을 client에 보내기
                 // myUser.setPwd(token.getToken()); -> 이 부분은 return 파라미터에 token을 담은 것으로 대체
@@ -123,14 +145,22 @@ public class LoginLogoutService {
         }
     }
 
-//    public ResponseType logoutUser(@RequestBody User user) {
-//
-//        try
-//        {
-//
-//        }
-//        catch (Exception e) {
-//
-//        }
-//    }
+    // So, the first thing to do when logging out is
+    // just to delete the token you stored on the client (e.i. browser local storage).
+    // In that case, the client won’t have a token to put in the request, thus causing unauthorized response status.
+    public ResponseType logoutUser(@RequestBody UserWithToken userWithToken) {
+
+        try
+        {
+            String key = userWithToken.getToken();
+
+            // redis token pop
+            hashOperations.getOperations().delete(key);
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Logout.getStatus());
+        }
+        catch (Exception e) {
+            System.out.println("Catch Error");
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Logout.getStatus());
+        }
+    }
 }

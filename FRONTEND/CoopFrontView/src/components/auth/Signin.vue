@@ -102,7 +102,6 @@ const baseURI = localStorage.getItem('baseURI')
         axios.post(`http://localhost:8082/login`, this.userInfo) 
           .then(response => {
             this.info = response.data.data // this.info에 token String 저장
-            debugger
             localStorage.setItem('token', this.info.data)
             console.log('entered')
             console.log(this.info.data)

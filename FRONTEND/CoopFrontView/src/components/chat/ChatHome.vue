@@ -7,6 +7,7 @@
       permanent
     >
 
+    <!-- 클라이언트 사이드에서도 JWT 토큰을 파괴해야 함-->
     <v-list class="white--text">
         <template v-for="item in teams">
           <v-layout

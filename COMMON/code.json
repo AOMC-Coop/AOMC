@@ -98,22 +98,10 @@
     "description": "Success Register"
   },
 
-  "3202": {
-    "status": 200,
-    "message": "회원 탈퇴 성공",
-    "description": "Success Withdrawal"
-  },
-
   "3203": {
     "status": 200,
     "message": "로그인 성공",
     "description": "Success Login"
-  },
-
-  "3204": {
-    "status": 200,
-    "message": "로그아웃 성공",
-    "description": "Success Logout"
   },
 
   "3401": {
@@ -130,33 +118,21 @@
 
   "3403": {
     "status": 400,
-    "message": "탈퇴 실패",
-    "description": "Fail Withdrawal"
-  },
-
-  "3404": {
-    "status": 400,
     "message": "로그인 실패",
     "description": "Fail Login"
   },
 
-  "3405": {
+  "3404": {
     "status": 400,
     "message": "로그인 실패 : 가입된 아이디가 없음",
     "description": "Fail Login : Wrong ID"
   },
 
-  "3406": {
+  "3405": {
   "status": 400,
   "message": "로그인 실패 : 잘못된 비밀번호",
   "description": "Fail Login : Wrong Password"
-  },
-
-  "3407": {
-    "status": 400,
-    "message": "로그아웃 실패",
-    "description": "Fail Logout"
-  },
+},
 
   "5201": {
     "status": 200,

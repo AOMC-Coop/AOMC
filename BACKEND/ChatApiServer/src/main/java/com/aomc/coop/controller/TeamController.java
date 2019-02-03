@@ -16,6 +16,8 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.net.URI;
 
 
@@ -576,13 +578,16 @@ public class TeamController {
 //        headers.setLocation(URI.create("https://www.naver.com/"));
 
 //        return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
-        @GetMapping(path="/accept")
+        @RequestMapping(path="/accept")
         @CrossOrigin
-        public ResponseEntity<Void> acceptInvite(){
+        void acceptInvite(HttpServletResponse response) throws IOException {
             System.out.println("지나감");
-        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, "http://localhost:9999/chat").build();
+            response.sendRedirect("http://localhost:9999/chat");
+//        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, "http://localhost:9999/chat").build();
 
     }
+
+
 
 
 

@@ -1,12 +1,15 @@
 <template>
-<div class="div" infinite-wrapper  style="overflow: auto;">
+<div class="topdiv" infinite-wrapper  style="overflow: auto;">  
+  <!-- <div class="div" infinite-wrapper> -->
     <v-card-title>
       <v-icon large left>#</v-icon>
       <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
     </v-card-title>
-    <infinite-loading direction="top" @infinite="infiniteHandler" spinner="waveDots" v-if="this.$store.state.scrollFlag" force-use-infinite-wrapper="true"></infinite-loading>
+      <!-- <v-infinite-scroll :onTopScrollsToBottom=false :loading="loading" @top="infiniteHandler" :offset='30' style="max-height: 100%; overflow-y: scroll;"> -->
 
-   <v-list class="card">   
+    <infinite-loading ref="infiniteLoading" direction="top" @infinite="infiniteHandler" spinner="waveDots" v-if="this.$store.state.scrollFlag" force-use-infinite-wrapper="true"></infinite-loading>
+   <v-list class="card">
+     
       <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
         <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
@@ -27,36 +30,11 @@
         <!-- </v-list-tile> -->
         </v-card-actions>
       </div>
+      
   </v-list>
-
-    <!-- <v-list subheader three-line>
-     <transition-group name="list">
-      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
-        <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
-        <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
-         
-        <v-list-tile>
-          <v-list-tile-action>
-            <v-avatar size="42px" class="mr-3">
-                  <img
-                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
-                    alt=""
-                  >
-                </v-avatar>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title><h5>{{item.nickname}} {{item.send_time}}</h5></v-list-tile-title>
-            <v-list-tile-title>{{item.content}}</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </div>
-    </transition-group> 
-  </v-list> -->
-
+   <!-- </v-infinite-scroll> -->
 </div>
 
- 
-  
 </template>
 <script>
 import axios from "axios";
@@ -71,9 +49,15 @@ export default {
   name: 'MessageList',
    data() {
     return {
-      start:10,
-      // flag:false
+      // loading:false,
+      // beforeValue:0,
+      // count:0
     };
+  },
+  watch: {
+    getReceivedMessages: function (e) {
+     this.change()
+    }
   },
   computed:{
         ...mapGetters([
@@ -81,19 +65,30 @@ export default {
     ])
     },
   methods: {
-    infiniteHandler($state) {
-      debugger
-     
-      axios.get("http://localhost:8083/api/channel/message?channelIdx=" + 8, {
+    change () {
+        this.$nextTick(() => {
+          if(this.$refs.infiniteLoading.status == 2) {
+            this.$refs.infiniteLoading.stateChanger.reset();
+          }
+      })
+    },
+    //한번 complete가 되고나면 함수가 아예 불리지않는 문제 해결해야함!!!!! -> 계속 reset되는것같음 -> 해결했지만 가끔 리스트2번불림 -> 포커스문제 해결해야함
+    //v-infinite-scroll을 사용하면  스크롤 포커스 문제가 발생한다 -> 새로운데이터 들어왔을때 포커스가 잘안됨
+    infiniteHandler() {
+      // this.loading = true
+      
+      if(this.$store.state.messageStartNum===0)
+        this.$store.state.scrollFlag=false
+
+      axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
         params: {
-          start: this.start
+          start: this.$store.state.messageStartNum
         },
       }).then((response) => {
         if (response.data.status==200) {
 
-        this.start += 10;
+        this.$store.state.messageStartNum+=10;
         var result = response.data.data;
-
         var firstValue= this.$store.state.received_messages[0].send_date;
 
         for(var i=0;i<result.length;i++){
@@ -108,14 +103,23 @@ export default {
             firstValue = result[i].send_date
           }
           this.$store.state.received_messages.unshift(result[i]);
+        }
 
-        }
+        //  this.loading = false
         if(result.length<10){
-          $state.complete();
+          // $state.complete();
+          this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+          this.$store.state.scrollFlag=false
         }
-        $state.loaded();
+        
+        // $state.loaded();
+        this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
+        // this.$store.state.scrollFlag=false
       } else {
-        $state.complete();
+        // this.loading = false
+        // $state.complete();
+        this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+        this.$store.state.scrollFlag=false
       }
     }); 
 
@@ -182,7 +186,7 @@ export default {
   padding-left: 2%;
 }
 .div{
-   overflow-y: scroll;
+   /* overflow-y: scroll; */
 }
 
 </style>

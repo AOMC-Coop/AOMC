@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
     userIdx:'',
     userNickName:'',
     scrollFlag:false,
+    messageStartNum:0,
     channelInfo: {
       idx:'',
       channelName:''

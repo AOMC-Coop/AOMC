@@ -110,7 +110,8 @@
    
     </v-navigation-drawer>
         
-    <ChatRoom :key="somevalueunderyourcontrol"></ChatRoom>
+    <!-- <ChatRoom :key="somevalueunderyourcontrol"></ChatRoom> -->
+    <ChatRoom class="chatroom"></ChatRoom>
     
     <v-dialog v-model="dialog" width="800px" id="chat">
       <v-card>
@@ -203,7 +204,6 @@ var today = now.format("dddd, MMMM Do").toString()
 
  
   data: () => ({
-    messageStart:0,
     dialog: false,
     createTeamDialog: false,
     createTeamName:'',
@@ -299,6 +299,7 @@ var today = now.format("dddd, MMMM Do").toString()
       clickChannel(itemIdx, channelName) {
         this.$store.state.channelInfo.idx = itemIdx;
         this.$store.state.channelInfo.channelName = channelName;
+        this.$store.state.messageStartNum=0
         this.getMessage();
       },
       clickSave() {
@@ -383,6 +384,7 @@ var today = now.format("dddd, MMMM Do").toString()
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
+              this.$store.state.messageStartNum=0
               this.getMessage();
 
             } else {
@@ -395,18 +397,16 @@ var today = now.format("dddd, MMMM Do").toString()
 
       },
       getMessage() {
-        debugger
-        // this.$store.state.received_messages.splice(0);
-        this.$store.state.received_messages=''
+        this.$store.state.received_messages.splice(0);
 
     axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
       params: {
-        start: this.messageStart
+        start: this.$store.state.messageStartNum
       },
     }).then((response) => {
       if (response.data.status==200) {
         // this.start += 10;
-
+        this.$store.state.messageStartNum+=10
         var sendDate = "";
         var result = response.data.data.reverse();
 
@@ -528,5 +528,8 @@ color: brown;
 }
 v-dialog {
   overflow-y: scroll;
+}
+.chatroom{
+  background-color: white;
 }
 </style>

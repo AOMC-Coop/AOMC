@@ -240,5 +240,10 @@
     "status": 400,
     "message": "팀 정보 없음",
     "description": "Fail Read Team"
+  },
+  "5503": {
+    "status": 400,
+    "message": "메세지 정보 없음",
+    "description": "No Message"
   }
 }

@@ -7,7 +7,16 @@ module.exports = (Vue) => {
       }, 0);
     },
   });
+
+  // Vue.directive('focus', {
+  //   inserted: function (el) {
+  //     getReceivedMessages.focus()
+  //   }
+  // });
+
+  
 };
+
 
 
 

@@ -16,6 +16,9 @@ import VuePullInfiniteScroller from 'vue-pull-infinite-scroller'
 import VeeValidate from 'vee-validate'
 import VueScrollFocus from 'vue-scroll-focus'
 import InfiniteLoading from 'vue-infinite-loading'
+// import InfiniteScroll from 'v-infinite-scroll'
+// import 'v-infinite-scroll/dist/v-infinite-scroll.css'
+// Vue.use(InfiniteScroll)
 
 Vue.use(VuePullInfiniteScroller)
 Vue.use(SmoothScrollbar)
@@ -24,7 +27,12 @@ Vue.use(Directives)
 Vue.use(VeeValidate)
 Vue.config.productionTip = false
 Vue.use(VueScrollFocus)
-Vue.use(InfiniteLoading)
+Vue.use(InfiniteLoading, {
+  slots: {
+    noResults:'No more message',
+    noMore: 'No more message', // you can pass a string value
+  }
+})
 
 
 /* eslint-disable no-new */

@@ -92,7 +92,7 @@ export default {
             debugger
             this.$store.state.received_messages.push(JSON.parse(tick.body));
 
-            // console.log("subcribe = " + tick.body);
+            console.log("subcribe = " + tick.body);
 
             var newValue= this.$store.state.received_messages.slice(-1)[0].send_date;
 

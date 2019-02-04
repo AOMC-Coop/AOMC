@@ -102,21 +102,11 @@ public class ChannelService {
 
             //mysql에서 메세지 가져오기
             List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
+//            System.out.println(messages);
 
-//            String sendDate = "";
-////            if(messages.size() > 0) {
-////                sendDate = messages.get(0).getSend_date();
-////
-////                for(int i=1;i<messages.size();i++){
-////                    if(messages.get(i).getSend_date().equals(sendDate)){
-////                        messages.get(i).setSend_date("");
-////                    }else{
-////                        sendDate = messages.get(i).getSend_date();
-////                    }
-////                }
-////            }else {
-////                return codeJsonParser.codeJsonParser(Status_1000.FAIL_Get_Message.getStatus()); //에러코드 수정하기
-////            }
+                if(messages.size()==0){
+                return codeJsonParser.codeJsonParser(Status_1000.No_Message.getStatus());
+            }
 
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);

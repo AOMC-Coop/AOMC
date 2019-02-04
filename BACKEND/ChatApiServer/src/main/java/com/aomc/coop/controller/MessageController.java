@@ -3,6 +3,7 @@ package com.aomc.coop.controller;
 import com.aomc.coop.config.RabbitMQConfig;
 import com.aomc.coop.model.Channel;
 import com.aomc.coop.model.Message;
+import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -27,37 +28,17 @@ import java.util.logging.SimpleFormatter;
 public class MessageController {
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+    private RabbitMQUtil rabbitMQUtil;
 
 
     @MessageMapping("/chat")
     public Message broadcasting(Message msg) throws Exception{
-        System.out.println("요청이 왔습니다" + msg);
-//        System.out.println("channelIdx는 " + channelIdx);
-
-        Map<String, Message> map = new HashMap<>();
-        map.put("msg", msg);
-//        map.put("channelIdx", ms);
-
-        //큐에보냄
-        if(msg != null) {
-            System.out.println("rabbitMQ send");
-            rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, map);
-        }
-
-        return  msg;
+        return rabbitMQUtil.sendRabbitMQ(msg);
     }
 
     @RabbitListener(queues = RabbitMQConfig.RECEIVE_QUEUE_NAME)
     public void broadCasting(Message message) throws Exception {
-
-        System.out.println("rabbitMQ receive = " + message);
-        //SendTo("/topic/message")
-        this.simpMessagingTemplate.convertAndSend("/topic/message", message);
-
+        rabbitMQUtil.receiveRabbitMQ(message);
     }
 }
 

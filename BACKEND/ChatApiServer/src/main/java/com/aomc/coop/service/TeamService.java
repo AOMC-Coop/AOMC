@@ -15,6 +15,7 @@ import com.aomc.coop.response.Status_common;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
 import com.aomc.coop.utils.mail.MailSend;
+import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
@@ -46,6 +47,9 @@ public class TeamService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RabbitMQUtil rabbitMQUtil;
 
     private JwtService jwtService;
 
@@ -82,7 +86,8 @@ public class TeamService {
             message.setNickname(ownerUserInfo.getNickname());
 
             //
-            message.setIdx(170);
+            message.setIdx(0);
+            message.setUser_idx(ownerUserInfo.getIdx());
             //
 
             List<Message> messages = new ArrayList<>();
@@ -98,8 +103,10 @@ public class TeamService {
             teamMapper.createTeam(team);
             channelMapper.createChannel(channel, team.getIdx());
 
-
-            messageMapper.createMessage(message, channel.getIdx(), ownerUserInfo.getIdx());
+            //
+            message.setChannel_idx(channel.getIdx());
+            rabbitMQUtil.sendRabbitMQ(message);
+            //messageMapper.createMessage(message, channel.getIdx(), ownerUserInfo.getIdx());
 
             for (User user : users) {
 

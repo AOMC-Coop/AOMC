@@ -35,10 +35,10 @@ public class MessageController {
 
         //redis에 저장하기
         Map<Integer, Integer> channelInfo_map = new HashMap<>();
-        channelInfo_map.put(map.get("msg").getChannel_idx(), 170);
+        channelInfo_map.put(map.get("msg").getChannel_idx(), 0);
         hashOperations_channelIdx.putAll(RedisUtil.ChannelInfoKey, channelInfo_map);
 
-        listOperations.rightPush(RedisUtil.redisKey + ":" + map.get("msg").getChannel_idx(), map.get("msg"));
+        listOperations.rightPush(RedisUtil.redisKey + map.get("msg").getChannel_idx(), map.get("msg"));
 
         //receive 큐에보냄
         if(map.get("msg") != null) {

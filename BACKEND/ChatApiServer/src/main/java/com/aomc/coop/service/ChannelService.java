@@ -94,32 +94,24 @@ public class ChannelService {
         if (channelIdx >= 0) {
             //redis에서 메세지 가져오기
             listOperations= redisTemplate.opsForList();
-            List<Message> redis_messageList = listOperations.range(RedisUtil.redisKey+ ":" + channelIdx, 0, -1);
+            List<Message> redis_messageList = listOperations.range(RedisUtil.redisKey + channelIdx, 0, -1);
             if(redis_messageList.size() > 0) {
                 Collections.reverse(redis_messageList);
+                System.out.println("getChannelMessage - Redis" + redis_messageList);
+                return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList);
+            }else {
+                //mysql에서 메세지 가져오기
+                List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
+//            System.out.println(messages);
+
+                if(messages.size()==0){
+                    return codeJsonParser.codeJsonParser(Status_1000.No_Message.getStatus());
+                }
+
+
+                return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);
             }
 
-
-            //mysql에서 메세지 가져오기
-            List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
-
-//            String sendDate = "";
-////            if(messages.size() > 0) {
-////                sendDate = messages.get(0).getSend_date();
-////
-////                for(int i=1;i<messages.size();i++){
-////                    if(messages.get(i).getSend_date().equals(sendDate)){
-////                        messages.get(i).setSend_date("");
-////                    }else{
-////                        sendDate = messages.get(i).getSend_date();
-////                    }
-////                }
-////            }else {
-////                return codeJsonParser.codeJsonParser(Status_1000.FAIL_Get_Message.getStatus()); //에러코드 수정하기
-////            }
-
-
-            return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);
         } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_Get_Message.getStatus());

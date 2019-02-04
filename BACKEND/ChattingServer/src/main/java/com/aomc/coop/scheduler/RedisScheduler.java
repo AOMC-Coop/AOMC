@@ -3,19 +3,30 @@ package com.aomc.coop.scheduler;
 import com.aomc.coop.mapper.MessageMapper;
 import com.aomc.coop.model.Message;
 import com.aomc.coop.util.RedisUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 public class RedisScheduler {
 
-    @Resource(name="redisTemplate")
+    @Resource(name = "redisTemplate")
     private ListOperations<String, Message> listOperations;
+
+    @Resource(name = "redisTemplate")
+    private HashOperations<String, Integer, Integer> hashOperations_channelIdx; //String : key, Integer : channelIdx, Integer : lastMessageIdx
+
 
     @Autowired
     private MessageMapper messageMapper;
@@ -27,14 +38,34 @@ public class RedisScheduler {
 
         //1. redis에 저장되어 있는 message들을 가져오기
         //2. 가져온 message들을 redis에서 삭제한 후 db에 저장
-        while(true) {
-            Message message = listOperations.leftPop(RedisUtil.redisKey);
-            if(message == null) {
-                break;
+        Map<Integer, Integer> map = hashOperations_channelIdx.entries(RedisUtil.ChannelInfoKey);
+        ObjectMapper mapper = new ObjectMapper();
+        HashMap<Integer, Integer> map3 = mapper.convertValue(map, new TypeReference<HashMap<Integer, Integer>>() {
+        });
+
+        Set set = map3.keySet();
+
+        Iterator iterator = set.iterator();
+
+        while (iterator.hasNext()) {
+
+            int key = (int) iterator.next();
+
+            System.out.println("hashMap Key : " + key);
+
+            while (true) {
+                Message message = listOperations.leftPop(RedisUtil.redisKey + key);
+
+                if (message == null) {
+                    break;
+                }
+                //db에 저장
+                messageMapper.createMessage(message, message.getChannel_idx(), message.getUser_idx());
+                System.out.println("///// " + message.getContent());
+
+
             }
-            //db에 저장
-            messageMapper.createMessage(message, message.getChannel_idx(), message.getUser_idx());
-            System.out.println("///// " + message.getContent());
+
         }
 
     }

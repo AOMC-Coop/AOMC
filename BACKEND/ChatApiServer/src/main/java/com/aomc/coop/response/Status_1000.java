@@ -13,6 +13,8 @@ public enum Status_1000 {
 
     SUCCESS_Get_Message("1204"),
     FAIL_Get_Message("1403"),
+    No_Message("5503"),
+
 
     SUCCESS_Get_Channel_Users("1205"),
     FAIL_Get_Channel_Users("1404"),

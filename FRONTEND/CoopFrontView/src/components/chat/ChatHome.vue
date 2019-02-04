@@ -111,7 +111,8 @@
    
     </v-navigation-drawer>
         
-    <ChatRoom :key="somevalueunderyourcontrol"></ChatRoom>
+    <!-- <ChatRoom :key="somevalueunderyourcontrol"></ChatRoom> -->
+    <ChatRoom class="chatroom"></ChatRoom>
     
     <v-dialog v-model="dialog" width="800px" id="chat">
       <v-card>
@@ -189,6 +190,10 @@ import ChatRoom from './ChatRoom.vue'
 import CreateChannel from './CreateChannel.vue'
 import InviteUserEmail from './InviteUserEmail.vue'
 import axios from "axios";
+import moment from 'moment'
+
+var now = new moment();
+var today = now.format("dddd, MMMM Do").toString()
 
   export default {
     el: "Chat",
@@ -200,7 +205,6 @@ import axios from "axios";
 
  
   data: () => ({
-      
     dialog: false,
     createTeamDialog: false,
     createTeamName:'',
@@ -296,6 +300,7 @@ import axios from "axios";
       clickChannel(itemIdx, channelName) {
         this.$store.state.channelInfo.idx = itemIdx;
         this.$store.state.channelInfo.channelName = channelName;
+        this.$store.state.messageStartNum=0
         this.getMessage();
       },
       clickSave() {
@@ -372,7 +377,7 @@ import axios from "axios";
         });
       },
       getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
-        // debugger
+        debugger
         axios
         .get("http://localhost:8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
@@ -380,7 +385,8 @@ import axios from "axios";
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
-              // this.getMessage();
+              this.$store.state.messageStartNum=0
+              this.getMessage();
 
             } else {
             this.errors.push(e);
@@ -391,27 +397,46 @@ import axios from "axios";
         });
 
       },
-      // getMessage() {
-      //   debugger
-      //   this.$store.state.received_messages.splice(0);
-      //   axios
-      //   .get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx +"&start=0")
-      //   .then(response => {
-      //       if(response.data) {
-              
-      //         this.$store.state.received_messages = response.data.data;
-      //         console.log(this.$store.state.received_messages)
+      getMessage() {
+        this.$store.state.received_messages.splice(0);
 
-              
-      //       } else {
-      //       this.errors.push(e);
-      //       }
-      //     })
-      //   .catch(e => {
-      //     // location.href = './';
-      //     this.errors.push(e);
-      //   });
-      // },
+    axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      params: {
+        start: this.$store.state.messageStartNum
+      },
+    }).then((response) => {
+      if (response.data.status==200) {
+        // this.start += 10;
+        this.$store.state.messageStartNum+=10
+        var sendDate = "";
+        var result = response.data.data.reverse();
+
+      if(result[0].send_date===today){
+        sendDate = 'today'
+        result[0].send_date = 'today'
+      }else{
+        sendDate = result[0].send_date
+      }
+      
+        for(var i=1;i<result.length;i++){
+          if(result[i].send_date==today){
+            result[i].send_date='today'
+          }
+
+          if(result[i].send_date === sendDate){
+            result[i].send_date=''
+          }else{
+            sendDate = result[i].send_date
+          }
+        }
+        
+        this.$store.state.received_messages = result      
+        this.$store.state.scrollFlag=true
+        } else {
+          alert(response.data.message)
+        }
+      });
+      },
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
         axios
@@ -504,5 +529,8 @@ color: brown;
 }
 v-dialog {
   overflow-y: scroll;
+}
+.chatroom{
+  background-color: white;
 }
 </style>

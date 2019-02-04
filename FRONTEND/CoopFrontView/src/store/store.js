@@ -17,6 +17,7 @@ export const store = new Vuex.Store({
     },
     received_messages:[
       {
+        idx:'',
         content : '',
         nickname:'',
         send_date:'',

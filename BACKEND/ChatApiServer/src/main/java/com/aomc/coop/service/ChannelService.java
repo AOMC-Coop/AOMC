@@ -97,19 +97,21 @@ public class ChannelService {
             List<Message> redis_messageList = listOperations.range(RedisUtil.redisKey + channelIdx, 0, -1);
             if(redis_messageList.size() > 0) {
                 Collections.reverse(redis_messageList);
-            }
-
-
-            //mysql에서 메세지 가져오기
-            List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
+                System.out.println("getChannelMessage - Redis" + redis_messageList);
+                return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList);
+            }else {
+                //mysql에서 메세지 가져오기
+                List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
 //            System.out.println(messages);
 
                 if(messages.size()==0){
-                return codeJsonParser.codeJsonParser(Status_1000.No_Message.getStatus());
+                    return codeJsonParser.codeJsonParser(Status_1000.No_Message.getStatus());
+                }
+
+
+                return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);
             }
 
-
-            return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);
         } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_Get_Message.getStatus());

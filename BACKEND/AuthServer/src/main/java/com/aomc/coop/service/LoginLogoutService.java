@@ -56,13 +56,15 @@ public class LoginLogoutService {
     private HashOperations<String, String, Object> hashOperations; // HashOperations : Redis map specific operations working on a hash
                                                                    // HashOperations <H,HK,HV>
 // *** 모든 User 정보를 넣기 위해 String -> Object로 바꾸었는데, Side effect 없겠지?
+    // Code Refactoring : Generics를 사용해야 할 것 같아
 
 
     public ResponseType loginUser(@RequestBody User user) throws UnsupportedEncodingException { // header,body(json),HTTP.status //,
 
         try
         {
-            User myUser = userMapper.getUser(user.getUid());
+            String uid = user.getUid();
+            User myUser = userMapper.getUserWithUid(uid);
 
             // 해당 이메일로 가입된 유저가 없는 경우
             if(myUser == null){
@@ -73,12 +75,18 @@ public class LoginLogoutService {
                 System.out.println("updateAccess_date : Fail");
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login.getStatus());
             }
+
+            // 탈퇴한 회원일 경우
+// *** 추후 Status_3000 수정하자 -> 더 자세히 경우 나누기
+            if(myUser.getStatus() == 0){
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login.getStatus());
+            }
             String hashPassword = SHA256.getInstance().encodeSHA256(myUser.getSalt() + user.getPwd());
             System.out.println("hashPassword : "+hashPassword);
                 // 1. Http request로 들어온 user와 db상의 user가 같다면
             if(hashPassword.equals(myUser.getPwd())) {
                 // 2. JWT(JSON Web Tokens) 토큰 생성
-                final JwtService.TokenRes token = new JwtService.TokenRes(jwtService.create(myUser.getIdx()));
+                final JwtService.TokenRes token = new JwtService.TokenRes(jwtService.create(myUser.getIdx()), myUser.getIdx());
 
                 // 3. redis에 토큰 보내기
                 String key = token.getToken();
@@ -132,7 +140,7 @@ public class LoginLogoutService {
 //				headers.add("auth_token", token);
                 // 제대로 로그인이 되었다면
                 System.out.println("Successfully login!");
-                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), token.getToken()); // ,로 파라미터에 token값 넘기기 (String으로)
+                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), token); // ,로 파라미터에 token 객체 넘기기 (token String, idx)
             } else {
                 // Http request로 들어온 user와 db상의 user가 다르다면
                 System.out.println("Wrong Password");

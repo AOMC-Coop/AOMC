@@ -20,10 +20,11 @@ Logout               ㅣ Done ㅣ vue에서도 jwt 토큰을 파괴해야 함
 redis에 회원정보 저장 ㅣ Done ㅣ
 Register             ㅣ Done ㅣ Vue 구축되면 테스트 해볼 것
 회원탈퇴              ㅣ Done ㅣ Vue 구축되면 테스트 해볼 것
-Mypage               ㅣ      ㅣ
-Mypage 프로필 수정    ㅣ      ㅣ
+Mypage               ㅣ Done ㅣ 파일 서버 & 스토리지 구축 이후, 프로필 사진도 다루어야 함
+Mypage 프로필 수정    ㅣ Done ㅣ
+비밀번호 찾기          ㅣ      ㅣ <-- 요놈까지 하고 vue 전부 구축
 email 인증            ㅣ      ㅣ
-비밀번호 찾기          ㅣ      ㅣ
+
 
 */
 
@@ -33,6 +34,7 @@ email 인증            ㅣ      ㅣ
 public class LoginLogoutController {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
+
     @Autowired
     private LoginLogoutService loginLogoutService;
 

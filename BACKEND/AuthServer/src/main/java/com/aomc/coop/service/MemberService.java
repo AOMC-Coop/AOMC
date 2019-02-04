@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import com.aomc.coop.mapper.UserMapper;
+import com.aomc.coop.model.UserWithToken;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
@@ -13,11 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.aomc.coop.model.User;
 import com.aomc.coop.util.SHA256;
 
@@ -37,7 +34,7 @@ public class MemberService {
     public ResponseType register(@RequestBody User user) throws NoSuchAlgorithmException {
 
         String uid = user.getUid();
-        User myUser = userMapper.getUser(uid);
+        User myUser = userMapper.getUserWithUid(uid);
         // db상에 이미 가입되어 있는 내역이 없는 경우, 정상 절차대로 가입
         if(myUser == null) {
             // 1. (@RequestBody User user)가 Http request를 자바 객체 User로 변환시켜줌
@@ -59,11 +56,9 @@ public class MemberService {
             // 4. salt와 hash된 password를 user 데이터에 저장, user role까지 설정
             user.setSalt(salt);
             user.setPwd(hashPassword);
-            if(user.getUid().equals("admin")) {
-                user.setRole("admin_role");
-            }else {
-                user.setRole("user_role");
-            }
+            if(user.getUid().equals("admin")) { user.setRole("admin_role"); }
+            else { user.setRole("user_role"); }
+
             // 5. 유저가 탈퇴하면 0으로 설정하기 때문에 필요
             user.setStatus(1);
 
@@ -85,15 +80,22 @@ public class MemberService {
     }
 
     // 회원 탈퇴
-    public ResponseType withdrawal(@RequestBody User user){
-        try {
-            String uid = user.getUid();
-            User myUser = userMapper.getUser(uid);
-            myUser.setStatus(0);
-            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
-        } catch (Exception e) {
+    public ResponseType withdrawal(@RequestBody UserWithToken userWithToken, int idx){
+
+        int userIdx = userWithToken.getIdx();
+
+        if(userIdx == idx)
+        {
+            try {
+                userMapper.withdrawal(idx);
+                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
+            } catch (Exception e) {
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());
+            }
+        } else {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());
         }
+
 
     }
 }

@@ -116,6 +116,18 @@
     "description": "Success Logout"
   },
 
+  "3205": {
+    "status": 200,
+    "message": "마이페이지 조회 성공",
+    "description": "Success Get Profile"
+  },
+
+  "3206": {
+    "status": 200,
+    "message": "마이페이지 수정 성공",
+    "description": "Success Set Profile"
+  },
+
   "3401": {
     "status": 400,
     "message": "회원 가입 실패",
@@ -147,15 +159,39 @@
   },
 
   "3406": {
-  "status": 400,
-  "message": "로그인 실패 : 잘못된 비밀번호",
-  "description": "Fail Login : Wrong Password"
+    "status": 400,
+    "message": "로그인 실패 : 잘못된 비밀번호",
+    "description": "Fail Login : Wrong Password"
   },
 
   "3407": {
     "status": 400,
     "message": "로그아웃 실패",
     "description": "Fail Logout"
+  },
+
+  "3408": {
+    "status": 400,
+    "message": "마이페이지 조회 실패",
+    "description": "Fail Get Profile"
+  },
+
+  "3409": {
+    "status": 400,
+    "message": "마이페이지 조회 실패 : 다른 유저 idx 입력",
+    "description": "Fail Set Profile : Wrong Idx"
+  },
+
+  "3410": {
+    "status": 400,
+    "message": "마이페이지 수정 실패",
+    "description": "Fail Set Profile"
+  },
+
+  "3411": {
+    "status": 400,
+    "message": "마이페이지 수정 실패 : 다른 유저 idx 입력",
+    "description": "Fail Set Profile : Wrong Idx"
   },
 
   "5201": {

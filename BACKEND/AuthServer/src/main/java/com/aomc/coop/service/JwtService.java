@@ -16,7 +16,7 @@ import static com.auth0.jwt.JWT.require;
 
 @Slf4j
 // The Simple Logging Facade for Java (SLF4J) serves as a simple facade or abstraction for various logging frameworks
-// (e.g. java.util.logging, logback, log4j) allowing the end user to plug in the desired logging framework at deployment time.
+// (e.g. java.utils.logging, logback, log4j) allowing the end user to plug in the desired logging framework at deployment time.
 @Service
 public class JwtService {
 

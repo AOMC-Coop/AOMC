@@ -94,8 +94,6 @@ public class ProfileService {
                 hashOperations.putAll(key, userInfo);
 
                 // db 정보 수정
-//                user.setNickname(newNickname);
-//                user.setGender(newGender);
                 userMapper.updateUserInfo(idx, newNickname, newGender);
 
                 // *** 클라이언트 단에서는 Vue에서 입력한 정보로 바로 수정된 내역이 출력되도록 하자. 때문에 여기서 response에 담아서 줄 필요 X

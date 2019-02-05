@@ -3,13 +3,11 @@ package com.aomc.coop.service;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Base64.Encoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.model.UserWithToken;
@@ -17,27 +15,15 @@ import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.aomc.coop.model.User;
-import com.aomc.coop.util.Http;
-import com.aomc.coop.util.SHA256;
+import com.aomc.coop.utils.Http;
+import com.aomc.coop.utils.SHA256;
 
 @Slf4j
 @Service
@@ -171,4 +157,6 @@ public class LoginLogoutService {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Logout.getStatus());
         }
     }
+
+
 }

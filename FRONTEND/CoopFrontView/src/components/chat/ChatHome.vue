@@ -108,8 +108,17 @@
       </v-subheader>
     </v-flex>
 
-   
+    <form @submit.prevent="signOut">
+      <v-btn color="warning" type="submit">Sign out</v-btn>
+    </form>
+    <form @submit.prevent="withdrawal">
+      <v-btn color="error" type="submit">Withdrawal</v-btn>
+    </form>
+    <form @submit.prevent="getProfile">
+      <v-btn color="success" type="submit">Profile</v-btn>
+    </form>    
     </v-navigation-drawer>
+    
         
     <!-- <ChatRoom :key="somevalueunderyourcontrol"></ChatRoom> -->
     <ChatRoom class="chatroom"></ChatRoom>
@@ -171,6 +180,7 @@
 
           </v-layout>
         </v-container>
+        
         <v-card-actions>
           <v-btn flat color="primary">More</v-btn>
           <v-spacer></v-spacer>
@@ -179,7 +189,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
+    
      <modals-container />
 
   </v-app>
@@ -262,7 +272,12 @@ var today = now.format("dddd, MMMM Do").toString()
           {uid:''}
         ]
       },
-      visible: false
+      visible: false,
+
+      userWithToken : {
+        idx : localStorage.getItem('idx'),
+        token: localStorage.getItem('token')
+      },
     }),
     
     props: {
@@ -468,11 +483,75 @@ var today = now.format("dddd, MMMM Do").toString()
       },
       handleClickButton(){
       this.visible = !this.visible
-    } 
+    },
+    signOut: function (){
+      axios.post(`http://localhost:8082/logout`, this.userWithToken)
+        .then(response => {
+          let description = response.data.description
+          if(description == "Fail Logout"){
+              alert("Fail to sign out!")
+           } else {
+              localStorage.removeItem('token')
+              localStorage.removeItem('idx')
+              console.log(JSON.stringify(localStorage))
+              alert("Successfully Signed out!")
+              location.href = './'
+           }
+         }).catch(e => {
+          console.log(e)
+          this.errors(e)
+          location.href = './'
+        })      
+    },
+    withdrawal: function (){
+      let idx = localStorage.getItem('idx')
+      let url = `http://localhost:8082/members/`+ idx
+      axios.put(url, this.userWithToken)
+        .then(response => {
+          let description = response.data.description
+          if(description == "Fail Withdrawal"){
+              alert("Fail to withdraw!")
+           } else {
+              localStorage.removeItem('token')
+              localStorage.removeItem('idx')
+              console.log(JSON.stringify(localStorage))
+              alert("Successfully withdrew!")
+              location.href = './'
+           }
+         }).catch(e => {
+          console.log(e)
+          this.errors(e)
+          location.href = './'
+        })      
+    },
+    getProfile: function (){
+      let idx = localStorage.getItem('idx')
+      let url = `http://localhost:8082/profile/`+ idx
+      axios.post(url, this.userWithToken)
+        .then(response => {
+          let description = response.data.description
+          if(description == "Fail Get Profile"){
+              alert("Fail to get profile!")
+           } else {
+              let nickname = response.data.nickname
+              let gender = response.data.gender
+// ***** localStorage로 저장하여도 ./Profile에는 적용되지 않는다. localStorage의 범위 알아볼 것
+              localStorage.setItem('nickname', nickname)
+              localStorage.setItem('gender', gender)
+              location.href = './profile'
+           }
+         }).catch(e => {
+          console.log(e)
+          this.errors(e)
+          location.href = './'
+        })      
     },
 
-   
 
+   //  else if(description == "Fail Set Profile : Wrong Idx")
+  },
+
+  
     created() {
       
 

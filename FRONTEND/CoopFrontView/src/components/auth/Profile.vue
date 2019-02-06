@@ -19,10 +19,7 @@
           <v-form>
             <v-container py-0>
               <v-layout wrap>
-                <v-flex
-                  xs12
-                  md4
-                >
+                <v-flex xs12 md4>
                   <!-- <v-text-field
                     label="Company (disabled)"
                     disabled/>
@@ -31,10 +28,19 @@
                   xs12
                   md4
                 > -->
-                  <v-text-field
-                    class="purple-input"
-                    label="User Name"
-                  />
+                <form @submit.prevent="setProfile"> 
+                    <v-text-field
+                        id="nickname_bind"
+                        class="purple-input"
+                        label="User Name"
+                        v-model="profileWithToken.nickname"
+                    />
+                    <v-btn type="submit" class="mx-0 font-weight-light" color="success">
+                        Update Profile
+                    </v-btn>
+                </form>
+
+<!-- ***** v-text-field안에 v-bind:value=nickname 씨벌탱 이렇게 해도 바인딩이 안된다. v-bind:value="nickname" 여기에 유저 nickname을 가져와서 표시해야 한다.-->
                 <!-- </v-flex>
                 <v-flex
                   xs12
@@ -100,12 +106,7 @@
                   xs12
                   text-xs-right
                 > -->
-                  <v-btn
-                    class="mx-0 font-weight-light"
-                    color="success"
-                  >
-                    Update Profile
-                  </v-btn>
+
                 </v-flex>
               </v-layout>
             </v-container>
@@ -143,7 +144,52 @@
 </template>
 
 <script>
+import axios from "axios";
+import Vue from 'vue'
+
+let gender = localStorage.getItem('gender')
+
+new Vue({
+    el: '#nickname_bind',
+    data: {
+        nickname:localStorage.getItem('nickname') 
+    }
+});
+
 export default {
-  //
+
+  data: () => ({
+    profileWithToken : {
+      token: localStorage.getItem('token'),  
+      idx : localStorage.getItem('idx'),
+      //   uid :
+      nickname : '',
+// ***** 아직 gender는 문제가 많아 부득이하게 1로 고정하여 전송
+      gender : 1
+    }
+   }),
+  methods: {
+    setProfile: function (){
+      let idx = localStorage.getItem('idx')
+      let url = `http://localhost:8082/profile/`+ idx
+      axios.put(url, this.profileWithToken)
+        .then(response => {
+          let description = response.data.description
+          if(description == "Fail Set Profile"){
+              alert("Fail to update profile!")
+           } else if (description == "Fail Set Profile : Wrong Idx"){
+              alert("Wrong URL!")
+           } else {
+                alert("Successfully update profile!")
+                location.href = './profile'
+           }   
+           }
+         ).catch(e => {
+          console.log(e)
+          this.errors(e)
+          location.href = './'
+        })      
+    }
+  }
 }
 </script>

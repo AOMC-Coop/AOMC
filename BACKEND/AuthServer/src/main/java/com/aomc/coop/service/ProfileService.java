@@ -40,6 +40,7 @@ public class ProfileService {
     // 프로필 조회
     public ResponseType getProfile(@RequestBody UserWithToken userWithToken, int idx){
 
+        System.out.println(userWithToken.getIdx() + " " + userWithToken.getToken());
         // URL로 들어온 idx와 토큰에 저장된 idx가 같아야 함 : 유저는 자기 idx에 해당하는 자기 정보만 볼 수 있어야 함
         int userIdx = userWithToken.getIdx();
         if(idx == userIdx)

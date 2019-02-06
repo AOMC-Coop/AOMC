@@ -2,6 +2,10 @@
   <div id="app">
     <!-- <router-link to="/">login</router-link> -->
     <!-- <router-link to="/chat">chat</router-link> -->
+    <!-- <div id="isLogin">
+      <v-if="{{message}}"><chat></chat></v-if>
+      <v-else></v-else>
+    </div> -->
     <router-view/>
   </div>
 </template>
@@ -16,7 +20,18 @@ import Signup from './components/auth/Signup.vue'
 import Signin from './components/auth/Signin.vue'
 import Profile from './components/auth/Profile.vue'
 import Chat from './components/chat/ChatHome.vue'
+import Vue from 'vue'
 
+// let token = localStorage.getItem('token')
+// let isLogin = 0
+// if(token != null) { isLogin = 1 }
+
+// new Vue({
+//   el: '#isLogin',
+//     data: {
+//       message: isLogin
+//   },
+// });
 
 export default {
   name: 'App',
@@ -27,9 +42,10 @@ export default {
     'Profile' : Profile
   }
 }
+
 </script>
 
-<<style>
+<style>
  #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

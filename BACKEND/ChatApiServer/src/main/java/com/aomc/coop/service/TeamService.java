@@ -120,7 +120,7 @@ public class TeamService {
 
                 //방장인 경우 메일 안보냄
                 if (user.getUid().equals(team.getOwner())) {
-                    teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 1);
+                    teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 1, 1);
                     channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
                 } else {
 
@@ -132,7 +132,7 @@ public class TeamService {
                     } else {//초대받은팀원이 User인 경우
                         //각테이블에 생성 데이터넣기
                         System.out.println(userTemp.getIdx());
-                        teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0);
+                        teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0, 0);
                         channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
 
                         //Redis에 정보 저장
@@ -343,7 +343,7 @@ public class TeamService {
 
                 hashMap.put("userIdx", userTemp.getIdx());
 
-                teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0);
+                teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0, 0);
 
                 channelMapper.createUserHasChannel(channels.get(0).getIdx(), userTemp.getIdx());
 

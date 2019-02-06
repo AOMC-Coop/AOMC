@@ -5,9 +5,6 @@
 //    // -> user_has_channel user_has_team 둘 다에 정보를 넣어주고, 둘 다의 certification을 1로 바꿔야 함(초대 했다는 뜻)
 //}
 //
-////    loginlogout  로그인 로그아웃
-////    members 회원가입 회원탈퇴 email인증
-////    profile 프로필 회원수정 비밀번호 찾기
 //
 //
 //

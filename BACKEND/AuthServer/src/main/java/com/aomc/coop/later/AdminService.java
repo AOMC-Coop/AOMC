@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.utils.List;
 
 // Admin 기능은 Admin Server로 분리할 것이므로, 지금은 건들지 말 것
 // *** 아직 Admin 기능이 완전하지 않음

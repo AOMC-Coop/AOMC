@@ -14,14 +14,17 @@
 // Mypage.vue : 마이페이지 회원수정 회원탈퇴 비밀번호 찾기 (Chat.vue 위에)
 import Signup from './components/auth/Signup.vue'
 import Signin from './components/auth/Signin.vue'
+import Profile from './components/auth/Profile.vue'
 import Chat from './components/chat/ChatHome.vue'
+
 
 export default {
   name: 'App',
   components : {
     'Chat' : Chat,
     'Signup' : Signup,
-    'Signin' : Signin
+    'Signin' : Signin,
+    'Profile' : Profile
   }
 }
 </script>

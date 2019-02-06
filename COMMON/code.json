@@ -98,10 +98,34 @@
     "description": "Success Register"
   },
 
+  "3202": {
+    "status": 200,
+    "message": "회원 탈퇴 성공",
+    "description": "Success Withdrawal"
+  },
+
   "3203": {
     "status": 200,
     "message": "로그인 성공",
     "description": "Success Login"
+  },
+
+  "3204": {
+    "status": 200,
+    "message": "로그아웃 성공",
+    "description": "Success Logout"
+  },
+
+  "3205": {
+    "status": 200,
+    "message": "마이페이지 조회 성공",
+    "description": "Success Get Profile"
+  },
+
+  "3206": {
+    "status": 200,
+    "message": "마이페이지 수정 성공",
+    "description": "Success Set Profile"
   },
 
   "3401": {
@@ -118,21 +142,57 @@
 
   "3403": {
     "status": 400,
+    "message": "탈퇴 실패",
+    "description": "Fail Withdrawal"
+  },
+
+  "3404": {
+    "status": 400,
     "message": "로그인 실패",
     "description": "Fail Login"
   },
 
-  "3404": {
+  "3405": {
     "status": 400,
     "message": "로그인 실패 : 가입된 아이디가 없음",
     "description": "Fail Login : Wrong ID"
   },
 
-  "3405": {
-  "status": 400,
-  "message": "로그인 실패 : 잘못된 비밀번호",
-  "description": "Fail Login : Wrong Password"
-},
+  "3406": {
+    "status": 400,
+    "message": "로그인 실패 : 잘못된 비밀번호",
+    "description": "Fail Login : Wrong Password"
+  },
+
+  "3407": {
+    "status": 400,
+    "message": "로그아웃 실패",
+    "description": "Fail Logout"
+  },
+
+  "3408": {
+    "status": 400,
+    "message": "마이페이지 조회 실패",
+    "description": "Fail Get Profile"
+  },
+
+  "3409": {
+    "status": 400,
+    "message": "마이페이지 조회 실패 : 다른 유저 idx 입력",
+    "description": "Fail Set Profile : Wrong Idx"
+  },
+
+  "3410": {
+    "status": 400,
+    "message": "마이페이지 수정 실패",
+    "description": "Fail Set Profile"
+  },
+
+  "3411": {
+    "status": 400,
+    "message": "마이페이지 수정 실패 : 다른 유저 idx 입력",
+    "description": "Fail Set Profile : Wrong Idx"
+  },
 
   "5201": {
     "status": 200,
@@ -240,10 +300,5 @@
     "status": 400,
     "message": "팀 정보 없음",
     "description": "Fail Read Team"
-  },
-  "5503": {
-    "status": 400,
-    "message": "메세지 정보 없음",
-    "description": "No Message"
   }
 }

@@ -100,11 +100,11 @@ const baseURI = localStorage.getItem('baseURI')
       },
       signin: function () {
         axios.post(`http://localhost:8082/login`, this.userInfo) 
-          .then(response => {
-            this.info = response.data.data // this.info에 token String 저장
-            localStorage.setItem('token', this.info.data)
+          .then(response => { 
+            localStorage.setItem('token', response.data.data.token)
+            localStorage.setItem('idx', response.data.data.idx)
+            debugger
             console.log('entered')
-            console.log(this.info.data)
             location.href = './chat'
           }
           ).catch(e => {

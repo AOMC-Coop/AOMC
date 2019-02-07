@@ -33,7 +33,12 @@ export default new Router({ // 모르면 공부
       path: '/profile',
       name: 'Profile',
       component: Profile
-    }
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: Signup
+    },
   ],
   // scrollBehavior (to, from, savedPosition) {
   //   return { x: 100, y: 100 }

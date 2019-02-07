@@ -24,7 +24,6 @@ public class MemberController {
     @CrossOrigin
     public ResponseEntity register(@RequestBody User user) { // header, body(json), HTTP.status //
         try {
-// ***** 여기서 e-mail code로 인증을 먼저 받고, 인증 성공 시 register를 호출할 것
             return new ResponseEntity(memberService.register(user), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);

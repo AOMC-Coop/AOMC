@@ -2,7 +2,6 @@ package com.aomc.coop.service;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Random;
 
 import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.model.UserWithToken;
@@ -34,14 +33,9 @@ public class MemberService {
     MailSend mailSend = new MailSend();
     private JavaMailSender mailSender;
 
+
+    // <1. 회원 가입>
     // 가입시 이메일 인증
-//    public ResponseType RegisterAuthorization(final User user) {
-//
-//        String authCode = authCode();
-//        SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), null, authCode);
-//        // 여기선 token이 쓰이지 않으므로, null을 입력. MailSend 클래스는 비밀번호 변경에도 사용될 것이므로, String token을 아규먼트로 가지고 있긴 해야 함.
-//        sendMailThread.start();
-//    }
 
 
     // 회원 가입
@@ -49,13 +43,19 @@ public class MemberService {
 // ***** 여기선 try ~ catch를 안 썼다. 쓰는 걸로 변경할 것
     public ResponseType register(@RequestBody User user) throws NoSuchAlgorithmException {
 
+        if(!user.getPwd().equals(user.getConfirm_pwd())){
+            System.out.println(user.getPwd()+ " "+user.getConfirm_pwd());
+            System.out.println("Password doesn't match!");
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
+        }
+
         String uid = user.getUid();
         User myUser = userMapper.getUserWithUid(uid);
+
         // db상에 이미 가입되어 있는 내역이 없는 경우, 정상 절차대로 가입
         if(myUser == null) {
 
             System.out.println("Register");
-
 
             SecureRandom secRan = SecureRandom.getInstance("SHA1PRNG");
             int numLength = 16;
@@ -65,40 +65,38 @@ public class MemberService {
             }
             System.out.println("salt : "+ salt);
 
-
             String newPassword = salt + user.getPwd();
             String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
-
 
             user.setSalt(salt);
             user.setPwd(hashPassword);
             if(user.getUid().equals("admin")) { user.setRole("admin_role"); }
             else { user.setRole("user_role"); }
 
-
             user.setStatus(1);
 
             // 제대로 db에 저장이 되었다면
             if (userMapper.insertUser(user) == 1) {
                 System.out.println("Successfully Registered");
-
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register.getStatus());
-// 이 return 값은, ex) Chat.vue -> created().get.then.(response)의 response로 감 // 토큰도 ResponseEntity에 담아서 보낼것
             } else {
             // 어떠한 이유로 db에 저장이 되지 못했다면
+                System.out.println("Fail to store user in db!");
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
             }
         } else {
         // 이미 가입되어 있는 uid(e-mail)이라면
+            System.out.println("Already registerd ID!");
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
         }
     }
 
-    // 회원 탈퇴
+    // <2. 회원 탈퇴>
     public ResponseType withdrawal(@RequestBody UserWithToken userWithToken, int idx){
 
         int userIdx = userWithToken.getIdx();
 
+        System.out.println("userIdx : " + userIdx +"  idx : " + idx);
         if(userIdx == idx)
         {
             try {
@@ -114,24 +112,12 @@ public class MemberService {
 
     }
 
+    // <3. 비밀번호 분실 후 변경>
 
+    // Forgot password?
+    // 이메일 발송
+    // 이메일 버튼을 통해
 
-    // 6자리 인증 코드 생성
-    public String authCode() {
-
-        Random random = new Random(System.currentTimeMillis());
-        int certNumLength = 6;
-
-        int range = (int)Math.pow(10,certNumLength);
-        int trim = (int)Math.pow(10, certNumLength-1);
-        int result = random.nextInt(range)+trim;
-
-        if(result>range){
-            result = result - trim;
-        }
-
-        return String.valueOf(result);
-    }
 
     // 메일보내기
     class SendMailThread extends Thread {
@@ -154,10 +140,32 @@ public class MemberService {
     }
 
 
-
     // 비밀번호 변경
+//    public ResponseType registerAuthorization(@RequestBody User user) {
+//
+//        String authCode = authCode();
+//        SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), null, authCode);
+//        // 여기선 token이 쓰이지 않으므로, null을 입력. MailSend 클래스는 비밀번호 변경에도 사용될 것이므로, String token을 아규먼트로 가지고 있긴 해야 함.
+//        sendMailThread.start();
+//
+//    }
 
-
+    // 6자리 인증 코드 생성
+//    public String authCode() {
+//
+//        Random random = new Random(System.currentTimeMillis());
+//        int certNumLength = 6;
+//
+//        int range = (int)Math.pow(10,certNumLength);
+//        int trim = (int)Math.pow(10, certNumLength-1);
+//        int result = random.nextInt(range)+trim;
+//
+//        if(result>range){
+//            result = result - trim;
+//        }
+//
+//        return String.valueOf(result);
+//    }
 
 //    //초대 승낙
 //    public ResponseType acceptInvite(final String token) {

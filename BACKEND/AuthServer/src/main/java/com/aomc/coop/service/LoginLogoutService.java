@@ -119,9 +119,6 @@ public class LoginLogoutService {
                 // System.out.println(userId + " " + ip + " " + timeStamp + " " + role + " " + access_date);
 
                 // 4. 토큰을 client에 보내기
-                // myUser.setPwd(token.getToken()); -> 이 부분은 return 파라미터에 token을 담은 것으로 대체
-// ***** password 대신 token을 보냄 -> 1. 원래는 JWT 토큰을 바디에 보내야 함  2. 그 다음부터는 헤더에 담아서 통신 -> 다른 service들에 영향 : 은미 코드 보자
-
 //				HttpHeaders headers = new HttpHeaders();
 //				headers.add("auth_token", token);
                 // 제대로 로그인이 되었다면
@@ -150,6 +147,7 @@ public class LoginLogoutService {
 
             // redis token pop
             hashOperations.getOperations().delete(key);
+            System.out.println("Successfully logout!");
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Logout.getStatus());
         }
         catch (Exception e) {

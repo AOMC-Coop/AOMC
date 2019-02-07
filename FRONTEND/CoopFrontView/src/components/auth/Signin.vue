@@ -57,6 +57,18 @@
 
 <script>
 import axios from 'axios'
+"use strict";
+const token = axios.defaults.headers
+console.log(token)
+
+const token2 = (new URL(document.location)).searchParams.get('token')
+console.log(token2)
+
+const token3 = axios.defaults.headers.common['token']
+console.log(token3)
+
+// http.request(`http://appServer:5001/?key=value`, { 'Authorization': 'Bearer ' + jwt }).on('response', (response) => response.pipe(res))
+
 const baseURI = localStorage.getItem('baseURI')
 
   export default {

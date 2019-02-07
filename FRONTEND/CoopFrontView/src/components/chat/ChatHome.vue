@@ -313,10 +313,12 @@ var today = now.format("dddd, MMMM Do").toString()
         this.$store.state.inviteUsers.push({uid:this.$store.state.userId});
       },
       clickChannel(itemIdx, channelName) {
-        this.$store.state.channelInfo.idx = itemIdx;
-        this.$store.state.channelInfo.channelName = channelName;
-        this.$store.state.messageStartNum=0
-        this.getMessage();
+        if(itemIdx !== this.$store.state.channelInfo.idx){
+           this.$store.state.channelInfo.idx = itemIdx;
+          this.$store.state.channelInfo.channelName = channelName;
+          this.$store.state.messageStartNum=0
+          this.getMessage();
+        }
       },
       clickSave() {
         // debugger;
@@ -343,7 +345,6 @@ var today = now.format("dddd, MMMM Do").toString()
         this.dialog = false;
       },
       clickCancel() {
-        debugger;
         // for(item in this.inviteUsers) {
         //   console.log(item.uid)
         //   debugger;
@@ -375,7 +376,6 @@ var today = now.format("dddd, MMMM Do").toString()
         axios
         .get("http://localhost:8083/api/team/" + teamIdx)
         .then(response => {
-          // debugger;
             if(response.data) {
               this.teamMembers = response.data.data;
               for(var i=0; i<this.teamMembers.length; i++) {
@@ -392,7 +392,6 @@ var today = now.format("dddd, MMMM Do").toString()
         });
       },
       getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
-        debugger
         axios
         .get("http://localhost:8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
@@ -413,16 +412,24 @@ var today = now.format("dddd, MMMM Do").toString()
 
       },
       getMessage() {
+        debugger;
         this.$store.state.received_messages.splice(0);
 
     axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
       params: {
-        start: this.$store.state.messageStartNum
+        start: this.$store.state.messageStartNum,
+        messageLastIdx: this.$store.state.messageLastIdx
       },
     }).then((response) => {
       if (response.data.status==200) {
         // this.start += 10;
-        this.$store.state.messageStartNum+=10
+        if(response.data.plusData === -1) {
+          this.$store.state.messageStartNum = 0;
+        }else {
+          this.$store.state.messageStartNum = response.data.plusData;
+          this.$store.state.messageStartNum+=10
+        }
+        
         var sendDate = "";
         var result = response.data.data.reverse();
 
@@ -444,8 +451,11 @@ var today = now.format("dddd, MMMM Do").toString()
             sendDate = result[i].send_date
           }
         }
-        
-        this.$store.state.received_messages = result      
+        debugger;
+        this.$store.state.received_messages = result
+        this.$store.state.messageLastIdx = this.$store.state.received_messages[this.$store.state.received_messages.length-1].message_idx;
+        console.log("ChatHome - LastIdx = " + this.$store.state.messageLastIdx);
+        console.log("//////////////"+this.$store.state.messageStartNum);
         this.$store.state.scrollFlag=true
         } else {
           alert(response.data.message)
@@ -454,12 +464,11 @@ var today = now.format("dddd, MMMM Do").toString()
       },
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
+        this.$store.state.messageLastIdx = 0;
         axios
         .get("http://localhost:8083/api/team/user/" + teamIdx)
         .then(response => {
-          debugger;
             if(response.data) {
-              debugger;
               //this.teamsFromServer = response.data.data;
               this.teamName = teamName;
               this.userName = "yunjae"; //userName 받기
@@ -568,7 +577,6 @@ var today = now.format("dddd, MMMM Do").toString()
       axios
         .get("http://localhost:8083/api/team/user/" + "5")
         .then(response => { //
-          // debugger;
             if(response.data) {
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;
@@ -576,6 +584,9 @@ var today = now.format("dddd, MMMM Do").toString()
               localStorage.setItem("teamIdx", response.data.data[0].idx);
               console.log("teamIdx" + response.data.data[0].idx);
               this.getMemberByTeamId(response.data.data[0].idx);
+
+              this.$store.state.messageLastIdx = 0;
+
               this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
 
               this.$store.state.channelInfo.idx = response.data.data[0].idx;

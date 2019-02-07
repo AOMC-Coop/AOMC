@@ -7,7 +7,7 @@ import java.util.Date;
 
 @Data
 public class Message implements Serializable {
-    private int idx;
+    private int message_idx;
     private String content;
     private String nickname;
     private int channel_idx;

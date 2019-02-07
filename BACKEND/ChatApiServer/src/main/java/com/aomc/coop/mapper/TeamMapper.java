@@ -19,8 +19,8 @@ public interface TeamMapper {
     void createTeam(final Team team);
 
     //team생성 - user_has_team 테이블
-    @Insert("INSERT INTO user_has_team(team_idx, user_idx, owner_flag) VALUES( #{teamIdx}, #{userIdx}, #{ownerFlag})")
-    int createUserHasTeam(final int teamIdx, final int userIdx, final int ownerFlag);
+    @Insert("INSERT INTO user_has_team(team_idx, user_idx, owner_flag, invite_flag) VALUES( #{teamIdx}, #{userIdx}, #{ownerFlag}, #{inviteFlag})")
+    int createUserHasTeam(final int teamIdx, final int userIdx, final int ownerFlag, final int inviteFlag);
 
     //team상세조회
     @Select("SELECT idx, name, status FROM teams WHERE idx = #{idx}")

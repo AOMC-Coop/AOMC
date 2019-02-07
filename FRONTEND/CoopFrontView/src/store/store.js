@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
     userIdx:'',
     userNickName:'',
     scrollFlag:false,
+    messageLastIdx:0,
     messageStartNum:0,
     channelInfo: {
       idx:'',
@@ -17,7 +18,7 @@ export const store = new Vuex.Store({
     },
     received_messages:[
       {
-        idx:'',
+        message_idx:'',
         content : '',
         nickname:'',
         send_date:'',

@@ -383,11 +383,11 @@ public class TeamService {
         int userIdx = Integer.parseInt(string_userIdx);
 
         if (teamIdx == -1) {
-            return "http://localhost:9999/"; //회원가입창 //만료된주소입니다라는 메세지 보내야함
+            return "http://localhost:9999/signup"; //회원가입창 //만료된주소입니다라는 메세지 보내야함
 //            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
         }
         if (userIdx == 0) {
-            return "http://localhost:9999/"; //회원가입창
+            return "http://localhost:9999/signup"; //회원가입창
 //            return codeJsonParser.codeJsonParser(Status_5000.PLEASE_SIGNUP.getStatus(), token);
         }
         teamMapper.updateInviteFlag(teamIdx, userIdx);

@@ -86,6 +86,7 @@
 
 <script>
 import axios from 'axios'
+
   export default {
     data () {
       return {
@@ -119,6 +120,18 @@ import axios from 'axios'
           this.$router.push('/')
         }
       }
+    },
+    created(){
+      debugger
+
+      const info = axios.defaults.headers
+      console.log(info)
+
+      const token2 = (new URL(document.location)).searchParams.get('token')
+      console.log("token2"+token2)
+
+      const token3 = axios.defaults.headers.common['token']
+      console.log("token3"+token3)
     },
     methods: {
       onSignup () {

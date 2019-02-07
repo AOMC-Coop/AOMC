@@ -123,7 +123,13 @@ public class LoginLogoutService {
 //				headers.add("auth_token", token);
                 // 제대로 로그인이 되었다면
                 System.out.println("Successfully login!");
-                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), token); // ,로 파라미터에 token 객체 넘기기 (token String, idx)
+                UserWithToken userWithToken = new UserWithToken();
+                userWithToken.setIdx(myUser.getIdx());
+                userWithToken.setUid(myUser.getUid());
+                userWithToken.setToken(key);
+                userWithToken.setNickname(myUser.getNickname());
+
+                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), userWithToken); // ,로 파라미터에 token 객체 넘기기 (token String, idx)
             } else {
                 // Http request로 들어온 user와 db상의 user가 다르다면
                 System.out.println("Wrong Password");

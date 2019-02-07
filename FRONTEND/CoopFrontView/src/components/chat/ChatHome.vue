@@ -536,6 +536,9 @@ var today = now.format("dddd, MMMM Do").toString()
               let nickname = response.data.nickname
               let gender = response.data.gender
 // ***** localStorage로 저장하여도 ./Profile에는 적용되지 않는다. localStorage의 범위 알아볼 것
+// <아래 방법 활용>
+// : store.js
+// -> Chathome.vue에서 this.$store로 찾아보기
               localStorage.setItem('nickname', nickname)
               localStorage.setItem('gender', gender)
               location.href = './profile'

@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Data
 public class Message implements Serializable {
-    private int idx;
+    private int message_idx;
     private String content;
     private String nickname;
     private int channel_idx;

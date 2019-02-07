@@ -86,7 +86,7 @@ public class TeamService {
             message.setNickname(ownerUserInfo.getNickname());
 
             //
-            message.setIdx(0);
+            message.setMessage_idx(0);
             message.setUser_idx(ownerUserInfo.getIdx());
             //
 

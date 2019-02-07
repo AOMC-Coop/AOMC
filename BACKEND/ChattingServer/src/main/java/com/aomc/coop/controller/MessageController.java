@@ -52,7 +52,7 @@ public class MessageController {
             lastIdx = 0;
         }
 
-        map.get("msg").setIdx(lastIdx);
+        map.get("msg").setMessage_idx(lastIdx);
         System.out.println("lastIdx = " + lastIdx);
 
         channelInfo_map.put(map.get("msg").getChannel_idx(), lastIdx);

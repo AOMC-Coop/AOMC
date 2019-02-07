@@ -595,37 +595,24 @@ public class TeamController {
 
         @GetMapping(path="/accept/{token}")
         @CrossOrigin
-        ResponseEntity<Void> acceptInvite(RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "token") final String token) throws IOException {
+        ResponseEntity acceptInvite(RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "token") final String token) throws IOException {
 
 //            try{
                 String redirectAddress = teamService.acceptInvite(token);
+
 //                redirectAttributes.addFlashAttribute("token", token);
+
 //                response.setHeader("token", token);
 //                response.sendRedirect(redirectAddress);
 
-
-
-//            http.request("http://appServer:5001/?key=value", { "Authorization": token }).on("response", (response) => response.pipe(res));
-
-
-
-//                response.containsHeader(token);
-//                response.getWriter().append(token);
-
 //                String token2 = response.getHeader("token");
 //                System.out.println(token2);
-
-
-
-
+            
             HttpHeaders headers = new HttpHeaders();
-
-            System.out.println("지나감");
-            System.out.println(token);
-            headers.setLocation(URI.create(redirectAddress));
+            headers.setLocation(URI.create(redirectAddress+token));
             headers.set("token", token);
-//            headers.setLocation(URI.create("https://www.naver.com/"));
-            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
+//            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
+            return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).headers(headers).build();
 
 
 
@@ -642,6 +629,7 @@ public class TeamController {
 
 
 //        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, "http://localhost:9999/chat").build();
+
     }
 
 

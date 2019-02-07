@@ -45,6 +45,16 @@ export default new Router({ // 모르면 공부
       name: 'Signup',
       component: Signup
     },
+    { path: '/signup/:token',
+      redirect: to => {
+        const {params} = to
+        if (params.token) {
+
+          localStorage.setItem('invite_token', params.token)
+          return '/signup'
+        }
+      }
+    },
   ],
   // scrollBehavior (to, from, savedPosition) {
   //   return { x: 100, y: 100 }

@@ -19,6 +19,12 @@ Vue.use(Vuetify, {
 export default new Router({ // 모르면 공부
   mode: 'history',
   routes: [
+    // {path: '/chat/:teamIdx', name: 'ChatHome', component: ChatHome, props: true },
+    // {
+    //   path: '/chat',
+    //   name: 'ChatHome',
+    //   component: ChatHome
+    // },
     {
       path: '/',
       name: 'Signin',
@@ -38,6 +44,16 @@ export default new Router({ // 모르면 공부
       path: '/signup',
       name: 'Signup',
       component: Signup
+    },
+    { path: '/signup/:token',
+      redirect: to => {
+        const {params} = to
+        if (params.token) {
+
+          localStorage.setItem('invite_token', params.token)
+          return '/signup'
+        }
+      }
     },
   ],
   // scrollBehavior (to, from, savedPosition) {

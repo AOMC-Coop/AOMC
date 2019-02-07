@@ -7,6 +7,7 @@ import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.TeamService;
 import com.aomc.coop.utils.CodeJsonParser;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.CORBA.portable.Delegate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
@@ -520,7 +525,7 @@ public class TeamController {
 
             return new ResponseEntity<>(teamService.inviteTeam(team), HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_5000.FAIL_INVITE.getStatus()), HttpStatus.OK);
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
     }
 
@@ -578,11 +583,51 @@ public class TeamController {
 //        headers.setLocation(URI.create("https://www.naver.com/"));
 
 //        return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
-        @RequestMapping(path="/accept")
+
+
+
+
+
+//    @RequestMapping(value = "/{path:[^\\.]*}")
+//    public String redirect() {
+//        return "forward:/";
+//    }
+
+        @GetMapping(path="/accept/{token}")
         @CrossOrigin
-        void acceptInvite(HttpServletResponse response) throws IOException {
-            System.out.println("지나감");
-            response.sendRedirect("http://localhost:9999/chat");
+        ResponseEntity acceptInvite(RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "token") final String token) throws IOException {
+
+//            try{
+                String redirectAddress = teamService.acceptInvite(token);
+
+//                redirectAttributes.addFlashAttribute("token", token);
+
+//                response.setHeader("token", token);
+//                response.sendRedirect(redirectAddress);
+
+//                String token2 = response.getHeader("token");
+//                System.out.println(token2);
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(URI.create(redirectAddress+token));
+            headers.set("token", token);
+//            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
+            return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).headers(headers).build();
+
+
+
+//            return "forward:"+redirectAddress;
+
+
+
+
+//                return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, redirectAddress).build();
+
+//            }catch (Exception e){
+//                System.out.println("오류");
+//            }
+
+
 //        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, "http://localhost:9999/chat").build();
 
     }

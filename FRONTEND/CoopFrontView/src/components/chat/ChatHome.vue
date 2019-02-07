@@ -1,4 +1,5 @@
 <template >
+<!-- $route.params.teamidx -->
   <v-app id="inspire">
     <v-navigation-drawer 
       class="primary"

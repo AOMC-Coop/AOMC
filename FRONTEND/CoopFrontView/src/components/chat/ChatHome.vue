@@ -494,6 +494,9 @@ var today = now.format("dddd, MMMM Do").toString()
       this.visible = !this.visible
     },
     signOut: function (){
+      // this.stompClient.disconnect(distick => {
+      //   console.log("socket disconnect");
+      // });
       axios.post(`http://localhost:8082/logout`, this.userWithToken)
         .then(response => {
           let description = response.data.description
@@ -572,7 +575,7 @@ var today = now.format("dddd, MMMM Do").toString()
       this.userIdx = this.$store.state.userIdx;
       this.$store.state.userNickName = "yunyun"; //test용으로 넣어놈. 로그인 할때 받아야함
       axios
-        .get("http://localhost:8083/api/team/user/" + "5")
+        .get("http://localhost:8083/api/team/user/" + this.$store.state.userIdx)
         .then(response => { //
             if(response.data) {
               this.teamsFromServer = response.data.data;

@@ -76,20 +76,32 @@ export default {
     //v-infinite-scroll을 사용하면  스크롤 포커스 문제가 발생한다 -> 새로운데이터 들어왔을때 포커스가 잘안됨
     infiniteHandler() {
       // this.loading = true
-      
-      if(this.$store.state.messageStartNum===0)
-        this.$store.state.scrollFlag=false
+      console.log("1 "+this.$store.state.messageStartNum);
+      debugger;
+      // if(this.$store.state.messageStartNum===-1)
+      //   this.$store.state.scrollFlag=false
 
+      // if(this.$store.state.scrollFlag === true) {
       axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
         params: {
-          start: this.$store.state.messageStartNum
+          start: this.$store.state.messageStartNum,
+          messageLastIdx: this.$store.state.messageLastIdx
         },
       }).then((response) => {
         if (response.data.status==200) {
+        debugger;
+        console.log("2 "+this.$store.state.messageStartNum);
+         if(response.data.plusData === -1) {
+          this.$store.state.messageStartNum = 0;
+        }else {
+          this.$store.state.messageStartNum = response.data.plusData;
+          this.$store.state.messageStartNum+=10;
+        }
+        
 
-        this.$store.state.messageStartNum+=10;
         var result = response.data.data;
         var firstValue= this.$store.state.received_messages[0].send_date;
+
 
         for(var i=0;i<result.length;i++){
           if((result[i].send_date===today&&firstValue==='today')){
@@ -108,6 +120,7 @@ export default {
         //  this.loading = false
         if(result.length<10){
           // $state.complete();
+          debugger;
           this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
           this.$store.state.scrollFlag=false
         }
@@ -118,12 +131,16 @@ export default {
       } else {
         // this.loading = false
         // $state.complete();
+        debugger;
         this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
         this.$store.state.scrollFlag=false
       }
+      this.$store.state.messageLastIdx = result[0].message_idx;
+      console.log("MessageList - LastIdx = " + this.$store.state.messageLastIdx);
     }); 
-
+    
     }
+    // }
   },
   created() {
     // this.$store.state.received_messages=''

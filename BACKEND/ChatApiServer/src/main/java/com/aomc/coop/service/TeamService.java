@@ -15,6 +15,7 @@ import com.aomc.coop.response.Status_common;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
 import com.aomc.coop.utils.mail.MailSend;
+import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
@@ -46,6 +47,9 @@ public class TeamService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private RabbitMQUtil rabbitMQUtil;
 
     private JwtService jwtService;
 
@@ -80,6 +84,12 @@ public class TeamService {
             Message message = new Message();
             message.setContent("joined #general");
             message.setNickname(ownerUserInfo.getNickname());
+
+            //
+            message.setMessage_idx(0);
+            message.setUser_idx(ownerUserInfo.getIdx());
+            //
+
             List<Message> messages = new ArrayList<>();
             messages.add(message);
 
@@ -93,8 +103,10 @@ public class TeamService {
             teamMapper.createTeam(team);
             channelMapper.createChannel(channel, team.getIdx());
 
-
-            messageMapper.createMessage(message, channel.getIdx(), ownerUserInfo.getIdx());
+            //
+            message.setChannel_idx(channel.getIdx());
+            rabbitMQUtil.sendRabbitMQ(message);
+            //messageMapper.createMessage(message, channel.getIdx(), ownerUserInfo.getIdx());
 
             for (User user : users) {
 
@@ -108,7 +120,7 @@ public class TeamService {
 
                 //방장인 경우 메일 안보냄
                 if (user.getUid().equals(team.getOwner())) {
-                    teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 1);
+                    teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 1, 1);
                     channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
                 } else {
 
@@ -120,7 +132,7 @@ public class TeamService {
                     } else {//초대받은팀원이 User인 경우
                         //각테이블에 생성 데이터넣기
                         System.out.println(userTemp.getIdx());
-                        teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0);
+                        teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0, 0);
                         channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
 
                         //Redis에 정보 저장
@@ -340,7 +352,7 @@ public class TeamService {
 
                 hashMap.put("userIdx", userTemp.getIdx());
 
-                teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0);
+                teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0, 0);
 
                 channelMapper.createUserHasChannel(channels.get(0).getIdx(), userTemp.getIdx());
 

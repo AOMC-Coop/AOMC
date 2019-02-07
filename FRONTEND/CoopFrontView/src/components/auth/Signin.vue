@@ -6,21 +6,25 @@
       </v-flex>
     </v-layout>
     <v-layout row>
+      
       <v-flex xs12 sm6 offset-sm3>
+        <img src="https://github.com/AOMC-Coop/AOMC/blob/master/image/coop_logo2.png?raw=true" width="70" height="70">
+        <br><br>
         <v-toolbar>
-            <!-- <v-spacer></v-spacer> -->
+            
             <v-toolbar-items>
-            <v-btn flat>Login</v-btn> <!-- 버튼 클릭시 Login.vue 페이지로 전환 -->
-            <v-btn flat>Sign up</v-btn> <!-- 버튼 클릭시 Signup.vue 페이지로 전환 -->
+            <!-- 추후 버튼 말고 다른 태그로 교체 -->
+            <v-btn flat>Login</v-btn>
             </v-toolbar-items>
         </v-toolbar>
+        <img
         <v-card>
           <v-card-text>
             <v-container>
               <form @submit.prevent="signin"> 
-                  <!-- Login 버튼 클릭시 LoginLogoutController로 uid와 password전달 : @Request User user에 담아서 -->
                 <v-layout row>
                   <v-flex xs12>
+                    <!-- 잘못된 양식의 이메일 입력시 경고 띄우는 코드 가져오기 -->
                     <v-text-field
                       name="email"
                       label="E-mail"
@@ -50,6 +54,8 @@
             </v-container>
           </v-card-text>
         </v-card>
+        <br><br><br><br>
+        <a href="http://localhost:9999/signup">NOT SIGN UP YET? JOIN US!</a>
       </v-flex>
     </v-layout>
   </v-container>
@@ -112,13 +118,21 @@ const baseURI = localStorage.getItem('baseURI')
       },
       signin: function () {
         axios.post(`http://localhost:8082/login`, this.userInfo) 
-          .then(response => {
-            this.info = response.data.data // this.info에 token String 저장
-            localStorage.setItem('token', this.info.data)
-            console.log('entered')
-            console.log(this.info.data)
-            location.href = './chat'
-          }
+          .then(response => { 
+            let description = response.data.description
+            if(description == "Fail Login : Wrong ID"){
+              alert("Your ID is not signed up yet! please check your ID again!")
+            } else if (description == "Fail Login : Wrong Password"){
+              alert("Wrong Password!")
+            } else if (description == "Fail Login"){
+              alert("Withdrew ID!")
+            } else {
+              localStorage.setItem('token', response.data.data.token)
+              console.log(JSON.stringify(localStorage))
+              localStorage.setItem('idx', response.data.data.idx)
+              location.href = './chat'
+            }
+            }
           ).catch(e => {
             console.log(e)
             this.errors(e)

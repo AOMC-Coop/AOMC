@@ -4,22 +4,20 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import com.aomc.coop.mapper.UserMapper;
+import com.aomc.coop.model.UserWithToken;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.mail.javamail.JavaMailSender;
+import com.aomc.coop.utils.mail.MailSend;
+
 import com.aomc.coop.model.User;
-import com.aomc.coop.util.SHA256;
+import com.aomc.coop.utils.SHA256;
 
 @Slf4j
 @Service
@@ -32,19 +30,34 @@ public class MemberService {
     @Autowired
     private UserMapper userMapper;
 
+    MailSend mailSend = new MailSend();
+    private JavaMailSender mailSender;
+
+
+    // <1. 회원 가입>
+    // 가입시 이메일 인증
+
+
     // 회원 가입
-// *** 여기선 try...catch를 안 썼다. 그래도 되는걸까?
+
+// ***** 여기선 try ~ catch를 안 썼다. 쓰는 걸로 변경할 것
     public ResponseType register(@RequestBody User user) throws NoSuchAlgorithmException {
 
+        if(!user.getPwd().equals(user.getConfirm_pwd())){
+            System.out.println(user.getPwd()+ " "+user.getConfirm_pwd());
+            System.out.println("Password doesn't match!");
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
+        }
+
         String uid = user.getUid();
-        User myUser = userMapper.getUser(uid);
+        User myUser = userMapper.getUserWithUid(uid);
+
         // db상에 이미 가입되어 있는 내역이 없는 경우, 정상 절차대로 가입
         if(myUser == null) {
-            // 1. (@RequestBody User user)가 Http request를 자바 객체 User로 변환시켜줌
+
             System.out.println("Register");
 
-            // 2. random 문자열을 통해 salt 생성
-            SecureRandom secRan = SecureRandom.getInstance("SHA1PRNG"); //random 문자 길이를 담은 객체
+            SecureRandom secRan = SecureRandom.getInstance("SHA1PRNG");
             int numLength = 16;
             String salt = "";
             for (int i = 0; i < numLength; ++i) {
@@ -52,50 +65,128 @@ public class MemberService {
             }
             System.out.println("salt : "+ salt);
 
-            // 3. salt를 통해 hash된 password를 구하기
             String newPassword = salt + user.getPwd();
             String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
 
-            // 4. salt와 hash된 password를 user 데이터에 저장, user role까지 설정
             user.setSalt(salt);
             user.setPwd(hashPassword);
-            if(user.getUid().equals("admin")) {
-                user.setRole("admin_role");
-            }else {
-                user.setRole("user_role");
-            }
-            // 5. 유저가 탈퇴하면 0으로 설정하기 때문에 필요
+            if(user.getUid().equals("admin")) { user.setRole("admin_role"); }
+            else { user.setRole("user_role"); }
+
             user.setStatus(1);
 
-            // 6. 정보 입력을 끝내고 user를 db에 INSERT
+            // 제대로 db에 저장이 되었다면
             if (userMapper.insertUser(user) == 1) {
                 System.out.println("Successfully Registered");
-            // 7. Status_3000 response를 줌
-            // 제대로 db에 저장이 되었다면
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register.getStatus());
-// 이 return 값은, ex) Chat.vue -> created().get.then.(response)의 response로 감 // 토큰도 ResponseEntity에 담아서 보낼것
             } else {
             // 어떠한 이유로 db에 저장이 되지 못했다면
+                System.out.println("Fail to store user in db!");
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
             }
         } else {
         // 이미 가입되어 있는 uid(e-mail)이라면
+            System.out.println("Already registerd ID!");
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
         }
     }
 
-    // 회원 탈퇴
-    public ResponseType withdrawal(@RequestBody User user){
-        try {
-            String uid = user.getUid();
-            User myUser = userMapper.getUser(uid);
-            myUser.setStatus(0);
-            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
-        } catch (Exception e) {
+    // <2. 회원 탈퇴>
+    public ResponseType withdrawal(@RequestBody UserWithToken userWithToken, int idx){
+
+        int userIdx = userWithToken.getIdx();
+
+        System.out.println("userIdx : " + userIdx +"  idx : " + idx);
+        if(userIdx == idx)
+        {
+            try {
+                userMapper.withdrawal(idx);
+                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
+            } catch (Exception e) {
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());
+            }
+        } else {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());
         }
 
+
     }
+
+    // <3. 비밀번호 분실 후 변경>
+
+    // Forgot password?
+    // 이메일 발송
+    // 이메일 버튼을 통해
+
+
+    // 메일보내기
+    class SendMailThread extends Thread {
+
+        JavaMailSender mailSender;
+        String uid;
+        String token;
+        String authCode;
+
+        public SendMailThread(JavaMailSender mailSender, String uid, String token, String authCode) {
+            this.mailSender = mailSender;
+            this.uid = uid;
+            this.token = token;
+            this.authCode = authCode;
+        }
+
+        public void run() {
+            mailSend.mailsend(mailSender, uid, token, authCode);
+        }
+    }
+
+
+    // 비밀번호 변경
+//    public ResponseType registerAuthorization(@RequestBody User user) {
+//
+//        String authCode = authCode();
+//        SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), null, authCode);
+//        // 여기선 token이 쓰이지 않으므로, null을 입력. MailSend 클래스는 비밀번호 변경에도 사용될 것이므로, String token을 아규먼트로 가지고 있긴 해야 함.
+//        sendMailThread.start();
+//
+//    }
+
+    // 6자리 인증 코드 생성
+//    public String authCode() {
+//
+//        Random random = new Random(System.currentTimeMillis());
+//        int certNumLength = 6;
+//
+//        int range = (int)Math.pow(10,certNumLength);
+//        int trim = (int)Math.pow(10, certNumLength-1);
+//        int result = random.nextInt(range)+trim;
+//
+//        if(result>range){
+//            result = result - trim;
+//        }
+//
+//        return String.valueOf(result);
+//    }
+
+//    //초대 승낙
+//    public ResponseType acceptInvite(final String token) {
+//
+//        String string_teamIdx = (String) values.get(token, "teamIdx");
+//        String string_userIdx = (String) values.get(token, "userIdx");
+//
+//        int teamIdx = Integer.parseInt(string_teamIdx);
+//        int userIdx = Integer.parseInt(string_userIdx);
+//
+//        if (teamIdx == -1) {
+//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
+//        }
+//        if (userIdx == 0) {
+//            return codeJsonParser.codeJsonParser(Status_5000.PLEASE_SIGNUP.getStatus(), token);
+//        }
+//        teamMapper.updateAuthFlag(teamIdx, userIdx);
+//        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_ACCEPT_INVITE.getStatus());
+//
+//    }
+
 }
 
 // ResponseEntity : Response body와 함께 Http status를 전송하기 위해 사용

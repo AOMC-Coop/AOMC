@@ -16,7 +16,7 @@ import static com.auth0.jwt.JWT.require;
 
 @Slf4j
 // The Simple Logging Facade for Java (SLF4J) serves as a simple facade or abstraction for various logging frameworks
-// (e.g. java.util.logging, logback, log4j) allowing the end user to plug in the desired logging framework at deployment time.
+// (e.g. java.utils.logging, logback, log4j) allowing the end user to plug in the desired logging framework at deployment time.
 @Service
 public class JwtService {
 
@@ -96,13 +96,12 @@ public class JwtService {
         return new Token();
     }
 
-
+// *** Token과 TokenRes의 차이는 뭘까? 일단 TokenRes에 모두 담아 사용하였다.
     public static class Token {
         //토큰에 담길 정보 필드
         //초기값을 -1로 설정함으로써 로그인 실패시 -1 반환
         private int idx = -1;
         public Token() { }
-// ***  public Token() { } <- 얘는 꼭 있어야 하는 걸까?
         public Token(final int idx) { this.idx = idx; }
         public int getUser_idx() { return idx; }
     }
@@ -111,15 +110,23 @@ public class JwtService {
     public static class TokenRes {
         //실제 토큰
         private String token;
+        private int idx = -1;
         public TokenRes() { }
-        public TokenRes(final String token) {
+        public TokenRes(final String token, final int idx) {
             this.token = token;
+            this.idx = idx;
         }
         public String getToken() {
             return token;
         }
         public void setToken(String token) {
             this.token = token;
+        }
+        public int getIdx() {
+            return idx;
+        }
+        public void setIdx(int idx) {
+            this.idx = idx;
         }
     }
 }

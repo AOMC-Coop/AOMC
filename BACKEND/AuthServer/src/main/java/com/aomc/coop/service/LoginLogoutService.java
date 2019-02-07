@@ -3,13 +3,11 @@ package com.aomc.coop.service;
 import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Base64.Encoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.model.UserWithToken;
@@ -17,27 +15,15 @@ import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.aomc.coop.model.User;
-import com.aomc.coop.util.Http;
-import com.aomc.coop.util.SHA256;
+import com.aomc.coop.utils.Http;
+import com.aomc.coop.utils.SHA256;
 
 @Slf4j
 @Service
@@ -56,13 +42,15 @@ public class LoginLogoutService {
     private HashOperations<String, String, Object> hashOperations; // HashOperations : Redis map specific operations working on a hash
                                                                    // HashOperations <H,HK,HV>
 // *** 모든 User 정보를 넣기 위해 String -> Object로 바꾸었는데, Side effect 없겠지?
+    // Code Refactoring : Generics를 사용해야 할 것 같아
 
 
     public ResponseType loginUser(@RequestBody User user) throws UnsupportedEncodingException { // header,body(json),HTTP.status //,
 
         try
         {
-            User myUser = userMapper.getUser(user.getUid());
+            String uid = user.getUid();
+            User myUser = userMapper.getUserWithUid(uid);
 
             // 해당 이메일로 가입된 유저가 없는 경우
             if(myUser == null){
@@ -73,12 +61,18 @@ public class LoginLogoutService {
                 System.out.println("updateAccess_date : Fail");
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login.getStatus());
             }
+
+            // 탈퇴한 회원일 경우
+// *** 추후 Status_3000 수정하자 -> 더 자세히 경우 나누기
+            if(myUser.getStatus() == 0){
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login.getStatus());
+            }
             String hashPassword = SHA256.getInstance().encodeSHA256(myUser.getSalt() + user.getPwd());
             System.out.println("hashPassword : "+hashPassword);
                 // 1. Http request로 들어온 user와 db상의 user가 같다면
             if(hashPassword.equals(myUser.getPwd())) {
                 // 2. JWT(JSON Web Tokens) 토큰 생성
-                final JwtService.TokenRes token = new JwtService.TokenRes(jwtService.create(myUser.getIdx()));
+                final JwtService.TokenRes token = new JwtService.TokenRes(jwtService.create(myUser.getIdx()), myUser.getIdx());
 
                 // 3. redis에 토큰 보내기
                 String key = token.getToken();
@@ -125,14 +119,11 @@ public class LoginLogoutService {
                 // System.out.println(userId + " " + ip + " " + timeStamp + " " + role + " " + access_date);
 
                 // 4. 토큰을 client에 보내기
-                // myUser.setPwd(token.getToken()); -> 이 부분은 return 파라미터에 token을 담은 것으로 대체
-// ***** password 대신 token을 보냄 -> 1. 원래는 JWT 토큰을 바디에 보내야 함  2. 그 다음부터는 헤더에 담아서 통신 -> 다른 service들에 영향 : 은미 코드 보자
-
 //				HttpHeaders headers = new HttpHeaders();
 //				headers.add("auth_token", token);
                 // 제대로 로그인이 되었다면
                 System.out.println("Successfully login!");
-                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), token.getToken()); // ,로 파라미터에 token값 넘기기 (String으로)
+                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), token); // ,로 파라미터에 token 객체 넘기기 (token String, idx)
             } else {
                 // Http request로 들어온 user와 db상의 user가 다르다면
                 System.out.println("Wrong Password");
@@ -156,6 +147,7 @@ public class LoginLogoutService {
 
             // redis token pop
             hashOperations.getOperations().delete(key);
+            System.out.println("Successfully logout!");
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Logout.getStatus());
         }
         catch (Exception e) {
@@ -163,4 +155,6 @@ public class LoginLogoutService {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Logout.getStatus());
         }
     }
+
+
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface MessageMapper {
 
     //messages 테이블
-    @Insert("INSERT INTO messages(content, channel_idx, user_idx) VALUES(#{message.content}, #{channelIdx}, #{userIdx})")
-    int createMessage(final Message message, int channelIdx, int userIdx);
+    @Insert("INSERT INTO messages(message_idx, content, channel_idx, user_idx) VALUES(#{message.message_idx}, #{message.content}, #{channelIdx}, #{userIdx})")
+    int createMessage(final Message message, final int channelIdx, final int userIdx);
 
 }

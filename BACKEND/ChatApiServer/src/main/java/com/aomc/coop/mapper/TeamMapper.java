@@ -19,15 +19,15 @@ public interface TeamMapper {
     void createTeam(final Team team);
 
     //team생성 - user_has_team 테이블
-    @Insert("INSERT INTO user_has_team(team_idx, user_idx, owner_flag) VALUES( #{teamIdx}, #{userIdx}, #{ownerFlag})")
-    int createUserHasTeam(final int teamIdx, final int userIdx, final int ownerFlag);
+    @Insert("INSERT INTO user_has_team(team_idx, user_idx, owner_flag, invite_flag) VALUES( #{teamIdx}, #{userIdx}, #{ownerFlag}, #{inviteFlag})")
+    int createUserHasTeam(final int teamIdx, final int userIdx, final int ownerFlag, final int inviteFlag);
 
     //team상세조회
     @Select("SELECT idx, name, status FROM teams WHERE idx = #{idx}")
     Team readTeamDetail(@Param("idx") final int teamIdx);
 
     //team의 user조회
-    @Select("SELECT has.user_idx as idx, u.uid, u.nickname FROM teams t, user_has_team has, users u WHERE t.idx = has.team_idx AND has.user_idx = u.idx AND has.team_idx = #{idx} AND has.invite_flag=1 ORDER bY user_idx")
+    @Select("SELECT has.user_idx as idx, u.uid, u.nickname FROM teams t, user_has_team has, users u WHERE t.idx = has.team_idx AND has.user_idx = u.idx AND team_idx = #{idx} AND has.invite_flag=1 ORDER bY user_idx")
     List<User> readUserOfTeam(@Param("idx") final int teamIdx);
 
     //유저가 가진 팀 조회

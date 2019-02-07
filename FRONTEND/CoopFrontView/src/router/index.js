@@ -6,6 +6,7 @@ import ChatHome from '@/components/chat/ChatHome'
 import Vuetify from 'vuetify'
 import '../assets/stylus/main.styl'
 import colors from 'vuetify/es5/util/colors'
+import Profile from '@/components/auth/Profile'
 
 Vue.use(Vuetify, {
   theme: {
@@ -18,13 +19,32 @@ Vue.use(Vuetify, {
 export default new Router({ // 모르면 공부
   mode: 'history',
   routes: [
-    {path: '/', name: 'Signin', component: Signin},
-    {path: '/chat/:teamIdx', name: 'ChatHome', component: ChatHome, props: true }
+    // {path: '/chat/:teamIdx', name: 'ChatHome', component: ChatHome, props: true },
     // {
     //   path: '/chat',
     //   name: 'ChatHome',
     //   component: ChatHome
     // },
+    {
+      path: '/',
+      name: 'Signin',
+      component: Signin
+    },
+    {
+      path: '/chat',
+      name: 'ChatHome',
+      component: ChatHome
+    },
+    {
+      path: '/profile',
+      name: 'Profile',
+      component: Profile
+    },
+    {
+      path: '/signup',
+      name: 'Signup',
+      component: Signup
+    },
   ],
   // scrollBehavior (to, from, savedPosition) {
   //   return { x: 100, y: 100 }

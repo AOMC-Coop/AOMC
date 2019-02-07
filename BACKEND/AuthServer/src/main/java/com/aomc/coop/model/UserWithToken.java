@@ -5,6 +5,6 @@ import java.io.Serializable;
 
 @Data
 public class UserWithToken implements Serializable {
-    private String uid;
+    private int idx;
     private String token;
 }

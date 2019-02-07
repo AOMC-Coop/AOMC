@@ -40,7 +40,7 @@ public class ChannelService {
     @Autowired
     private JwtService jwtService;
 
-    @Resource(name="redisTemplate")
+    @Resource(name = "redisTemplate")
     private ListOperations<String, Message> listOperations;
 
     @Autowired
@@ -63,7 +63,7 @@ public class ChannelService {
 
         channelMapper.createChannel(channel, channel.getTeamIdx());
         messageMapper.createMessage(message, channel.getIdx(), channel.getUsers().get(0).getIdx());
-        for(int i=0; i<channel.getUsers().size(); i++) {
+        for (int i = 0; i < channel.getUsers().size(); i++) {
             System.out.println("채널 생성 함수의 user index = " + channel.getUsers().get(i).getIdx());
 
             channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(i).getIdx());
@@ -89,32 +89,60 @@ public class ChannelService {
         }
     }
 
-    public ResponseType getChannelMessage(int channelIdx, int start) {
+    public ResponseType getChannelMessage(int channelIdx, int start, int messageLastIdx) {
+        System.out.println("start = " + start + " lastIdx = " + messageLastIdx);
 
         if (channelIdx >= 0) {
             //redis에서 메세지 가져오기
-            listOperations= redisTemplate.opsForList();
-            List<Message> redis_messageList = listOperations.range(RedisUtil.redisKey+ ":" + channelIdx, 0, -1);
-            if(redis_messageList.size() > 0) {
-                Collections.reverse(redis_messageList);
-            }
-
-
-            //mysql에서 메세지 가져오기
-            List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
+            listOperations = redisTemplate.opsForList();
+            List<Message> redis_messageList = listOperations.range(RedisUtil.redisKey + channelIdx, 0, -1);
+            if (redis_messageList.size() > 0) {
+                if (messageLastIdx == 0) { // redis 일 때
+                    start = -1;
+                    Collections.reverse(redis_messageList);
+                    System.out.println("1-getChannelMessage - Redis");
+                    return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList, start);
+                } else if (messageLastIdx <= redis_messageList.get(redis_messageList.size() - 1).getMessage_idx()) { //redis이지만 이미 다 가져온 경우
+                    //mysql에서 가져오기
+                    List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
 //            System.out.println(messages);
 
-                if(messages.size()==0){
-                return codeJsonParser.codeJsonParser(Status_1000.No_Message.getStatus());
+                    if (messages.size() == 0) {
+                        return codeJsonParser.codeJsonParser(Status_1000.No_Message.getStatus());
+                    }
+                    System.out.println("2-getChannelMessage - MySQL");
+                    return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages, start);
+                }
+//                else if (messageLastIdx < redis_messageList.get(redis_messageList.size() - 1).getMessage_idx()) { //redis인 경우 - 부분만 가져왔을 경우
+//                    start = -1;
+//                    List<Message> subMessageList = redis_messageList.subList(messageLastIdx + 1, redis_messageList.size() - 1);
+//                    System.out.println("3-getChannelMessage - Redis - subMessageList");
+//                    return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), subMessageList, start);
+//                }
+                else {
+                    return codeJsonParser.codeJsonParser(Status_1000.No_Message.getStatus(), start);
+                }
+
+
+            } else {
+                //mysql에서 메세지 가져오기
+                List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
+//            System.out.println(messages);
+
+                if (messages.size() == 0) {
+                    return codeJsonParser.codeJsonParser(Status_1000.No_Message.getStatus(), start);
+                }
+
+                System.out.println("4-getChannelMessage - MySQL");
+                return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages, start);
             }
 
-
-            return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages);
         } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return codeJsonParser.codeJsonParser(Status_1000.FAIL_Get_Message.getStatus());
+            return codeJsonParser.codeJsonParser(Status_1000.FAIL_Get_Message.getStatus(), start);
         }
     }
+
 
     public ResponseType getChannelUsers(int channelIdx) {
         if (channelIdx >= 0) {

@@ -51,7 +51,7 @@ export default {
     //   // this.msg = '';
     // }
     submitMessageFunc() {
-      if (this.msg.length === 0) return false;
+      if (this.msg.length === 0 || this.msg.length > 500) return false;
       // this.$emit('submitMessage', this.msg);
       debugger;
       console.log(this.$store.state.stompClient);

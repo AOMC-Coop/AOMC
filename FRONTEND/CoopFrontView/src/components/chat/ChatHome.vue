@@ -104,7 +104,7 @@
 
     <v-flex xs6 >
       <v-subheader class="white--text" >
-        <v-icon class="white--text" @click="dialog = !dialog">add</v-icon> 
+        <v-icon class="white--text" @click="addInvitePeopleDialog">add</v-icon> 
         <v-text style = "fontSize : 15px">invite people</v-text>
       </v-subheader>
     </v-flex>
@@ -330,6 +330,11 @@ var today = now.format("dddd, MMMM Do").toString()
         }
       )
       },
+      addInvitePeopleDialog() {
+        debugger
+        this.$store.state.inviteUsers.push({uid:localStorage.getItem("userId")});
+        this.dialog = !this.dialog;
+      },
       saveTeam() {
         this.createTeam.name = this.createTeamName;
         this.createTeam.users = this.$store.state.inviteUsers;
@@ -364,7 +369,7 @@ var today = now.format("dddd, MMMM Do").toString()
         }
       },
       clickSave() {
-        // debugger;
+        debugger;
         console.log(this.$store.state.inviteUsers);
         this.inviteTeam.idx = localStorage.getItem("teamIdx");
         this.inviteTeam.users = this.$store.state.inviteUsers;
@@ -373,7 +378,7 @@ var today = now.format("dddd, MMMM Do").toString()
         axios
         .post("http://localhost:8083/api/team/invite", this.inviteTeam)
         .then(response => {
-          // debugger;
+          debugger;
             if(response.data) {
               // this.teamMembers = response.data.data;
               console.log(response.data);
@@ -628,7 +633,7 @@ var today = now.format("dddd, MMMM Do").toString()
       console.log(localStorage.getItem("userId"));
       console.log(localStorage.getItem("userIdx"));
       console.log(localStorage.getItem("userNickName"));
-      
+
       this.createSocket();
 
       axios

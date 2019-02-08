@@ -299,6 +299,7 @@ public class TeamService {
     public ResponseType inviteTeam(final Team team) {
 
         List<User> inviteUsers = team.getUsers();
+        System.out.println(inviteUsers);
 //        List<Channel> channels = team.getChannels();
 
         List<User> usersOfTeam = teamMapper.readUserOfTeam(team.getIdx());

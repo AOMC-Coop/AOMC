@@ -1,7 +1,4 @@
-package com.aomc.coop;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+package hello;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,17 +6,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
-import com.aomc.coop.storage.StorageProperties;
-import com.aomc.coop.storage.StorageService;
-
-// @SpringBootApplication = @Configuration + @EnableAutoConfiguration + @ComponentScan
+import hello.storage.StorageProperties;
+import hello.storage.StorageService;
 
 @SpringBootApplication
 @EnableConfigurationProperties(StorageProperties.class)
-public class CoopFileServerApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(CoopFileServerApplication.class, args);
+        SpringApplication.run(Application.class, args);
     }
 
     @Bean
@@ -30,4 +25,3 @@ public class CoopFileServerApplication {
         };
     }
 }
-

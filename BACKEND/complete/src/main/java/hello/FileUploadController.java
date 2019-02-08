@@ -1,4 +1,4 @@
-package com.aomc.coop.controller;
+package hello;
 
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -19,8 +19,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.aomc.coop.storage.StorageService;
-import com.aomc.coop.storage.StorageFileNotFoundException;
+import hello.storage.StorageFileNotFoundException;
+import hello.storage.StorageService;
 
 @Controller
 public class FileUploadController {
@@ -32,22 +32,17 @@ public class FileUploadController {
         this.storageService = storageService;
     }
 
-    // GET / looks up the current list of uploaded files from
-    // the StorageService and loads it into a Thymeleaf template.
-    // It calculates a link to the actual resource using MvcUriComponentsBuilder
     @GetMapping("/")
     public String listUploadedFiles(Model model) throws IOException {
 
         model.addAttribute("files", storageService.loadAll().map(
-                path -> MvcUriComponentsBuilder.fromMethodName
-                        (FileUploadController.class, "serveFile", path.getFileName().toString()).build().toString())
+                path -> MvcUriComponentsBuilder.fromMethodName(FileUploadController.class,
+                        "serveFile", path.getFileName().toString()).build().toString())
                 .collect(Collectors.toList()));
 
         return "uploadForm";
     }
 
-    // GET /files/{filename} loads the resource if it exists,
-    // and sends it to the browser to download using a "Content-Disposition" response header
     @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
@@ -57,16 +52,15 @@ public class FileUploadController {
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-    // POST / is geared to handle a multi-part message file
-    // and give it to the StorageService for saving
     @PostMapping("/")
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String handleFileUpload(@RequestParam("file") MultipartFile file,
+            RedirectAttributes redirectAttributes) {
 
         storageService.store(file);
-        redirectAttributes.addFlashAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
+        redirectAttributes.addFlashAttribute("message",
+                "You successfully uploaded " + file.getOriginalFilename() + "!");
 
         return "redirect:/";
-        // redirect 오른쪽의 주소로 URL 요청을 다시 하는 것
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

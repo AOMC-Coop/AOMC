@@ -529,10 +529,11 @@ var today = now.format("dddd, MMMM Do").toString()
         debugger;
         this.$store.state.received_messages = result
         this.$store.state.messageLastIdx = this.$store.state.received_messages[this.$store.state.received_messages.length-1].message_idx;
-        console.log("ChatHome - LastIdx = " + this.$store.state.messageLastIdx);
-        console.log("//////////////"+this.$store.state.messageStartNum);
-        console.log(this.$store.state.received_messages);
+        // console.log("ChatHome - LastIdx = " + this.$store.state.messageLastIdx);
+        // console.log("//////////////"+this.$store.state.messageStartNum);
+        // console.log(this.$store.state.received_messages);
         this.$store.state.scrollFlag=true
+        localStorage.setItem('scrollControlValue', result[0].message_idx)    
         } else {
           alert(response.data.message)
         }

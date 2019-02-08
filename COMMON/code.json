@@ -282,6 +282,11 @@
     "message": "회원가입이 필요합니다",
     "description": "Please Signup"
   },
+  "5411": {
+    "status": 400,
+    "message": "현재 팀에 존재하는 회원들입니다",
+    "description": "No Invite Member"
+  },
   
 
   

@@ -221,7 +221,7 @@ public class TeamService {
     //채널조회
     public ResponseType readChannel(final int teamIdx, final int userIdx) {
 
-        List<Channel> channels = channelMapper.readChannel(teamIdx, userIdx);
+        List<Channel> channels = channelMapper.readChannelOfUser(teamIdx, userIdx);
 
         if (channels == null) {
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_CHANNEL.getStatus());
@@ -235,7 +235,7 @@ public class TeamService {
 
         int teamFlag = teamMapper.deactiveUserOfTeam(teamIdx, userIdx);
 
-        List<Channel> channels = channelMapper.readChannel(teamIdx, userIdx);
+        List<Channel> channels = channelMapper.readChannelOfUser(teamIdx, userIdx);
 
         for (Channel channel : channels) {
             int channelFlag = channelMapper.deactiveUserOfChannel(channel.getIdx(), userIdx);
@@ -299,16 +299,18 @@ public class TeamService {
     public ResponseType inviteTeam(final Team team) {
 
         List<User> inviteUsers = team.getUsers();
-        List<Channel> channels = team.getChannels();
+//        List<Channel> channels = team.getChannels();
 
         List<User> usersOfTeam = teamMapper.readUserOfTeam(team.getIdx());
+        Team teamTemp  = teamMapper.readTeamDetail(team.getIdx());
+        List<Channel> channels = channelMapper.readChannelOfTeam(team.getIdx());
 
         List<User> firstUsers = new ArrayList<>();
         List<User> existUsers = new ArrayList<>();
 
 
         for (User inviteUser : inviteUsers) {
-            for (int i = 1; i < usersOfTeam.size(); i++) {
+            for (int i = 0; i < usersOfTeam.size(); i++) {
 
                 if (inviteUser.getUid().equals(usersOfTeam.get(i).getUid())) {
                     existUsers.add(inviteUser);
@@ -318,6 +320,13 @@ public class TeamService {
                     firstUsers.add(inviteUser);
                 }
             }
+        }
+
+
+        System.out.println("firstUsers : "+firstUsers);
+        System.out.println("existUsers : "+existUsers);
+        if(firstUsers.size()==0){
+            return codeJsonParser.codeJsonParser(Status_5000.No_Invite_Member.getStatus());
         }
 
 
@@ -352,20 +361,20 @@ public class TeamService {
             values.putAll(token.getToken(), hashMap);
             values.getOperations().expire(token.getToken(), 1L, TimeUnit.HOURS);
 
-            //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
 
-
-            SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), token.getToken(), team.getName(), inviteUsers.get(0).getUid());
-                sendMailThread.start();
+            SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), token.getToken(), teamTemp.getName(), inviteUsers.get(0).getUid());
+            sendMailThread.start();
 
         }
+
+
 
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_INVITE.getStatus(), firstUsers, existUsers);
 
     }
 
     //초대 승낙
-    public ResponseType acceptInvite(final String token) {
+    public String acceptInvite(final String token) {
 
         String string_teamIdx = (String) values.get(token, "teamIdx");
         String string_userIdx = (String) values.get(token, "userIdx");
@@ -374,13 +383,16 @@ public class TeamService {
         int userIdx = Integer.parseInt(string_userIdx);
 
         if (teamIdx == -1) {
-            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
+            return "http://localhost:9999/signup/"; //회원가입창 //만료된주소입니다라는 메세지 보내야함
+//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
         }
         if (userIdx == 0) {
-            return codeJsonParser.codeJsonParser(Status_5000.PLEASE_SIGNUP.getStatus(), token);
+            return "http://localhost:9999/signup/"; //회원가입창
+//            return codeJsonParser.codeJsonParser(Status_5000.PLEASE_SIGNUP.getStatus(), token);
         }
-        teamMapper.updateAuthFlag(teamIdx, userIdx);
-        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_ACCEPT_INVITE.getStatus());
+        teamMapper.updateInviteFlag(teamIdx, userIdx);
+        return "http://localhost:9999/";
+//        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_ACCEPT_INVITE.getStatus());
 
 
     }

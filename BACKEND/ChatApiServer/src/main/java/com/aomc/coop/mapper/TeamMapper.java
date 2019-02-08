@@ -53,7 +53,7 @@ public interface TeamMapper {
 
     //이메일 인증시
     @Update("UPDATE user_has_team SET invite_flag=1 WHERE team_idx = #{teamIdx} AND user_idx = #{userIdx}")
-    void updateAuthFlag(final int teamIdx, final int userIdx);
+    void updateInviteFlag(final int teamIdx, final int userIdx);
 
 //    //팀초대시 이메일 인증키 조회
 //    @Select("SELECT authkey FROM user_has_team WHERE team_idx = #{teamIdx} AND user_idx = #{userIdx}")

@@ -201,6 +201,8 @@ import CreateChannel from './CreateChannel.vue'
 import InviteUserEmail from './InviteUserEmail.vue'
 import axios from "axios";
 import moment from 'moment'
+import SockJS from "sockjs-client"
+import Stomp from "webstomp-client"
 
 var now = new moment();
 var today = now.format("dddd, MMMM Do").toString()
@@ -287,6 +289,46 @@ var today = now.format("dddd, MMMM Do").toString()
     },
 
     methods: {
+      createSocket() {
+      debugger
+      this.msg = '';
+      this.socket = new SockJS("http://localhost:8083/socketconnect")
+      // this.stompClient = Stomp.over(this.socket);
+      this.$store.state.stompClient = Stomp.over(this.socket)
+      // this.stompClient.connect(
+        this.$store.state.stompClient.connect(
+        {},
+        frame => {
+          debugger;
+          console.log("connect success");
+          // this.connected = true;
+          // console.log("////////////////////////"+frame);
+          this.$store.state.stompClient.subscribe("/topic/message", tick => {
+            // console.log(tick);
+            debugger
+            this.$store.state.received_messages.push(JSON.parse(tick.body));
+
+            console.log("subcribe = " + tick.body);
+
+            var newValue= this.$store.state.received_messages.slice(-1)[0].send_date
+
+            for(var i=0; i<this.$store.state.received_messages.length;i++){
+              if(this.$store.state.received_messages[i].send_date===now.format("dddd, MMMM Do").toString()||this.$store.state.received_messages[i].send_date==='today'){
+                this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
+                newValue='today'
+              }
+              if(this.$store.state.received_messages[i].send_date===newValue){
+                this.$store.state.received_messages.slice(-1)[0].send_date = ''
+              }
+            }
+          });
+        },
+        error => {
+          console.log(error);
+          this.connected = false;
+        }
+      )
+      },
       saveTeam() {
         this.createTeam.name = this.createTeamName;
         this.createTeam.users = this.$store.state.inviteUsers;
@@ -310,7 +352,7 @@ var today = now.format("dddd, MMMM Do").toString()
       },
       addCreateTeamDialog() {
         this.createTeamDialog = !this.createTeamDialog;
-        this.$store.state.inviteUsers.push({uid:this.$store.state.userId});
+        this.$store.state.inviteUsers.push({uid:localStorage.getItem("userId")});
       },
       clickChannel(itemIdx, channelName) {
         if(itemIdx !== this.$store.state.channelInfo.idx){
@@ -471,9 +513,9 @@ var today = now.format("dddd, MMMM Do").toString()
             if(response.data) {
               //this.teamsFromServer = response.data.data;
               this.teamName = teamName;
-              this.userName = "yunjae"; //userName 받기
+              this.userName = localStorage.getItem("userNickName"); //userName 받기
               this.getMemberByTeamId(teamIdx);
-              this.getChannelsByTeamIdxAndUserIdx(teamIdx, 5); // 5->userId로 받아야 함
+              this.getChannelsByTeamIdxAndUserIdx(teamIdx, localStorage.getItem("userIdx")); // 5->userId로 받아야 함
 
               this.$store.state.channelInfo.idx = response.data.data[0].idx;
               this.$store.state.channelInfo.channelName = response.data.data[0].name;
@@ -569,28 +611,40 @@ var today = now.format("dddd, MMMM Do").toString()
   
     created() {
       
-
+      debugger;
       this.$store.state.inviteUsers.splice(0);
       this.inviteTeam.channels.splice(0);
-      localStorage.setItem("userId", "yunjea0312@naver.com"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
-      this.$store.state.userId = "yunjea0312@naver.com";
-      this.$store.state.userIdx = 5; //test용으로 넣어놈. 로그인 할때 받아야함
+      // localStorage.setItem("userId", "yunjea0312@naver.com"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
+      // this.$store.state.userId = "yunjea0312@naver.com";
+      // this.$store.state.userIdx = 5; //test용으로 넣어놈. 로그인 할때 받아야함
       this.userIdx = this.$store.state.userIdx;
-      this.$store.state.userNickName = "yunyun"; //test용으로 넣어놈. 로그인 할때 받아야함
+      // this.$store.state.userNickName = "yunyun"; //test용으로 넣어놈. 로그인 할때 받아야함
+
+      console.log(this.$store.state.userId);
+      console.log(this.$store.state.userIdx);
+      console.log(this.$store.state.userNickName);
+
+      console.log(localStorage.getItem("userId"));
+      console.log(localStorage.getItem("userIdx"));
+      console.log(localStorage.getItem("userNickName"));
+      
+      this.createSocket();
+
       axios
-        .get("http://localhost:8083/api/team/user/" + this.$store.state.userIdx)
+        .get("http://localhost:8083/api/team/user/" + localStorage.getItem("userIdx"))
         .then(response => { //
             if(response.data) {
+              debugger;
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;
-              this.userName = "yunjae"; //로그인 한 후 userName 받기 -> localStorage에서 받기 
+              this.userName = localStorage.getItem("userNickName"); //로그인 한 후 userName 받기 -> localStorage에서 받기 
               localStorage.setItem("teamIdx", response.data.data[0].idx);
               console.log("teamIdx" + response.data.data[0].idx);
               this.getMemberByTeamId(response.data.data[0].idx);
 
               this.$store.state.messageLastIdx = 0;
 
-              this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, 5);
+              this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, localStorage.getItem("userIdx"));
 
               this.$store.state.channelInfo.idx = response.data.data[0].idx;
               this.$store.state.channelInfo.channelName = response.data.data[0].name;

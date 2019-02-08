@@ -7,6 +7,8 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   // 메세지 를 state 속성으로 추가
   state: {
+    stompClient:null,
+    userId:'',
     userIdx:'',
     userNickName:'',
     scrollFlag:false,

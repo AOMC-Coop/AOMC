@@ -101,9 +101,11 @@ const baseURI = localStorage.getItem('baseURI')
       // onSignin () {
       //   this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
       // },
+
       onDismissed () {
         this.$store.dispatch('clearError')
       },
+      
       signin: function () {
         axios.post(`http://localhost:8082/login`, this.userInfo) 
           .then(response => { 
@@ -118,7 +120,25 @@ const baseURI = localStorage.getItem('baseURI')
               localStorage.setItem('token', response.data.data.token)
               console.log(JSON.stringify(localStorage))
               localStorage.setItem('idx', response.data.data.idx)
-              location.href = './chat'
+              
+              localStorage.setItem("userId", response.data.data.uid); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
+              localStorage.setItem("userIdx", response.data.data.idx);
+              // localStorage.setItem("userIdx", 5);
+              localStorage.setItem("userNickName", response.data.data.nickname);
+
+              this.$store.state.userId = response.data.data.uid;
+              this.$store.state.userIdx = response.data.data.idx; //test용으로 넣어놈. 로그인 할때 받아야함
+              this.$store.state.userNickName = response.data.data.nickname; //test용으로 넣어놈. 로그인 할때 받아야함
+
+              console.log(this.$store.state.userId);
+              console.log(this.$store.state.userIdx);
+              console.log(this.$store.state.userNickName);
+
+              console.log(localStorage.getItem("userId"));
+              console.log(localStorage.getItem("userIdx"));
+              console.log(localStorage.getItem("userNickName"));
+
+              this.$router.push({path: '/chat'})
             }
             }
           ).catch(e => {

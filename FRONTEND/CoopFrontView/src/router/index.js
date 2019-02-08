@@ -16,15 +16,10 @@ Vue.use(Vuetify, {
   }
 })
 
-export default new Router({ // 모르면 공부
+export default new Router({
   mode: 'history',
   routes: [
     // {path: '/chat/:teamIdx', name: 'ChatHome', component: ChatHome, props: true },
-    // {
-    //   path: '/chat',
-    //   name: 'ChatHome',
-    //   component: ChatHome
-    // },
     {
       path: '/',
       name: 'Signin',
@@ -49,16 +44,12 @@ export default new Router({ // 모르면 공부
       redirect: to => {
         const {params} = to
         if (params.token) {
-
           localStorage.setItem('invite_token', params.token)
           return '/signup'
         }
       }
     },
-  ],
-  // scrollBehavior (to, from, savedPosition) {
-  //   return { x: 100, y: 100 }
-  // }
+  ]
 })
 
 Vue.use(Router)

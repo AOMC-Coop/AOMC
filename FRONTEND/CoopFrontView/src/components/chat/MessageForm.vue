@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import SockJS from "sockjs-client";
-import Stomp from "webstomp-client";
+// import SockJS from "sockjs-client";
+// import Stomp from "webstomp-client";
 import moment from 'moment'
 
 var now = new moment();
@@ -42,21 +42,31 @@ export default {
       },
       channel: {
         idx: this.$store.state.channelInfo.idx
-      }
+      },
+      userIdx: localStorage.getItem("userIdx"),
+      userNickName: localStorage.getItem("userNickName")
     }
   },
   methods: {
+    // submitMessageFunction() {
+    //   this.$store.dispatch('submitMessageFunc', {msg:this.msg});
+    //   // this.msg = '';
+    // }
     submitMessageFunc() {
-      if (this.msg.length === 0) return false;
+      if (this.msg.length === 0 || this.msg.length > 500) return false;
       // this.$emit('submitMessage', this.msg);
-      
-      if (this.stompClient) {
-        const sendMessage = { content: this.msg , channel_idx: this.$store.state.channelInfo.idx, user_idx: this.$store.state.userIdx, nickname: this.$store.state.userNickName, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
+      debugger;
+      console.log(this.$store.state.stompClient);
+
+      if (this.$store.state.stompClient) {
+        debugger;
+        
+        const sendMessage = { content: this.msg , channel_idx: this.$store.state.channelInfo.idx, user_idx: this.userIdx, nickname: this.userNickName, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
         const sendChannel = { idx: this.$store.state.channelInfo.idx};
         console.log("channelInfo.idx = " + this.$store.state.channelInfo.idx);
         console.log("this.channel.idx = " + this.channel.idx);
         debugger;
-        this.stompClient.send("/app/chat", JSON.stringify(sendMessage)); //채널번호 붙이고 싶음
+        this.$store.state.stompClient.send("/app/chat", JSON.stringify(sendMessage)); //채널번호 붙이고 싶음
       }
 
       this.msg = '';
@@ -78,40 +88,41 @@ export default {
 
 
    created() {
-      this.msg = '';
-      this.socket = new SockJS("http://localhost:8083/socketconnect");
-      this.stompClient = Stomp.over(this.socket);
-      this.stompClient.connect(
-        {},
-        frame => {
-          debugger
-          // this.connected = true;
-          // console.log("////////////////////////"+frame);
-          this.stompClient.subscribe("/topic/message", tick => {
-            // console.log(tick);
-            debugger
-            this.$store.state.received_messages.push(JSON.parse(tick.body));
+       this.msg = '';
+      // this.socket = new SockJS("http://localhost:8083/socketconnect");
+      // this.stompClient = Stomp.over(this.socket);
+      // this.stompClient.connect(
+      //   {},
+      //   frame => {
+      //     debugger
+      //     // this.connected = true;
+      //     // console.log("////////////////////////"+frame);
+      //     this.stompClient.subscribe("/topic/message", tick => {
+      //       // console.log(tick);
+      //       debugger
+      //       this.$store.state.received_messages.push(JSON.parse(tick.body));
 
-            console.log("subcribe = " + tick.body);
+      //       console.log("subcribe = " + tick.body);
 
-            var newValue= this.$store.state.received_messages.slice(-1)[0].send_date;
+      //       var newValue= this.$store.state.received_messages.slice(-1)[0].send_date;
 
-            for(var i=0; i<this.$store.state.received_messages.length-1;i++){
-              if(this.$store.state.received_messages[i].send_date===now.format("dddd, MMMM Do").toString()||this.$store.state.received_messages[i].send_date==='today'){
-                this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
-                newValue='today'
-              }
-              if(this.$store.state.received_messages[i].send_date===newValue){
-                this.$store.state.received_messages.slice(-1)[0].send_date = ''
-              }
-            }
-          });
-        },
-        error => {
-          console.log(error);
-          this.connected = false;
-        }
-      )
+      //       for(var i=0; i<this.$store.state.received_messages.length-1;i++){
+      //         if(this.$store.state.received_messages[i].send_date===now.format("dddd, MMMM Do").toString()||this.$store.state.received_messages[i].send_date==='today'){
+      //           this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
+      //           newValue='today'
+      //         }
+      //         if(this.$store.state.received_messages[i].send_date===newValue){
+      //           this.$store.state.received_messages.slice(-1)[0].send_date = ''
+      //         }
+      //       }
+      //     });
+      //   },
+      //   error => {
+      //     console.log(error);
+      //     this.connected = false;
+      //   }
+      // )
+
       // this.stompClient.disconnect(distick => {
       //   console.log("socket disconnect");
       // });

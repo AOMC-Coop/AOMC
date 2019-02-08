@@ -123,25 +123,19 @@ import axios from 'axios'
     created(){
       debugger
       //가람님 이게 초대 토큰입니다
-      console.log(localStorage.getItem('invite_token'))      
-     
-//       res.writeHead(302, {
-//   'Location': 'your/404/path.html'
-// });
-// res.end();
+      console.log(localStorage.getItem('invite_token'))  
 
-      const info = axios.defaults.headers.common
-      console.log(info)
+      // const info = axios.defaults.headers.common
+      // console.log(info)
 
+      // const url = (new URL(document.location))
+      // console.log("url = "+url)
 
-      const url = (new URL(document.location))
-      console.log("url = "+url)
+      // const token2 = (new URL(document.location)).searchParams.get('token')
+      // console.log("token2 = "+token2)
 
-      const token2 = (new URL(document.location)).searchParams.get('token')
-      console.log("token2 = "+token2)
-
-      const token3 = axios.defaults.headers.common['token']
-      console.log("token3"+token3)
+      // const token3 = axios.defaults.headers.common['token']
+      // console.log("token3"+token3)
 
       // axios.interceptors.response.use(function (response) {
       //  // Do something with response data
@@ -167,7 +161,7 @@ import axios from 'axios'
         if(this.userInfo.pwd !== this.userInfo.confirm_pwd ){
           alert('Passwords do not match! Are you insane?')
         } else {
-          axios.post(`http://localhost:8082/members`, this.userInfo)
+          axios.post(this.$store.state.ip + `:8082/members`, this.userInfo)
             .then(response => { 
               let description = response.data.description
               if(description == "Fail Register : Already registered e-mail address"){

@@ -32,7 +32,7 @@ public class RedisScheduler {
     private MessageMapper messageMapper;
 
     // 애플리케이션 시작 후 30초 후에 첫 실행, 그 후 매 30초마다 주기적으로 실행한다.
-    //@Scheduled(initialDelay = 30000, fixedDelay = 30000)
+//    @Scheduled(initialDelay = 30000, fixedDelay = 30000)
     @Transactional
     public void redisChatToMySQL() {
 

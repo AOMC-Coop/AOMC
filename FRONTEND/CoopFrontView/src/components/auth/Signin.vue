@@ -108,7 +108,7 @@ const baseURI = localStorage.getItem('baseURI')
       },
       
       signin: function () {
-        axios.post(`http://localhost:8082/login`, this.userInfo) 
+        axios.post(this.$store.state.ip + `:8082/login`, this.userInfo) 
           .then(response => { 
             let description = response.data.description
             if(description == "Fail Login : Wrong ID"){

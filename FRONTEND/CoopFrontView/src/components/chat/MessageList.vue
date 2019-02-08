@@ -77,7 +77,7 @@ export default {
       //   this.$store.state.scrollFlag=false
 
       // if(this.$store.state.scrollFlag === true) {
-      axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
         params: {
           start: this.$store.state.messageStartNum,
           messageLastIdx: this.$store.state.messageLastIdx
@@ -86,13 +86,26 @@ export default {
         if (response.data.status==200) {
         debugger;
         console.log("2 "+this.$store.state.messageStartNum);
-         if(response.data.plusData === -1) {
+
+        if(response.data.plusData === -3) {
+          this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+          this.$store.state.scrollFlag=false
+        }
+        else if(response.data.plusData === -2) {
+          this.$store.state.messageStartNum = -1;
+        }
+        else if(response.data.plusData === -1) {
           this.$store.state.messageStartNum = 0;
         }else {
           this.$store.state.messageStartNum = response.data.plusData;
           this.$store.state.messageStartNum+=10;
         }
-        
+
+        if(response.data.data == null) {
+          this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+          this.$store.state.scrollFlag=false;
+          return;
+        }
 
         var result = response.data.data;
         var firstValue= this.$store.state.received_messages[0].send_date;

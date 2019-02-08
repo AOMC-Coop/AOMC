@@ -161,7 +161,7 @@ import axios from 'axios'
         if(this.userInfo.pwd !== this.userInfo.confirm_pwd ){
           alert('Passwords do not match! Are you insane?')
         } else {
-          axios.post(`http://localhost:8082/members`, this.userInfo)
+          axios.post(this.$store.state.ip + `:8082/members`, this.userInfo)
             .then(response => { 
               let description = response.data.description
               if(description == "Fail Register : Already registered e-mail address"){

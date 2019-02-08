@@ -80,6 +80,7 @@ export default {
    created() {
       this.msg = '';
       this.socket = new SockJS("http://localhost:8083/socketconnect");
+      debugger
       this.stompClient = Stomp.over(this.socket);
       this.stompClient.connect(
         {},

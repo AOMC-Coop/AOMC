@@ -44,7 +44,7 @@
               <v-list-tile
               v-for="(child, i) in teamMembers"
               :key="i"
-              v-if="child.idx !== userIdx"
+              v-if="child.idx != userIdx"
               
             >
             <v-flex xs12 align-center justify-space-between>
@@ -128,8 +128,8 @@ export default {
   name: 'CreateChannel',
   data:function(){
       return {
-          userIdx: this.$store.state.userIdx,
-          userNickName: this.$store.state.userNickName,
+          userIdx: localStorage.getItem("userIdx"),
+          userNickName: localStorage.getItem("userNickName"),
           del_password:'',
           channelName:'',
           channel:{
@@ -206,6 +206,7 @@ export default {
           
           
           console.log("userIdx=" + userIdx);
+          console.log("localStorage userIdx = " + localStorage.getItem("userIdx"));
           console.log("users = " + this.channel.users);
           console.log("teamIdx = " + this.channel.teamIdx);
 

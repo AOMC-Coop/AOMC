@@ -105,7 +105,12 @@ export default {
           this.$store.state.messageStartNum = response.data.plusData;
           this.$store.state.messageStartNum+=10;
         }
-        
+
+        if(response.data.data == null) {
+          this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+          this.$store.state.scrollFlag=false;
+          return;
+        }
 
         var result = response.data.data;
         var firstValue= this.$store.state.received_messages[0].send_date;

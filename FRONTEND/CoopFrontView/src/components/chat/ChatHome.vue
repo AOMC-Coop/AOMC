@@ -307,21 +307,39 @@ var today = now.format("dddd, MMMM Do").toString()
           this.$store.state.stompClient.subscribe("/topic/message", tick => {
             // console.log(tick);
             debugger
-            this.$store.state.received_messages.push(JSON.parse(tick.body));
+            var message = JSON.parse(tick.body);
+            if(message.channel_idx === this.$store.state.channelInfo.idx){
+              this.$store.state.received_messages.push(JSON.parse(tick.body));
 
-            console.log("subcribe = " + tick.body);
+              console.log("subcribe = " + tick.body);
 
-            var newValue= this.$store.state.received_messages.slice(-1)[0].send_date
+              var newValue= this.$store.state.received_messages.slice(-1)[0].send_date
 
-            for(var i=0; i<this.$store.state.received_messages.length;i++){
-              if(this.$store.state.received_messages[i].send_date===now.format("dddd, MMMM Do").toString()||this.$store.state.received_messages[i].send_date==='today'){
-                this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
-                newValue='today'
-              }
-              if(this.$store.state.received_messages[i].send_date===newValue){
-                this.$store.state.received_messages.slice(-1)[0].send_date = ''
+              for(var i=0; i<this.$store.state.received_messages.length;i++){
+               if(this.$store.state.received_messages[i].send_date===now.format("dddd, MMMM Do").toString()||this.$store.state.received_messages[i].send_date==='today'){
+                 this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
+                 newValue='today'
+                }
+                if(this.$store.state.received_messages[i].send_date===newValue){
+                 this.$store.state.received_messages.slice(-1)[0].send_date = ''
+                }
               }
             }
+            // this.$store.state.received_messages.push(JSON.parse(tick.body));
+
+            // console.log("subcribe = " + tick.body);
+
+            // var newValue= this.$store.state.received_messages.slice(-1)[0].send_date
+
+            // for(var i=0; i<this.$store.state.received_messages.length;i++){
+            //   if(this.$store.state.received_messages[i].send_date===now.format("dddd, MMMM Do").toString()||this.$store.state.received_messages[i].send_date==='today'){
+            //     this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
+            //     newValue='today'
+            //   }
+            //   if(this.$store.state.received_messages[i].send_date===newValue){
+            //     this.$store.state.received_messages.slice(-1)[0].send_date = ''
+            //   }
+            // }
           });
         },
         error => {
@@ -362,6 +380,7 @@ var today = now.format("dddd, MMMM Do").toString()
       },
       clickChannel(itemIdx, channelName) {
         if(itemIdx !== this.$store.state.channelInfo.idx){
+          this.$store.state.messageLastIdx = 0;
           this.$store.state.channelInfo.idx = itemIdx;
           this.$store.state.channelInfo.channelName = channelName;
           this.$store.state.messageStartNum=0
@@ -471,7 +490,11 @@ var today = now.format("dddd, MMMM Do").toString()
     }).then((response) => {
       if (response.data.status==200) {
         // this.start += 10;
-        if(response.data.plusData === -2) {
+        if(response.data.plusData === -3) {
+          this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+          this.$store.state.scrollFlag=false
+        }
+        else if(response.data.plusData === -2) {
           this.$store.state.messageStartNum = -1;
         }
         else if(response.data.plusData === -1) {
@@ -479,6 +502,12 @@ var today = now.format("dddd, MMMM Do").toString()
         }else {
           this.$store.state.messageStartNum = response.data.plusData;
           this.$store.state.messageStartNum+=10
+        }
+
+        if(response.data.data == null) {
+          // this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
+          // this.$store.state.scrollFlag=false;
+          return;
         }
         
         var sendDate = "";
@@ -621,20 +650,19 @@ var today = now.format("dddd, MMMM Do").toString()
   
     created() {
       
-      debugger;
       this.$store.state.inviteUsers.splice(0);
       this.inviteTeam.channels.splice(0);
       // localStorage.setItem("userId", "yunjea0312@naver.com"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
       // this.$store.state.userId = "yunjea0312@naver.com";
       // this.$store.state.userIdx = 5; //test용으로 넣어놈. 로그인 할때 받아야함
-      this.userIdx = this.$store.state.userIdx;
+      this.userIdx = localStorage.getItem("userIdx");
       // this.$store.state.userNickName = "yunyun"; //test용으로 넣어놈. 로그인 할때 받아야함
 
       console.log(this.$store.state.userId);
       console.log(this.$store.state.userIdx);
       console.log(this.$store.state.userNickName);
 
-      console.log(localStorage.getItem("userId"));
+      console.log("localStorage = " + localStorage.getItem("userId"));
       console.log(localStorage.getItem("userIdx"));
       console.log(localStorage.getItem("userNickName"));
 
@@ -644,7 +672,7 @@ var today = now.format("dddd, MMMM Do").toString()
         .get(this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"))
         .then(response => { //
             if(response.data) {
-              debugger;
+
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;
               this.userName = localStorage.getItem("userNickName"); //로그인 한 후 userName 받기 -> localStorage에서 받기 

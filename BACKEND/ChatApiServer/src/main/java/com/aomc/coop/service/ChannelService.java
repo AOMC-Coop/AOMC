@@ -130,11 +130,12 @@ public class ChannelService {
                     return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList, start);
                 } else if (messageLastIdx <= redis_messageList.get(redis_messageList.size() - 1).getMessage_idx()) { //redis이지만 이미 다 가져온 경우
                     //mysql에서 가져오기
+                    System.out.println("//////-getChannelMessage - MySQL");
                     List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
 //            System.out.println(messages);
 
                     if (messages.size() == 0) {
-                        return codeJsonParser.codeJsonParser(Status_1000.No_Message.getStatus());
+                        return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages, start);
                     }
                     System.out.println("2-getChannelMessage - MySQL");
                     return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages, start);
@@ -152,6 +153,7 @@ public class ChannelService {
 
             } else {
                 //mysql에서 메세지 가져오기
+                System.out.println("||||||||||-getChannelMessage - MySQL");
                 List<Message> messages = channelMapper.getChannelMessage(channelIdx, start);
 //            System.out.println(messages);
 

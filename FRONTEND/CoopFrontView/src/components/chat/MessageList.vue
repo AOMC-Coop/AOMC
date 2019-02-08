@@ -49,9 +49,7 @@ export default {
   name: 'MessageList',
    data() {
     return {
-      // loading:false,
       // beforeValue:0,
-      // count:0
     };
   },
   watch: {
@@ -64,7 +62,7 @@ export default {
       'getReceivedMessages'
     ])
     },
-  methods: {
+  methods: {    
     change () {
         this.$nextTick(() => {
           if(this.$refs.infiniteLoading.status == 2) {
@@ -72,10 +70,7 @@ export default {
           }
       })
     },
-    //한번 complete가 되고나면 함수가 아예 불리지않는 문제 해결해야함!!!!! -> 계속 reset되는것같음 -> 해결했지만 가끔 리스트2번불림 -> 포커스문제 해결해야함
-    //v-infinite-scroll을 사용하면  스크롤 포커스 문제가 발생한다 -> 새로운데이터 들어왔을때 포커스가 잘안됨
     infiniteHandler() {
-      // this.loading = true
       console.log("1 "+this.$store.state.messageStartNum);
       debugger;
       // if(this.$store.state.messageStartNum===-1)
@@ -117,20 +112,15 @@ export default {
           this.$store.state.received_messages.unshift(result[i]);
         }
 
-        //  this.loading = false
         if(result.length<10){
-          // $state.complete();
           debugger;
           this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
           this.$store.state.scrollFlag=false
         }
         
-        // $state.loaded();
         this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded');
         // this.$store.state.scrollFlag=false
       } else {
-        // this.loading = false
-        // $state.complete();
         debugger;
         this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete');
         this.$store.state.scrollFlag=false
@@ -140,46 +130,9 @@ export default {
     }); 
     
     }
-    // }
   },
   created() {
-    // this.$store.state.received_messages=''
-
-    // axios.get("http://localhost:8083/api/channel/message?channelIdx=" + 8, {
-    //   params: {
-    //     start: this.start
-    //   },
-    // }).then((response) => {
-    //   if (response.data.status==200) {
-    //     this.start += 10;
-
-    //     var sendDate = "";
-    //     var result = response.data.data.reverse();
-
-    //   if(result[0].send_date===today){
-    //     sendDate = 'today'
-    //     result[0].send_date = 'today'
-    //   }else{
-    //     sendDate = result[0].send_date
-    //   }
-      
-    //     for(var i=1;i<result.length;i++){
-    //       if(result[i].send_date==today){
-    //         result[i].send_date='today'
-    //       }
-
-    //       if(result[i].send_date === sendDate){
-    //         result[i].send_date=''
-    //       }else{
-    //         sendDate = result[i].send_date
-    //       }
-    //     }
-        
-    //     this.$store.state.received_messages = result          
-    //     } else {
-    //       alert(response.data.message)
-    //     }
-    //   });
+    
   },
      
 };
@@ -201,9 +154,6 @@ export default {
 }
 .card{
   padding-left: 2%;
-}
-.div{
-   /* overflow-y: scroll; */
 }
 
 </style>

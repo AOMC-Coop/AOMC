@@ -6,6 +6,7 @@
       <v-if="{{message}}"><chat></chat></v-if>
       <v-else></v-else>
     </div> -->
+    <notifications group="foo" />
     <router-view/>
   </div>
 </template>

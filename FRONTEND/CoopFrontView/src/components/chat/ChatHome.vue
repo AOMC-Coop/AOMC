@@ -193,6 +193,7 @@
     
      <modals-container />
 
+
   </v-app>
 </template>
 
@@ -308,7 +309,7 @@ var today = now.format("dddd, MMMM Do").toString()
             // console.log(tick);
             debugger
             var message = JSON.parse(tick.body);
-            if(message.channel_idx === this.$store.state.channelInfo.idx){
+            if(message.channel_idx === this.$store.state.channelInfo.idx){ //현재 있는 채팅방인 경우
               this.$store.state.received_messages.push(JSON.parse(tick.body));
 
               console.log("subcribe = " + tick.body);
@@ -324,22 +325,16 @@ var today = now.format("dddd, MMMM Do").toString()
                  this.$store.state.received_messages.slice(-1)[0].send_date = ''
                 }
               }
+            }else { // 다른 채팅방에서 메세지 올 때 알림 띄우기
+              debugger
+              let nicknamePlusTime = message.nickname + "   " + message.send_date;
+              this.$notify({
+                group: 'foo',
+                title: nicknamePlusTime,
+                text: message.content,
+                // animationType: velocity
+              });
             }
-            // this.$store.state.received_messages.push(JSON.parse(tick.body));
-
-            // console.log("subcribe = " + tick.body);
-
-            // var newValue= this.$store.state.received_messages.slice(-1)[0].send_date
-
-            // for(var i=0; i<this.$store.state.received_messages.length;i++){
-            //   if(this.$store.state.received_messages[i].send_date===now.format("dddd, MMMM Do").toString()||this.$store.state.received_messages[i].send_date==='today'){
-            //     this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
-            //     newValue='today'
-            //   }
-            //   if(this.$store.state.received_messages[i].send_date===newValue){
-            //     this.$store.state.received_messages.slice(-1)[0].send_date = ''
-            //   }
-            // }
           });
         },
         error => {

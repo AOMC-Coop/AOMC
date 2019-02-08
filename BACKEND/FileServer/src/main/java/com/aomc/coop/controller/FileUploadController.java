@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.aomc.coop.storage.StorageService;
+import com.aomc.coop.service.StorageService;
 import com.aomc.coop.storage.StorageFileNotFoundException;
 
 @Controller
@@ -38,6 +38,7 @@ public class FileUploadController {
     @GetMapping("/")
     public String listUploadedFiles(Model model) throws IOException {
 
+// ***** fileanme : 한글 파일명은 제대로 읽혀지지 않으므로, UTF-8 처리가 필요하다.
         model.addAttribute("files", storageService.loadAll().map(
                 path -> MvcUriComponentsBuilder.fromMethodName
                         (FileUploadController.class, "serveFile", path.getFileName().toString()).build().toString())

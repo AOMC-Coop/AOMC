@@ -1,4 +1,4 @@
-package com.aomc.coop.storage;
+package com.aomc.coop.service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +9,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
+import com.aomc.coop.storage.StorageException;
+import com.aomc.coop.storage.StorageFileNotFoundException;
+import com.aomc.coop.storage.StorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

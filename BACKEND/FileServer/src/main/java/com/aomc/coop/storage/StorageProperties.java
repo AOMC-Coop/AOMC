@@ -8,7 +8,9 @@ public class StorageProperties {
     /**
      * Folder location for storing files
      */
-    private String location = "upload-dir";
+
+// ***** 여기서 upload directory를 관리하자.
+    private String location = "E:\\FileStorage";
 
     public String getLocation() {
         return location;

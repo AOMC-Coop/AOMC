@@ -119,6 +119,7 @@ export default {
       //     this.connected = false;
       //   }
       // )
+
       // this.stompClient.disconnect(distick => {
       //   console.log("socket disconnect");
       // });

@@ -388,7 +388,7 @@ public class TeamService {
 //            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
         }
         if (userIdx == 0) {
-            return "http://localhost:9999/signup/"; //회원가입창
+            return "http://localhost:9999/signup/"+token; //회원가입창
 //            return codeJsonParser.codeJsonParser(Status_5000.PLEASE_SIGNUP.getStatus(), token);
         }
         teamMapper.updateInviteFlag(teamIdx, userIdx);

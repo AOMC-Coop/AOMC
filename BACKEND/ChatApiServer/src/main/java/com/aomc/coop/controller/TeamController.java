@@ -607,9 +607,9 @@ public class TeamController {
 
 //                String token2 = response.getHeader("token");
 //                System.out.println(token2);
-            
+
             HttpHeaders headers = new HttpHeaders();
-            headers.setLocation(URI.create(redirectAddress+token));
+            headers.setLocation(URI.create(redirectAddress));
             headers.set("token", token);
 //            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
             return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).headers(headers).build();

@@ -293,7 +293,7 @@ var today = now.format("dddd, MMMM Do").toString()
       createSocket() {
       debugger
       this.msg = '';
-      this.socket = new SockJS("http://localhost:8083/socketconnect")
+      this.socket = new SockJS(this.$store.state.ip + ":8083/socketconnect")
       // this.stompClient = Stomp.over(this.socket);
       this.$store.state.stompClient = Stomp.over(this.socket)
       // this.stompClient.connect(
@@ -340,7 +340,7 @@ var today = now.format("dddd, MMMM Do").toString()
         this.createTeam.users = this.$store.state.inviteUsers;
 
         axios
-        .post("http://localhost:8083/api/team", this.createTeam)
+        .post(this.$store.state.ip + ":8083/api/team", this.createTeam)
         .then(response => {
           // debugger;
             if(response.data) {
@@ -362,7 +362,7 @@ var today = now.format("dddd, MMMM Do").toString()
       },
       clickChannel(itemIdx, channelName) {
         if(itemIdx !== this.$store.state.channelInfo.idx){
-           this.$store.state.channelInfo.idx = itemIdx;
+          this.$store.state.channelInfo.idx = itemIdx;
           this.$store.state.channelInfo.channelName = channelName;
           this.$store.state.messageStartNum=0
           this.getMessage();
@@ -376,7 +376,7 @@ var today = now.format("dddd, MMMM Do").toString()
         this.inviteTeam.channels.push({idx: this.channels[0].idx});//general idx 채널을 넣어줘야함
 
         axios
-        .post("http://localhost:8083/api/team/invite", this.inviteTeam)
+        .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam)
         .then(response => {
           debugger;
             if(response.data) {
@@ -422,7 +422,7 @@ var today = now.format("dddd, MMMM Do").toString()
       
       getMemberByTeamId(teamIdx){
         axios
-        .get("http://localhost:8083/api/team/" + teamIdx)
+        .get(this.$store.state.ip + ":8083/api/team/" + teamIdx)
         .then(response => {
             if(response.data) {
               this.teamMembers = response.data.data;
@@ -441,7 +441,7 @@ var today = now.format("dddd, MMMM Do").toString()
       },
       getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
         axios
-        .get("http://localhost:8083/api/team/channel/" + teamIdx + "&" + userIdx)
+        .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
             if(response.data) {
               this.channels = response.data.data;
@@ -463,7 +463,7 @@ var today = now.format("dddd, MMMM Do").toString()
         debugger;
         this.$store.state.received_messages.splice(0);
 
-    axios.get("http://localhost:8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+    axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
       params: {
         start: this.$store.state.messageStartNum,
         messageLastIdx: this.$store.state.messageLastIdx
@@ -471,7 +471,10 @@ var today = now.format("dddd, MMMM Do").toString()
     }).then((response) => {
       if (response.data.status==200) {
         // this.start += 10;
-        if(response.data.plusData === -1) {
+        if(response.data.plusData === -2) {
+          this.$store.state.messageStartNum = -1;
+        }
+        else if(response.data.plusData === -1) {
           this.$store.state.messageStartNum = 0;
         }else {
           this.$store.state.messageStartNum = response.data.plusData;
@@ -504,6 +507,7 @@ var today = now.format("dddd, MMMM Do").toString()
         this.$store.state.messageLastIdx = this.$store.state.received_messages[this.$store.state.received_messages.length-1].message_idx;
         console.log("ChatHome - LastIdx = " + this.$store.state.messageLastIdx);
         console.log("//////////////"+this.$store.state.messageStartNum);
+        console.log(this.$store.state.received_messages);
         this.$store.state.scrollFlag=true
         } else {
           alert(response.data.message)
@@ -514,7 +518,7 @@ var today = now.format("dddd, MMMM Do").toString()
         localStorage.setItem("teamIdx", teamIdx);
         this.$store.state.messageLastIdx = 0;
         axios
-        .get("http://localhost:8083/api/team/user/" + teamIdx)
+        .get(this.$store.state.ip + ":8083/api/team/user/" + teamIdx)
         .then(response => {
             if(response.data) {
               //this.teamsFromServer = response.data.data;
@@ -545,7 +549,7 @@ var today = now.format("dddd, MMMM Do").toString()
       // this.stompClient.disconnect(distick => {
       //   console.log("socket disconnect");
       // });
-      axios.post(`http://localhost:8082/logout`, this.userWithToken)
+      axios.post(this.$store.state.ip + `:8082/logout`, this.userWithToken)
         .then(response => {
           let description = response.data.description
           if(description == "Fail Logout"){
@@ -565,7 +569,7 @@ var today = now.format("dddd, MMMM Do").toString()
     },
     withdrawal: function (){
       let idx = localStorage.getItem('idx')
-      let url = `http://localhost:8082/members/`+ idx
+      let url = this.$store.state.ip + `:8082/members/`+ idx
       axios.put(url, this.userWithToken)
         .then(response => {
           let description = response.data.description
@@ -586,7 +590,7 @@ var today = now.format("dddd, MMMM Do").toString()
     },
     getProfile: function (){
       let idx = localStorage.getItem('idx')
-      let url = `http://localhost:8082/profile/`+ idx
+      let url = this.$store.state.ip + `:8082/profile/`+ idx
       axios.post(url, this.userWithToken)
         .then(response => {
           let description = response.data.description
@@ -637,7 +641,7 @@ var today = now.format("dddd, MMMM Do").toString()
       this.createSocket();
 
       axios
-        .get("http://localhost:8083/api/team/user/" + localStorage.getItem("userIdx"))
+        .get(this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"))
         .then(response => { //
             if(response.data) {
               debugger;

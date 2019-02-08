@@ -157,7 +157,7 @@ export default {
         if(this.channelName !== '') {
           this.channel.name = this.channelName;
           axios
-        .post("http://localhost:8083/api/channel/", this.channel)
+        .post(this.$store.state.ip + ":8083/api/channel/", this.channel)
         .then(response => {
           debugger;
             if(response.data) {

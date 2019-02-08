@@ -171,7 +171,7 @@ export default {
   methods: {
     setProfile: function (){
       let idx = localStorage.getItem('idx')
-      let url = `http://localhost:8082/profile/`+ idx
+      let url = this.$store.state.ip + `:8082/profile/`+ idx
       axios.put(url, this.profileWithToken)
         .then(response => {
           let description = response.data.description

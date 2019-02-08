@@ -8,6 +8,7 @@ import com.aomc.coop.model.Message;
 import com.aomc.coop.model.User;
 import com.aomc.coop.response.Status_1000;
 import com.aomc.coop.utils.CodeJsonParser;
+import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import com.aomc.coop.utils.redis.RedisUtil;
 import com.aomc.coop.utils.ResponseType;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +47,9 @@ public class ChannelService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private RabbitMQUtil rabbitMQUtil;
+
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
     public ResponseType createChannel(Channel channel) {
@@ -56,13 +60,24 @@ public class ChannelService {
         Message message = new Message();
         message.setContent("joined #" + channel.getName());
         message.setNickname(channel.getUsers().get(0).getNickname());
+
+        //
+        message.setMessage_idx(0);
+        message.setUser_idx(channel.getUsers().get(0).getIdx());
+        //
+
         List<Message> messages = new ArrayList<>();
         messages.add(message);
 
         channel.setMessages(messages);
 
         channelMapper.createChannel(channel, channel.getTeamIdx());
-        messageMapper.createMessage(message, channel.getIdx(), channel.getUsers().get(0).getIdx());
+
+        //
+        message.setChannel_idx(channel.getIdx());
+        rabbitMQUtil.sendRabbitMQ(message);
+//        messageMapper.createMessage(message, channel.getIdx(), channel.getUsers().get(0).getIdx());
+        //
         for (int i = 0; i < channel.getUsers().size(); i++) {
             System.out.println("채널 생성 함수의 user index = " + channel.getUsers().get(i).getIdx());
 
@@ -97,7 +112,18 @@ public class ChannelService {
             listOperations = redisTemplate.opsForList();
             List<Message> redis_messageList = listOperations.range(RedisUtil.redisKey + channelIdx, 0, -1);
             if (redis_messageList.size() > 0) {
-                if (messageLastIdx == 0) { // redis 일 때
+                if(start == -1) {
+                    start = -3;
+                    System.out.println("-1-getChannelMessage - Redis");
+                    redis_messageList.clear();
+                    return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList, start);
+                }
+                else if(redis_messageList.size() == 1 && messageLastIdx == 0) { //join #general 이 redis에 유일하게 있는 경우
+                    start = -2;
+                    System.out.println("0-getChannelMessage - Redis");
+                    return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList, start);
+                }
+                else if (messageLastIdx == 0) { // redis 일 때
                     start = -1;
                     Collections.reverse(redis_messageList);
                     System.out.println("1-getChannelMessage - Redis");

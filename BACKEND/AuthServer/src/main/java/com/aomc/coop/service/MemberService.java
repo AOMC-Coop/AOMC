@@ -31,7 +31,13 @@ public class MemberService {
     private UserMapper userMapper;
 
     MailSend mailSend = new MailSend();
+
     private JavaMailSender mailSender;
+
+    public MemberService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
 
 
     // <1. 회원 가입>
@@ -70,11 +76,21 @@ public class MemberService {
 
             user.setSalt(salt);
             user.setPwd(hashPassword);
-            if(user.getUid().equals("admin")) { user.setRole("admin_role"); }
+            if(uid.equals("admin")) { user.setRole("admin_role"); }
             else { user.setRole("user_role"); }
 
             user.setStatus(1);
 
+            // 인증 메일 발송
+            SendMailThread sendMailThread = new SendMailThread(mailSender, uid);
+            sendMailThread.run();
+
+// ***** 유저 정보를 모두 입력 받고, 메일까지 전송 후 일단 redis에 putAll
+// ***** getOperations().expire()를 통해 5분 후 정보가 사라지도록 할 것
+// ***** 유저가 이메일 인증을 5분 이내로 완료하면, redis의 유저 정보를 DB로 INSERT
+// ***** 5분 이내로 인증이 이루어지지 않으면, 유저 정보는 파기되므로 DB에 INSERT 시도시 오류가 나며 error status를 return할 것
+
+// ***** 아래 코드는 인증 이후 단계로 분리하고, redis putAll로 대체할 것
             // 제대로 db에 저장이 되었다면
             if (userMapper.insertUser(user) == 1) {
                 System.out.println("Successfully Registered");
@@ -101,6 +117,8 @@ public class MemberService {
         {
             try {
                 userMapper.withdrawal(idx);
+
+
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
             } catch (Exception e) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());
@@ -112,32 +130,35 @@ public class MemberService {
 
     }
 
-    // <3. 비밀번호 분실 후 변경>
-
-    // Forgot password?
-    // 이메일 발송
-    // 이메일 버튼을 통해
-
-
     // 메일보내기
     class SendMailThread extends Thread {
 
         JavaMailSender mailSender;
         String uid;
         String token;
-        String authCode;
 
-        public SendMailThread(JavaMailSender mailSender, String uid, String token, String authCode) {
+        public SendMailThread(JavaMailSender mailSender, String uid) {
             this.mailSender = mailSender;
             this.uid = uid;
             this.token = token;
-            this.authCode = authCode;
         }
 
         public void run() {
-            mailSend.mailsend(mailSender, uid, token, authCode);
+            mailSend.mailsend(mailSender, uid);
         }
     }
+
+    // <3. 비밀번호 변경>
+
+
+    // <4. 비밀번호 분실 후 변경>
+
+    // Forgot password?
+    // 이메일 발송
+    // 이메일 버튼을 통해 비밀번호 수정 창으로 이동
+
+
+
 
 
     // 비밀번호 변경

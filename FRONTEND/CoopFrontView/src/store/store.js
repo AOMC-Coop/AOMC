@@ -7,7 +7,7 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   // 메세지 를 state 속성으로 추가
   state: {
-    ip:"http://10.240.202.225",
+    ip:"http://220.75.192.79",
     stompClient:null,
     userId:'',
     userIdx:'',

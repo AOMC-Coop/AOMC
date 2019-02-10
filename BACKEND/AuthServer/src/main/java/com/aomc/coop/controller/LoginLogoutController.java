@@ -20,12 +20,12 @@ Logout                  ㅣ Done ㅣ 로그아웃 후 '/chat' -> '/'으로 redir
 redis에 회원정보 저장    ㅣ Done ㅣ
 회원가입                 ㅣ Done ㅣ
 회원탈퇴                 ㅣ Done ㅣ
-Profile                 ㅣ Done ㅣ vue에 nickname 띄워주기, 파일 서버 & 스토리지 구축 이후 프로필 사진도 다루어야 함
+Profile                 ㅣ Done ㅣ 1) vue에 nickname 띄워주기, 2) 파일 서버 & 스토리지 구축 이후 프로필 사진도 다루어야 함
 Profile 프로필 수정      ㅣ Done ㅣ 파일 서버 & 스토리지 구축 이후 프로필 사진도 다루어야 함
 
-가입 시 email 인증       ㅣ      ㅣ
+가입 시 email 인증       ㅣ Done ㅣ 이메일 URL 클릭 시 로그인 화면으로 redirect
 비밀번호 변경            ㅣ      ㅣ
-비밀번호 분실 후 변경     ㅣ      ㅣ <- 여기까지 끝내자
+비밀번호 분실 후 변경     ㅣ      ㅣ
 토큰 헤더                ㅣ      ㅣ 토큰 헤더에 담아서 보내기 -> 대대적으로 손 봐야 함 : utils.auth.AuthAspect
 방 초대시 인증서버 동기화 ㅣ      ㅣ
 

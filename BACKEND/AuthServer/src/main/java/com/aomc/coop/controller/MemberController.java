@@ -33,6 +33,17 @@ public class MemberController {
         }
     }
 
+    // 회원 가입 시 이메일 인증
+    @GetMapping(path="/{authUrl}")
+    @CrossOrigin
+    public ResponseEntity emailAuth(@PathVariable(value = "authUrl") String authUrl) { // header, body(json), HTTP.status //
+        try {
+            return new ResponseEntity(memberService.emailAuth(authUrl), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
+    }
+
     // 회원 탈퇴
     @PutMapping(path="/{idx}")
     @CrossOrigin
@@ -45,6 +56,15 @@ public class MemberController {
     }
 
     // 비밀번호 변경
+//    @PutMapping(path="/pwd/{idx}")
+//    @CrossOrigin
+//    public ResponseEntity changePwd(@RequestBody User user, @PathVariable(value = "idx") int idx) { // header, body(json), HTTP.status //
+//        try {
+//            return new ResponseEntity(memberService.changePwd(user, idx), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+//        }
+//    }
 
 
     // 비밀번호 분실 후 변경

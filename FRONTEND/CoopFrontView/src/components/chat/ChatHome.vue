@@ -117,7 +117,10 @@
     </form>
     <form @submit.prevent="getProfile">
       <v-btn color="success" type="submit">Profile</v-btn>
-    </form>    
+    </form>
+    <form @submit.prevent="ChangePwd">
+      <v-btn color="info">Change Password</v-btn>
+    </form>
     </v-navigation-drawer>
     
         
@@ -638,6 +641,9 @@ var today = now.format("dddd, MMMM Do").toString()
           location.href = './'
         })      
     },
+    ChangePwd : function (){
+      location.href = './pwd'
+    }
 
 
    //  else if(description == "Fail Set Profile : Wrong Idx")

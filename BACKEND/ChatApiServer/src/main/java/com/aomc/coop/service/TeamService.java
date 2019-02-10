@@ -1,6 +1,5 @@
 package com.aomc.coop.service;
 
-import com.aomc.coop.config.MailConfig;
 import com.aomc.coop.mapper.ChannelMapper;
 import com.aomc.coop.mapper.MessageMapper;
 import com.aomc.coop.mapper.TeamMapper;
@@ -11,25 +10,21 @@ import com.aomc.coop.model.Team;
 import com.aomc.coop.model.User;
 import com.aomc.coop.response.Status_1000;
 import com.aomc.coop.response.Status_5000;
-import com.aomc.coop.response.Status_common;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
+import com.aomc.coop.utils.date.DateFormatCustom;
 import com.aomc.coop.utils.mail.MailSend;
 import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
-import org.springframework.mail.MailSender;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -81,37 +76,42 @@ public class TeamService {
             Channel channel = new Channel();
             channel.setName("general");
 
+            //message Date Format
+            Date date = new Date();
+
+            DateFormatCustom dataFormatCustom = new DateFormatCustom();
+            String sendDate = dataFormatCustom.sendDateFormat(date);
+            String sendTime = dataFormatCustom.sendTimeFormat(date);
+            String sendDBDate = dataFormatCustom.sendDBDateFormat(date);
+
+            //message info setting
             Message message = new Message();
             message.setContent("joined #general");
             message.setNickname(ownerUserInfo.getNickname());
-
-            //
             message.setMessage_idx(0);
             message.setUser_idx(ownerUserInfo.getIdx());
-            //
+            message.setSend_date(sendDate);
+            message.setSend_time(sendTime);
+            message.setSend_db_date(sendDBDate);
+
+
 
             List<Message> messages = new ArrayList<>();
             messages.add(message);
-
             channel.setMessages(messages);
 
             List<Channel> channels = new ArrayList<>();
             channels.add(channel);
-
             team.setChannels(channels);
-
             teamMapper.createTeam(team);
             channelMapper.createChannel(channel, team.getIdx());
 
-            //
             message.setChannel_idx(channel.getIdx());
             rabbitMQUtil.sendRabbitMQ(message);
-            //messageMapper.createMessage(message, channel.getIdx(), ownerUserInfo.getIdx());
 
             for (User user : users) {
 
                 User userTemp = userMapper.findBysUserid(user.getUid());
-
                 final JwtService.TokenResponse token = new JwtService.TokenResponse(jwtService.create(team.getIdx(), user.getUid()));
 
                 HashMap hashMap = new HashMap();

@@ -1,4 +1,4 @@
-package com.aomc.coop.storage;
+package hello.storage;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -8,9 +8,7 @@ public class StorageProperties {
     /**
      * Folder location for storing files
      */
-
-// ***** 여기서 upload directory를 관리하자.
-    private String location = "E:\\FileStorage";
+    private String location = "upload-dir";
 
     public String getLocation() {
         return location;

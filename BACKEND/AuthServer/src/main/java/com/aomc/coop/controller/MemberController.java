@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+//
+
+
 @RestController
 @RequestMapping("/members")
 public class MemberController {
@@ -42,6 +45,9 @@ public class MemberController {
     }
 
     // 비밀번호 변경
+
+
+    // 비밀번호 분실 후 변경
 
 
 

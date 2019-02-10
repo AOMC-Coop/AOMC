@@ -14,19 +14,20 @@ import org.springframework.web.bind.annotation.*;
 
 <인증 서버 기능 리스트>
 ------------------------------------------
-[        기능       ] [ 상태 ] [     남은 일들     ]
-                     ㅣ      ㅣ 토큰 헤더에 담아서 보내기 -> 대대적으로 손 봐야할 듯 : utils.auth.AuthAspect
-Login                ㅣ Done ㅣ 로그인이 되었다면, '/' -> '/chat'으로 redirect할 것
-Logout               ㅣ Done ㅣ 로그아웃 후 '/chat' -> '/'으로 redirect할 것
-redis에 회원정보 저장 ㅣ Done ㅣ
-회원가입              ㅣ Done ㅣ
-회원탈퇴              ㅣ Done ㅣ
-Profile              ㅣ Done ㅣ vue에 nickname 띄워주기, 파일 서버 & 스토리지 구축 이후 프로필 사진도 다루어야 함
-Profile 프로필 수정   ㅣ Done ㅣ 파일 서버 & 스토리지 구축 이후 프로필 사진도 다루어야 함
+[        기능       ]    [ 상태 ]    [     남은 일들     ]
+Login                   ㅣ Done ㅣ 로그인이 되었다면, '/' -> '/chat'으로 redirect할 것
+Logout                  ㅣ Done ㅣ 로그아웃 후 '/chat' -> '/'으로 redirect할 것
+redis에 회원정보 저장    ㅣ Done ㅣ
+회원가입                 ㅣ Done ㅣ
+회원탈퇴                 ㅣ Done ㅣ
+Profile                 ㅣ Done ㅣ vue에 nickname 띄워주기, 파일 서버 & 스토리지 구축 이후 프로필 사진도 다루어야 함
+Profile 프로필 수정      ㅣ Done ㅣ 파일 서버 & 스토리지 구축 이후 프로필 사진도 다루어야 함
 
-비밀번호 변경         ㅣ      ㅣ
-가입 시 email 인증    ㅣ      ㅣ
-초대                  ㅣ      ㅣ
+가입 시 email 인증       ㅣ      ㅣ
+비밀번호 변경            ㅣ      ㅣ
+비밀번호 분실 후 변경     ㅣ      ㅣ <- 여기까지 끝내자
+토큰 헤더                ㅣ      ㅣ 토큰 헤더에 담아서 보내기 -> 대대적으로 손 봐야 함 : utils.auth.AuthAspect
+방 초대시 인증서버 동기화 ㅣ      ㅣ
 
 */
 

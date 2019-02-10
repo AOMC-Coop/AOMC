@@ -16,6 +16,8 @@ import VuePullInfiniteScroller from 'vue-pull-infinite-scroller'
 import VeeValidate from 'vee-validate'
 import VueScrollFocus from 'vue-scroll-focus'
 import InfiniteLoading from 'vue-infinite-loading'
+import Notifications from 'vue-notification'
+import velocity from 'velocity-animate'
 // import InfiniteScroll from 'v-infinite-scroll'
 // import 'v-infinite-scroll/dist/v-infinite-scroll.css'
 // Vue.use(InfiniteScroll)
@@ -33,6 +35,8 @@ Vue.use(InfiniteLoading, {
     noMore: 'No more message', // you can pass a string value
   }
 })
+Vue.use(Notifications)
+Vue.use(Notifications, { velocity })
 
 
 /* eslint-disable no-new */

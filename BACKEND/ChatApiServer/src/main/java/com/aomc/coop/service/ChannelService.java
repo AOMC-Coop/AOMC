@@ -8,6 +8,7 @@ import com.aomc.coop.model.Message;
 import com.aomc.coop.model.User;
 import com.aomc.coop.response.Status_1000;
 import com.aomc.coop.utils.CodeJsonParser;
+import com.aomc.coop.utils.date.DateFormatCustom;
 import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import com.aomc.coop.utils.redis.RedisUtil;
 import com.aomc.coop.utils.ResponseType;
@@ -20,9 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -57,30 +57,35 @@ public class ChannelService {
         if (channel == null) {
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_Channel.getStatus());
         }
+
+        //message Date Format
+        Date date = new Date();
+        DateFormatCustom dataFormatCustom = new DateFormatCustom();
+        String sendDate = dataFormatCustom.sendDateFormat(date);
+        String sendTime = dataFormatCustom.sendTimeFormat(date);
+        String sendDBDate = dataFormatCustom.sendDBDateFormat(date);
+
+        //message info setting
         Message message = new Message();
         message.setContent("joined #" + channel.getName());
         message.setNickname(channel.getUsers().get(0).getNickname());
-
-        //
         message.setMessage_idx(0);
         message.setUser_idx(channel.getUsers().get(0).getIdx());
-        //
+        message.setSend_date(sendDate);
+        message.setSend_time(sendTime);
+        message.setSend_db_date(sendDBDate);
 
         List<Message> messages = new ArrayList<>();
         messages.add(message);
-
         channel.setMessages(messages);
-
         channelMapper.createChannel(channel, channel.getTeamIdx());
 
         //
         message.setChannel_idx(channel.getIdx());
         rabbitMQUtil.sendRabbitMQ(message);
-//        messageMapper.createMessage(message, channel.getIdx(), channel.getUsers().get(0).getIdx());
         //
         for (int i = 0; i < channel.getUsers().size(); i++) {
-            System.out.println("채널 생성 함수의 user index = " + channel.getUsers().get(i).getIdx());
-
+//            System.out.println("채널 생성 함수의 user index = " + channel.getUsers().get(i).getIdx());
             channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(i).getIdx());
 
         }

@@ -673,6 +673,7 @@ var today = now.format("dddd, MMMM Do").toString()
         })      
     },
     changePwd : function (){
+      debugger
       this.$router.push({path: '/pwd'})
     }
 

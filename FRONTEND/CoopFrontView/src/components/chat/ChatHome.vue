@@ -119,7 +119,7 @@
       <v-btn color="success" type="submit">Profile</v-btn>
     </form>
     <form @submit.prevent="changePwd">
-      <v-btn color="info">Change Password</v-btn>
+      <v-btn color="info" type="submit">Change Password</v-btn>
     </form>
     </v-navigation-drawer>
     

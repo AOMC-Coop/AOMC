@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import com.aomc.coop.mapper.UserMapper;
+import com.aomc.coop.model.NewPwd;
 import com.aomc.coop.model.UserWithToken;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
@@ -223,12 +224,38 @@ public class MemberService {
     }
 
     // <3. 비밀번호 변경>
-//    public ResponseType changePwd (@RequestBody User user, final int idx) {
-//        String pwd = user.getPwd();
-//
-//
-//
-//    }
+    public ResponseType changePwd (@RequestBody NewPwd newPwd, final int idx) {
+
+        if(newPwd.getIdx() != idx){
+            System.out.println("idx don't match");
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus());
+        }
+        String pwd = newPwd.getPwd();
+
+        try {
+
+            SecureRandom secRan = SecureRandom.getInstance("SHA1PRNG");
+            int numLength = 16;
+            String newSalt = "";
+            for (int i = 0; i < numLength; ++i) {
+                newSalt += secRan.nextInt(10);
+            }
+
+            String newPassword = newSalt + pwd;
+            String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
+
+            if(userMapper.changePwd(hashPassword, newSalt, idx) == 1){
+                System.out.println("password change success");
+                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Change_Pwd.getStatus());
+            } else {
+                System.out.println("password change fail");
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd.getStatus());
+            }
+        } catch (Exception e) {
+            System.out.println("password change fail");
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd.getStatus());
+        }
+    }
 
 
     // <4. 비밀번호 분실 후 변경>

@@ -1,7 +1,9 @@
 package com.aomc.coop.controller;
 
+import com.aomc.coop.model.NewPwd;
 import com.aomc.coop.model.User;
 import com.aomc.coop.model.UserWithToken;
+import com.aomc.coop.model.NewPwd;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.MemberService;
 import com.aomc.coop.utils.CodeJsonParser;
@@ -56,15 +58,15 @@ public class MemberController {
     }
 
     // 비밀번호 변경
-//    @PutMapping(path="/pwd/{idx}")
-//    @CrossOrigin
-//    public ResponseEntity changePwd(@RequestBody User user, @PathVariable(value = "idx") int idx) { // header, body(json), HTTP.status //
-//        try {
-//            return new ResponseEntity(memberService.changePwd(user, idx), HttpStatus.OK);
-//        } catch (Exception e) {
-//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-//        }
-//    }
+    @PutMapping(path="/pwd/{idx}")
+    @CrossOrigin
+    public ResponseEntity changePwd(@RequestBody NewPwd newPwd, @PathVariable(value = "idx") int idx) { // header, body(json), HTTP.status //
+        try {
+            return new ResponseEntity(memberService.changePwd(newPwd, idx), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
+    }
 
 
     // 비밀번호 분실 후 변경

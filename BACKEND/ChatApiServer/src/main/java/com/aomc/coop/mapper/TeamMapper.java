@@ -46,18 +46,9 @@ public interface TeamMapper {
     @Update("UPDATE user_has_team SET status=0 WHERE team_idx = #{teamIdx} AND user_idx = #{userIdx}")
     int deactiveUserOfTeam(final int teamIdx, final int userIdx);
 
-
-//    //이메일인증 - user_has_team 테이블
-//    @Update("UPDATE user_has_team SET authkey=#{authkey} WHERE team_idx = #{teamIdx} AND user_idx = #{userIdx}")
-//    int sendAuthEmail(final String authkey, final int teamIdx, final int userIdx);
-
     //이메일 인증시
     @Update("UPDATE user_has_team SET invite_flag=1 WHERE team_idx = #{teamIdx} AND user_idx = #{userIdx}")
     void updateInviteFlag(final int teamIdx, final int userIdx);
-
-//    //팀초대시 이메일 인증키 조회
-//    @Select("SELECT authkey FROM user_has_team WHERE team_idx = #{teamIdx} AND user_idx = #{userIdx}")
-//    String acceptInvite(final int teamIdx, final int userIdx);
 
 
 }

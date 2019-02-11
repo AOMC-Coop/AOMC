@@ -483,6 +483,13 @@ var today = now.format("dddd, MMMM Do").toString()
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
+
+              if(this.$store.state.channelInfo.channelName==='general'){
+               this.$store.state.generalFlag=false
+              }else{
+                this.$store.state.generalFlag=true
+              }
+
               this.$store.state.messageStartNum=0
               this.getMessage();
 
@@ -590,8 +597,10 @@ var today = now.format("dddd, MMMM Do").toString()
         this.getMemberByTeamId(teamIdx);
         this.getChannelsByTeamIdxAndUserIdx(teamIdx, localStorage.getItem("userIdx")); // 5->userId로 받아야 함
 
-        this.$store.state.channelInfo.idx = response.data.data[0].idx;
-        this.$store.state.channelInfo.channelName = response.data.data[0].name;
+        // this.$store.state.channelInfo.idx = response.data.data[0].idx;
+        // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+
+
       },
       handleClickButton(){
       this.visible = !this.visible

@@ -270,13 +270,13 @@ public class ChannelController {
 
      *
 
-     *        @brief GET http://localhost:8083/api/channel/invite/19/6
+     *        @brief GET http://localhost:8083/api/channel/invite?channelIdx=19&userIdx=6
 
      *        @details 채널에 멤버를 초대하는 함수
 
-     *        @param PathVariable(value = "channelIdx") int channelIdx
+     *        @param RequestParam(value = "channelIdx") int channelIdx
 
-     *        @param PathVariable(value = "userIdx") int userIdx
+     *        @param RequestParam(value = "userIdx") int userIdx
 
      *        @return ResponseEntity<>
 
@@ -313,8 +313,8 @@ public class ChannelController {
      */
     @GetMapping
     @CrossOrigin
-    @RequestMapping("/invite/{channelIdx}/{userIdx}")
-    public ResponseEntity inviteChannelUser(@PathVariable(value = "channelIdx") int channelIdx, @PathVariable(value = "userIdx") int userIdx){
+    @RequestMapping("/invite")
+    public ResponseEntity inviteChannelUser(@RequestParam(value = "channelIdx") int channelIdx, @RequestParam(value = "userIdx") int userIdx){
 
         if(channelIdx >= 0 || userIdx >= 0) {
             return new ResponseEntity<>(channelService.inviteChannelUser(channelIdx, userIdx), HttpStatus.OK);
@@ -331,9 +331,9 @@ public class ChannelController {
 
      *        @details 멤버가 채널 나가기 하는 함수
 
-     *        @param PathVariable(value = "channelIdx") int channelIdx
+     *        @param RequestParam(value = "channelIdx") int channelIdx
 
-     *        @param PathVariable(value = "userIdx") int userIdx
+     *        @param RequestParam(value = "userIdx") int userIdx
 
      *        @return ResponseEntity<>
 

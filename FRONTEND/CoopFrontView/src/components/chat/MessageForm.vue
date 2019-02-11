@@ -9,7 +9,7 @@
             placeholder="대화를 입력하세요."
             v-model="msg"
             outline
-            @keyup.13="submitMessageFunc"
+            @keypress.13.prevent="submitMessageFunc"
             prepend-icon="add"
             clearable
             ></v-textarea>
@@ -28,6 +28,7 @@ var now = new moment();
 var send_date = now.format("dddd, MMMM Do").toString()
 var send_time = now.format("LT").toString()
 var send_db_date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
+
 
 export default {
   name: 'MessageForm',
@@ -48,18 +49,18 @@ export default {
     }
   },
   methods: {
-    // submitMessageFunction() {
-    //   this.$store.dispatch('submitMessageFunc', {msg:this.msg});
-    //   // this.msg = '';
-    // }
     submitMessageFunc() {
-      if (this.msg.length === 0 || this.msg.length > 500) return false;
-      // this.$emit('submitMessage', this.msg);
       debugger;
+      console.log(this.msg.length);
+      if (this.msg.length === 0 || this.msg.length > 500 || this.msg == '/\n/') {
+        this.msg = '';
+        return;
+      }
+      // if(this.msg.length === 1 && this.msg === '/\n/') return false;
+      // this.$emit('submitMessage', this.msg);
       console.log(this.$store.state.stompClient);
 
       if (this.$store.state.stompClient) {
-        debugger;
         
         const sendMessage = { content: this.msg , channel_idx: this.$store.state.channelInfo.idx, user_idx: this.userIdx, nickname: this.userNickName, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
         const sendChannel = { idx: this.$store.state.channelInfo.idx};

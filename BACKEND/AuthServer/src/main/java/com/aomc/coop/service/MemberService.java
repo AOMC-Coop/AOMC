@@ -48,9 +48,9 @@ public class MemberService {
 
     private JavaMailSender mailSender;
 
-//    public MemberService(JavaMailSender mailSender) {
-//        this.mailSender = mailSender;
-//    }
+    public MemberService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
 
 
@@ -110,7 +110,7 @@ public class MemberService {
                 hashOperations.getOperations().expire(authUrl, 3L, TimeUnit.MINUTES);
 
                 SendMailThread sendMailThread = new SendMailThread(mailSender, uid, authUrl);
-                sendMailThread.run();
+                sendMailThread.start();
 
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register_Auth_Mail_Sent.getStatus());
 

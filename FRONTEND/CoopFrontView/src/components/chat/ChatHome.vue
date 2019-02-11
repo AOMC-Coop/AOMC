@@ -576,30 +576,13 @@ var today = now.format("dddd, MMMM Do").toString()
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
         this.$store.state.messageLastIdx = 0;
-        axios
-        .get(this.$store.state.ip + ":8083/api/team/user/" + teamIdx)
-        .then(response => {
-            if(response.data) {
-              //this.teamsFromServer = response.data.data;
-              this.teamName = teamName;
-              this.userName = localStorage.getItem("userNickName"); //userName 받기
-              this.getMemberByTeamId(teamIdx);
-              this.getChannelsByTeamIdxAndUserIdx(teamIdx, localStorage.getItem("userIdx")); // 5->userId로 받아야 함
+        this.teamName = teamName;
+        this.userName = localStorage.getItem("userNickName"); //userName 받기
+        this.getMemberByTeamId(teamIdx);
+        this.getChannelsByTeamIdxAndUserIdx(teamIdx, localStorage.getItem("userIdx")); // 5->userId로 받아야 함
 
-              this.$store.state.channelInfo.idx = response.data.data[0].idx;
-              this.$store.state.channelInfo.channelName = response.data.data[0].name;
-
-              
-            } else {
-            //   app.renderNotification('Successfully Singed Up');
-            //   app.toggleSignUp();
-            this.errors.push(e);
-            }
-          })
-        .catch(e => {
-          // location.href = './';
-          this.errors.push(e);
-        });
+        this.$store.state.channelInfo.idx = response.data.data[0].idx;
+        this.$store.state.channelInfo.channelName = response.data.data[0].name;
       },
       handleClickButton(){
       this.visible = !this.visible

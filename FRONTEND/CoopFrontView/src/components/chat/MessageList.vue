@@ -1,10 +1,7 @@
 <template>
 <div class="topdiv" infinite-wrapper  style="overflow: auto;">  
   <!-- <div class="div" infinite-wrapper> -->
-    <v-card-title>
-      <v-icon large left>#</v-icon>
-      <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
-    </v-card-title>
+    
       <!-- <v-infinite-scroll :onTopScrollsToBottom=false :loading="loading" @top="infiniteHandler" :offset='30' style="max-height: 100%; overflow-y: scroll;"> -->
 
     <infinite-loading ref="infiniteLoading" direction="top" @infinite="infiniteHandler" spinner="waveDots" v-if="this.$store.state.scrollFlag" force-use-infinite-wrapper="true"></infinite-loading>

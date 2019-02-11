@@ -16,7 +16,7 @@ public interface TeamMapper {
     //team생성 - teams 테이블
     @Insert("INSERT INTO teams(name) VALUES(#{name})")
     @Options(useGeneratedKeys = true, keyProperty = "idx")
-    void createTeam(final Team team);
+    int createTeam(final Team team);
 
     //team생성 - user_has_team 테이블
     @Insert("INSERT INTO user_has_team(team_idx, user_idx, owner_flag, invite_flag) VALUES( #{teamIdx}, #{userIdx}, #{ownerFlag}, #{inviteFlag})")

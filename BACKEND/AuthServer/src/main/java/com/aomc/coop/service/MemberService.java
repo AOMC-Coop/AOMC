@@ -48,9 +48,9 @@ public class MemberService {
 
     private JavaMailSender mailSender;
 
-    public MemberService(JavaMailSender mailSender) {
-        this.mailSender = mailSender;
-    }
+//    public MemberService(JavaMailSender mailSender) {
+//        this.mailSender = mailSender;
+//    }
 
 
 

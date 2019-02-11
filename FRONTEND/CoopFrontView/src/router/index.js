@@ -7,7 +7,7 @@ import Vuetify from 'vuetify'
 import '../assets/stylus/main.styl'
 import colors from 'vuetify/es5/util/colors'
 import Profile from '@/components/auth/Profile'
-import Pwd from '@/components/chat/ChangePwd'
+import Pwd from '@/components/auth/ChangePwd'
 
 Vue.use(Vuetify, {
   theme: {

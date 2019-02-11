@@ -3,7 +3,7 @@ package com.aomc.coop.mapper;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
-import com.aomc.coop.model.File;
+        import com.aomc.coop.model.File;
 
 @Mapper
 @Repository

@@ -25,7 +25,10 @@ public enum Status_3000 {
 
     SUCCESS_Set_Profile("3206"),
     FAIL_Set_Profile("3410"),
-    FAIL_Set_Profile_Wrong_Idx("3411");
+    FAIL_Set_Profile_Wrong_Idx("3411"),
+
+    SUCCESS_Change_Pwd("3207"),
+    FAIL_Change_Pwd("3413");
 
 
     final private String status;

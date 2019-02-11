@@ -2,6 +2,14 @@ package com.aomc.coop.service;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.model.UserWithToken;
@@ -10,6 +18,7 @@ import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +27,8 @@ import com.aomc.coop.utils.mail.MailSend;
 
 import com.aomc.coop.model.User;
 import com.aomc.coop.utils.SHA256;
+
+import javax.annotation.Resource;
 
 @Slf4j
 @Service
@@ -29,6 +40,9 @@ public class MemberService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Resource(name="redisTemplate")
+    private HashOperations<String, String, Object> hashOperations;
 
     MailSend mailSend = new MailSend();
 
@@ -47,68 +61,130 @@ public class MemberService {
     // 회원 가입
 
 // ***** 여기선 try ~ catch를 안 썼다. 쓰는 걸로 변경할 것
-    public ResponseType register(@RequestBody User user) throws NoSuchAlgorithmException {
+    public ResponseType register(@RequestBody User user) {
 
-        if(!user.getPwd().equals(user.getConfirm_pwd())){
-            System.out.println(user.getPwd()+ " "+user.getConfirm_pwd());
-            System.out.println("Password doesn't match!");
-            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
-        }
+        try {
 
-        String uid = user.getUid();
-        User myUser = userMapper.getUserWithUid(uid);
-
-        // db상에 이미 가입되어 있는 내역이 없는 경우, 정상 절차대로 가입
-        if(myUser == null) {
-
-            System.out.println("Register");
-
-            SecureRandom secRan = SecureRandom.getInstance("SHA1PRNG");
-            int numLength = 16;
-            String salt = "";
-            for (int i = 0; i < numLength; ++i) {
-                salt += secRan.nextInt(10);
-            }
-            System.out.println("salt : "+ salt);
-
-            String newPassword = salt + user.getPwd();
-            String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
-
-            user.setSalt(salt);
-            user.setPwd(hashPassword);
-            if(uid.equals("admin")) { user.setRole("admin_role"); }
-            else { user.setRole("user_role"); }
-
-            user.setStatus(1);
-
-            // 인증 메일 발송
-            SendMailThread sendMailThread = new SendMailThread(mailSender, uid);
-            sendMailThread.run();
-
-// ***** 유저 정보를 모두 입력 받고, 메일까지 전송 후 일단 redis에 putAll
-// ***** getOperations().expire()를 통해 5분 후 정보가 사라지도록 할 것
-// ***** 유저가 이메일 인증을 5분 이내로 완료하면, redis의 유저 정보를 DB로 INSERT
-// ***** 5분 이내로 인증이 이루어지지 않으면, 유저 정보는 파기되므로 DB에 INSERT 시도시 오류가 나며 error status를 return할 것
-
-// ***** 아래 코드는 인증 이후 단계로 분리하고, redis putAll로 대체할 것
-            // 제대로 db에 저장이 되었다면
-            if (userMapper.insertUser(user) == 1) {
-                System.out.println("Successfully Registered");
-                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register.getStatus());
-            } else {
-            // 어떠한 이유로 db에 저장이 되지 못했다면
-                System.out.println("Fail to store user in db!");
+            if (!user.getPwd().equals(user.getConfirm_pwd())) {
+                System.out.println(user.getPwd() + " " + user.getConfirm_pwd());
+                System.out.println("Password doesn't match!");
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
             }
-        } else {
-        // 이미 가입되어 있는 uid(e-mail)이라면
-            System.out.println("Already registerd ID!");
-            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
+
+            String uid = user.getUid();
+            User myUser = userMapper.getUserWithUid(uid);
+
+            // db상에 이미 가입되어 있는 내역이 없는 경우, 정상 절차대로 가입
+            if (myUser == null) {
+
+                System.out.println("Register");
+
+                HashMap<String, Object> hashMap = new HashMap<>();
+
+                SecureRandom secRan = SecureRandom.getInstance("SHA1PRNG");
+                int numLength = 16;
+                String salt = "";
+                for (int i = 0; i < numLength; ++i) {
+                    salt += secRan.nextInt(10);
+                }
+
+                String authUrl = "";
+                for (int i = 0; i < numLength; ++i) {
+                    authUrl += secRan.nextInt(10);
+                }
+
+                System.out.println("authUrl : " + authUrl);
+
+                String newPassword = salt + user.getPwd();
+                String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
+                String nickname = user.getNickname();
+                int gender = user.getGender();
+
+                hashMap.put("uid", uid);
+                hashMap.put("pwd", hashPassword);
+                hashMap.put("salt", salt);
+                hashMap.put("nickname", nickname);
+                hashMap.put("gender", gender);
+
+                hashOperations.putAll(authUrl, hashMap);
+                hashOperations.getOperations().expire(authUrl, 3L, TimeUnit.MINUTES);
+
+                SendMailThread sendMailThread = new SendMailThread(mailSender, uid, authUrl);
+                sendMailThread.run();
+
+                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register_Auth_Mail_Sent.getStatus());
+
+            } else {
+                // 이미 가입되어 있는 uid(e-mail)이라면
+                System.out.println("Already registerd ID!");
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
+            }
+        }
+        catch (Exception e) {
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
         }
     }
 
+
+    public ResponseType emailAuth(@PathVariable(value = "authUrl") final String authUrl) {
+
+        try {
+            Map userInfo = hashOperations.entries(authUrl);
+            String uid = (String) userInfo.get("uid");
+
+            if(userMapper.getUserWithUid(uid) != null ) {
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
+            }
+
+            if(userInfo == null) {
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Timeout.getStatus());
+
+            } else {
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                SimpleDateFormat sdf = new SimpleDateFormat( "yy-MM-dd HH:mm:ss" , Locale.KOREA );
+
+
+                String pwd = (String) userInfo.get("pwd");
+                String salt = (String) userInfo.get("salt");
+                String role = "user_role";
+                String nickname = (String) userInfo.get("nickname");
+// ***** gender : Object -> int 캐스팅 에러 발생. 일단은 gender를 1로 강제 할당. 추후 필히 변경
+                // int gender = ((Integer) userInfo.get("gender")).intValue();
+                // Date reg_date = new Date( timestamp.getTime());
+                // Date access_date = (Date) userInfo.get(("access_date"));
+
+                User user = new User();
+                user.setUid(uid);
+                user.setPwd(pwd);
+                user.setSalt(salt);
+                user.setRole(role);
+                user.setNickname(nickname);
+                user.setGender(1);
+                // user.setReg_date(reg_date);
+                // user.setAccess_date(access_date);
+                user.setStatus(1);
+
+                // 제대로 db에 저장이 되었다면
+                if (userMapper.insertUser(user) == 1) {
+                    System.out.println("Successfully Registered");
+                    return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register.getStatus());
+                } else {
+                    // 어떠한 이유로 db에 저장이 되지 못했다면
+                    System.out.println("Fail to store user in db!");
+                    return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
+                }
+
+            }
+
+        }
+        catch (Exception e) {
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
+        }
+
+    }
+
     // <2. 회원 탈퇴>
-    public ResponseType withdrawal(@RequestBody UserWithToken userWithToken, int idx){
+    public ResponseType withdrawal(@RequestBody UserWithToken userWithToken, final int idx) {
 
         int userIdx = userWithToken.getIdx();
 
@@ -118,7 +194,6 @@ public class MemberService {
             try {
                 userMapper.withdrawal(idx);
 
-
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
             } catch (Exception e) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());
@@ -127,7 +202,6 @@ public class MemberService {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());
         }
 
-
     }
 
     // 메일보내기
@@ -135,20 +209,26 @@ public class MemberService {
 
         JavaMailSender mailSender;
         String uid;
-        String token;
+        String authUrl;
 
-        public SendMailThread(JavaMailSender mailSender, String uid) {
+        public SendMailThread(JavaMailSender mailSender, String uid, String authUrl) {
             this.mailSender = mailSender;
             this.uid = uid;
-            this.token = token;
+            this.authUrl = authUrl;
         }
 
         public void run() {
-            mailSend.mailsend(mailSender, uid);
+            mailSend.mailsend(mailSender, uid, authUrl);
         }
     }
 
     // <3. 비밀번호 변경>
+//    public ResponseType changePwd (@RequestBody User user, final int idx) {
+//        String pwd = user.getPwd();
+//
+//
+//
+//    }
 
 
     // <4. 비밀번호 분실 후 변경>
@@ -188,25 +268,6 @@ public class MemberService {
 //        return String.valueOf(result);
 //    }
 
-//    //초대 승낙
-//    public ResponseType acceptInvite(final String token) {
-//
-//        String string_teamIdx = (String) values.get(token, "teamIdx");
-//        String string_userIdx = (String) values.get(token, "userIdx");
-//
-//        int teamIdx = Integer.parseInt(string_teamIdx);
-//        int userIdx = Integer.parseInt(string_userIdx);
-//
-//        if (teamIdx == -1) {
-//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
-//        }
-//        if (userIdx == 0) {
-//            return codeJsonParser.codeJsonParser(Status_5000.PLEASE_SIGNUP.getStatus(), token);
-//        }
-//        teamMapper.updateAuthFlag(teamIdx, userIdx);
-//        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_ACCEPT_INVITE.getStatus());
-//
-//    }
 
 }
 
@@ -214,6 +275,7 @@ public class MemberService {
 // cf) @ResponseBody : 자바 객체를 Http response body로 변환
 // @RequestBody : Http request body를 java 객체로 변환
 // NoSuchAlgorithmException : This exception is thrown when a particular cryptographic algorithm is requested but is not available in the environment
+
 // <Generic>
 // 클래스 내부에서 사용할 데이터 타입을 외부에서 지정하는 기법
 // 컴파일 단계에서 오류가 검출된다.

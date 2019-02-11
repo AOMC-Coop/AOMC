@@ -72,7 +72,14 @@
                 </v-layout>
                 <v-layout>
                   <v-flex xs12>
-                    <v-btn type="submit" :loading="loading">Sign Up</v-btn>
+                    <v-btn 
+                    color="secondary"
+                    type="submit" 
+                    :loading="loading"
+                    :disabled="loading"
+                    @click="loader = 'loading'">
+                    <!-- https://vuetifyjs.com/en/components/buttons#api 의 예제를 긁어 왔으나, 버튼 로딩 애니메이션이 안 됨 -->
+                    Sign Up </v-btn>
                   </v-flex>
                 </v-layout>
               </form>
@@ -96,7 +103,8 @@ import axios from 'axios'
           nickname: '',
           gender:''
         },
-        radios: 'radio-1'
+        radios: 'radio-1',
+        loader: null
       }
     },
     computed: {
@@ -118,10 +126,17 @@ import axios from 'axios'
         if (value !== null && value !== undefined) {
           this.$router.push('/')
         }
+      },
+      loader () {
+        const l = this.loader
+        this[l] = !this[l]
+
+        setTimeout(() => (this[l] = false), 3000)
+
+        this.loader = null
       }
     },
     created(){
-      debugger
       //가람님 이게 초대 토큰입니다
       console.log(localStorage.getItem('invite_token'))  
 
@@ -158,16 +173,18 @@ import axios from 'axios'
         this.$store.dispatch('clearError')
       },
       signup: function () {
+        
         if(this.userInfo.pwd !== this.userInfo.confirm_pwd ){
           alert('Passwords do not match! Are you insane?')
         } else {
-          axios.post(this.$store.state.ip + `:8082/members`, this.userInfo)
+          /*this.$store.state.ip*/
+          axios.post(`http://localhost:8082/members`, this.userInfo)
             .then(response => { 
               let description = response.data.description
               if(description == "Fail Register : Already registered e-mail address"){
                 alert("Already signed up e-mail address! please use another e-mail!")
               } else {
-                alert("Successfully signed up!")
+                alert("Authorization mail has been sent to your e-mail account! Please Check your email!")
                 location.href = './'
               }
             }
@@ -182,3 +199,42 @@ import axios from 'axios'
     }
   }
 </script>
+
+<style>
+  .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>

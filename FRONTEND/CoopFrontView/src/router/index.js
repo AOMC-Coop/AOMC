@@ -7,6 +7,7 @@ import Vuetify from 'vuetify'
 import '../assets/stylus/main.styl'
 import colors from 'vuetify/es5/util/colors'
 import Profile from '@/components/auth/Profile'
+import Pwd from '@/components/chat/ChangePwd'
 
 Vue.use(Vuetify, {
   theme: {
@@ -40,7 +41,8 @@ export default new Router({
       name: 'Signup',
       component: Signup
     },
-    { path: '/signup/:token',
+    { 
+      path: '/signup/:token',
       redirect: to => {
         const {params} = to
         if (params.token) {
@@ -49,6 +51,20 @@ export default new Router({
         }
       }
     },
+    {
+      path: '/pwd',
+      name: 'Pwd',
+      component: Pwd
+    },
+    {
+      path: '/members/:authUrl',
+      redirect: to => {
+        const {params} = to
+        if (params.authUrl) {
+          return '/signin'
+        }
+      }
+    } 
   ]
 })
 

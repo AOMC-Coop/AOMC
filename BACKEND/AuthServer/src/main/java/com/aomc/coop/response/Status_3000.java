@@ -3,8 +3,10 @@ package com.aomc.coop.response;
 public enum Status_3000 {
 // *** 다 끝나고 나서 한 번 손보긴 해야함 -> 더욱 자세히 case 나누기
     SUCCESS_Register("3201"),
+    SUCCESS_Register_Auth_Mail_Sent("3210"),
     FAIL_Register("3401"),
     FAIL_Register_Duplicate("3402"),
+    FAIL_Register_Timeout("3412"),
 
     SUCCESS_Withdrawal("3202"),
     FAIL_Withdrawal("3403"),

@@ -121,7 +121,7 @@
       <v-btn color="success" type="submit">Profile</v-btn>
     </form>
     <form @submit.prevent="changePwd">
-      <v-btn color="info">Change Password</v-btn>
+      <v-btn color="info" type="submit">Change Password</v-btn>
     </form>
     </v-navigation-drawer>
     
@@ -251,6 +251,13 @@ var today = now.format("dddd, MMMM Do").toString()
           status: ''
         }
       ],
+      teamFromServer:[ //teamsFromServer에 추가할 team
+        { 
+          idx: '' ,
+          name: '',
+          status: ''
+        }
+      ],
       teamMembers: [
         {
           idx: '' ,
@@ -363,7 +370,11 @@ var today = now.format("dddd, MMMM Do").toString()
           // debugger;
             if(response.data) {
               // this.teamMembers = response.data.data;
+              debugger;
               console.log(response.data);
+              this.teamFromServer.idx = response.data.data;
+              this.teamFromServer.name = this.createTeam.name;
+              this.teamsFromServer.push(this.teamFromServer);
             } else {
             this.errors.push(e);
             }
@@ -484,6 +495,26 @@ var today = now.format("dddd, MMMM Do").toString()
         });
 
       },
+      getChannelsByTeamIdxAndUserIdxWithOutGetMessage(teamIdx, userIdx) {
+        axios
+        .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
+        .then(response => {
+            if(response.data) {
+              this.channels = response.data.data;
+              this.$store.state.channelInfo.idx = this.channels[0].idx;
+              this.$store.state.channelInfo.channelName = this.channels[0].name;
+              this.$store.state.messageStartNum=0
+
+
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+
+      },
       getMessage() {
         debugger;
         this.$store.state.received_messages.splice(0);
@@ -553,40 +584,14 @@ var today = now.format("dddd, MMMM Do").toString()
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
         this.$store.state.messageLastIdx = 0;
-        
-        axios
-        .get(this.$store.state.ip + ":8083/api/team/user/" + teamIdx)
-        .then(response => {
-           debugger
-            if(response.data) {
-              //this.teamsFromServer = response.data.data;
-              this.teamName = teamName;
-              this.userName = localStorage.getItem("userNickName"); //userName 받기
-              this.getMemberByTeamId(teamIdx);
-              this.getChannelsByTeamIdxAndUserIdx(teamIdx, localStorage.getItem("userIdx")); // 5->userId로 받아야 함
 
-              this.$store.state.channelInfo.idx = response.data.data[0].idx;
-              this.$store.state.channelInfo.channelName = response.data.data[0].name;
+        this.teamName = teamName;
+        this.userName = localStorage.getItem("userNickName"); //userName 받기
+        this.getMemberByTeamId(teamIdx);
+        this.getChannelsByTeamIdxAndUserIdx(teamIdx, localStorage.getItem("userIdx")); // 5->userId로 받아야 함
 
-              debugger
-              console.log("[chatHome - clickTeamName] = "+ this.$store.state.channelInfo.channelName)
-              if(this.$store.state.channelInfo.channelName=='general'){
-                this.$store.state.generalFlag=false
-              }else{
-                this.$store.state.generalFlag=true
-              }            
-              
-              
-            } else {
-            //   app.renderNotification('Successfully Singed Up');
-            //   app.toggleSignUp();
-            this.errors.push(e);
-            }
-          })
-        .catch(e => {
-          // location.href = './';
-          this.errors.push(e);
-        });
+        this.$store.state.channelInfo.idx = response.data.data[0].idx;
+        this.$store.state.channelInfo.channelName = response.data.data[0].name;
       },
       handleClickButton(){
       this.visible = !this.visible
@@ -660,11 +665,21 @@ var today = now.format("dddd, MMMM Do").toString()
         })      
     },
     changePwd : function (){
+      debugger
       this.$router.push({path: '/pwd'})
     }
 
 
    //  else if(description == "Fail Set Profile : Wrong Idx")
+  },
+
+  mounted() {
+    debugger;
+    console.log("mounted");
+  },
+  updated() {
+    // debugger;
+    // this.getChannelsByTeamIdxAndUserIdxWithOutGetMessage(localStorage.getItem("teamIdx"), localStorage.getItem("userIdx"));
   },
 
   

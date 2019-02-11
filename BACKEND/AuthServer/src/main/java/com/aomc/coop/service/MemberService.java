@@ -125,7 +125,7 @@ public class MemberService {
         }
     }
 
-
+// ***** 이메일 인증 성공시 바로 로그인 창으로 넘어가도록 구조를 바꿔보자
     public ResponseType emailAuth(@PathVariable(value = "authUrl") final String authUrl) {
 
         try {

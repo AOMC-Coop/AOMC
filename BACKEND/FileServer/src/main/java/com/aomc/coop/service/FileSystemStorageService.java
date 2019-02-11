@@ -7,8 +7,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Date;
 import java.util.stream.Stream;
 
+import com.aomc.coop.model.Message;
 import com.aomc.coop.storage.StorageException;
 import com.aomc.coop.storage.StorageFileNotFoundException;
 import com.aomc.coop.storage.StorageProperties;
@@ -120,4 +122,40 @@ public class FileSystemStorageService implements StorageService {
             throw new StorageException("Could not initialize storage", e);
         }
     }
+
+// ***** 유틸의 이 함수를 부르면 됨, 메시지 객체 파라미터에 URL 넣으면 됨
+//   public Message sendRabbitMQ(Message message) {
+//        System.out.println("요청이 왔습니다" + message);
+////        System.out.println("channelIdx는 " + channelIdx);
+//
+//        Map<String, Message> map = new HashMap<>();
+//        map.put("msg", message);
+////        map.put("channelIdx", ms);
+//
+//        //큐에보냄
+//        if(message != null) {
+//            System.out.println("rabbitMQ send");
+//            rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, map);
+//        }
+//
+//        return  message;
+//    }
+
+//    //message Date Format
+//    Date date = new Date();
+//
+//    DateFormatCustom dataFormatCustom = new DateFormatCustom();
+//    String sendDate = dataFormatCustom.sendDateFormat(date);
+//    String sendTime = dataFormatCustom.sendTimeFormat(date);
+//    String sendDBDate = dataFormatCustom.sendDBDateFormat(date);
+//
+//    //message info setting
+//    Message message = new Message();
+//            message.setContent("joined #general");
+//            message.setNickname(ownerUserInfo.getNickname());
+//            message.setMessage_idx(0);
+//            message.setUser_idx(ownerUserInfo.getIdx());
+//            message.setSend_date(sendDate);
+//            message.setSend_time(sendTime);
+//            message.setSend_db_date(sendDBDate);
 }

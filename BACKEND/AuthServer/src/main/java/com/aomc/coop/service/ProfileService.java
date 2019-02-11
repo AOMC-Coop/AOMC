@@ -54,7 +54,7 @@ public class ProfileService {
                 String uid = (String) userInfo.get("uid");
                 String nickname = (String) userInfo.get("nickname");
 // ***** gender는 'Object -> int' 형 변환 오류로 인해 일단 주석처리
-                // int gender = userInfo.get("gender");
+                // int gender = (int) userInfo.get("gender");
 
                 profileWithToken.setUid(uid);
                 profileWithToken.setNickname(nickname);

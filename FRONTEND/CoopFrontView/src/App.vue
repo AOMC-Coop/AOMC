@@ -8,6 +8,7 @@
     </div> -->
     <notifications group="foo" />
     <router-view/>
+    <!-- <FileUpload></FileUpload> -->
   </div>
 </template>
 
@@ -22,6 +23,8 @@ import Signin from './components/auth/Signin.vue'
 import Profile from './components/auth/Profile.vue'
 import Chat from './components/chat/ChatHome.vue'
 import Vue from 'vue'
+import FileUpload from './components/file/FileUpload.vue'
+import Pwd from './components/chat/ChangePwd.vue'
 
 // let token = localStorage.getItem('token')
 // let isLogin = 0
@@ -40,7 +43,9 @@ export default {
     'Chat' : Chat,
     'Signup' : Signup,
     'Signin' : Signin,
-    'Profile' : Profile
+    'Profile' : Profile,
+    'FileUpload' : FileUpload,
+    'Pwd' : Pwd
   }
 }
 

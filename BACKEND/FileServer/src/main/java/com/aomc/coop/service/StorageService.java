@@ -1,4 +1,4 @@
-package com.aomc.coop.storage;
+package com.aomc.coop.service;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;

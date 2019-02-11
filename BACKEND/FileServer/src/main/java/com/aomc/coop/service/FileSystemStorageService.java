@@ -1,4 +1,4 @@
-package com.aomc.coop.storage;
+package com.aomc.coop.service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +9,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
+import com.aomc.coop.storage.StorageException;
+import com.aomc.coop.storage.StorageFileNotFoundException;
+import com.aomc.coop.storage.StorageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -16,6 +19,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+/*
+
+1. 디렉토리 구조는 채널이 가장 우선
+2. 방 단위로 나눠서 스케일 아웃
+    하드웨어 추가를 통한 스케일 아웃 -> 디렉토리 구조를 나눠서 만들어보자.
+    실제/ 물리적                    -> 가상/ 논리적
+    ex) 한 상위 디렉토리 파일 스토리지의 최대 용량을 32GB로 설정하고, 이 용량을 초과하면 새로운 디렉토리 생성(스케일 아웃)
+3. 파일 매니저(매니징) 서버와 파일 서버(+스토리지)는 나눠서 짤 것 : 그럼 저장 공간이 무한대가 됨
+   :
+4. 파일 URL과 디렉토리 루트를 redis에 저장
+5.
+
+
+*/
+
 
 @Service
 public class FileSystemStorageService implements StorageService {

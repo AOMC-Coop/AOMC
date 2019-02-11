@@ -13,7 +13,7 @@ public class MailSend {
             MailConfig sendMail = new MailConfig(mailSender);
             sendMail.setFrom("dmsal2525@gmail.com", "CoopDeveloper");
             sendMail.setTo(uid);
-            sendMail.setSubject("[You invited to join a Coop workspace]");
+            sendMail.setSubject("[You are invited to join a Coop workspace]");
             String imgHtml = "<img src=\"https://github.com/AOMC-Coop/AOMC/blob/master/image/coop_logo2.png?raw=true\" width=\"50\" height=\"50\">";
             sendMail.setText(new StringBuffer().append(imgHtml + "<h1>Join " + teamName + " on Coop</h1><br/>")
                     .append("(<b style=\"text-decoration:none\">" + teamOwner + "</b>) has invited you to join the Slack workspace <b>" + teamName + "</b>. Join now to start collaborating!<br/>")

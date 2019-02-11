@@ -5,23 +5,22 @@ import org.springframework.mail.javamail.JavaMailSender;
 
 public class MailSend {
 
-    public void mailsend(JavaMailSender mailSender, String uid, String token, String authCode){
+    public void mailsend(JavaMailSender mailSender, String uid, String authUrl){
 
         try{
+            String url = "http://localhost:8082/members/" + authUrl;
             MailConfig sendMail = new MailConfig(mailSender);
             sendMail.setFrom("Starever222@gmail.com", "CoopDeveloper");
             sendMail.setTo(uid);
-            sendMail.setSubject("[Authorization code to sign up]");
+            sendMail.setSubject("[Let's finish signing up!]");
             sendMail.setText(new StringBuffer()
-                    .append("(<b style=\"text-decoration:none\"></b>) Your authorization code is : <b>" + authCode  + "</b>. Please enter this code to sign up our service!<br/>")
-                    .append("<a href='http://localhost:8082/chat")
-                    .append(token)
-                    .append("' target='_blenk'>이메일로 초대 수락</a>")
+                    .append("(<b style=\"text-decoration:none\">Click this button to finish signing up!</b>) <br/>")
+                    .append("<a href="+ url + " role='button'>CLICK</a>")
                     .toString());
             sendMail.send();
 
         }catch (Exception e){
-
+// ***** 시간 남으면 에러 처리 할 것
         }
 
     }

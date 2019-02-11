@@ -1,25 +1,19 @@
 <template>
 <v-content>
-
-    <div>
-      <v-card-title>
-        <v-icon large left>#</v-icon>
-        <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
-    </v-card-title>
-    
+  <div>
+    <Message-Header></Message-Header>
     <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages"></Message-List>
-    <Message-From class="msg-form" v-on:submitMessage="sendMessage" ></Message-From>
-    <!-- <Message-Header class="msg-header"></Message-Header> -->
-
+    <Message-From class="msg-form"></Message-From>
+    <!-- <Message-From class="msg-form" v-on:submitMessage="sendMessage" ></Message-From> -->
   </div>
   </v-content>
 </template>
 
 <script>
 import axios from "axios";
-import MessageHeader from '@/components/chat/MessageHeader.vue';
 import MessageList from '@/components/chat/MessageList.vue';
 import MessageForm from '@/components/chat/MessageForm.vue';
+import MessageHeader from '@/components/chat/MessageHeader.vue';
 
 export default {
   name: 'ChatRoom',
@@ -31,9 +25,9 @@ export default {
     };
   },
   components: {
+    'Message-Header': MessageHeader,
     'Message-List': MessageList,
     'Message-From': MessageForm,
-    'Message-Header': MessageHeader
   },
     
   methods: {    

@@ -123,6 +123,24 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
+// ***** 유틸의 이 함수를 부르면 됨, 메시지 객체 파라미터에 URL 넣으면 됨
+//   public Message sendRabbitMQ(Message message) {
+//        System.out.println("요청이 왔습니다" + message);
+////        System.out.println("channelIdx는 " + channelIdx);
+//
+//        Map<String, Message> map = new HashMap<>();
+//        map.put("msg", message);
+////        map.put("channelIdx", ms);
+//
+//        //큐에보냄
+//        if(message != null) {
+//            System.out.println("rabbitMQ send");
+//            rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, map);
+//        }
+//
+//        return  message;
+//    }
+
 //    //message Date Format
 //    Date date = new Date();
 //

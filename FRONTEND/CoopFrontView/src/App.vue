@@ -24,7 +24,7 @@ import Profile from './components/auth/Profile.vue'
 import Chat from './components/chat/ChatHome.vue'
 import Vue from 'vue'
 import FileUpload from './components/file/FileUpload.vue'
-import Pwd from './components/chat/ChangePwd.vue'
+import Pwd from './components/auth/ChangePwd.vue'
 
 // let token = localStorage.getItem('token')
 // let isLogin = 0

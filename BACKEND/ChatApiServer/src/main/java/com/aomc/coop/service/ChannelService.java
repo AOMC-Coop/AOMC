@@ -78,7 +78,7 @@ public class ChannelService {
         List<Message> messages = new ArrayList<>();
         messages.add(message);
         channel.setMessages(messages);
-        channelMapper.createChannel(channel, channel.getTeamIdx());
+        int channelIdx = channelMapper.createChannel(channel, channel.getTeamIdx());
 
         //
         message.setChannel_idx(channel.getIdx());
@@ -92,7 +92,7 @@ public class ChannelService {
         //int idx2 = channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(0).getIdx());
 
         if (channel.getIdx() >= 0) {
-            return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_Channel.getStatus());
+            return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_Channel.getStatus(), channel.getIdx());
         } else {
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_Channel.getStatus());
         }
@@ -110,7 +110,7 @@ public class ChannelService {
     }
 
     public ResponseType getChannelMessage(int channelIdx, int start, int messageLastIdx) {
-        System.out.println("start = " + start + " lastIdx = " + messageLastIdx);
+        System.out.println("start = " + start + " lastIdx = " + messageLastIdx + " channelIdx = " + channelIdx);
 
         if (channelIdx >= 0) {
             //redis에서 메세지 가져오기
@@ -123,7 +123,7 @@ public class ChannelService {
                     redis_messageList.clear();
                     return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList, start);
                 }
-                else if(redis_messageList.size() == 1 && messageLastIdx == 0) { //join #general 이 redis에 유일하게 있는 경우
+                else if(redis_messageList.size() == 1 && messageLastIdx == 0 && redis_messageList.get(0).getMessage_idx() == 0) { //join #general 이 redis에 유일하게 있는 경우
                     start = -2;
                     System.out.println("0-getChannelMessage - Redis");
                     return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList, start);

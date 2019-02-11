@@ -249,6 +249,13 @@ var today = now.format("dddd, MMMM Do").toString()
           status: ''
         }
       ],
+      teamFromServer:[ //teamsFromServer에 추가할 team
+        { 
+          idx: '' ,
+          name: '',
+          status: ''
+        }
+      ],
       teamMembers: [
         {
           idx: '' ,
@@ -361,7 +368,11 @@ var today = now.format("dddd, MMMM Do").toString()
           // debugger;
             if(response.data) {
               // this.teamMembers = response.data.data;
+              debugger;
               console.log(response.data);
+              this.teamFromServer.idx = response.data.data;
+              this.teamFromServer.name = this.createTeam.name;
+              this.teamsFromServer.push(this.teamFromServer);
             } else {
             this.errors.push(e);
             }
@@ -466,6 +477,26 @@ var today = now.format("dddd, MMMM Do").toString()
               this.$store.state.channelInfo.channelName = this.channels[0].name;
               this.$store.state.messageStartNum=0
               this.getMessage();
+
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+
+      },
+      getChannelsByTeamIdxAndUserIdxWithOutGetMessage(teamIdx, userIdx) {
+        axios
+        .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
+        .then(response => {
+            if(response.data) {
+              this.channels = response.data.data;
+              this.$store.state.channelInfo.idx = this.channels[0].idx;
+              this.$store.state.channelInfo.channelName = this.channels[0].name;
+              this.$store.state.messageStartNum=0
+
 
             } else {
             this.errors.push(e);
@@ -642,11 +673,21 @@ var today = now.format("dddd, MMMM Do").toString()
         })      
     },
     changePwd : function (){
+      debugger
       this.$router.push({path: '/pwd'})
     }
 
 
    //  else if(description == "Fail Set Profile : Wrong Idx")
+  },
+
+  mounted() {
+    debugger;
+    console.log("mounted");
+  },
+  updated() {
+    // debugger;
+    // this.getChannelsByTeamIdxAndUserIdxWithOutGetMessage(localStorage.getItem("teamIdx"), localStorage.getItem("userIdx"));
   },
 
   

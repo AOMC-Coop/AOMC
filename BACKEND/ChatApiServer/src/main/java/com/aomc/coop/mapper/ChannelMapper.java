@@ -14,7 +14,7 @@ public interface ChannelMapper {
     //channels 테이블
     @Insert("INSERT INTO channels(name, team_idx) VALUES(#{channel.name}, #{team_idx})")
     @Options(useGeneratedKeys = true, keyProperty = "channel.idx")
-    void createChannel(@Param("channel") final Channel channel, @Param("team_idx") final int team_idx);
+    int createChannel(@Param("channel") final Channel channel, @Param("team_idx") final int team_idx);
 
     //channels 테이블
     @Insert("INSERT INTO user_has_channel(channel_idx, user_idx) VALUES(#{channelIdx}, #{userIdx})")

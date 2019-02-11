@@ -31,4 +31,7 @@ public interface UserMapper {
 
     @Update("UPDATE users SET status = 0 WHERE idx = #{idx}")
     int withdrawal(final int idx);
+
+    @Update("UPDATE users SET pwd = #{pwd}, salt = #{salt} WHERE idx = #{idx}")
+    int changePwd(final String pwd, final String salt, final int idx);
 }

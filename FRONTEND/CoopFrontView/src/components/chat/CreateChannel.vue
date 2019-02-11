@@ -133,6 +133,7 @@ export default {
           del_password:'',
           channelName:'',
           channel:{
+            idx:'',
             name: '',
             teamIdx:'',
             users:[
@@ -163,6 +164,7 @@ export default {
             if(response.data) {
               // this.teamMembers = response.data.data;
               console.log(response.data);
+              this.channel.idx = response.data.data;
               this.channels.push(this.channel);
             } else {
             this.errors.push(e);

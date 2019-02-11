@@ -8,6 +8,7 @@ import '../assets/stylus/main.styl'
 import colors from 'vuetify/es5/util/colors'
 import Profile from '@/components/auth/Profile'
 import Pwd from '@/components/auth/ChangePwd'
+import CheckTeam from '@/components/chat/CheckTeam'
 
 Vue.use(Vuetify, {
   theme: {
@@ -40,6 +41,11 @@ export default new Router({
       path: '/signup',
       name: 'Signup',
       component: Signup
+    },
+    {
+      path: '/checkTeam',
+      name: 'CheckTeam',
+      component: CheckTeam
     },
     { 
       path: '/signup/:token',

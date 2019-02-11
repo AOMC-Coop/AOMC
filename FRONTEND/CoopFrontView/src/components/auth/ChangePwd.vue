@@ -1,73 +1,55 @@
 <template>
   <v-form>
     <v-container fluid>
+      <form @submit.prevent="sendNewPwd">
       <v-layout row wrap>
 
         <v-flex xs12 sm6>
           <v-text-field
-            v-model="password"
             :append-icon="show1 ? 'visibility_off' : 'visibility'"
             :rules="[rules.required, rules.min]"
             :type="show1 ? 'text' : 'password'"
             name="input-10-1"
-            label="Normal with hint text"
+            label="enter new password"
             hint="At least 8 characters"
             counter
             @click:append="show1 = !show1"
-          ></v-text-field>
-        </v-flex>
-
-        <v-flex xs12 sm6>
-          <v-text-field
-            :append-icon="show2 ? 'visibility_off' : 'visibility'"
-            :rules="[rules.required, rules.min]"
-            :type="show2 ? 'text' : 'password'"
-            name="input-10-2"
-            label="Visible"
-            hint="At least 8 characters"
-            value="wqfasds"
-            class="input-group--focused"
-            @click:append="show2 = !show2"
+            v-model="pwdInfo.pwd"
           ></v-text-field>
         </v-flex>
 
         <v-flex xs12 sm6>
           <v-text-field
             :append-icon="show3 ? 'visibility_off' : 'visibility'"
-            :rules="[rules.required, rules.min]"
+            :rules="[rules.required, rules.min, comparePasswords]"
             :type="show3 ? 'text' : 'password'"
             name="input-10-2"
-            label="Not visible"
+            label="enter new password again"
             hint="At least 8 characters"
             value="wqfasds"
             class="input-group--focused"
             @click:append="show3 = !show3"
+            v-model="pwdInfo.confirm_pwd"
           ></v-text-field>
         </v-flex>
-
-        <v-flex xs12 sm6>
-          <v-text-field
-            :append-icon="show4 ? 'visibility_off' : 'visibility'"
-            :rules="[rules.required, rules.emailMatch]"
-            :type="show4 ? 'text' : 'password'"
-            name="input-10-2"
-            label="Error"
-            hint="At least 8 characters"
-            value="Pa"
-            error
-            @click:append="show4 = !show4"
-          ></v-text-field>
-        </v-flex>
-
+      <v-btn type="submit" :loading="loading" >Change Password</v-btn>
       </v-layout>
+      </form>
     </v-container>
   </v-form>
 </template>
 
 <script>
+import axios from 'axios'
+
   export default {
     data () {
       return {
+        pwdInfo: {
+          idx: '',
+          pwd: '',
+          confirm_pwd: ''
+        },
         show1: false,
         show2: true,
         show3: false,
@@ -76,12 +58,42 @@
         rules: {
           required: value => !!value || 'Required.',
           min: v => v.length >= 8 || 'Min 8 characters',
-          emailMatch: () => ('The email and password you entered don\'t match')
+
         }
       }
     },
-    created() {
-      debugger;
+    computed: {
+      comparePasswords () {
+        return this.pwdInfo.pwd !== this.pwdInfo.confirm_pwd ? 'Passwords do not match.' : true
+      }
+    },
+    methods: {
+      sendNewPwd: function () {
+        if(this.pwdInfo.pwd !== this.pwdInfo.confirm_pwd ){
+            alert('Passwords do not match! Are you insane?')
+        } else {
+            let idx = localStorage.getItem('idx')
+            let url = "http://localhost:8082/members/pwd/" + idx
+            this.pwdInfo.idx = idx
+            debugger
+            axios.put(url, this.pwdInfo)
+            .then(response => { 
+              let description = response.data.description
+              if(description == "Success Change Password"){
+                alert("Successfully changed password!")
+                this.$router.push({path: '/chat'})
+              } else {
+                alert("Fail to change password!")
+              }
+            }
+            ).catch(e => {
+              console.log(e)
+              this.errors(e)
+
+            })
+        }
+        
+        }
     }
-  }
+}
 </script>

@@ -327,7 +327,7 @@ public class ChannelController {
 
      *
 
-     *        @brief DELETE http://localhost:8083/api/channel/invite/19/6
+     *        @brief DELETE http://localhost:8083/api/channel/19/6
 
      *        @details 멤버가 채널 나가기 하는 함수
 
@@ -360,10 +360,9 @@ public class ChannelController {
      *
 
      */
-    @DeleteMapping
     @CrossOrigin
-    @RequestMapping("/{channelIdx}/{userIdx}")
-    public ResponseEntity deleteChannelUser(@PathVariable(value = "channelIdx") int channelIdx, @PathVariable(value = "userIdx") int userIdx){
+    @DeleteMapping
+    public ResponseEntity deleteChannelUser(@RequestParam(value = "channelIdx") int channelIdx, @RequestParam(value = "userIdx") int userIdx){
 
         if(channelIdx >= 0 || userIdx >= 0) {
             return new ResponseEntity<>(channelService.deleteChannelUser(channelIdx, userIdx), HttpStatus.OK);

@@ -1,9 +1,9 @@
 <template>
 
    <v-app id="inspire">
-
-    <!-- <v-flex xs6 >
-    <v-card class="card">
+<div class="topDiv">
+    <v-flex xs6 >
+    <v-card class="cardshape">
           <v-card-title
             class="headline grey lighten-2"
             primary-title
@@ -29,15 +29,9 @@
           </v-card-actions>
         </v-card>
 
-    </v-flex> -->
-    <v-btn
-              color="primary"
-              flat
-              @click="addCreateTeamDialog"
-            >
-            Create Team
-            </v-btn>
+    </v-flex>
 
+<div>
     <v-dialog v-model="createTeamDialog" width="800px" id="chat">
       <v-card>
         <v-card-title
@@ -71,11 +65,16 @@
         <v-card-actions>
           <v-btn flat color="primary">More</v-btn>
           <v-spacer></v-spacer>
-          <v-btn flat color="primary" @click="createTeamDialog = !createTeamDialog">Cancel</v-btn>
+          <v-btn flat color="primary" @click=" createTeamDialog = !createTeamDialog">Cancel</v-btn>
           <v-btn flat @click="saveTeam">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
+    </div>
+
+    </div>
+
+    
 
    </v-app>
 
@@ -106,11 +105,15 @@ export default {
   },
     
   methods: {    
+      clickCancel() {
+        createTeamDialog = !createTeamDialog;
+      },
       inviteMember() {
         
         this.$store.state.components.push('component');
       },
-    addCreateTeamDialog() {
+      addCreateTeamDialog() {
+        this.$store.state.components.splice(0);
         this.createTeamDialog = !this.createTeamDialog;
         this.$store.state.inviteUsers.push({uid:localStorage.getItem("userId")});
       },
@@ -121,14 +124,9 @@ export default {
         axios
         .post(this.$store.state.ip + ":8083/api/team", this.createTeam)
         .then(response => {
-          // debugger;
             if(response.data) {
-              // this.teamMembers = response.data.data;
-              debugger;
               console.log(response.data);
-              this.teamFromServer.idx = response.data.data;
-              this.teamFromServer.name = this.createTeam.name;
-              this.teamsFromServer.push(this.teamFromServer);
+            this.$router.push({path: '/chat'});
             } else {
             this.errors.push(e);
             }
@@ -140,16 +138,16 @@ export default {
         this.createTeamDialog = false;
       },
   },
+  created() {
+      this.$store.state.inviteUsers.splice(0);
+  }
 };
 
 </script>
 
 <style>
-div{
+.cardshape{
     width: 100%;
-    height: 100%;
-}
-.card{
     margin-left: 50%;
     margin-top: 30%;
 }

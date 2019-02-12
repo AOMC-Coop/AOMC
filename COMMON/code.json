@@ -140,6 +140,12 @@
     "description": "Success Auth Mail Sent"
   },
 
+  "3250": {
+    "status": 200,
+    "message": "파일 업로드 성공",
+    "description": "Success File Upload"
+  },
+
   "3401": {
     "status": 400,
     "message": "회원 가입 실패",
@@ -216,6 +222,12 @@
     "status": 400,
     "message": "비밀번호 변경 실패",
     "description": "Fail Change Password"
+  },
+
+  "3450": {
+    "status": 200,
+    "message": "파일 업로드 실패",
+    "description": "Fail File Upload"
   },
 
   "5201": {

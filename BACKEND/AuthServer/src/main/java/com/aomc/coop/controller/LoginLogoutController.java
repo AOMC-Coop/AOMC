@@ -25,9 +25,12 @@ Profile 프로필 수정      ㅣ Done ㅣ 파일 서버 & 스토리지 구축 �
 
 가입 시 email 인증       ㅣ Done ㅣ 이메일 URL 클릭 시 로그인 화면으로 redirect
 비밀번호 변경            ㅣ Done ㅣ
-비밀번호 분실 후 변경     ㅣ      ㅣ
-토큰 헤더                ㅣ      ㅣ 토큰 헤더에 담아서 보내기 -> 대대적으로 손 봐야 함 : utils.auth.AuthAspect
+
 방 초대시 인증서버 동기화 ㅣ      ㅣ
+(비회원 유저라면, 초대 토큰을 받아서 회원가입 시키기 -> user has team에 정보 넣어주고, user has channel에도 넣어줘야 함 (redis에서 찾아서 할 것), teamservice의 356줄 flag를 1로 해서 저장 (2개 다))
+
+토큰 헤더                ㅣ      ㅣ 토큰 헤더에 담아서 보내기 -> 대대적으로 손 봐야 함 : utils.auth.AuthAspect
+비밀번호 분실 후 변경     ㅣ      ㅣ
 
 */
 

@@ -32,6 +32,7 @@ import com.aomc.coop.utils.SHA256;
 import javax.annotation.Resource;
 
 @Slf4j
+
 @Service
 @Transactional
 public class MemberService {
@@ -49,19 +50,17 @@ public class MemberService {
 
     private JavaMailSender mailSender;
 
-//    public MemberService(JavaMailSender mailSender) {
-//        this.mailSender = mailSender;
-//    }
+    public MemberService(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
 
 
 
     // <1. 회원 가입>
     // 가입시 이메일 인증
 
-
     // 회원 가입
 
-// ***** 여기선 try ~ catch를 안 썼다. 쓰는 걸로 변경할 것
     public ResponseType register(@RequestBody User user) {
 
         try {
@@ -111,7 +110,7 @@ public class MemberService {
                 hashOperations.getOperations().expire(authUrl, 3L, TimeUnit.MINUTES);
 
                 SendMailThread sendMailThread = new SendMailThread(mailSender, uid, authUrl);
-                sendMailThread.run();
+                sendMailThread.start();
 
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register_Auth_Mail_Sent.getStatus());
 
@@ -265,18 +264,6 @@ public class MemberService {
     // 이메일 버튼을 통해 비밀번호 수정 창으로 이동
 
 
-
-
-
-    // 비밀번호 변경
-//    public ResponseType registerAuthorization(@RequestBody User user) {
-//
-//        String authCode = authCode();
-//        SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), null, authCode);
-//        // 여기선 token이 쓰이지 않으므로, null을 입력. MailSend 클래스는 비밀번호 변경에도 사용될 것이므로, String token을 아규먼트로 가지고 있긴 해야 함.
-//        sendMailThread.start();
-//
-//    }
 
     // 6자리 인증 코드 생성
 //    public String authCode() {

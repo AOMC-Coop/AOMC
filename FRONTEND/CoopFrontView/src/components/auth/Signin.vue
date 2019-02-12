@@ -108,13 +108,17 @@ const baseURI = localStorage.getItem('baseURI')
       },
 
       checkIsTeam(userIdx) {
-        axios
-        .get("http://localhost:8083/api/team/user/" + userIdx)
+        let token = localStorage.getItem('token');
+        debugger
+         axios({
+        method: 'get',
+        url: "http://localhost:8083/api/team/user/" + userIdx,
+        headers: { 'X-Auth-Token': `${token}` }
+      })
         .then(response => { //
             debugger;
             if(response.data.data == null) {
               debugger;
-              
               this.$router.push({path: '/checkTeam'});
 
               // this.teamsFromServer = response.data.data;
@@ -146,6 +150,7 @@ const baseURI = localStorage.getItem('baseURI')
       },
       
       signin: function () {
+
       // this.$store.state.ip + `:8082/login`  
         axios.post(`http://localhost:8082/login`, this.userInfo) 
           .then(response => { 

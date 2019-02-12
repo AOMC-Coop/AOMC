@@ -121,8 +121,13 @@ export default {
         this.createTeam.name = this.createTeamName;
         this.createTeam.users = this.$store.state.inviteUsers;
 
+        // axios
+        // .post(this.$store.state.ip + ":8083/api/team", this.createTeam)
+        let token = localStorage.getItem('token');
         axios
-        .post(this.$store.state.ip + ":8083/api/team", this.createTeam)
+        .post(this.$store.state.ip + ":8083/api/team", this.createTeam, 
+        {headers: { 'X-Auth-Token': `${token}` }}
+        )
         .then(response => {
             if(response.data) {
               console.log(response.data);

@@ -158,7 +158,14 @@ export default {
     },
 
     chaneStarFlag(starFlag) {
-       axios.get(this.$store.state.ip + ":8083/api/channel/star?channelIdx=" + this.$store.state.channelInfo.idx + "&userIdx=" + localStorage.getItem("userIdx") + "&starFlag=" + starFlag)
+      //  axios.get(this.$store.state.ip + ":8083/api/channel/star?channelIdx=" + this.$store.state.channelInfo.idx + "&userIdx=" + localStorage.getItem("userIdx") + "&starFlag=" + starFlag)
+       let token = localStorage.getItem('token');
+       axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/channel/star?channelIdx=" + this.$store.state.channelInfo.idx + "&userIdx=" + localStorage.getItem("userIdx") + "&starFlag=" + starFlag,
+        
+        headers: { 'X-Auth-Token': `${token}` },
+      })
        .then((response) => {
         debugger
           if (response.data.status==200) {
@@ -200,12 +207,23 @@ export default {
 
     },
     exitChannel() {        
-        axios.delete(this.$store.state.ip + ":8083/api/channel", {
+      //   axios.delete(this.$store.state.ip + ":8083/api/channel", {
+      //   params: {
+      //     channelIdx: this.$store.state.channelInfo.idx,
+      //     userIdx: this.$store.state.userIdx
+      //   },
+      // })
+      let token = localStorage.getItem('token');
+       axios({
+        method: 'delete',
+        url: this.$store.state.ip + ":8083/api/channel",
         params: {
           channelIdx: this.$store.state.channelInfo.idx,
           userIdx: this.$store.state.userIdx
         },
-      }).then(response => {
+        headers: { 'X-Auth-Token': `${token}` },
+      })
+      .then(response => {
           // debugger;
             if(response.data.status===200) {
 
@@ -234,12 +252,23 @@ export default {
       debugger
         this.$store.state.received_messages.splice(0);
 
-        axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
-         params: {
-          start: this.$store.state.messageStartNum,
+      //   axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      //    params: {
+      //     start: this.$store.state.messageStartNum,
+      //     messageLastIdx: this.$store.state.messageLastIdx
+      //   },
+      // })
+      let token = localStorage.getItem('token');
+       axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        params: {
+           start: this.$store.state.messageStartNum,
           messageLastIdx: this.$store.state.messageLastIdx
         },
-      }).then((response) => {
+        headers: { 'X-Auth-Token': `${token}` },
+      })
+      .then((response) => {
         debugger
       if (response.data.status==200) {
         // this.start += 10;

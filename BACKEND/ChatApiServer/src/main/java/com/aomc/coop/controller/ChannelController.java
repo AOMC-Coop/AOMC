@@ -5,6 +5,7 @@ import com.aomc.coop.response.Status_1000;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.ChannelService;
 import com.aomc.coop.utils.CodeJsonParser;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.extern.slf4j.Slf4j;
@@ -86,7 +87,6 @@ public class ChannelController {
 
      */
     @PostMapping
-    @CrossOrigin
     public ResponseEntity makeChannel(@RequestBody final Channel channel){
 
         if(channel != null) {
@@ -137,7 +137,6 @@ public class ChannelController {
 
      */
     @PutMapping
-    @CrossOrigin
     public ResponseEntity updateChannel(@RequestBody final Channel channel){
         if(channel != null) {
             return new ResponseEntity<>(channelService.updateChannel(channel), HttpStatus.OK);
@@ -192,7 +191,6 @@ public class ChannelController {
 
      */
     @GetMapping
-    @CrossOrigin
     @RequestMapping("/message")
     public ResponseEntity getChannelMessage(@RequestParam("channelIdx") final int channelIdx, @RequestParam("start") final int start, @RequestParam("messageLastIdx") final int messageLastIdx){
         if(channelIdx >= 0) {
@@ -256,7 +254,6 @@ public class ChannelController {
 
      */
     @GetMapping
-    @CrossOrigin
     @RequestMapping("/users")
     public ResponseEntity getChannelUsers(@RequestParam("channelIdx") final int channelIdx){
         if(channelIdx >= 0) {
@@ -312,7 +309,6 @@ public class ChannelController {
 
      */
     @GetMapping
-    @CrossOrigin
     @RequestMapping("/invite")
     public ResponseEntity inviteChannelUser(@RequestParam(value = "channelIdx") int channelIdx, @RequestParam(value = "userIdx") int userIdx){
 
@@ -360,7 +356,6 @@ public class ChannelController {
      *
 
      */
-    @CrossOrigin
     @DeleteMapping
     public ResponseEntity deleteChannelUser(@RequestParam(value = "channelIdx") int channelIdx, @RequestParam(value = "userIdx") int userIdx){
 
@@ -371,7 +366,6 @@ public class ChannelController {
         }
     }
 
-    @CrossOrigin
     @GetMapping
     @RequestMapping("/star")
     public ResponseEntity updateUserHasChannelStar(@RequestParam(value = "channelIdx") int channelIdx, @RequestParam(value = "userIdx") int userIdx, @RequestParam(value = "starFlag") int starFlag) {

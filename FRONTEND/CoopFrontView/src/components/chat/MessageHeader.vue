@@ -25,13 +25,13 @@
       </v-btn>
 
 
-      <v-btn icon @click="starClick" v-if="star === false" >
+      <v-btn icon @click="starClick" v-if="this.$store.state.starFlag === false" >
         <v-avatar size="25px" tile>
           <img src="./../../assets/image/star_off.png" alt="Vuetify">
         </v-avatar>
       </v-btn>
 
-      <v-btn icon @click="starClick" v-if="star === true" >
+      <v-btn icon @click="starClick" v-if="this.$store.state.starFlag === true" >
         <v-avatar size="25px" tile>
           <img src="./../../assets/image/star_on.png" alt="Vuetify">
         </v-avatar>
@@ -136,7 +136,7 @@ export default {
   data() {
     return {
 
-      star: '',
+      // star: false,
 
       createTeamDialog: false
      
@@ -147,15 +147,39 @@ export default {
   methods: {
 
     starClick() {
-      // if(star === false) { //star_flag가 0에서 1로 바껴야 함
-
-      // }else { //star_flag가 1에서 0로 바껴야 함
-        
-      // }
-      this.star = !this.star;
+      debugger
+      if(this.$store.state.starFlag === false) { //star_flag가 0에서 1로 바껴야 함
+        this.chaneStarFlag(1);
+      }else if(this.$store.state.starFlag === true){ //star_flag가 1에서 0로 바껴야 함
+        this.chaneStarFlag(0);
+      }
+      
     },
+
+    chaneStarFlag(starFlag) {
+       axios.get(this.$store.state.ip + ":8083/api/channel/star?channelIdx=" + this.$store.state.channelInfo.idx + "&userIdx=" + localStorage.getItem("userIdx") + "&starFlag=" + starFlag)
+       .then((response) => {
+        debugger
+          if (response.data.status==200) {
+
+              for(var i=0;i<this.channels.length;i++){
+                   if(this.channels[i].idx==this.$store.state.channelInfo.idx){
+                    this.channels[i].star_flag = starFlag;
+                   }
+                    
+              }
+              if(starFlag === 1) {
+                this.$store.state.starChannelCount = this.$store.state.starChannelCount + 1;
+              }
+              if(starFlag === 0) {
+                this.$store.state.starChannelCount = this.$store.state.starChannelCount - 1;
+              }
+
+            this.$store.state.starFlag = !this.$store.state.starFlag;
+          }
+      })
     
-            
+  },
 
     getChannelUsers(){
       this.createTeamDialog = !this.createTeamDialog;
@@ -277,7 +301,13 @@ export default {
   
 
   created() {
-    this.star = false; //star_flag 보고 바꾸기
+    // this.star = false; //star_flag 보고 바꾸기
+
+    // for(var i=0; i<this.channels.length; i++) {
+    //   if(this.channels[i].star_flag === 1) {
+    //     this.$store.state.starFlag = true;
+    //   }
+    // }
   },
 
     

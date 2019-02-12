@@ -60,6 +60,24 @@
           </v-list-group>
         </template>
       </v-list> 
+
+      <v-flex xs12 v-if="this.$store.state.starChannelCount > 0">
+      <v-subheader class="white--text">
+        <v-text style = "fontSize : 18px">  Starred </v-text>
+      </v-subheader>
+      <v-list dense class="white--text">
+        <template v-for="item in channels">
+          
+          <v-list-tile v-if :key="item.text" v-if="item.star_flag === 1">
+            <v-list-tile-content>
+              <v-list-tile-title>
+               <v-text> # {{ item.name }} </v-text>
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </template>
+      </v-list>
+    </v-flex>
     
 
      <v-flex xs12>
@@ -386,6 +404,7 @@ var today = now.format("dddd, MMMM Do").toString()
         this.createTeamDialog = false;
       },
       addCreateTeamDialog() {
+        this.$store.state.components.splice(0);
         this.createTeamDialog = !this.createTeamDialog;
         this.$store.state.inviteUsers.push({uid:localStorage.getItem("userId")});
       },
@@ -402,6 +421,16 @@ var today = now.format("dddd, MMMM Do").toString()
             this.$store.state.generalFlag=false
           }else{
             this.$store.state.generalFlag=true
+          }
+
+          for(var i=0; i<this.channels.length; i++) {
+            if(this.channels[i].idx === itemIdx) {
+              if(this.channels[i].star_flag === 1) {
+                this.$store.state.starFlag = true;
+              }else {
+                this.$store.state.starFlag = false;
+              }
+            }
           }
         }
       },
@@ -497,6 +526,25 @@ var today = now.format("dddd, MMMM Do").toString()
               this.getMessage();
               this.getChannelUsers();
 
+              for(var i=0; i<this.channels.length; i++) {
+                if(this.channels[i].star_flag == 1) {
+                  this.$store.state.starChannelCount = this.$store.state.starChannelCount + 1;
+                }
+              }
+              if(this.channels[0].star_flag === 1) {
+                this.$store.state.starFlag = true;
+              }else {
+                this.$store.state.starFlag = false;
+              }
+          //     for(var i=0; i<this.channels.length; i++) {
+          //   if(this.channels[i].idx === itemIdx) {
+          //     if(this.channels[i].star_flag === 1) {
+          //       this.$store.state.starFlag = true;
+          //     }
+          //   }
+          // }
+              
+
             } else {
             this.errors.push(e);
             }
@@ -510,12 +558,12 @@ var today = now.format("dddd, MMMM Do").toString()
         axios
         .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
+          debugger
             if(response.data) {
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
               this.$store.state.messageStartNum=0
-
 
             } else {
             this.errors.push(e);

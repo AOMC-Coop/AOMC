@@ -480,6 +480,7 @@ var today = now.format("dddd, MMMM Do").toString()
         .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
             if(response.data) {
+              debugger
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;

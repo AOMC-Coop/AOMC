@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dbde70fa-270b-414d-a3f7-a52d8efb0129" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/FRONTEND/CoopFrontView/src/components/chat/CheckTeam.vue" beforeDir="false" afterPath="$PROJECT_DIR$/FRONTEND/CoopFrontView/src/components/chat/CheckTeam.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/controller/ChannelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/controller/ChannelController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_1000.java" beforeDir="false" afterPath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_1000.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/service/ChannelService.java" beforeDir="false" afterPath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/service/ChannelService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMMON/code.json" beforeDir="false" afterPath="$PROJECT_DIR$/COMMON/code.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FRONTEND/CoopFrontView/src/components/chat/ChatHome.vue" beforeDir="false" afterPath="$PROJECT_DIR$/FRONTEND/CoopFrontView/src/components/chat/ChatHome.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FRONTEND/CoopFrontView/src/components/chat/MessageHeader.vue" beforeDir="false" afterPath="$PROJECT_DIR$/FRONTEND/CoopFrontView/src/components/chat/MessageHeader.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FRONTEND/CoopFrontView/src/components/chat/MessageList.vue" beforeDir="false" afterPath="$PROJECT_DIR$/FRONTEND/CoopFrontView/src/components/chat/MessageList.vue" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,8 +39,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/COMMON/code.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+            <state relative-caret-position="499">
+              <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
             </state>
           </provider>
         </entry>
@@ -84,10 +90,11 @@
         <option value="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/service/TeamService.java" />
         <option value="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_3000.js" />
         <option value="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_3000.java" />
+        <option value="$PROJECT_DIR$/COMMON/code.json" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
+  <component name="ProjectFrameBounds" extendedState="1">
     <option name="y" value="23" />
     <option name="width" value="1440" />
     <option name="height" value="838" />
@@ -198,11 +205,12 @@
       <workItem from="1548927083216" duration="11000" />
       <workItem from="1549851897435" duration="21000" />
       <workItem from="1549872924365" duration="6000" />
+      <workItem from="1549945942612" duration="130000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2244000" />
+    <option name="totallyTimeSpent" value="2374000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="838" extended-state="0" />
@@ -280,8 +288,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/COMMON/code.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="17" selection-start-line="14" selection-start-column="17" selection-end-line="14" selection-end-column="17" />
+        <state relative-caret-position="499">
+          <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
         </state>
       </provider>
     </entry>

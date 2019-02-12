@@ -24,9 +24,15 @@
       <span>5</span>
       </v-btn>
 
-      <v-btn icon @click="">
+      <v-btn icon @click="starClick" v-if="star === false" >
         <v-avatar size="25px" tile>
           <img src="./../../assets/image/star_off.png" alt="Vuetify">
+        </v-avatar>
+      </v-btn>
+
+      <v-btn icon @click="starClick" v-if="star === true" >
+        <v-avatar size="25px" tile>
+          <img src="./../../assets/image/star_on.png" alt="Vuetify">
         </v-avatar>
       </v-btn>
 
@@ -70,12 +76,21 @@ import axios from "axios";
 export default {
   data() {
     return {
+      star: '',
     };
   },
   
     
   methods: {
-     inviteChannel(){
+    starClick() {
+      if(star === false) { //star_flag가 0에서 1로 바껴야 함
+        
+      }else { //star_flag가 1에서 0로 바껴야 함
+
+      }
+      this.star = !this.star;
+    },
+    inviteChannel(){
             //     this.$modal.show(CreateChannel,{
             //         teamMembers : this.teamMembers,
             //         channels: this.channels,
@@ -107,6 +122,10 @@ export default {
           this.errors.push(e);
         });      
     },
+  },
+
+  created() {
+    this.star = false; //star_flag 보고 바꾸기
   }
   
 };

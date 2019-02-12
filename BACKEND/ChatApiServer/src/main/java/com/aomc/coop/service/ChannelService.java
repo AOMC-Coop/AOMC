@@ -232,4 +232,14 @@ public class ChannelService {
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_Delete_Channel_User.getStatus());
         }
     }
+
+    public ResponseType updateUserHasChannelStar(int channelIdx, int userIdx, int starFlag) {
+        if (channelIdx >= 0 || userIdx >= 0) {
+            channelMapper.updateUserHasChannelStar(channelIdx, userIdx, starFlag);
+            return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_UdpateStar_Channel_User.getStatus());
+        } else {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return codeJsonParser.codeJsonParser(Status_1000.FAIL_UdpateStar_Channel_User.getStatus());
+        }
+    }
 }

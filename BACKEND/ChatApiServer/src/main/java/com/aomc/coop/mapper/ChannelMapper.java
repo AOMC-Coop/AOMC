@@ -59,8 +59,7 @@ public interface ChannelMapper {
     @Update("UPDATE user_has_channel SET status=#{status} WHERE channel_idx = #{channelIdx} AND user_idx = #{userIdx}")
     void updateChannelStatus(int status, int channelIdx, int userIdx);
 
-
-//    //채널의 User 수 조회
-//    @Select("SELECT count(*) as user_count FROM user_has_channel has WHERE has.channel_idx=#{idx}")
-//    int getUserCountOfchannel(@Param("idx") final int channnelIdx);
+    //채널 star_flag 수정
+    @Update("UPDATE user_has_channel SET star_flag=#{starFlag} WHERE channel_idx = #{channelIdx} AND user_idx = #{userIdx}")
+    void updateUserHasChannelStar(int channelIdx, int userIdx, int starFlag);
 }

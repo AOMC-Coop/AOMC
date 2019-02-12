@@ -371,4 +371,15 @@ public class ChannelController {
         }
     }
 
+    @CrossOrigin
+    @GetMapping
+    @RequestMapping("/star")
+    public ResponseEntity updateUserHasChannelStar(@RequestParam(value = "channelIdx") int channelIdx, @RequestParam(value = "userIdx") int userIdx, @RequestParam(value = "starFlag") int starFlag) {
+        if(channelIdx >= 0 || userIdx >= 0) {
+            return new ResponseEntity<>(channelService.updateUserHasChannelStar(channelIdx, userIdx, starFlag), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
+    }
+
 }

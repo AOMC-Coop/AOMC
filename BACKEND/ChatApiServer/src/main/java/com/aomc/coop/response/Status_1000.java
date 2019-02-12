@@ -24,7 +24,10 @@ public enum Status_1000 {
     FAIL_Invite_Channel_User("1405"),
 
     SUCCESS_Delete_Channel_User("1207"),
-    FAIL_Delete_Channel_User("1406");
+    FAIL_Delete_Channel_User("1406"),
+
+    SUCCESS_UdpateStar_Channel_User("1208"),
+    FAIL_UdpateStar_Channel_User("1407");
 
     final private String status;
 

@@ -7,7 +7,7 @@
     <infinite-loading ref="infiniteLoading" direction="top" @infinite="infiniteHandler" spinner="waveDots" v-if="this.$store.state.scrollFlag" force-use-infinite-wrapper="true"></infinite-loading>
    <v-list class="card">
      
-      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
+      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index" class="list_div">
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
         <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
         <!-- <v-list-tile> -->
@@ -164,6 +164,9 @@ export default {
 }
 .card{
   padding-left: 2%;
+}
+.list_div:hover {
+  background: rgba(230, 230, 230, 0.979);
 }
 
 </style>

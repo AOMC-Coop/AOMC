@@ -24,9 +24,16 @@
       <span>{{this.$store.state.channelUserCount}}</span>
       </v-btn>
 
-      <v-btn icon>
+
+      <v-btn icon @click="starClick" v-if="star === false" >
         <v-avatar size="25px" tile>
           <img src="./../../assets/image/star_off.png" alt="Vuetify">
+        </v-avatar>
+      </v-btn>
+
+      <v-btn icon @click="starClick" v-if="star === true" >
+        <v-avatar size="25px" tile>
+          <img src="./../../assets/image/star_on.png" alt="Vuetify">
         </v-avatar>
       </v-btn>
 
@@ -146,15 +153,28 @@ export default {
 
   data() {
     return {
+
+      star: '',
+
       createTeamDialog: false
      
+
     };
   },
-   created(){
-
-  },  
     
   methods: {
+
+    starClick() {
+      // if(star === false) { //star_flag가 0에서 1로 바껴야 함
+
+      // }else { //star_flag가 1에서 0로 바껴야 함
+        
+      // }
+      this.star = !this.star;
+    },
+    
+            
+
     getChannelUsers(){
       this.createTeamDialog = !this.createTeamDialog;
       
@@ -170,6 +190,7 @@ export default {
           height : '80%',
           draggable: true
         })    
+
     },
     exitChannel() {        
         axios.delete(this.$store.state.ip + ":8083/api/channel", {
@@ -270,6 +291,15 @@ export default {
       });
       },
   },
+
+  
+
+  created() {
+    this.star = false; //star_flag 보고 바꾸기
+  },
+
+    
+
   
 };
 </script>

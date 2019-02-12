@@ -71,39 +71,40 @@
 
     <v-dialog v-model="createTeamDialog" width="800px" id="chat">
       <v-card>
-        <v-card-title
-          class="grey lighten-4 py-4 title"
-        >
+        <v-card-title class="primary py-4 title white--text">
         # {{this.$store.state.channelInfo.channelName}} users
         </v-card-title>
-        <v-container grid-list-sm class="pa-4">
-          <v-layout row wrap>
-            <v-flex xs12 align-center justify-space-between>
-              <v-layout align-center>
 
-                <v-text-field
-                  prepend-icon="notes"
-                  placeholder="TeamName"
-                  v-model="createTeamName"
-                ></v-text-field>
-              </v-layout>
+         <v-container grid-list-md text-xs-center>
+            <v-layout row wrap justify-center>
+
+              <v-flex v-for="(child, i) in this.$store.state.channelUsers" :key="`3${i}`" xs3>
+                <v-list>
+                  <v-avatar size="42px" class="mr-3">
+                  <img src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png">
+                </v-avatar>
+                  <v-list-content class="px-0">{{ child.nickname }}</v-list-content>
+                </v-list>
+              </v-flex>
+          </v-layout>
+          
+          <v-layout row justify-center>
+            <v-flex xs2>
+              <v-btn @click="inviteChannel" v-if="this.$store.state.generalFlag">
+                    <v-avatar size="30px" tile>
+                    <img src="./../../assets/image/invite.png" alt="Vuetify">
+                    </v-avatar>
+                    <span>Invite Others</span>
+                  </v-btn>
             </v-flex>
-            
-            <!-- <v-text>invite member</v-text><v-icon right @click="">add</v-icon> -->
-            
-
-            <!-- <InviteUserEmail v-for="item in this.$store.state.components" v-bind:key="InviteUserEmail">
-           
-            </InviteUserEmail> -->
-
           </v-layout>
         </v-container>
         
+       
+        
         <v-card-actions>
-          <v-btn flat color="primary">More</v-btn>
           <v-spacer></v-spacer>
           <v-btn flat color="primary" @click="createTeamDialog = !createTeamDialog">Cancel</v-btn>
-          <v-btn flat @click="saveTeam">Save</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>

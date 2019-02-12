@@ -24,6 +24,7 @@ public interface ChannelMapper {
     @Update("UPDATE channels SET name=#{name}, update_date=now() WHERE idx = #{idx}")
     void updateChannel(final Channel channel);
 
+    //채널의 메세지조회
     @Select("SELECT m.message_idx, content, channel_idx, u.nickname, u.idx as user_idx, DATE_FORMAT(send_date, '%W, %M %D') as send_date, DATE_FORMAT(send_date, '%l:%i %p') as send_time FROM messages m, users u WHERE m.user_idx=u.idx AND channel_idx = #{channelIdx} ORDER BY m.message_idx desc LIMIT #{start}, 10")
     List<Message> getChannelMessage(int channelIdx, int start);
 
@@ -37,11 +38,11 @@ public interface ChannelMapper {
     @Update("UPDATE user_has_channel SET status= 0 WHERE channel_idx = #{channelIdx} and user_idx = #{userIdx}")
     void deleteChannelUser(int channelIdx, int userIdx);
 
-    //channel 조회
-    @Select("SELECT DISTINCT c.idx, c.name, uhc.star_flag, uhc.status FROM channels c, user_has_channel uhc WHERE c.idx = uhc.channel_idx AND team_idx=#{teamIdx} AND user_idx=#{userIdx}")
+    //유저의 channel 조회
+    @Select("SELECT DISTINCT c.idx, c.name, has.star_flag, has.status FROM channels c, user_has_channel has WHERE c.idx = has.channel_idx AND has.status=1 AND team_idx=#{teamIdx} AND user_idx=#{userIdx}")
     List<Channel> readChannelOfUser(final int teamIdx, final int userIdx);
 
-    //channel 조회
+    //팀의 channel 조회
     @Select("SELECT DISTINCT c.idx, c.name, uhc.star_flag, uhc.status FROM channels c, user_has_channel uhc WHERE c.idx = uhc.channel_idx AND team_idx=#{teamIdx}")
     List<Channel> readChannelOfTeam(final int teamIdx);
 
@@ -57,4 +58,12 @@ public interface ChannelMapper {
 
     @Update("UPDATE user_has_channel SET status=#{status} WHERE channel_idx = #{channelIdx} AND user_idx = #{userIdx}")
     void updateChannelStatus(int status, int channelIdx, int userIdx);
+
+    //채널의 User 조회
+    @Select("SELECT u.uid, u.nickname FROM user_has_channel has, users u WHERE has.user_idx=u.idx AND has.channel_idx=#{idx}")
+    List<User> readUserOfChannel(@Param("idx") final int channnelIdx);
+
+    //채널의 User 수 조회
+    @Select("SELECT count(*) as user_count FROM user_has_channel has WHERE has.channel_idx=#{idx}")
+    int getUserCountOfchannel(@Param("idx") final int channnelIdx);
 }

@@ -566,69 +566,17 @@ public class TeamController {
      *        @throws
      *
      */
-//    @GetMapping(path="/accept/{token}")
-//    @CrossOrigin
-//    public ResponseEntity<Void> acceptInvite(@PathVariable(value = "token") final String token){
-//        response.sendRedirect("some-url");
-//        try{
-//             TeamService.acceptInvite(token);
-
-//            return "redirect:/localhost:9999/chat";
-
-//        }catch (Exception e){
-//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-//        }
-
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setLocation(URI.create("https://www.naver.com/"));
-
-//        return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
-
-
-
-
-
-//    @RequestMapping(value = "/{path:[^\\.]*}")
-//    public String redirect() {
-//        return "forward:/";
-//    }
-
         @GetMapping(path="/accept/{token}")
         @CrossOrigin
         ResponseEntity acceptInvite(RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "token") final String token) throws IOException {
 
-//            try{
-                String redirectAddress = teamService.acceptInvite(token);
-
-//                redirectAttributes.addFlashAttribute("token", token);
-
-//                response.setHeader("token", token);
-//                response.sendRedirect(redirectAddress);
-
-//                String token2 = response.getHeader("token");
-//                System.out.println(token2);
-
+            String redirectAddress = teamService.acceptInvite(token);
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create(redirectAddress));
             headers.set("token", token);
 //            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
             return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).headers(headers).build();
 
-
-
-//            return "forward:"+redirectAddress;
-
-
-
-
-//                return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, redirectAddress).build();
-
-//            }catch (Exception e){
-//                System.out.println("오류");
-//            }
-
-
-//        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header(HttpHeaders.LOCATION, "http://localhost:9999/chat").build();
 
     }
 

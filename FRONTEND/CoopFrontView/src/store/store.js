@@ -13,6 +13,7 @@ export const store = new Vuex.Store({
     userIdx:'',
     userNickName:'',
     scrollFlag:false,
+    generalFlag:false,
     messageLastIdx:0,
     messageStartNum:0,
     channelInfo: {

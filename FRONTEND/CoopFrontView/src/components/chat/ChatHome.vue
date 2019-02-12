@@ -40,7 +40,8 @@
               @click="clickTeamName(child.idx, child.name)"
             >
               <v-list-tile-action >
-                <v-icon class="white--text" >widgets</v-icon>
+                <!-- <v-icon class="white--text" >widgets</v-icon> -->
+                  <img src="./../../assets/image/circle.png" alt="widgets">
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title class="white--text" style = "fontSize : 20px">
@@ -71,7 +72,8 @@
           
           <v-list-tile v-if :key="item.text" @click="">
             <v-list-tile-action>
-              <v-icon class="white--text" >people</v-icon>
+              <!-- <v-icon class="white--text" >people</v-icon> -->
+              <img src="./../../assets/image/user.png" alt="widgets">
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
@@ -394,6 +396,12 @@ var today = now.format("dddd, MMMM Do").toString()
           this.$store.state.channelInfo.channelName = channelName;
           this.$store.state.messageStartNum=0
           this.getMessage();
+
+          if(this.$store.state.channelInfo.channelName==='general'){
+            this.$store.state.generalFlag=false
+          }else{
+            this.$store.state.generalFlag=true
+          }
         }
       },
       clickSave() {
@@ -475,6 +483,13 @@ var today = now.format("dddd, MMMM Do").toString()
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
+
+              if(this.$store.state.channelInfo.channelName==='general'){
+               this.$store.state.generalFlag=false
+              }else{
+                this.$store.state.generalFlag=true
+              }
+
               this.$store.state.messageStartNum=0
               this.getMessage();
 
@@ -576,13 +591,16 @@ var today = now.format("dddd, MMMM Do").toString()
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
         this.$store.state.messageLastIdx = 0;
+
         this.teamName = teamName;
         this.userName = localStorage.getItem("userNickName"); //userName 받기
         this.getMemberByTeamId(teamIdx);
         this.getChannelsByTeamIdxAndUserIdx(teamIdx, localStorage.getItem("userIdx")); // 5->userId로 받아야 함
 
-        this.$store.state.channelInfo.idx = response.data.data[0].idx;
-        this.$store.state.channelInfo.channelName = response.data.data[0].name;
+        // this.$store.state.channelInfo.idx = response.data.data[0].idx;
+        // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+
+
       },
       handleClickButton(){
       this.visible = !this.visible
@@ -746,5 +764,8 @@ v-dialog {
 }
 .chatroom{
   background-color: white;
+}
+img{
+  /* margin: 0 */
 }
 </style>

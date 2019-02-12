@@ -1,11 +1,10 @@
 <template>
 <v-content>
-
-    <div>
-    <!-- <Message-List class="msg-list"></Message-List> -->
+  <div>
+    <Message-Header></Message-Header>
     <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages"></Message-List>
-    <Message-From v-on:submitMessage="sendMessage" class="msg-form"></Message-From>
-
+    <Message-From class="msg-form"></Message-From>
+    <!-- <Message-From class="msg-form" v-on:submitMessage="sendMessage" ></Message-From> -->
   </div>
   </v-content>
 </template>
@@ -14,10 +13,10 @@
 import axios from "axios";
 import MessageList from '@/components/chat/MessageList.vue';
 import MessageForm from '@/components/chat/MessageForm.vue';
-
+import MessageHeader from '@/components/chat/MessageHeader.vue';
 
 export default {
-  name: 'Content',
+  name: 'ChatRoom',
   data() {
     return {
       // start:10
@@ -26,6 +25,7 @@ export default {
     };
   },
   components: {
+    'Message-Header': MessageHeader,
     'Message-List': MessageList,
     'Message-From': MessageForm,
   },
@@ -50,14 +50,20 @@ export default {
 </script>
 
 <style>
+/* .msg-header {
+  background-color:white;
+  position:absolute;
+  top:0;
+  width:100%;
+  height:10%;
+} */
 .msg-list {
   position: absolute;
   background-color:white; 
-  top: 0;
+  top:20;
   width:100%;
-  height: 80%;
+  height:73%;
 }
-
 .msg-form {
   background-color:white;
   position:absolute;

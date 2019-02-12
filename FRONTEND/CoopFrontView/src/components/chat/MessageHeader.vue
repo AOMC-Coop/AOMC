@@ -74,29 +74,47 @@
             <v-flex xs12 align-center justify-space-between>
               <v-layout align-center>
 
-                <v-text-field
-                  prepend-icon="notes"
-                  placeholder="TeamName"
-                  v-model="createTeamName"
-                ></v-text-field>
+                <v-list-tile
+                  v-for="(child, i) in teamMembers"
+                  :key="i"           
+                >
+            <v-flex xs12 align-center justify-space-between>
+            <v-layout align-center>
+              <v-list-tile-action >
+                <v-avatar size="42px" class="mr-3">
+                  <img
+                    src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                    alt=""
+                  >
+                </v-avatar>
+              </v-list-tile-action>
+              <v-list-tile-content>
+                <v-list-tile-title justify-space-between>
+                  {{ child.nickname }} 
+                </v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action>
+              <!-- <v-icon right fab @click="clickInviteUserInChannel(child.idx, child.nickname)">add</v-icon> -->
+            </v-list-tile-action>
+            
+            </v-layout>
+            </v-flex>
+            </v-list-tile>
+
+                
               </v-layout>
             </v-flex>
             
-            <!-- <v-text>invite member</v-text><v-icon right @click="">add</v-icon> -->
             
-
-            <!-- <InviteUserEmail v-for="item in this.$store.state.components" v-bind:key="InviteUserEmail">
-           
-            </InviteUserEmail> -->
 
           </v-layout>
         </v-container>
         
         <v-card-actions>
-          <v-btn flat color="primary">More</v-btn>
+          <!-- <v-btn flat color="primary">More</v-btn> -->
           <v-spacer></v-spacer>
           <v-btn flat color="primary" @click="createTeamDialog = !createTeamDialog">Cancel</v-btn>
-          <v-btn flat @click="saveTeam">Save</v-btn>
+          <!-- <v-btn flat @click="saveTeam">Save</v-btn> -->
         </v-card-actions>
       </v-card>
     </v-dialog>

@@ -267,13 +267,23 @@ public class ChannelController {
 
      *
 
-     *        @brief GET http://localhost:8083/api/channel/invite?channelIdx=19&userIdx=6
+     *        @brief POST http://localhost:8083/api/channel/invite
 
      *        @details 채널에 멤버를 초대하는 함수
+     *        test json
+     *        {
+     * 	        "idx":81,
+     * 	        "users":[
+     * 		        {
+     * 			        "idx": 9
+     * 		        },
+     * 		        {
+     * 			        "idx": 16
+     * 		        }
+     * 	        ]
+     *      }
 
-     *        @param RequestParam(value = "channelIdx") int channelIdx
-
-     *        @param RequestParam(value = "userIdx") int userIdx
+     *        @param @RequestBody Channel channel
 
      *        @return ResponseEntity<>
 
@@ -308,12 +318,12 @@ public class ChannelController {
      *
 
      */
-    @GetMapping
+    @PostMapping
     @RequestMapping("/invite")
-    public ResponseEntity inviteChannelUser(@RequestParam(value = "channelIdx") int channelIdx, @RequestParam(value = "userIdx") int userIdx){
+    public ResponseEntity inviteChannelUser(@RequestBody Channel channel){
 
-        if(channelIdx >= 0 || userIdx >= 0) {
-            return new ResponseEntity<>(channelService.inviteChannelUser(channelIdx, userIdx), HttpStatus.OK);
+        if(channel != null) {
+            return new ResponseEntity<>(channelService.inviteChannelUser(channel), HttpStatus.OK);
         }else {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }

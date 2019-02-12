@@ -92,6 +92,18 @@
     "description": "Fail Channel User Delete"
   },
 
+  "1208": {
+    "status": 200,
+    "message": "채널 즐겨찾기 수정 성공",
+    "description": "Success Channel User Star Update"
+  },
+
+  "1407": {
+    "status": 400,
+    "message": "채널 즐겨찾기 수정 실패",
+    "description": "Fail Channel User Star Update"
+  },
+
   "3201": {
     "status": 200,
     "message": "회원 가입 성공",
@@ -323,9 +335,9 @@
     "message": "현재 팀에 존재하는 회원들입니다",
     "description": "No Invite Member"
   },
-  
 
-  
+
+
 
   "5500": {
     "status": 400,

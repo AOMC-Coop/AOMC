@@ -13,8 +13,18 @@ export const store = new Vuex.Store({
     userIdx:'',
     userNickName:'',
     scrollFlag:false,
+    generalFlag:false,
     messageLastIdx:0,
     messageStartNum:0,
+    channelUserCount:0,
+    starChannelCount:0,
+    starFlag:false,
+    channelUsers: [
+      {
+        "uid":'',
+        "nickname":''
+      }
+    ],    
     channelInfo: {
       idx:'',
       channelName:''

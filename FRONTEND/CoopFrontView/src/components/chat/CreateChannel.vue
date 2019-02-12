@@ -157,13 +157,18 @@ export default {
       save_data() {
         if(this.channelName !== '') {
           this.channel.name = this.channelName;
-          axios
-        .post(this.$store.state.ip + ":8083/api/channel/", this.channel)
+        //   axios
+        // .post(this.$store.state.ip + ":8083/api/channel/", this.channel)
+        let token = localStorage.getItem('token');
+        axios
+        .post(this.$store.state.ip + ":8083/api/channel/", this.channel, 
+        {headers: { 'X-Auth-Token': `${token}` }}
+        )
         .then(response => {
-          debugger;
+          // debugger;
             if(response.data) {
               // this.teamMembers = response.data.data;
-              console.log(response.data);
+              // console.log(response.data);
               this.channel.idx = response.data.data;
               this.channels.push(this.channel);
             } else {
@@ -185,7 +190,7 @@ export default {
         console.log(log);
       },
       clickInviteUserInChannel(userIdx, nickname) {
-          debugger;
+          // debugger;
           this.channel.name = this.channelName;
           
           console.log("users = " + this.channel.users);
@@ -207,16 +212,16 @@ export default {
           
           
           
-          console.log("userIdx=" + userIdx);
-          console.log("localStorage userIdx = " + localStorage.getItem("userIdx"));
-          console.log("users = " + this.channel.users);
-          console.log("teamIdx = " + this.channel.teamIdx);
+          // console.log("userIdx=" + userIdx);
+          // console.log("localStorage userIdx = " + localStorage.getItem("userIdx"));
+          // console.log("users = " + this.channel.users);
+          // console.log("teamIdx = " + this.channel.teamIdx);
 
       }
   },
   created() {
-    debugger;
-    console.log(this.channels);
+    // debugger;
+    // console.log(this.channels);
     this.channel.teamIdx = this.teamIdx
     this.channel.users.pop(); // 왜 유저가 한개 들어있을까?ㅁ
     this.channel.users.push({idx: this.userIdx, nickname: this.userNickName});

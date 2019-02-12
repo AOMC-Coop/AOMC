@@ -40,7 +40,8 @@
               @click="clickTeamName(child.idx, child.name)"
             >
               <v-list-tile-action >
-                <v-icon class="white--text" >widgets</v-icon>
+                <!-- <v-icon class="white--text" >widgets</v-icon> -->
+                  <img src="./../../assets/image/circle.png" alt="widgets">
               </v-list-tile-action>
               <v-list-tile-content>
                 <v-list-tile-title class="white--text" style = "fontSize : 20px">
@@ -59,6 +60,24 @@
           </v-list-group>
         </template>
       </v-list> 
+
+      <v-flex xs12 v-if="this.$store.state.starChannelCount > 0">
+      <v-subheader class="white--text">
+        <v-text style = "fontSize : 18px">  Starred </v-text>
+      </v-subheader>
+      <v-list dense class="white--text">
+        <template v-for="item in channels">
+          
+          <v-list-tile v-if :key="item.text" v-if="item.star_flag === 1">
+            <v-list-tile-content>
+              <v-list-tile-title>
+               <v-text> # {{ item.name }} </v-text>
+              </v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </template>
+      </v-list>
+    </v-flex>
     
 
      <v-flex xs12>
@@ -71,7 +90,8 @@
           
           <v-list-tile v-if :key="item.text" @click="">
             <v-list-tile-action>
-              <v-icon class="white--text" >people</v-icon>
+              <!-- <v-icon class="white--text" >people</v-icon> -->
+              <img src="./../../assets/image/user.png" alt="widgets">
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>
@@ -125,7 +145,7 @@
     
         
     <!-- <ChatRoom :key="somevalueunderyourcontrol"></ChatRoom> -->
-    <ChatRoom class="chatroom"></ChatRoom>
+    <ChatRoom :channels="channels" :teamMembers="teamMembers" class="chatroom"></ChatRoom>
     
     <v-dialog v-model="dialog" width="800px" id="chat">
       <v-card>
@@ -362,8 +382,16 @@ var today = now.format("dddd, MMMM Do").toString()
         this.createTeam.name = this.createTeamName;
         this.createTeam.users = this.$store.state.inviteUsers;
 
+        // let token = localStorage.getItem('token');
+        // axios
+        // .post(this.$store.state.ip + ":8083/api/team", this.createTeam, 
+        // {headers: { 'X-Auth-Token': `${token}` }}
+        // )
+        let token = localStorage.getItem('token');
         axios
-        .post(this.$store.state.ip + ":8083/api/team", this.createTeam)
+        .post(this.$store.state.ip + ":8083/api/team", this.createTeam, 
+        {headers: { 'X-Auth-Token': `${token}` }}
+        )
         .then(response => {
           // debugger;
             if(response.data) {
@@ -384,6 +412,7 @@ var today = now.format("dddd, MMMM Do").toString()
         this.createTeamDialog = false;
       },
       addCreateTeamDialog() {
+        this.$store.state.components.splice(0);
         this.createTeamDialog = !this.createTeamDialog;
         this.$store.state.inviteUsers.push({uid:localStorage.getItem("userId")});
       },
@@ -394,6 +423,23 @@ var today = now.format("dddd, MMMM Do").toString()
           this.$store.state.channelInfo.channelName = channelName;
           this.$store.state.messageStartNum=0
           this.getMessage();
+          this.getChannelUsers();
+
+          if(this.$store.state.channelInfo.channelName==='general'){
+            this.$store.state.generalFlag=false
+          }else{
+            this.$store.state.generalFlag=true
+          }
+
+          for(var i=0; i<this.channels.length; i++) {
+            if(this.channels[i].idx === itemIdx) {
+              if(this.channels[i].star_flag === 1) {
+                this.$store.state.starFlag = true;
+              }else {
+                this.$store.state.starFlag = false;
+              }
+            }
+          }
         }
       },
       clickSave() {
@@ -403,9 +449,14 @@ var today = now.format("dddd, MMMM Do").toString()
         this.inviteTeam.users = this.$store.state.inviteUsers;
         this.inviteTeam.channels.push({idx: this.channels[0].idx});//general idx 채널을 넣어줘야함
 
+        // axios
+        // .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam)
+        let token = localStorage.getItem('token');
         axios
-        .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam)
-        .then(response => {
+        .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam, 
+        {headers: { 'X-Auth-Token': `${token}` }}
+        )
+      .then(response => {
           debugger;
             if(response.data) {
               // this.teamMembers = response.data.data;
@@ -449,8 +500,14 @@ var today = now.format("dddd, MMMM Do").toString()
       },
       
       getMemberByTeamId(teamIdx){
-        axios
-        .get(this.$store.state.ip + ":8083/api/team/" + teamIdx)
+        // axios
+        // .get(this.$store.state.ip + ":8083/api/team/" + teamIdx)
+        let token = localStorage.getItem('token');
+        axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/team/" + teamIdx,
+        headers: { 'X-Auth-Token': `${token}` }
+      })
         .then(response => {
             if(response.data) {
               this.teamMembers = response.data.data;
@@ -468,15 +525,50 @@ var today = now.format("dddd, MMMM Do").toString()
         });
       },
       getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
-        axios
-        .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
-        .then(response => {
+        debugger
+        // axios
+        // .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
+        let token = localStorage.getItem('token');
+        axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx,
+        headers: { 'X-Auth-Token': `${token}` }
+      })
+      .then(response => {
             if(response.data) {
+              debugger
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
+
+              if(this.$store.state.channelInfo.channelName==='general'){
+               this.$store.state.generalFlag=false
+              }else{
+                this.$store.state.generalFlag=true
+              }
+
               this.$store.state.messageStartNum=0
               this.getMessage();
+              this.getChannelUsers();
+
+              for(var i=0; i<this.channels.length; i++) {
+                if(this.channels[i].star_flag == 1) {
+                  this.$store.state.starChannelCount = this.$store.state.starChannelCount + 1;
+                }
+              }
+              if(this.channels[0].star_flag === 1) {
+                this.$store.state.starFlag = true;
+              }else {
+                this.$store.state.starFlag = false;
+              }
+          //     for(var i=0; i<this.channels.length; i++) {
+          //   if(this.channels[i].idx === itemIdx) {
+          //     if(this.channels[i].star_flag === 1) {
+          //       this.$store.state.starFlag = true;
+          //     }
+          //   }
+          // }
+              
 
             } else {
             this.errors.push(e);
@@ -488,15 +580,21 @@ var today = now.format("dddd, MMMM Do").toString()
 
       },
       getChannelsByTeamIdxAndUserIdxWithOutGetMessage(teamIdx, userIdx) {
-        axios
-        .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
+        // axios
+        // .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
+        let token = localStorage.getItem('token');
+        axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx,
+        headers: { 'X-Auth-Token': `${token}` }
+      })
         .then(response => {
+          debugger
             if(response.data) {
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
               this.$store.state.messageStartNum=0
-
 
             } else {
             this.errors.push(e);
@@ -511,12 +609,24 @@ var today = now.format("dddd, MMMM Do").toString()
         debugger;
         this.$store.state.received_messages.splice(0);
 
-    axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
-      params: {
-        start: this.$store.state.messageStartNum,
-        messageLastIdx: this.$store.state.messageLastIdx
-      },
-    }).then((response) => {
+      //   axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      //    params: {
+      //     start: this.$store.state.messageStartNum,
+      //     messageLastIdx: this.$store.state.messageLastIdx
+      //   },
+      // })
+      let token = localStorage.getItem('token');
+      axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        params: {
+          start: this.$store.state.messageStartNum,
+          messageLastIdx: this.$store.state.messageLastIdx
+        },
+        headers: { 'X-Auth-Token': `${token}` }
+      })
+      .then((response) => {
+        debugger
       if (response.data.status==200) {
         // this.start += 10;
         if(response.data.plusData === -3) {
@@ -573,33 +683,47 @@ var today = now.format("dddd, MMMM Do").toString()
         }
       });
       },
-      clickTeamName(teamIdx, teamName) {
-        localStorage.setItem("teamIdx", teamIdx);
-        this.$store.state.messageLastIdx = 0;
-        axios
-        .get(this.$store.state.ip + ":8083/api/team/user/" + teamIdx)
-        .then(response => {
-            if(response.data) {
-              //this.teamsFromServer = response.data.data;
-              this.teamName = teamName;
-              this.userName = localStorage.getItem("userNickName"); //userName 받기
-              this.getMemberByTeamId(teamIdx);
-              this.getChannelsByTeamIdxAndUserIdx(teamIdx, localStorage.getItem("userIdx")); // 5->userId로 받아야 함
-
-              this.$store.state.channelInfo.idx = response.data.data[0].idx;
-              this.$store.state.channelInfo.channelName = response.data.data[0].name;
-
-              
+      getChannelUsers(){
+      // axios.get(this.$store.state.ip + ":8083/api/channel/users", {
+      //   params: {
+      //     channelIdx: this.$store.state.channelInfo.idx
+      //   },
+      // })
+      let token = localStorage.getItem('token');
+      axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/channel/users",
+        params: {
+         channelIdx: this.$store.state.channelInfo.idx
+        },
+        headers: { 'X-Auth-Token': `${token}` }
+      })
+      .then(response => {
+            if(response.data.status===200) {
+              this.$store.state.channelUsers=response.data.data
+              this.$store.state.channelUserCount=this.$store.state.channelUsers.length
             } else {
-            //   app.renderNotification('Successfully Singed Up');
-            //   app.toggleSignUp();
             this.errors.push(e);
             }
           })
         .catch(e => {
-          // location.href = './';
           this.errors.push(e);
         });
+
+    },
+      clickTeamName(teamIdx, teamName) {
+        localStorage.setItem("teamIdx", teamIdx);
+        this.$store.state.messageLastIdx = 0;
+
+        this.teamName = teamName;
+        this.userName = localStorage.getItem("userNickName"); //userName 받기
+        this.getMemberByTeamId(teamIdx);
+        this.getChannelsByTeamIdxAndUserIdx(teamIdx, localStorage.getItem("userIdx")); // 5->userId로 받아야 함
+
+        // this.$store.state.channelInfo.idx = response.data.data[0].idx;
+        // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+
+
       },
       handleClickButton(){
       this.visible = !this.visible
@@ -609,7 +733,7 @@ var today = now.format("dddd, MMMM Do").toString()
       //   console.log("socket disconnect");
       // });
       axios.post(this.$store.state.ip + `:8082/logout`, this.userWithToken)
-        .then(response => {
+      .then(response => {
           let description = response.data.description
           if(description == "Fail Logout"){
               alert("Fail to sign out!")
@@ -711,8 +835,20 @@ var today = now.format("dddd, MMMM Do").toString()
 
       this.createSocket();
 
-      axios
-        .get(this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"))
+      let token = localStorage.getItem('token');
+
+
+      // axios
+      //   .get(this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"), {
+      //     headers: {
+      //       'X-Auth-Token' : '${token}'
+      //     }
+      //   })
+        axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"),
+        headers: { 'X-Auth-Token': `${token}` }
+      })
         .then(response => { //
             if(response.data) {
 
@@ -763,5 +899,8 @@ v-dialog {
 }
 .chatroom{
   background-color: white;
+}
+img{
+  /* margin: 0 */
 }
 </style>

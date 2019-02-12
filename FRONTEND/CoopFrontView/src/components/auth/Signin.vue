@@ -106,8 +106,51 @@ const baseURI = localStorage.getItem('baseURI')
       onDismissed () {
         this.$store.dispatch('clearError')
       },
+
+      checkIsTeam(userIdx) {
+        let token = localStorage.getItem('token');
+        debugger
+         axios({
+        method: 'get',
+        url: "http://localhost:8083/api/team/user/" + userIdx,
+        headers: { 'X-Auth-Token': `${token}` }
+      })
+        .then(response => { //
+            debugger;
+            if(response.data.data == null) {
+              debugger;
+              this.$router.push({path: '/checkTeam'});
+
+              // this.teamsFromServer = response.data.data;
+              // this.teamName = response.data.data[0].name;
+              // this.userName = localStorage.getItem("userNickName"); //로그인 한 후 userName 받기 -> localStorage에서 받기 
+              // localStorage.setItem("teamIdx", response.data.data[0].idx);
+              // console.log("teamIdx" + response.data.data[0].idx);
+              // this.getMemberByTeamId(response.data.data[0].idx);
+
+              // this.$store.state.messageLastIdx = 0;
+
+              // this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, localStorage.getItem("userIdx"));
+
+              // this.$store.state.channelInfo.idx = response.data.data[0].idx;
+              // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+              
+              
+            } else {
+            //   app.renderNotification('Successfully Singed Up');
+            //   app.toggleSignUp();
+            //this.errors.push(e);
+             this.$router.push({path: '/chat'});
+            }
+          })
+        .catch(e => {
+          // location.href = './';
+          this.errors.push(e);
+        });
+      },
       
       signin: function () {
+
       // this.$store.state.ip + `:8082/login`  
         axios.post(`http://localhost:8082/login`, this.userInfo) 
           .then(response => { 
@@ -140,7 +183,8 @@ const baseURI = localStorage.getItem('baseURI')
               console.log(localStorage.getItem("userIdx"));
               console.log(localStorage.getItem("userNickName"));
 
-              this.$router.push({path: '/chat'})
+              this.checkIsTeam(response.data.data.idx);
+             
             }
             }
           ).catch(e => {

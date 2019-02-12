@@ -1,16 +1,13 @@
 <template>
 <div class="topdiv" infinite-wrapper  style="overflow: auto;">  
   <!-- <div class="div" infinite-wrapper> -->
-    <v-card-title>
-      <v-icon large left>#</v-icon>
-      <span class="title font-weight-light">{{this.$store.state.channelInfo.channelName}}</span>
-    </v-card-title>
+    
       <!-- <v-infinite-scroll :onTopScrollsToBottom=false :loading="loading" @top="infiniteHandler" :offset='30' style="max-height: 100%; overflow-y: scroll;"> -->
 
     <infinite-loading ref="infiniteLoading" direction="top" @infinite="infiniteHandler" spinner="waveDots" v-if="this.$store.state.scrollFlag" force-use-infinite-wrapper="true"></infinite-loading>
    <v-list class="card">
      
-      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index">
+      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index" class="list_div">
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
         <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
         <!-- <v-list-tile> -->
@@ -72,17 +69,31 @@ export default {
     },
     infiniteHandler() {
       console.log("1 "+this.$store.state.messageStartNum);
+      console.log(this.$store.state.messageLastIdx);
       debugger;
       // if(this.$store.state.messageStartNum===-1)
       //   this.$store.state.scrollFlag=false
 
       // if(this.$store.state.scrollFlag === true) {
-      axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      // axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      //   params: {
+      //     start: this.$store.state.messageStartNum,
+      //     messageLastIdx: this.$store.state.messageLastIdx
+      //   },
+      // })
+      let token = localStorage.getItem('token');
+      debugger
+      console.log(this.$store.state.messageLastIdx);
+       axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
         params: {
           start: this.$store.state.messageStartNum,
           messageLastIdx: this.$store.state.messageLastIdx
         },
-      }).then((response) => {
+        headers: { 'X-Auth-Token': `${token}` },
+      })
+      .then((response) => {
         if (response.data.status==200) {
         debugger;
         console.log("2 "+this.$store.state.messageStartNum);
@@ -167,6 +178,9 @@ export default {
 }
 .card{
   padding-left: 2%;
+}
+.list_div:hover {
+  background: rgba(230, 230, 230, 0.979);
 }
 
 </style>

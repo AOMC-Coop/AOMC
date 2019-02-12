@@ -8,14 +8,14 @@ public enum Status_5000 {
     FAIL_DELETE_TEAM("5402"),
 
     SUCCESS_READ_TEAM("5203"),
-    FAIL_READ_TEAM("5502"),
+
 
     SUCCESS_INVITE("5204"),
     FAIL_INVITE("5405"),
     DEACTIVE_TEAM("5404"),
 
     SUCCESS_READ_CHANNEL("5205"),
-    FAIL_READ_CHANNEL("5501"),
+
 
     SUCCESS_DEACVITE_USER("5206"),
     FAIL_DEACVITE_USER("5406"),
@@ -24,12 +24,16 @@ public enum Status_5000 {
     FAIL_SEND_MAIL("5407"),
 
     SUCCESS_READ_USER("5208"),
-    FAIL_READ_USER("5502"),
+
 
     SUCCESS_ACCEPT_INVITE("5209"),
     FAIL_INCORRECT_AUTHKEY("5409"),
     PLEASE_SIGNUP("5410"),
-    No_Invite_Member("5411");
+    No_Invite_Member("5411"),
+
+    FAIL_READ_USER("5500"),
+    FAIL_READ_CHANNEL("5501"),
+    FAIL_READ_TEAM("5502");
 
     final private String status;
 

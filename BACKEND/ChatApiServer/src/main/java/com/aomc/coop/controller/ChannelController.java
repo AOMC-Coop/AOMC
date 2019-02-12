@@ -5,6 +5,7 @@ import com.aomc.coop.response.Status_1000;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.ChannelService;
 import com.aomc.coop.utils.CodeJsonParser;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.extern.slf4j.Slf4j;
@@ -86,7 +87,6 @@ public class ChannelController {
 
      */
     @PostMapping
-    @CrossOrigin
     public ResponseEntity makeChannel(@RequestBody final Channel channel){
 
         if(channel != null) {
@@ -137,7 +137,6 @@ public class ChannelController {
 
      */
     @PutMapping
-    @CrossOrigin
     public ResponseEntity updateChannel(@RequestBody final Channel channel){
         if(channel != null) {
             return new ResponseEntity<>(channelService.updateChannel(channel), HttpStatus.OK);
@@ -192,7 +191,6 @@ public class ChannelController {
 
      */
     @GetMapping
-    @CrossOrigin
     @RequestMapping("/message")
     public ResponseEntity getChannelMessage(@RequestParam("channelIdx") final int channelIdx, @RequestParam("start") final int start, @RequestParam("messageLastIdx") final int messageLastIdx){
         if(channelIdx >= 0) {
@@ -256,7 +254,6 @@ public class ChannelController {
 
      */
     @GetMapping
-    @CrossOrigin
     @RequestMapping("/users")
     public ResponseEntity getChannelUsers(@RequestParam("channelIdx") final int channelIdx){
         if(channelIdx >= 0) {
@@ -270,13 +267,23 @@ public class ChannelController {
 
      *
 
-     *        @brief GET http://localhost:8083/api/channel/invite/19/6
+     *        @brief POST http://localhost:8083/api/channel/invite
 
      *        @details 채널에 멤버를 초대하는 함수
+     *        test json
+     *        {
+     * 	        "idx":81,
+     * 	        "users":[
+     * 		        {
+     * 			        "idx": 9
+     * 		        },
+     * 		        {
+     * 			        "idx": 16
+     * 		        }
+     * 	        ]
+     *      }
 
-     *        @param PathVariable(value = "channelIdx") int channelIdx
-
-     *        @param PathVariable(value = "userIdx") int userIdx
+     *        @param @RequestBody Channel channel
 
      *        @return ResponseEntity<>
 
@@ -311,13 +318,12 @@ public class ChannelController {
      *
 
      */
-    @GetMapping
-    @CrossOrigin
-    @RequestMapping("/invite/{channelIdx}/{userIdx}")
-    public ResponseEntity inviteChannelUser(@PathVariable(value = "channelIdx") int channelIdx, @PathVariable(value = "userIdx") int userIdx){
+    @PostMapping
+    @RequestMapping("/invite")
+    public ResponseEntity inviteChannelUser(@RequestBody Channel channel){
 
-        if(channelIdx >= 0 || userIdx >= 0) {
-            return new ResponseEntity<>(channelService.inviteChannelUser(channelIdx, userIdx), HttpStatus.OK);
+        if(channel != null) {
+            return new ResponseEntity<>(channelService.inviteChannelUser(channel), HttpStatus.OK);
         }else {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
@@ -327,13 +333,13 @@ public class ChannelController {
 
      *
 
-     *        @brief DELETE http://localhost:8083/api/channel/invite/19/6
+     *        @brief DELETE http://localhost:8083/api/channel/19/6
 
      *        @details 멤버가 채널 나가기 하는 함수
 
-     *        @param PathVariable(value = "channelIdx") int channelIdx
+     *        @param RequestParam(value = "channelIdx") int channelIdx
 
-     *        @param PathVariable(value = "userIdx") int userIdx
+     *        @param RequestParam(value = "userIdx") int userIdx
 
      *        @return ResponseEntity<>
 
@@ -361,12 +367,20 @@ public class ChannelController {
 
      */
     @DeleteMapping
-    @CrossOrigin
-    @RequestMapping("/{channelIdx}/{userIdx}")
-    public ResponseEntity deleteChannelUser(@PathVariable(value = "channelIdx") int channelIdx, @PathVariable(value = "userIdx") int userIdx){
+    public ResponseEntity deleteChannelUser(@RequestParam(value = "channelIdx") int channelIdx, @RequestParam(value = "userIdx") int userIdx){
 
         if(channelIdx >= 0 || userIdx >= 0) {
             return new ResponseEntity<>(channelService.deleteChannelUser(channelIdx, userIdx), HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
+    }
+
+    @GetMapping
+    @RequestMapping("/star")
+    public ResponseEntity updateUserHasChannelStar(@RequestParam(value = "channelIdx") int channelIdx, @RequestParam(value = "userIdx") int userIdx, @RequestParam(value = "starFlag") int starFlag) {
+        if(channelIdx >= 0 || userIdx >= 0) {
+            return new ResponseEntity<>(channelService.updateUserHasChannelStar(channelIdx, userIdx, starFlag), HttpStatus.OK);
         }else {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }

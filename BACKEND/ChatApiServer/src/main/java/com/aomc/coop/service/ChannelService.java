@@ -179,13 +179,7 @@ public class ChannelService {
 
     public ResponseType getChannelUsers(int channelIdx) {
         if (channelIdx >= 0) {
-            List<Integer> users_idx = channelMapper.getChannelUsers(channelIdx);
-            List<User> users = new ArrayList<>();
-            for (Integer idx : users_idx) {
-                System.out.println("userIdx = " + idx);
-                User user = userMapper.findByUserIdx(idx);
-                users.add(user);
-            }
+            List<User> users = channelMapper.getChannelUsers(channelIdx);
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Channel_Users.getStatus(), users);
         } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -193,35 +187,59 @@ public class ChannelService {
         }
     }
 
-    public ResponseType inviteChannelUser(int channelIdx, int userIdx) {
-        if (channelIdx >= 0 || userIdx >= 0) {
-            //user_has_channel에 해당 채널에 유저가 있는지 판단
-            try {
-                int idx = channelMapper.findByChannelIdxAndUserIdx(channelIdx, userIdx);
-                System.out.println("idx = " + idx);
-                //status를 확인
-                int status = channelMapper.findByStatusFromIdx(idx);
-                //status가 0이면 1로 바꿔줌
-                if (status == 0) {
-                    channelMapper.updateChannelStatus(1, channelIdx, userIdx);
-                    return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Invite_Channel_User.getStatus());
-                }
-                //status가 1이면 이미 있는 사용자라고 말해줌
-                else if (status == 1) {
-                    return codeJsonParser.codeJsonParser(Status_1000.Channel_Already_Has_User.getStatus());
+    //user의 idx만 받음
+    public ResponseType inviteChannelUser(Channel channel) {
+        if (channel!=null) {
+            List<User> inviteUsers = channel.getUsers();
+
+            for(User inviteUser : inviteUsers){
+                try {
+                    int status = channelMapper.findChannelStatus(channel.getIdx(), inviteUser.getIdx());
+
+                    if (status == 0) {
+                        System.out.println("해당 채널을 나간 사용자 입니다.");
+                        channelMapper.updateChannelStatus(1, channel.getIdx(), inviteUser.getIdx());
+//                      return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Invite_Channel_User.getStatus());
+                    } else if (status == 1) {
+                        System.out.println("이미 채널에 있는 사용자입니다.");
+//                      return codeJsonParser.codeJsonParser(Status_1000.Channel_Already_Has_User.getStatus());
+                    }
+                } catch (Exception e) {
+                    //user_has_channel에 없으면 insert
+                    channelMapper.inviteChannelUser(channel.getIdx(), inviteUser.getIdx());
                 }
 
-                return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Invite_Channel_User.getStatus());
-            } catch (Exception e) {
-                //user_has_channel에 없으면 insert해줌
-                channelMapper.inviteChannelUser(channelIdx, userIdx);
-                return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Invite_Channel_User.getStatus());
             }
+            return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Invite_Channel_User.getStatus());
         } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_Invite_Channel_User.getStatus());
         }
     }
+
+
+
+            //user_has_channel에 해당 채널에 유저가 있는지 판단
+//            try {
+//                int idx = channelMapper.findByChannelIdxAndUserIdx(channelIdx, userIdx);
+//                System.out.println("idx = " + idx);
+//                //status를 확인
+//                int status = channelMapper.findByStatusFromIdx(idx);
+//                //status가 0이면 1로 바꿔줌
+//                if (status == 0) {
+//                    channelMapper.updateChannelStatus(1, channelIdx, userIdx);
+//                    return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Invite_Channel_User.getStatus());
+//                }
+//                //status가 1이면 이미 있는 사용자라고 말해줌
+//                else if (status == 1) {
+//                    return codeJsonParser.codeJsonParser(Status_1000.Channel_Already_Has_User.getStatus());
+//                }
+//
+//                return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Invite_Channel_User.getStatus());
+
+
+
+
 
     public ResponseType deleteChannelUser(int channelIdx, int userIdx) {
         if (channelIdx >= 0 || userIdx >= 0) {
@@ -230,6 +248,16 @@ public class ChannelService {
         } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_Delete_Channel_User.getStatus());
+        }
+    }
+
+    public ResponseType updateUserHasChannelStar(int channelIdx, int userIdx, int starFlag) {
+        if (channelIdx >= 0 || userIdx >= 0) {
+            channelMapper.updateUserHasChannelStar(channelIdx, userIdx, starFlag);
+            return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_UdpateStar_Channel_User.getStatus());
+        } else {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return codeJsonParser.codeJsonParser(Status_1000.FAIL_UdpateStar_Channel_User.getStatus());
         }
     }
 }

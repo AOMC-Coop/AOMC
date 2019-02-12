@@ -16,6 +16,13 @@ export const store = new Vuex.Store({
     generalFlag:false,
     messageLastIdx:0,
     messageStartNum:0,
+    channelUserCount:0,
+    channelUsers: [
+      {
+        "uid":'',
+        "nickname":''
+      }
+    ],    
     channelInfo: {
       idx:'',
       channelName:''

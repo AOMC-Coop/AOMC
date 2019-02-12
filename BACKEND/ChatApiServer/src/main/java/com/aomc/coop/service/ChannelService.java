@@ -179,13 +179,12 @@ public class ChannelService {
 
     public ResponseType getChannelUsers(int channelIdx) {
         if (channelIdx >= 0) {
-            List<Integer> users_idx = channelMapper.getChannelUsers(channelIdx);
-            List<User> users = new ArrayList<>();
-            for (Integer idx : users_idx) {
-                System.out.println("userIdx = " + idx);
-                User user = userMapper.findByUserIdx(idx);
-                users.add(user);
-            }
+            List<User> users = channelMapper.getChannelUsers(channelIdx);
+//            List<User> users = new ArrayList<>();
+//            for (Integer idx : users_idx) {
+//                User user = userMapper.findByUserIdx(idx);
+//                users.add(user);
+//            }
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Channel_Users.getStatus(), users);
         } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

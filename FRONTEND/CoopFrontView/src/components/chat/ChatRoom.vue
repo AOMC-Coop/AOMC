@@ -1,7 +1,7 @@
 <template>
 <v-content>
   <div>
-    <Message-Header></Message-Header>
+    <Message-Header :channels="channels" :teamMembers="teamMembers"></Message-Header>
     <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages"></Message-List>
     <Message-From class="msg-form"></Message-From>
     <!-- <Message-From class="msg-form" v-on:submitMessage="sendMessage" ></Message-From> -->
@@ -29,34 +29,19 @@ export default {
     'Message-List': MessageList,
     'Message-From': MessageForm,
   },
+  props:[
+    'channels',
+    'teamMembers'
+  ],
     
-  methods: {    
-    sendMessage(msg) {
-      // console.log(msg);
-      // this.pushMsgData({
-      //   from: {
-      //     name: '나',
-      //   },
-      //   msg,
-      // });
-      // this.$sendMessage({
-      //   name: this.$route.params.username,
-      //   msg,
-      // });
-    },
+  methods: {
+    
   },
 };
 
 </script>
 
 <style>
-/* .msg-header {
-  background-color:white;
-  position:absolute;
-  top:0;
-  width:100%;
-  height:10%;
-} */
 .msg-list {
   position: absolute;
   background-color:white; 

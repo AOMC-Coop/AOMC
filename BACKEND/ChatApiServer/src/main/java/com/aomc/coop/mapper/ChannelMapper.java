@@ -50,11 +50,8 @@ public interface ChannelMapper {
     @Update("UPDATE user_has_channel SET status=0 WHERE channel_idx = #{channelIdx} AND user_idx = #{userIdx}")
     int deactiveUserOfChannel(final int channelIdx, final int userIdx);
 
-    @Select("SELECT idx FROM user_has_channel WHERE channel_idx = #{channelIdx} and user_idx = #{userIdx}")
-    int findByChannelIdxAndUserIdx(int channelIdx, int userIdx);
-
-    @Select("SELECT status FROM user_has_channel WHERE idx = #{idx}")
-    int findByStatusFromIdx(int idx);
+    @Select("SELECT status FROM user_has_channel WHERE channel_idx = #{channelIdx} and user_idx = #{userIdx}")
+    int findChannelStatus(int channelIdx, int userIdx);
 
     @Update("UPDATE user_has_channel SET status=#{status} WHERE channel_idx = #{channelIdx} AND user_idx = #{userIdx}")
     void updateChannelStatus(int status, int channelIdx, int userIdx);

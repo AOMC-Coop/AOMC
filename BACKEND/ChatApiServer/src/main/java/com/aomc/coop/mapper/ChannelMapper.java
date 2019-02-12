@@ -29,8 +29,8 @@ public interface ChannelMapper {
     List<Message> getChannelMessage(int channelIdx, int start);
 
     //채널의 멤버 조회
-    @Select("SELECT user_idx FROM user_has_channel WHERE channel_idx = #{channelIdx} and status = 1")
-    List<Integer> getChannelUsers(int channelIdx);
+    @Select("SELECT u.uid, u.nickname FROM user_has_channel has, users u WHERE has.user_idx=u.idx AND has.status=1 AND has.channel_idx=#{channelIdx}")
+    List<User> getChannelUsers(int channelIdx);
 
     @Insert("INSERT INTO user_has_channel(channel_idx, user_idx) VALUES(#{channelIdx}, #{userIdx})")
     void inviteChannelUser(int channelIdx, int userIdx);
@@ -59,11 +59,8 @@ public interface ChannelMapper {
     @Update("UPDATE user_has_channel SET status=#{status} WHERE channel_idx = #{channelIdx} AND user_idx = #{userIdx}")
     void updateChannelStatus(int status, int channelIdx, int userIdx);
 
-    //채널의 User 조회
-    @Select("SELECT u.uid, u.nickname FROM user_has_channel has, users u WHERE has.user_idx=u.idx AND has.channel_idx=#{idx}")
-    List<User> readUserOfChannel(@Param("idx") final int channnelIdx);
 
-    //채널의 User 수 조회
-    @Select("SELECT count(*) as user_count FROM user_has_channel has WHERE has.channel_idx=#{idx}")
-    int getUserCountOfchannel(@Param("idx") final int channnelIdx);
+//    //채널의 User 수 조회
+//    @Select("SELECT count(*) as user_count FROM user_has_channel has WHERE has.channel_idx=#{idx}")
+//    int getUserCountOfchannel(@Param("idx") final int channnelIdx);
 }

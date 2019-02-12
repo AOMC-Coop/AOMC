@@ -127,7 +127,7 @@
     
         
     <!-- <ChatRoom :key="somevalueunderyourcontrol"></ChatRoom> -->
-    <ChatRoom class="chatroom"></ChatRoom>
+    <ChatRoom :channels="channels" :teamMembers="teamMembers" class="chatroom"></ChatRoom>
     
     <v-dialog v-model="dialog" width="800px" id="chat">
       <v-card>
@@ -396,6 +396,7 @@ var today = now.format("dddd, MMMM Do").toString()
           this.$store.state.channelInfo.channelName = channelName;
           this.$store.state.messageStartNum=0
           this.getMessage();
+          this.getChannelUsers();
 
           if(this.$store.state.channelInfo.channelName==='general'){
             this.$store.state.generalFlag=false
@@ -476,6 +477,7 @@ var today = now.format("dddd, MMMM Do").toString()
         });
       },
       getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
+        debugger
         axios
         .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
         .then(response => {
@@ -492,6 +494,7 @@ var today = now.format("dddd, MMMM Do").toString()
 
               this.$store.state.messageStartNum=0
               this.getMessage();
+              this.getChannelUsers();
 
             } else {
             this.errors.push(e);
@@ -526,12 +529,12 @@ var today = now.format("dddd, MMMM Do").toString()
         debugger;
         this.$store.state.received_messages.splice(0);
 
-    axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
-      params: {
-        start: this.$store.state.messageStartNum,
-        messageLastIdx: this.$store.state.messageLastIdx
-      },
-    }).then((response) => {
+        axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+         params: {
+          start: this.$store.state.messageStartNum,
+          messageLastIdx: this.$store.state.messageLastIdx
+        },
+      }).then((response) => {
       if (response.data.status==200) {
         // this.start += 10;
         if(response.data.plusData === -3) {
@@ -588,6 +591,24 @@ var today = now.format("dddd, MMMM Do").toString()
         }
       });
       },
+      getChannelUsers(){
+      axios.get(this.$store.state.ip + ":8083/api/channel/users", {
+        params: {
+          channelIdx: this.$store.state.channelInfo.idx
+        },
+      }).then(response => {
+            if(response.data.status===200) {
+              this.$store.state.channelUsers=response.data.data
+              this.$store.state.channelUserCount=this.$store.state.channelUsers.length
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+
+    },
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
         this.$store.state.messageLastIdx = 0;

@@ -38,7 +38,7 @@ public class FileUploadController {
     @PostMapping(path = "/{channel_idx}")
     @JsonInclude
 // ***** @RequestParam Message message -> String message 로 변환해서, String을 파싱해서 Message 객체로 변환하여 사용할 것
-    public ResponseEntity upload(@RequestParam("file") MultipartFile file, @RequestParam Message message, @PathVariable final int channel_idx) {
+    public ResponseEntity upload(@RequestParam("file") MultipartFile file, @RequestParam("message") Message message, @PathVariable final int channel_idx) {
         try {
             return new ResponseEntity(storageService.upload(file, message, channel_idx), HttpStatus.OK);
         } catch (Exception e) {

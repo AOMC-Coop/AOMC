@@ -9,6 +9,7 @@ import colors from 'vuetify/es5/util/colors'
 import Profile from '@/components/auth/Profile'
 import Pwd from '@/components/auth/ChangePwd'
 import CheckTeam from '@/components/chat/CheckTeam'
+import MissingPwd from '@/components/auth/MissingPwd'
 
 Vue.use(Vuetify, {
   theme: {
@@ -70,7 +71,12 @@ export default new Router({
           return '/signin'
         }
       }
-    } 
+    },
+    {
+      path: '/missingpwd',
+      name: 'MissingPwd',
+      component: MissingPwd
+    }
   ]
 })
 

@@ -32,7 +32,6 @@ import com.aomc.coop.utils.SHA256;
 import javax.annotation.Resource;
 
 @Slf4j
-
 @Service
 @Transactional
 public class MemberService {
@@ -210,15 +209,22 @@ public class MemberService {
         JavaMailSender mailSender;
         String uid;
         String authUrl;
+        int idx;
 
         public SendMailThread(JavaMailSender mailSender, String uid, String authUrl) {
             this.mailSender = mailSender;
             this.uid = uid;
             this.authUrl = authUrl;
         }
+// ***** 이런 식으로 중복되는 생성자가 있는건 별로인가?
+        public SendMailThread(JavaMailSender mailSender, String uid, int idx) {
+            this.mailSender = mailSender;
+            this.uid = uid;
+            this.idx = idx;
+        }
 
         public void run() {
-            mailSend.mailsend(mailSender, uid, authUrl);
+            mailSend.mailsendForMissingPwd(mailSender, uid, idx);
         }
     }
 
@@ -258,29 +264,29 @@ public class MemberService {
 
 
     // <4. 비밀번호 분실 후 변경>
-
-    // Forgot password?
     // 이메일 발송
-    // 이메일 버튼을 통해 비밀번호 수정 창으로 이동
+    public ResponseType missingEmailAuth (@PathVariable final int idx) {
 
+        try {
 
+// *****     if (idx != 헤더 토큰의 idx) {
+// *****          return codeJsonParser.codeJsonParser(Status_3000.FAIL_Missing_Pwd_Email_Auth.getStatus());
+// *****     }
 
-    // 6자리 인증 코드 생성
-//    public String authCode() {
-//
-//        Random random = new Random(System.currentTimeMillis());
-//        int certNumLength = 6;
-//
-//        int range = (int)Math.pow(10,certNumLength);
-//        int trim = (int)Math.pow(10, certNumLength-1);
-//        int result = random.nextInt(range)+trim;
-//
-//        if(result>range){
-//            result = result - trim;
-//        }
-//
-//        return String.valueOf(result);
-//    }
+            User myUser = userMapper.getUserWithIdx(idx);
+            String uid = myUser.getUid();
+
+            SendMailThread sendMailThread = new SendMailThread(mailSender, uid, idx);
+            sendMailThread.run();
+// ***** mailsend, mailSender, SendMailThread, JavaMailSender 진짜 헷갈린다. 시간나면 한 번 정리할 것
+// ***** 우선 sendMailThread.start() 대신, 편의상 sendMailThread.run()을 이용
+
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register_Auth_Mail_Sent.getStatus());
+        }
+        catch (Exception e) {
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
+        }
+    }
 
 
 }

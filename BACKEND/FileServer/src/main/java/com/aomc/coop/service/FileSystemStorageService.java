@@ -40,6 +40,9 @@ import org.springframework.web.multipart.MultipartFile;
 // ***** 방 단위로 나눠서 스케일 아웃 -> MAX_DIRECTORY_SIZE 변수를 설정하고, 이 용량을 넘으면 자동으로 상위 디렉토리를 파도록 하자
 // ***** 지금은 E:\FileStorage\{channel_idx} 의 구조이지만,
 // ***** 추후엔 E:\FileStorage\{new_hdd}\{channel_idx} 의 구조로 변경할 것
+
+// ***** 국가, 지역의 디렉토리를 추가할 수도 있다.
+// ***** 이 경우 디렉토리는 E:\FileStorage\{}\{city}\{new_hdd}\{channel_idx} 의 구조가 될 것 (예시)
 // ***** new_hdd = new hard drive의 줄임말, 의미는 아래 참조
 
 //       하드웨어 추가를 통한 스케일 아웃 -> 디렉토리 구조를 나눠서 만들어보자.
@@ -107,6 +110,7 @@ public class FileSystemStorageService implements StorageService {
                 Files.copy(inputStream, path.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
             }
+// ***** StandardCopyOption.REPLACE_EXISTING은 결국에는 쓰이지 말아야 한다.
 
             String url = "http://localhost:8085/files/" + channel_idx + "/" + filename;
 
@@ -114,15 +118,13 @@ public class FileSystemStorageService implements StorageService {
 
             fileToBeInserted.setName(filename);
             fileToBeInserted.setUrl(url);
-            // ***** RabbitMQ에 실어주는 것도 여기서 해야하나?
 
 
-            // ***** Mapper로 db에 file 정보를 저장할 것 -> 잘 되나 테스트 해보자
             if(fileMapper.insertFile(fileToBeInserted) == 0){
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
             }
 
-            //message info setting
+// ***** RabbitMQ에 실어주는 것
             message.setFile_url(url);
             rabbitMQUtil.sendRabbitMQ(message);
 

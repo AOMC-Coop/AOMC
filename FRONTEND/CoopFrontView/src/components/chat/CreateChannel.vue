@@ -87,6 +87,9 @@
               ></v-text-field>
             </v-flex> -->
           </v-layout>
+ <v-flex xs12>
+  <SearchMember :teamMembers="teamMembers"></SearchMember>
+ </v-flex>
 
       <v-subheader >
         <v-text style = "fontSize : 18px">  초대할 멤버 </v-text>
@@ -123,6 +126,7 @@
 </template>
 <script>
 import axios from "axios";
+import SearchMember from './SearchMember.vue'
 
 export default {
   name: 'CreateChannel',
@@ -144,7 +148,11 @@ export default {
             ]
           }
       } 
-  },props : [
+  },
+  components: {
+    'SearchMember' : SearchMember,
+  },
+  props : [
       // 'hot_table',
       'teamMembers',
       'teamIdx',
@@ -227,16 +235,13 @@ export default {
     this.channel.users.push({idx: this.userIdx, nickname: this.userNickName});
     // this.channel.teamIdx = localStorage.getItem(teamIdx);
     this.printLog(this.teamMembers)
-    window.addEventListener('scroll', this.handleScroll); 
   },
-  destroyed() { 
-    window.removeEventListener('scroll', this.handleScroll); 
-  } 
 }
 </script>
 
 <style>
-.div {
-  overflow-y : scroll;
+.list{
+  height: 50px; 
+  overflow : scroll;
 }
 </style>

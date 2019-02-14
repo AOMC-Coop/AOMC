@@ -224,8 +224,11 @@ public class MemberService {
         }
 
         public void run() {
-            mailSend.mailsendForMissingPwd(mailSender, uid, idx);
+            mailSend.mailsend(mailSender, uid, authUrl);
         }
+//        public void run() {
+//            mailSend.mailsendForMissingPwd(mailSender, uid, idx);
+//        }
     }
 
     // <3. 비밀번호 변경>

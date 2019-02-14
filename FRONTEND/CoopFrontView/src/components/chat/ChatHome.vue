@@ -68,7 +68,7 @@
       <v-list dense class="white--text">
         <template v-for="item in channels">
           
-          <v-list-tile v-if :key="item.text" v-if="item.star_flag === 1">
+          <v-list-tile v-if :key="item.text" v-if="item.star_flag === 1" @click="clickChannel(item.idx, item.name)">
             <v-list-tile-content>
               <v-list-tile-title>
                <v-text> # {{ item.name }} </v-text>
@@ -450,6 +450,10 @@ var today = now.format("dddd, MMMM Do").toString()
         this.inviteTeam.users = this.$store.state.inviteUsers;
         this.inviteTeam.channels.push({idx: this.channels[0].idx});//general idx 채널을 넣어줘야함
 
+        if(this.$store.state.inviteUsers.length <= 1) {
+          alert("멤버를 초대해주세요.");
+        }
+        else {
         // axios
         // .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam)
         let token = localStorage.getItem('token');
@@ -471,6 +475,7 @@ var today = now.format("dddd, MMMM Do").toString()
         });
         
         this.dialog = false;
+        }
       },
       clickCancel() {
         // for(item in this.inviteUsers) {
@@ -495,6 +500,7 @@ var today = now.format("dddd, MMMM Do").toString()
                         name: 'dynamic-modal',
                         width : '800px',
                         height : '80%',
+                        
                         draggable: true
             })
             

@@ -382,8 +382,16 @@ var today = now.format("dddd, MMMM Do").toString()
         this.createTeam.name = this.createTeamName;
         this.createTeam.users = this.$store.state.inviteUsers;
 
+        // let token = localStorage.getItem('token');
+        // axios
+        // .post(this.$store.state.ip + ":8083/api/team", this.createTeam, 
+        // {headers: { 'X-Auth-Token': `${token}` }}
+        // )
+        let token = localStorage.getItem('token');
         axios
-        .post(this.$store.state.ip + ":8083/api/team", this.createTeam)
+        .post(this.$store.state.ip + ":8083/api/team", this.createTeam, 
+        {headers: { 'X-Auth-Token': `${token}` }}
+        )
         .then(response => {
           // debugger;
             if(response.data) {
@@ -441,9 +449,14 @@ var today = now.format("dddd, MMMM Do").toString()
         this.inviteTeam.users = this.$store.state.inviteUsers;
         this.inviteTeam.channels.push({idx: this.channels[0].idx});//general idx 채널을 넣어줘야함
 
+        // axios
+        // .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam)
+        let token = localStorage.getItem('token');
         axios
-        .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam)
-        .then(response => {
+        .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam, 
+        {headers: { 'X-Auth-Token': `${token}` }}
+        )
+      .then(response => {
           debugger;
             if(response.data) {
               // this.teamMembers = response.data.data;
@@ -487,8 +500,14 @@ var today = now.format("dddd, MMMM Do").toString()
       },
       
       getMemberByTeamId(teamIdx){
-        axios
-        .get(this.$store.state.ip + ":8083/api/team/" + teamIdx)
+        // axios
+        // .get(this.$store.state.ip + ":8083/api/team/" + teamIdx)
+        let token = localStorage.getItem('token');
+        axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/team/" + teamIdx,
+        headers: { 'X-Auth-Token': `${token}` }
+      })
         .then(response => {
             if(response.data) {
               this.teamMembers = response.data.data;
@@ -507,9 +526,15 @@ var today = now.format("dddd, MMMM Do").toString()
       },
       getChannelsByTeamIdxAndUserIdx(teamIdx, userIdx) {
         debugger
-        axios
-        .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
-        .then(response => {
+        // axios
+        // .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
+        let token = localStorage.getItem('token');
+        axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx,
+        headers: { 'X-Auth-Token': `${token}` }
+      })
+      .then(response => {
             if(response.data) {
               debugger
               this.channels = response.data.data;
@@ -555,8 +580,14 @@ var today = now.format("dddd, MMMM Do").toString()
 
       },
       getChannelsByTeamIdxAndUserIdxWithOutGetMessage(teamIdx, userIdx) {
-        axios
-        .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
+        // axios
+        // .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
+        let token = localStorage.getItem('token');
+        axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx,
+        headers: { 'X-Auth-Token': `${token}` }
+      })
         .then(response => {
           debugger
             if(response.data) {
@@ -578,12 +609,24 @@ var today = now.format("dddd, MMMM Do").toString()
         debugger;
         this.$store.state.received_messages.splice(0);
 
-        axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
-         params: {
+      //   axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      //    params: {
+      //     start: this.$store.state.messageStartNum,
+      //     messageLastIdx: this.$store.state.messageLastIdx
+      //   },
+      // })
+      let token = localStorage.getItem('token');
+      axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        params: {
           start: this.$store.state.messageStartNum,
           messageLastIdx: this.$store.state.messageLastIdx
         },
-      }).then((response) => {
+        headers: { 'X-Auth-Token': `${token}` }
+      })
+      .then((response) => {
+        debugger
       if (response.data.status==200) {
         // this.start += 10;
         if(response.data.plusData === -3) {
@@ -641,11 +684,21 @@ var today = now.format("dddd, MMMM Do").toString()
       });
       },
       getChannelUsers(){
-      axios.get(this.$store.state.ip + ":8083/api/channel/users", {
+      // axios.get(this.$store.state.ip + ":8083/api/channel/users", {
+      //   params: {
+      //     channelIdx: this.$store.state.channelInfo.idx
+      //   },
+      // })
+      let token = localStorage.getItem('token');
+      axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/channel/users",
         params: {
-          channelIdx: this.$store.state.channelInfo.idx
+         channelIdx: this.$store.state.channelInfo.idx
         },
-      }).then(response => {
+        headers: { 'X-Auth-Token': `${token}` }
+      })
+      .then(response => {
             if(response.data.status===200) {
               this.$store.state.channelUsers=response.data.data
               this.$store.state.channelUserCount=this.$store.state.channelUsers.length
@@ -699,7 +752,7 @@ var today = now.format("dddd, MMMM Do").toString()
       //   console.log("socket disconnect");
       // });
       axios.post(this.$store.state.ip + `:8082/logout`, this.userWithToken)
-        .then(response => {
+      .then(response => {
           let description = response.data.description
           if(description == "Fail Logout"){
               alert("Fail to sign out!")
@@ -801,8 +854,20 @@ var today = now.format("dddd, MMMM Do").toString()
 
       this.createSocket();
 
-      axios
-        .get(this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"))
+      let token = localStorage.getItem('token');
+
+
+      // axios
+      //   .get(this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"), {
+      //     headers: {
+      //       'X-Auth-Token' : '${token}'
+      //     }
+      //   })
+        axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"),
+        headers: { 'X-Auth-Token': `${token}` }
+      })
         .then(response => { //
             if(response.data) {
 

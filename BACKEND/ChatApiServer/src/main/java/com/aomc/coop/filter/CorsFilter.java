@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @Component
-@Order(1)
 public class CorsFilter extends OncePerRequestFilter {
 
     @Override

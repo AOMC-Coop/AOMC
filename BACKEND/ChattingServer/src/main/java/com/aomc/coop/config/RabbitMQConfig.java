@@ -15,15 +15,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
+
 @Configuration
 @EnableRabbit
 public class RabbitMQConfig { //monitoring -> http://localhost:15672
 
     public static final String QUEUE_NAME = "queue";
 
-    private static final String EXCHANGE = QUEUE_NAME + "-exchange";
-
     public static final String RECEIVE_QUEUE_NAME = "receieve_queue";
+
+    private static final String EXCHANGE = RECEIVE_QUEUE_NAME + "-exchange";
 
 
     @Bean
@@ -39,8 +40,8 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory());
         container.setQueueNames(RECEIVE_QUEUE_NAME); //default
-//        container.setMessageListener(baseMesage());
-        container.setMessageConverter(jsonMessageConverter());
+//        container.setMessageListener(listenerAdapter);
+//        container.setMessageConverter(jsonMessageConverter());
         return container;
     }
 

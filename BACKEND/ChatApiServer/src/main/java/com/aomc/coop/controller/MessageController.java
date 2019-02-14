@@ -33,6 +33,7 @@ public class MessageController {
 
     @MessageMapping("/chat")
     public Message broadcasting(Message msg) throws Exception{
+        System.out.println("MessageController - " + msg);
         return rabbitMQUtil.sendRabbitMQ(msg);
     }
 

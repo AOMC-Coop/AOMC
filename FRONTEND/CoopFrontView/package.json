@@ -28,6 +28,7 @@
     "vue-router": "^3.0.1",
     "vue-smooth-scrollbar": "^0.1.2",
     "vuetify": "^1.4.2",
+    "vuetify-upload-button": "^1.2.2",
     "vuex": "^3.1.0",
     "webstomp-client": "^1.2.6"
   },

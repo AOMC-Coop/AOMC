@@ -13,6 +13,11 @@
             prepend-icon="add"
             clearable
             ></v-textarea>
+            <upload-btn icon>
+              <template slot="icon">
+                <v-icon>add</v-icon>
+              </template>
+            </upload-btn>
           </v-flex>
         </v-layout>
       </v-container>

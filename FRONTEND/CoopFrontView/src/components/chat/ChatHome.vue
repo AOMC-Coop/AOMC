@@ -68,7 +68,7 @@
       <v-list dense class="white--text">
         <template v-for="item in channels">
           
-          <v-list-tile v-if :key="item.text" v-if="item.star_flag === 1">
+          <v-list-tile v-if :key="item.text" v-if="item.star_flag === 1" @click="clickChannel(item.idx, item.name)">
             <v-list-tile-content>
               <v-list-tile-title>
                <v-text> # {{ item.name }} </v-text>
@@ -449,6 +449,10 @@ var today = now.format("dddd, MMMM Do").toString()
         this.inviteTeam.users = this.$store.state.inviteUsers;
         this.inviteTeam.channels.push({idx: this.channels[0].idx});//general idx 채널을 넣어줘야함
 
+        if(this.$store.state.inviteUsers.length <= 1) {
+          alert("멤버를 초대해주세요.");
+        }
+        else {
         // axios
         // .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam)
         let token = localStorage.getItem('token');
@@ -470,6 +474,7 @@ var today = now.format("dddd, MMMM Do").toString()
         });
         
         this.dialog = false;
+        }
       },
       clickCancel() {
         // for(item in this.inviteUsers) {
@@ -494,6 +499,7 @@ var today = now.format("dddd, MMMM Do").toString()
                         name: 'dynamic-modal',
                         width : '800px',
                         height : '80%',
+                        
                         draggable: true
             })
             
@@ -702,6 +708,8 @@ var today = now.format("dddd, MMMM Do").toString()
             if(response.data.status===200) {
               this.$store.state.channelUsers=response.data.data
               this.$store.state.channelUserCount=this.$store.state.channelUsers.length
+              this.getExceptChannelUsers();
+
             } else {
             this.errors.push(e);
             }
@@ -711,6 +719,23 @@ var today = now.format("dddd, MMMM Do").toString()
         });
 
     },
+    getExceptChannelUsers(){
+      
+      this.$store.state.exceptChannelUsers.splice(0)
+
+      for(var i=0; i<this.teamMembers.length;i++){
+        for(var j=0; j<this.$store.state.channelUsers.length;j++){
+          if(this.$store.state.channelUsers[j].idx==this.teamMembers[i].idx){
+            break;
+          }
+          if(this.$store.state.channelUsers.length-1==j){
+            this.$store.state.exceptChannelUsers.push(this.teamMembers[i])
+          }
+        }
+      }
+
+    },
+
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
         this.$store.state.messageLastIdx = 0;

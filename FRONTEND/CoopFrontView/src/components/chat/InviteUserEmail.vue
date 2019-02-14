@@ -35,7 +35,10 @@ export default{
     add() {
       this.$validator.validateAll()
       debugger;
-      if (!this.errors.any()) {
+      if(this.email === '') {
+        alert('이메일을 입력해 주세요.')
+      }
+      else if (!this.errors.any()) {
         this.$store.state.inviteUsers.push({uid:this.email});
         alert('추가 되었습니다.')
       }else {

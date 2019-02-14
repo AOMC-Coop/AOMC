@@ -30,7 +30,7 @@ public class RabbitMQUtil {
 
         //큐에보냄
         if(message != null) {
-            rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, map);
+            rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.QUEUE_NAME, map);
             System.out.println("rabbitMQ send");
         }
 

@@ -20,7 +20,7 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
 
     public static final String RECEIVE_QUEUE_NAME = "receieve_queue";
 
-    private static final String EXCHANGE = QUEUE_NAME + "-exchange";
+    public static final String EXCHANGE = QUEUE_NAME + "-exchange";
 
     @Bean
     public RabbitTemplate rabbitTemplate() {
@@ -35,14 +35,14 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory());
         container.setQueueNames(QUEUE_NAME);
-//        container.setMessageListener(baseMesage());
-        container.setMessageConverter(jsonMessageConverter());
+//        container.setMessageListener(listenerAdapter);
+//        container.setMessageConverter(jsonMessageConverter());
         return container;
     }
 
     @Bean
     public Queue queue() {
-        return new Queue(QUEUE_NAME, false);
+        return new Queue(QUEUE_NAME, true);
     }
 
     @Bean
@@ -65,6 +65,7 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
 //    public BaseMesage baseMesage() {
 //        return new BaseMesage();
 //    }
+
 
     @Bean
     public ConnectionFactory connectionFactory() {

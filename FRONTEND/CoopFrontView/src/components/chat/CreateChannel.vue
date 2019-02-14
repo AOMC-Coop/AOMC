@@ -227,16 +227,13 @@ export default {
     this.channel.users.push({idx: this.userIdx, nickname: this.userNickName});
     // this.channel.teamIdx = localStorage.getItem(teamIdx);
     this.printLog(this.teamMembers)
-    window.addEventListener('scroll', this.handleScroll); 
   },
-  destroyed() { 
-    window.removeEventListener('scroll', this.handleScroll); 
-  } 
 }
 </script>
 
 <style>
-.div {
-  overflow-y : scroll;
+.list{
+  height: 230px; 
+  overflow : scroll;
 }
 </style>

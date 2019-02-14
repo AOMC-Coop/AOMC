@@ -36,7 +36,6 @@ import java.net.URI;
 
 
 @Slf4j
-@CrossOrigin
 @RestController
 @RequestMapping("/api/team")
 public class TeamController {

@@ -76,6 +76,7 @@ public class FileSystemStorageService implements StorageService {
 // Message 객체를 보낼 것
     @Override
     public ResponseType upload(MultipartFile file, Message message, final int channel_idx) {
+
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
 // ***** filename 중복시, time 변수 혹은 다른 방식을 통해 filename 중복을 막도록 코드를 변경할 것
 

@@ -29,7 +29,7 @@ public interface ChannelMapper {
     List<Message> getChannelMessage(int channelIdx, int start);
 
     //채널의 멤버 조회
-    @Select("SELECT u.uid, u.nickname FROM user_has_channel has, users u WHERE has.user_idx=u.idx AND has.status=1 AND has.channel_idx=#{channelIdx}")
+    @Select("SELECT DISTINCT u.idx, u.uid, u.nickname FROM user_has_channel has, users u, user_has_team ht, channels c WHERE has.user_idx=u.idx AND ht.user_idx=u.idx AND c.team_idx=ht.team_idx AND has.status=1 AND ht.invite_flag=1 AND has.channel_idx=#{channelIdx}")
     List<User> getChannelUsers(int channelIdx);
 
     @Insert("INSERT INTO user_has_channel(channel_idx, user_idx) VALUES(#{channelIdx}, #{userIdx})")

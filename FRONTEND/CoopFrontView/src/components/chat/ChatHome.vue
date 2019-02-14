@@ -649,6 +649,8 @@ var today = now.format("dddd, MMMM Do").toString()
             if(response.data.status===200) {
               this.$store.state.channelUsers=response.data.data
               this.$store.state.channelUserCount=this.$store.state.channelUsers.length
+              this.getExceptChannelUsers();
+
             } else {
             this.errors.push(e);
             }
@@ -658,6 +660,23 @@ var today = now.format("dddd, MMMM Do").toString()
         });
 
     },
+    getExceptChannelUsers(){
+      
+      this.$store.state.exceptChannelUsers.splice(0)
+
+      for(var i=0; i<this.teamMembers.length;i++){
+        for(var j=0; j<this.$store.state.channelUsers.length;j++){
+          if(this.$store.state.channelUsers[j].idx==this.teamMembers[i].idx){
+            break;
+          }
+          if(this.$store.state.channelUsers.length-1==j){
+            this.$store.state.exceptChannelUsers.push(this.teamMembers[i])
+          }
+        }
+      }
+
+    },
+
       clickTeamName(teamIdx, teamName) {
         localStorage.setItem("teamIdx", teamIdx);
         this.$store.state.messageLastIdx = 0;

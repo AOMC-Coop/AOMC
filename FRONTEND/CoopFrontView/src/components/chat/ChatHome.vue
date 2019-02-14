@@ -103,7 +103,7 @@
       </v-list>
     </v-flex>
 
-     <v-flex xs6>
+     <v-flex xs12>
       <v-subheader class="white--text">
         <v-text style = "fontSize : 18px">  Channels </v-text>
         <v-icon @click="doc_del_rendar()" class="white--text" right fab>add</v-icon>
@@ -356,7 +356,7 @@ var today = now.format("dddd, MMMM Do").toString()
                 }
               }
             }else { // 다른 채팅방에서 메세지 올 때 알림 띄우기
-              debugger
+              // debugger
               let nicknamePlusTime = message.nickname + "   " + message.send_date;
               this.$notify({
                 group: 'foo',
@@ -374,7 +374,8 @@ var today = now.format("dddd, MMMM Do").toString()
       )
       },
       addInvitePeopleDialog() {
-        debugger
+        this.$store.state.components.splice(0);
+        this.$store.state.inviteUsers.splice(0);
         this.$store.state.inviteUsers.push({uid:localStorage.getItem("userId")});
         this.dialog = !this.dialog;
       },

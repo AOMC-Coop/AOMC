@@ -31,7 +31,7 @@ public interface TeamMapper {
     List<User> readUserOfTeam(@Param("idx") final int teamIdx);
 
     //유저가 가진 팀 조회
-    @Select("SELECT t.idx, t.name, t.status FROM teams t, user_has_team u WHERE t.idx = u.team_idx AND user_idx = #{idx}")
+    @Select("SELECT t.idx, t.name, t.status FROM teams t, user_has_team u WHERE t.idx = u.team_idx AND u.invite_flag=1 AND user_idx= #{idx}")
     List<Team> readTeamOfUser(@Param("idx") final int userIdx);
 
     //team수정

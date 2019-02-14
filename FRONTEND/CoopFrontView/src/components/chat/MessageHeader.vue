@@ -288,14 +288,14 @@
 <script>
 import axios from "axios";
 import moment from 'moment'
-// import inviteChannel from './inviteChannel.vue'
+import inviteChannel from './InviteChannel.vue'
 
 var now = new moment();
 var today = now.format("dddd, MMMM Do").toString()
 
 export default {
   components : {
-    // 'inviteChannel' : inviteChannel
+    'inviteChannel' : inviteChannel
     // 'InviteUserEmail' : InviteUserEmail
   },
   props:[
@@ -311,12 +311,6 @@ export default {
        userIdx: localStorage.getItem("userIdx"),
           userNickName: localStorage.getItem("userNickName"),
           channelName:'',
-          // inviteUsers:[
-          //   {
-          //     idx: '',
-          //     nickname:''
-          //   }
-          // ],
           channel:{
             idx:'',
             users:[
@@ -342,10 +336,13 @@ export default {
       
     },
     inviteChannel(){
+       let token = localStorage.getItem('token');
       this.channel.idx=this.$store.state.channelInfo.idx
 
       axios
-        .post(this.$store.state.ip + ":8083/api/channel/invite", this.channel)
+        .post(this.$store.state.ip + ":8083/api/channel/invite", this.channel, 
+        {headers: { 'X-Auth-Token': `${token}` }}
+        )
         .then(response => {
             if(response.data.status===200) {
               

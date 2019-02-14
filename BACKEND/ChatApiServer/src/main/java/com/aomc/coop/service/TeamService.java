@@ -15,6 +15,8 @@ import com.aomc.coop.utils.ResponseType;
 import com.aomc.coop.utils.date.DateFormatCustom;
 import com.aomc.coop.utils.mail.MailSend;
 import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
@@ -126,7 +128,7 @@ public class TeamService {
 
                     //초대받은팀원이 User가 아닌 경우 - userID만 넣기
                     if (userTemp == null) {
-                        hashMap.put("uid", user.getUid());
+//                        hashMap.put("uid", user.getUid());
                         hashMap.put("userIdx", 0);
 
                     } else {//초대받은팀원이 User인 경우
@@ -136,7 +138,7 @@ public class TeamService {
                         channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
 
                         //Redis에 정보 저장
-                        hashMap.put("uid", user.getUid());
+//                        hashMap.put("uid", user.getUid());
                         hashMap.put("userIdx", userTemp.getIdx());
                     }
 
@@ -340,7 +342,7 @@ public class TeamService {
             HashMap hashMap = new HashMap();
             hashMap.put("teamIdx", team.getIdx());
             hashMap.put("channelIdx", channels.get(0).getIdx());
-            hashMap.put("uid", user.getUid());
+//            hashMap.put("uid", user.getUid());
 
 
             //초대받은팀원이 User가 아닌 경우 - userIdx에 0 넣기
@@ -362,6 +364,9 @@ public class TeamService {
             values.putAll(token.getToken(), hashMap);
             values.getOperations().expire(token.getToken(), 1L, TimeUnit.HOURS);
 
+            String test = (String) values.get(token.getToken(), "teamIdx");
+            System.out.println("[TeamService, inviteTeam]test = "+test);
+
 
             SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), token.getToken(), teamTemp.getName(), inviteUsers.get(0).getUid());
             sendMailThread.start();
@@ -377,11 +382,22 @@ public class TeamService {
     //초대 승낙
     public String acceptInvite(final String token) {
 
+
         String string_teamIdx = (String) values.get(token, "teamIdx");
         String string_userIdx = (String) values.get(token, "userIdx");
 
+//        Map<String, Integer> map = values.entries(token);
+//        ObjectMapper mapper = new ObjectMapper();
+//        HashMap<String, Integer> map3 =  mapper.convertValue(map, new TypeReference<HashMap<String, Integer>>() {});
+//
+//        int teamIdx = map3.get("teamIdx");
+//        int userIdx = map3.get("userIdx");
+
         int teamIdx = Integer.parseInt(string_teamIdx);
         int userIdx = Integer.parseInt(string_userIdx);
+
+        System.out.println("[TeamService, acceptInvite] teamIdx = "+teamIdx);
+        System.out.println("[TeamService,acceptInvite] userIdx = "+userIdx);
 
         if (teamIdx == -1) {
             return "http://localhost:9999/signup/"; //회원가입창 //만료된주소입니다라는 메세지 보내야함

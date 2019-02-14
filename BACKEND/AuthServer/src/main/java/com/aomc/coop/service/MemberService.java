@@ -58,10 +58,8 @@ public class MemberService {
     // <1. 회원 가입>
     // 가입시 이메일 인증
 
-
     // 회원 가입
 
-// ***** 여기선 try ~ catch를 안 썼다. 쓰는 걸로 변경할 것
     public ResponseType register(@RequestBody User user) {
 
         try {
@@ -211,15 +209,22 @@ public class MemberService {
         JavaMailSender mailSender;
         String uid;
         String authUrl;
+        int idx;
 
         public SendMailThread(JavaMailSender mailSender, String uid, String authUrl) {
             this.mailSender = mailSender;
             this.uid = uid;
             this.authUrl = authUrl;
         }
+// ***** 이런 식으로 중복되는 생성자가 있는건 별로인가?
+        public SendMailThread(JavaMailSender mailSender, String uid, int idx) {
+            this.mailSender = mailSender;
+            this.uid = uid;
+            this.idx = idx;
+        }
 
         public void run() {
-            mailSend.mailsend(mailSender, uid, authUrl);
+            mailSend.mailsendForMissingPwd(mailSender, uid, idx);
         }
     }
 
@@ -259,41 +264,29 @@ public class MemberService {
 
 
     // <4. 비밀번호 분실 후 변경>
-
-    // Forgot password?
     // 이메일 발송
-    // 이메일 버튼을 통해 비밀번호 수정 창으로 이동
+    public ResponseType missingEmailAuth (@PathVariable final int idx) {
 
+        try {
 
+// *****     if (idx != 헤더 토큰의 idx) {
+// *****          return codeJsonParser.codeJsonParser(Status_3000.FAIL_Missing_Pwd_Email_Auth.getStatus());
+// *****     }
 
+            User myUser = userMapper.getUserWithIdx(idx);
+            String uid = myUser.getUid();
 
+            SendMailThread sendMailThread = new SendMailThread(mailSender, uid, idx);
+            sendMailThread.run();
+// ***** mailsend, mailSender, SendMailThread, JavaMailSender 진짜 헷갈린다. 시간나면 한 번 정리할 것
+// ***** 우선 sendMailThread.start() 대신, 편의상 sendMailThread.run()을 이용
 
-    // 비밀번호 변경
-//    public ResponseType registerAuthorization(@RequestBody User user) {
-//
-//        String authCode = authCode();
-//        SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), null, authCode);
-//        // 여기선 token이 쓰이지 않으므로, null을 입력. MailSend 클래스는 비밀번호 변경에도 사용될 것이므로, String token을 아규먼트로 가지고 있긴 해야 함.
-//        sendMailThread.start();
-//
-//    }
-
-    // 6자리 인증 코드 생성
-//    public String authCode() {
-//
-//        Random random = new Random(System.currentTimeMillis());
-//        int certNumLength = 6;
-//
-//        int range = (int)Math.pow(10,certNumLength);
-//        int trim = (int)Math.pow(10, certNumLength-1);
-//        int result = random.nextInt(range)+trim;
-//
-//        if(result>range){
-//            result = result - trim;
-//        }
-//
-//        return String.valueOf(result);
-//    }
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register_Auth_Mail_Sent.getStatus());
+        }
+        catch (Exception e) {
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
+        }
+    }
 
 
 }

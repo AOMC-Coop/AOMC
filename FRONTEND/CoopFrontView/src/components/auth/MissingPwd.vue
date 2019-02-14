@@ -14,14 +14,14 @@
             
             <v-toolbar-items>
             <!-- 추후 버튼 말고 다른 태그로 교체 -->
-            <v-btn flat>Login</v-btn>
+            <v-btn flat>Enter your e-mail</v-btn>
             </v-toolbar-items>
         </v-toolbar>
         <img
         <v-card>
           <v-card-text>
             <v-container>
-              <form @submit.prevent="signin"> 
+              <form @submit.prevent="sendMail"> 
                 <v-layout row>
                   <v-flex xs12>
                     <!-- 잘못된 양식의 이메일 입력시 경고 띄우는 코드 가져오기 -->
@@ -34,29 +34,15 @@
                       required></v-text-field>
                   </v-flex>
                 </v-layout>
-                <v-layout row>
-                  <v-flex xs12>
-                    <v-text-field
-                      name="password"
-                      label="Password"
-                      id="password"
-                      v-model="userInfo.pwd"
-                      type="password"
-                      required></v-text-field>
-                  </v-flex>
-                </v-layout>
                 <v-layout>
                   <v-flex xs12>
-                    <v-btn type="submit" :loading="loading">Login</v-btn>
+                    <v-btn type="submit" :loading="loading">Send email to verify</v-btn>
                   </v-flex>
                 </v-layout>
               </form>
             </v-container>
           </v-card-text>
         </v-card>
-        <br><br><br><br>
-        <a href="http://localhost:9999/signup">NOT SIGN UP YET? JOIN US!</a> <br><br>
-        <a href="http://localhost:9999/missingpwd">FORGOT YOUR PASSWORD?</a>
       </v-flex>
     </v-layout>
   </v-container>
@@ -73,7 +59,6 @@ const baseURI = localStorage.getItem('baseURI')
       return {
         userInfo: {
           uid: '',
-          pwd: ''
         },
         info:'',
       }
@@ -108,52 +93,11 @@ const baseURI = localStorage.getItem('baseURI')
         this.$store.dispatch('clearError')
       },
 
-      checkIsTeam(userIdx) {
-        let token = localStorage.getItem('token');
-        debugger
-         axios({
-        method: 'get',
-        url: "http://localhost:8083/api/team/user/" + userIdx,
-        headers: { 'X-Auth-Token': `${token}` }
-      })
-        .then(response => { //
-            debugger;
-            if(response.data.data == null) {
-              debugger;
-              this.$router.push({path: '/checkTeam'});
-
-              // this.teamsFromServer = response.data.data;
-              // this.teamName = response.data.data[0].name;
-              // this.userName = localStorage.getItem("userNickName"); //로그인 한 후 userName 받기 -> localStorage에서 받기 
-              // localStorage.setItem("teamIdx", response.data.data[0].idx);
-              // console.log("teamIdx" + response.data.data[0].idx);
-              // this.getMemberByTeamId(response.data.data[0].idx);
-
-              // this.$store.state.messageLastIdx = 0;
-
-              // this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, localStorage.getItem("userIdx"));
-
-              // this.$store.state.channelInfo.idx = response.data.data[0].idx;
-              // this.$store.state.channelInfo.channelName = response.data.data[0].name;
-              
-              
-            } else {
-            //   app.renderNotification('Successfully Singed Up');
-            //   app.toggleSignUp();
-            //this.errors.push(e);
-             this.$router.push({path: '/chat'});
-            }
-          })
-        .catch(e => {
-          // location.href = './';
-          this.errors.push(e);
-        });
-      },
-      
-      signin: function () {
-
+      sendMail : function () {
       // this.$store.state.ip + `:8082/login`  
-        axios.post(`http://localhost:8082/login`, this.userInfo) 
+      let idx = localStorage.getItem("userIdx");
+      let url = `http://localhost:8082/members/missing/` + idx;
+        axios.post(url) 
           .then(response => { 
             let description = response.data.description
             if(description == "Fail Login : Wrong ID"){
@@ -163,6 +107,9 @@ const baseURI = localStorage.getItem('baseURI')
             } else if (description == "Fail Login"){
               alert("Withdrew ID!")
             } else {
+
+
+
               localStorage.setItem('token', response.data.data.token)
               console.log(JSON.stringify(localStorage))
               localStorage.setItem('idx', response.data.data.idx)

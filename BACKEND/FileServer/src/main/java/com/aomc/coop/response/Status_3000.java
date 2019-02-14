@@ -27,12 +27,13 @@ public enum Status_3000 {
 
     SUCCESS_Set_Profile("3206"),
     FAIL_Set_Profile("3410"),
-    FAIL_Set_Profile_Wrong_Idx("3411");
+    FAIL_Set_Profile_Wrong_Idx("3411"),
 
     // 3250 ~ 3299 : 파일 서버 / 성공
     // 3450 ~ 3499 : 파일 서버 / 실패
 
-
+    SUCCESS_File_Upload("3250"),
+    FAIL_File_Upload("3450");
 
     final private String status;
 

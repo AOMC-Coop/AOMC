@@ -4,6 +4,11 @@
     "message": "잘못된 요청입니다.",
     "description": "Bad Request"
   },
+  "401": {
+    "status": 401,
+    "message": "승인되지 않은 요청입니다.",
+    "description": "Unauthorized Request"
+  },
   "500": {
     "status": 500,
     "message": "서버 오류",
@@ -152,6 +157,18 @@
     "description": "Success Auth Mail Sent"
   },
 
+  "3211": {
+    "status": 200,
+    "message": "비밀번호 변경 인증 메일 발송 성공",
+    "description": "SUCCESS Missing Password Mail Auth"
+  },
+
+  "3250": {
+    "status": 200,
+    "message": "파일 업로드 성공",
+    "description": "Success File Upload"
+  },
+
   "3401": {
     "status": 400,
     "message": "회원 가입 실패",
@@ -228,6 +245,12 @@
     "status": 400,
     "message": "비밀번호 변경 실패",
     "description": "Fail Change Password"
+  },
+
+  "3450": {
+    "status": 200,
+    "message": "파일 업로드 실패",
+    "description": "Fail File Upload"
   },
 
   "5201": {

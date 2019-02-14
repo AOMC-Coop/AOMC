@@ -21,10 +21,19 @@ export const store = new Vuex.Store({
     starFlag:false,
     channelUsers: [
       {
+        "idx":0,
         "uid":'',
         "nickname":''
       }
-    ],    
+    ],
+    exceptChannelUsers: [
+      {
+        idx: '' ,
+        uid: '',
+        nickname: '',
+        you:''
+      }
+    ],
     channelInfo: {
       idx:'',
       channelName:''

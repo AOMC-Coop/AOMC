@@ -39,8 +39,10 @@ public class LoginLogoutService {
     private JwtService jwtService;
 
     @Resource(name="redisTemplate") // @Resource : 일단 @Autowired와 비슷한 것으로 알고 있기
-    private HashOperations<String, String, Object> hashOperations; // HashOperations : Redis map specific operations working on a hash
-                                                                   // HashOperations <H,HK,HV>
+    private HashOperations<String, String, Object> hashOperations;
+
+    // HashOperations : Redis map specific operations working on a hash
+    // HashOperations <H,HK,HV>
 // *** 모든 User 정보를 넣기 위해 String -> Object로 바꾸었는데, Side effect 없겠지?
     // Code Refactoring : Generics를 사용해야 할 것 같아
 

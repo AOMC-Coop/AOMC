@@ -157,8 +157,13 @@ export default {
       save_data() {
         if(this.channelName !== '') {
           this.channel.name = this.channelName;
-          axios
-        .post(this.$store.state.ip + ":8083/api/channel/", this.channel)
+        //   axios
+        // .post(this.$store.state.ip + ":8083/api/channel/", this.channel)
+        let token = localStorage.getItem('token');
+        axios
+        .post(this.$store.state.ip + ":8083/api/channel/", this.channel, 
+        {headers: { 'X-Auth-Token': `${token}` }}
+        )
         .then(response => {
           // debugger;
             if(response.data) {

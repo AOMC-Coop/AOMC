@@ -69,17 +69,31 @@ export default {
     },
     infiniteHandler() {
       console.log("1 "+this.$store.state.messageStartNum);
+      console.log(this.$store.state.messageLastIdx);
       debugger;
       // if(this.$store.state.messageStartNum===-1)
       //   this.$store.state.scrollFlag=false
 
       // if(this.$store.state.scrollFlag === true) {
-      axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      // axios.get(this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx, {
+      //   params: {
+      //     start: this.$store.state.messageStartNum,
+      //     messageLastIdx: this.$store.state.messageLastIdx
+      //   },
+      // })
+      let token = localStorage.getItem('token');
+      debugger
+      console.log(this.$store.state.messageLastIdx);
+       axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
         params: {
           start: this.$store.state.messageStartNum,
           messageLastIdx: this.$store.state.messageLastIdx
         },
-      }).then((response) => {
+        headers: { 'X-Auth-Token': `${token}` },
+      })
+      .then((response) => {
         if (response.data.status==200) {
         debugger;
         console.log("2 "+this.$store.state.messageStartNum);

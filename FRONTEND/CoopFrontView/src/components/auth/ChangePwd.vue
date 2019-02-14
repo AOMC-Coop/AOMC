@@ -2,7 +2,7 @@
   <v-form>
     <v-container fluid>
       <form @submit.prevent="sendNewPwd">
-      <v-layout row wrap>
+      <v-layout row>
 
         <v-flex xs12 sm6>
           <v-text-field
@@ -17,7 +17,8 @@
             v-model="pwdInfo.pwd"
           ></v-text-field>
         </v-flex>
-
+      </v-layout>
+      <v-layout row>
         <v-flex xs12 sm6>
           <v-text-field
             :append-icon="show3 ? 'visibility_off' : 'visibility'"
@@ -32,8 +33,10 @@
             v-model="pwdInfo.confirm_pwd"
           ></v-text-field>
         </v-flex>
-      <v-btn type="submit" :loading="loading" >Change Password</v-btn>
-      </v-layout>
+      </v-layout>  
+      <v-layout row>
+        <v-btn type="submit" :loading="loading" >Change Password</v-btn>
+      </v-layout> 
       </form>
     </v-container>
   </v-form>

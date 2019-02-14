@@ -28,7 +28,11 @@ public enum Status_3000 {
     FAIL_Set_Profile_Wrong_Idx("3411"),
 
     SUCCESS_Change_Pwd("3207"),
-    FAIL_Change_Pwd("3413");
+    FAIL_Change_Pwd("3413"),
+
+    SUCCESS_Missing_Pwd_Email_Auth("3211"),
+    FAIL_Missing_Pwd_Email_Auth("3414");
+
 
 
     final private String status;

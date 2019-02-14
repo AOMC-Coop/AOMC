@@ -16,8 +16,8 @@ public class RabbitMQUtil {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+//    @Autowired
+//    private SimpMessagingTemplate simpMessagingTemplate;
 
     public Message sendRabbitMQ(Message message) {
         System.out.println("요청이 왔습니다" + message);
@@ -36,9 +36,9 @@ public class RabbitMQUtil {
         return  message;
     }
 
-    public void receiveRabbitMQ(Message message) {
-        System.out.println("rabbitMQ receive = " + message);
-        //SendTo("/topic/message")
-        this.simpMessagingTemplate.convertAndSend("/topic/message", message);
-    }
+//    public void receiveRabbitMQ(Message message) {
+//        System.out.println("rabbitMQ receive = " + message);
+//        //SendTo("/topic/message")
+//        this.simpMessagingTemplate.convertAndSend("/topic/message", message);
+//    }
 }

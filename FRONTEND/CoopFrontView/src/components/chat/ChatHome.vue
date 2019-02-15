@@ -68,7 +68,7 @@
       <v-list dense class="white--text">
         <template v-for="item in channels">
           
-          <v-list-tile v-if :key="item.text" v-if="item.star_flag === 1" @click="clickChannel(item.idx, item.name)">
+          <v-list-tile v-if :key="item.text" v-if="item.star_flag === 1" @click="clickChannel(item.idx, item.name, item.userHasLastIdx)">
             <v-list-tile-content>
               <v-list-tile-title>
                <v-text> # {{ item.name }} </v-text>
@@ -111,7 +111,7 @@
       <v-list dense class="white--text">
         <template v-for="item in channels">
           
-          <v-list-tile v-if :key="item.text" @click="clickChannel(item.idx, item.name)">
+          <v-list-tile v-if :key="item.text" @click="clickChannel(item.idx, item.name, item.userHasLastIdx)">
             <v-list-tile-content>
               <v-list-tile-title>
                <v-text> # {{ item.name }} </v-text>
@@ -150,7 +150,7 @@
     <v-dialog v-model="dialog" width="800px" id="chat">
       <v-card>
         <v-card-title
-          class="grey lighten-4 py-4 title"
+          class="primary py-4 title white--text"
         >
         Invite People
         </v-card-title>
@@ -178,7 +178,7 @@
     <v-dialog v-model="createTeamDialog" width="800px" id="chat">
       <v-card>
         <v-card-title
-          class="grey lighten-4 py-4 title"
+          class="primary py-4 title white--text"
         >
         Create Team
         </v-card-title>
@@ -290,7 +290,8 @@ var today = now.format("dddd, MMMM Do").toString()
           name: '',
           star_flag: '',
           status: '',
-          teamIdx: ''
+          teamIdx: '',
+          userHasLastIdx:''
         }
       ],
       inviteTeam: { //팀의 멤버 초대 
@@ -417,11 +418,13 @@ var today = now.format("dddd, MMMM Do").toString()
         this.createTeamDialog = !this.createTeamDialog;
         this.$store.state.inviteUsers.push({uid:localStorage.getItem("userId")});
       },
-      clickChannel(itemIdx, channelName) {
+      clickChannel(itemIdx, channelName, userHasLastIdx) {
+        debugger
         if(itemIdx !== this.$store.state.channelInfo.idx){
           this.$store.state.messageLastIdx = 0;
           this.$store.state.channelInfo.idx = itemIdx;
           this.$store.state.channelInfo.channelName = channelName;
+          this.$store.state.channelInfo.userHasLastIdx = userHasLastIdx;
           this.$store.state.messageStartNum=0
           this.getMessage();
           this.getChannelUsers();
@@ -547,6 +550,7 @@ var today = now.format("dddd, MMMM Do").toString()
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
+              this.$store.state.channelInfo.userHasLastIdx = this.channels[0].userHasLastIdx;
 
               if(this.$store.state.channelInfo.channelName==='general'){
                this.$store.state.generalFlag=false
@@ -586,32 +590,7 @@ var today = now.format("dddd, MMMM Do").toString()
         });
 
       },
-      getChannelsByTeamIdxAndUserIdxWithOutGetMessage(teamIdx, userIdx) {
-        // axios
-        // .get(this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx)
-        let token = localStorage.getItem('token');
-        axios({
-        method: 'get',
-        url: this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx,
-        headers: { 'X-Auth-Token': `${token}` }
-      })
-        .then(response => {
-          debugger
-            if(response.data) {
-              this.channels = response.data.data;
-              this.$store.state.channelInfo.idx = this.channels[0].idx;
-              this.$store.state.channelInfo.channelName = this.channels[0].name;
-              this.$store.state.messageStartNum=0
-
-            } else {
-            this.errors.push(e);
-            }
-          })
-        .catch(e => {
-          this.errors.push(e);
-        });
-
-      },
+      
       getMessage() {
         debugger;
         this.$store.state.received_messages.splice(0);
@@ -836,11 +815,6 @@ var today = now.format("dddd, MMMM Do").toString()
     debugger;
     console.log("mounted");
   },
-  updated() {
-    // debugger;
-    // this.getChannelsByTeamIdxAndUserIdxWithOutGetMessage(localStorage.getItem("teamIdx"), localStorage.getItem("userIdx"));
-  },
-
   
     created() {
       

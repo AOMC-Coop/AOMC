@@ -145,60 +145,7 @@ public class ChannelController {
         }
     }
 
-    /**
 
-     *
-
-     *        @brief GET http://localhost:8083/api/channel/message?channelIdx=21
-
-     *        @details 채널의 메세지를 가져오는 함수
-
-     *        @param RequestParam("channelIdx") final int channelIdx
-
-     *        @return ResponseEntity<>
-
-     *        성공시
-     *
-     *        {
-     *           "status": 200,
-     *           "message": "메세지 조회 성공",
-     *           "description": "Success Message Get"
-     *           "data": [
-     *              {
-     *             "idx": 14,
-     *             "content": "hello"
-     *              },
-     *              {
-     *             "idx": 15,
-     *             "content": "hello2"
-     *              }
-     *           ]
-     *        }
-
-     *        실패시
-
-     *        {
-     *           "status": 400,
-     *           "message": "메세지 조회 실패",
-     *           "description": "Fail Message Get"
-     *        }
-
-     *
-
-     *        @throws
-
-     *
-
-     */
-    @GetMapping
-    @RequestMapping("/message")
-    public ResponseEntity getChannelMessage(@RequestParam("channelIdx") final int channelIdx, @RequestParam("start") final int start, @RequestParam("messageLastIdx") final int messageLastIdx){
-        if(channelIdx >= 0) {
-            return new ResponseEntity<>(channelService.getChannelMessage(channelIdx, start, messageLastIdx), HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
-    }
 
     /**
 

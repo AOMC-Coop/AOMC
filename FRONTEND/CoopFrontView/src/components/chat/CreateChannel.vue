@@ -4,7 +4,7 @@
     <div class="div">
       <v-card >
         <v-card-title
-          class="grey lighten-4 py-4 title"
+          class="primary py-4 title white--text"
         >
           Create Channel
         </v-card-title>
@@ -41,7 +41,7 @@
               </v-layout>
             </v-flex> -->
 
-              <v-list-tile
+              <!-- <v-list-tile
               v-for="(child, i) in teamMembers"
               :key="i"
               v-if="child.idx != userIdx"
@@ -68,7 +68,7 @@
             
             </v-layout>
             </v-flex>
-            </v-list-tile>
+            </v-list-tile> -->
             
 
             <!-- <v-flex xs12>
@@ -88,7 +88,7 @@
             </v-flex> -->
           </v-layout>
  <v-flex xs12>
-  <SearchMember :teamMembers="teamMembers"></SearchMember>
+  <SearchMember :teamMembers="teamMembers" :channel="channel" :channelName="channelName"></SearchMember>
  </v-flex>
 
       <v-subheader >
@@ -100,7 +100,8 @@
           <v-list dense class="list">
         <template v-for="item in channel.users" v-if="item.idx !== userIdx"
         >
-          
+          <v-flex xs12 align-center justify-space-between>
+          <v-layout align-center>
           <v-list-tile v-if :key="item.text" >
             <!-- <v-list-tile-action>
               <v-icon class="white--text">{{ item.icon }}</v-icon>
@@ -110,7 +111,12 @@
                <v-text>  {{ item.nickname }} </v-text>
               </v-list-tile-title>
             </v-list-tile-content>
+             <v-list-tile-action>
+                <v-icon right fab @click="cancleUserInChannel(item.idx, item.nickname)">cancel</v-icon>
+              </v-list-tile-action>
           </v-list-tile>
+          </v-layout>
+          </v-flex>
         </template>
       </v-list>
           
@@ -127,6 +133,7 @@
 <script>
 import axios from "axios";
 import SearchMember from './SearchMember.vue'
+import { debug } from 'util';
 
 export default {
   name: 'CreateChannel',
@@ -158,6 +165,17 @@ export default {
       'teamIdx',
       'channels'
   ],methods : {
+    cancleUserInChannel(userIdx, nickname) {
+      debugger
+        for(var i=0;i<this.channel.users.length;i++){
+          if(this.channel.users[i].idx===userIdx){
+            this.channel.users.splice(i,1)
+          }
+        }
+
+        // this.$store.state.exceptChannelUsers.push({idx: userIdx, nickname: nickname})
+
+      },
       del_data(){
           
           this.$emit('close')
@@ -197,35 +215,35 @@ export default {
       printLog(log) {
         console.log(log);
       },
-      clickInviteUserInChannel(userIdx, nickname) {
-          // debugger;
-          this.channel.name = this.channelName;
+      // clickInviteUserInChannel(userIdx, nickname) {
+      //     // debugger;
+      //     this.channel.name = this.channelName;
           
-          console.log("users = " + this.channel.users);
-          // let user = {idx: userIdx, nickname: nickname};
-          var check = false;
-          if(this.channel.users.length == 0) {
-            this.channel.users.push({idx: userIdx, nickname: nickname});
-          }else {
-            for(var i=0; i<this.channel.users.length; i++) {
-              if(this.channel.users[i].idx == userIdx) {
-                // alert("이미 추가된 사용자 입니다."); //?
-                break;
-              }
-              if(i == this.channel.users.length-1) {
-                this.channel.users.push({idx: userIdx, nickname: nickname});
-              }
-          }
-          }
+      //     console.log("users = " + this.channel.users);
+      //     // let user = {idx: userIdx, nickname: nickname};
+      //     var check = false;
+      //     if(this.channel.users.length == 0) {
+      //       this.channel.users.push({idx: userIdx, nickname: nickname});
+      //     }else {
+      //       for(var i=0; i<this.channel.users.length; i++) {
+      //         if(this.channel.users[i].idx == userIdx) {
+      //           // alert("이미 추가된 사용자 입니다."); //?
+      //           break;
+      //         }
+      //         if(i == this.channel.users.length-1) {
+      //           this.channel.users.push({idx: userIdx, nickname: nickname});
+      //         }
+      //     }
+      //     }
           
           
           
-          // console.log("userIdx=" + userIdx);
-          // console.log("localStorage userIdx = " + localStorage.getItem("userIdx"));
-          // console.log("users = " + this.channel.users);
-          // console.log("teamIdx = " + this.channel.teamIdx);
+      //     // console.log("userIdx=" + userIdx);
+      //     // console.log("localStorage userIdx = " + localStorage.getItem("userIdx"));
+      //     // console.log("users = " + this.channel.users);
+      //     // console.log("teamIdx = " + this.channel.teamIdx);
 
-      }
+      // }
   },
   created() {
     // debugger;
@@ -241,7 +259,7 @@ export default {
 
 <style>
 .list{
-  height: 50px; 
+  height: 200px; 
   overflow : scroll;
 }
 </style>

@@ -16,6 +16,7 @@ public class Channel implements Serializable {
     private int star_flag;
     private int status;
     private int teamIdx;
+    private int userHasLastIdx;
 
     @JsonIgnore
     private List<Message> messages; //큐인지 리스트인지

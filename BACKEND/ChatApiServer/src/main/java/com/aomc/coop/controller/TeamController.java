@@ -206,8 +206,8 @@ public class TeamController {
      * @brief Delete http://localhost:8083/api/team/{teamIdx}
      * @details Team 삭제(비활성화)
      */
-    @DeleteMapping(path = "/{teamIdx}")
-    public ResponseEntity deleteTeam(@PathVariable(value = "teamIdx") final int teamIdx) {
+    @DeleteMapping
+    public ResponseEntity deleteTeam(@RequestParam(value = "teamIdx") final int teamIdx) {
         try {
             return new ResponseEntity<>(teamService.deleteTeam(teamIdx), HttpStatus.OK);
         } catch (Exception e) {

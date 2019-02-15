@@ -37,6 +37,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 
+// ***** File Management Server도 별도로 만들어야 한다.
+// ***** 현재 upload 함수 내에서 만들 것
+
 // ***** 방 단위로 나눠서 스케일 아웃 -> MAX_DIRECTORY_SIZE 변수를 설정하고, 이 용량을 넘으면 자동으로 상위 디렉토리를 파도록 하자
 // ***** 지금은 E:\FileStorage\{channel_idx} 의 구조이지만,
 // ***** 추후엔 E:\FileStorage\{new_hdd}\{channel_idx} 의 구조로 변경할 것
@@ -126,6 +129,7 @@ public class FileSystemStorageService implements StorageService {
             }
 
 // ***** RabbitMQ에 실어주는 것
+// ***** message에 filename도 실어서 보내주기
             message.setFile_url(url);
             rabbitMQUtil.sendRabbitMQ(message);
 

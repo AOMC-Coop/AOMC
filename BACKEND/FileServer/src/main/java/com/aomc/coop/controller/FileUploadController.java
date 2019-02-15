@@ -23,6 +23,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.aomc.coop.service.StorageService;
 import com.aomc.coop.storage.StorageFileNotFoundException;
 
+@CrossOrigin
 @Controller
 public class FileUploadController {
 
@@ -37,7 +38,7 @@ public class FileUploadController {
 
 
     @PostMapping(path = "/{channel_idx}")
-    @JsonInclude
+//    @JsonInclude
 // ***** @RequestParam Message message -> String message 로 변환해서, String을 파싱해서 Message 객체로 변환하여 사용할 것
     public ResponseEntity upload(@RequestParam("file") MultipartFile file, @RequestParam("message") String stringMessage, @PathVariable final int channel_idx) throws IOException {
         Message message  = new ObjectMapper().readValue(stringMessage, Message.class);

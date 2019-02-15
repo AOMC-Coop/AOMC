@@ -177,9 +177,9 @@ public class ChannelService {
     }
 
 
-    public ResponseType getChannelUsers(int channelIdx) {
+    public ResponseType getChannelUsers(int channelIdx, int teamIdx) {
         if (channelIdx >= 0) {
-            List<User> users = channelMapper.getChannelUsers(channelIdx);
+            List<User> users = channelMapper.getChannelUsers(channelIdx, teamIdx);
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Channel_Users.getStatus(), users);
         } else {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

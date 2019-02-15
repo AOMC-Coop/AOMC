@@ -701,7 +701,8 @@ var today = now.format("dddd, MMMM Do").toString()
         method: 'get',
         url: this.$store.state.ip + ":8083/api/channel/users",
         params: {
-         channelIdx: this.$store.state.channelInfo.idx
+         channelIdx: this.$store.state.channelInfo.idx,
+         teamIdx: localStorage.getItem("teamIdx")
         },
         headers: { 'X-Auth-Token': `${token}` }
       })

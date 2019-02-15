@@ -149,7 +149,7 @@
 
             <v-flex
               v-for="(child, i) in searchList"
-              :key="i" xs3
+              :key="i" xs4
               
               style = "margin:10px 50px 10px 7px;"
               >
@@ -187,7 +187,7 @@
 
             <v-flex 
               v-for="(child, i) in this.channel.users"
-              :key="i" xs3
+              :key="i" xs4
               
               style = "margin:10px 50px 10px 7px;"
               >
@@ -231,7 +231,7 @@
 
              <v-flex
               v-for="(child, i) in this.$store.state.channelUsers"
-              :key="i" xs3
+              :key="i" xs4
               
               style = "margin:10px 50px 10px 7px;"
               >
@@ -504,12 +504,7 @@ export default {
 
     },
     exitChannel() {        
-      //   axios.delete(this.$store.state.ip + ":8083/api/channel", {
-      //   params: {
-      //     channelIdx: this.$store.state.channelInfo.idx,
-      //     userIdx: this.$store.state.userIdx
-      //   },
-      // })
+     
       let token = localStorage.getItem('token');
        axios({
         method: 'delete',

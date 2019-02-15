@@ -50,12 +50,23 @@
               </v-list-tile-content>
             </v-list-tile>
 
-             <v-flex xs6 >
-              <v-subheader class="white--text" >
+            <v-flex xs6>
+              <v-btn color="primary" depressed @click="addCreateTeamDialog">
+                <v-icon class="white--text">add</v-icon>
+                <span>create Team</span>
+              </v-btn>
+              <!-- <v-subheader class="white--text" >
               <v-icon class="white--text" @click="addCreateTeamDialog">add</v-icon> 
               <v-text style = "fontSize : 15px">create Team</v-text>
-              </v-subheader>
-          </v-flex>
+              </v-subheader> -->
+            </v-flex>
+
+            <v-flex xs6>
+              <v-btn color="primary" depressed @click="exitTeam">
+                <v-icon class="white--text">remove</v-icon>
+                <span>sign out of {{teamName}}</span>
+              </v-btn>
+            </v-flex>
 
           </v-list-group>
         </template>
@@ -122,11 +133,18 @@
       </v-list>
     </v-flex>
 
-    <v-flex xs6 >
+    <!-- <v-flex xs6 >
       <v-subheader class="white--text" >
         <v-icon class="white--text" @click="addInvitePeopleDialog">add</v-icon> 
         <v-text style = "fontSize : 15px">invite people</v-text>
       </v-subheader>
+    </v-flex> -->
+
+    <v-flex xs6>
+      <v-btn color="primary" depressed @click="addInvitePeopleDialog">
+        <v-icon class="white--text">add</v-icon>
+        <span>invite people</span>
+      </v-btn>
     </v-flex>
 
     <form @submit.prevent="signOut">
@@ -231,6 +249,7 @@ import Stomp from "webstomp-client"
 
 var now = new moment();
 var today = now.format("dddd, MMMM Do").toString()
+let token = localStorage.getItem('token');
 
   export default {
     el: "Chat",
@@ -321,6 +340,49 @@ var today = now.format("dddd, MMMM Do").toString()
     },
 
     methods: {
+      exitTeam(){
+        axios({
+        method: 'delete',
+        url: this.$store.state.ip + ":8083/api/team",
+        params: {
+          teamIdx: localStorage.getItem("teamIdx")
+        },
+        headers: { 'X-Auth-Token': `${token}` },
+      })
+      .then(response => {
+          // debugger;
+            if(response.data.status===200) {
+
+              for(var i=0;i<this.teamsFromServer.length;i++){
+                if(this.teamsFromServer[i].idx==localStorage.getItem("teamIdx")){
+                    alert(this.teamsFromServer[i].name)
+                    this.teamsFromServer.splice(i,1)
+                    this.teamName=this.teamsFromServer[i-1].name
+                    localStorage.setItem("teamIdx", this.teamsFromServer[i-1].idx)
+
+                    this.getChannelsByTeamIdxAndUserIdx(this.teamsFromServer[i-1].idx, localStorage.getItem("userIdx"))
+
+                    // localStorage.setItem("teamName", this.teamsFromServer[i-1].name)
+                }
+              }
+
+                // for(var i=0;i<this.channels.length;i++){
+                //   if(this.channels[i].idx==this.$store.state.channelInfo.idx){
+                //     this.channels.splice(i,1)
+                //     this.$store.state.channelInfo.idx= this.channels[i-1].idx
+                //     this.$store.state.channelInfo.channelName= this.channels[i-1].name
+                //   }
+                    
+                // }
+
+            } else {
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          this.errors.push(e);
+        });
+      },
       createSocket() {
       debugger
       this.msg = '';

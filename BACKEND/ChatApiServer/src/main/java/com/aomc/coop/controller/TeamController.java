@@ -36,6 +36,7 @@ import java.net.URI;
 
 
 @Slf4j
+//@CrossOrigin
 @RestController
 @RequestMapping("/api/team")
 public class TeamController {
@@ -484,13 +485,13 @@ public class TeamController {
      * @brief Get http://localhost:8083/api/team/accept/{token}
      * @details 초대수락
      */
-    @GetMapping(path = "/accept/{token}")
-    ResponseEntity acceptInvite(RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response, @PathVariable(value = "token") final String token) throws IOException {
+    @GetMapping(path = "/accept")
+    ResponseEntity acceptInvite(RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "token") final String token) throws IOException {
 
         String redirectAddress = teamService.acceptInvite(token);
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectAddress));
-        headers.set("token", token);
+//        headers.set("token", token);
 //            return new ResponseEntity<Void>(headers, HttpStatus.MOVED_PERMANENTLY);
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).headers(headers).build();
 

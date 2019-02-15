@@ -255,9 +255,9 @@ public class ChannelController {
      */
     @GetMapping
     @RequestMapping("/users")
-    public ResponseEntity getChannelUsers(@RequestParam("channelIdx") final int channelIdx){
+    public ResponseEntity getChannelUsers(@RequestParam("channelIdx") final int channelIdx, @RequestParam("teamIdx") final int teamIdx){
         if(channelIdx >= 0) {
-            return new ResponseEntity<>(channelService.getChannelUsers(channelIdx), HttpStatus.OK);
+            return new ResponseEntity<>(channelService.getChannelUsers(channelIdx, teamIdx), HttpStatus.OK);
         }else {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }

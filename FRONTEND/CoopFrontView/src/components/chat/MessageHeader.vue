@@ -114,8 +114,8 @@
     <v-dialog v-model="inviteChannelDialog" width="800px">
 
        <v-card>
-        <v-card-title
-          class="grey lighten-4 py-4 title"
+        <v-card-title 
+         class="primary py-4 title white--text"
         >
         Invite to # {{this.$store.state.channelInfo.channelName}}
         </v-card-title>
@@ -124,7 +124,7 @@
                 <v-text-field
                   prepend-icon="search"
                   placeholder="Search  user's  nickname"
-                  v-model="channelName"
+                  v-model="searchName"
                 ></v-text-field>
             </v-flex>
             
@@ -148,7 +148,7 @@
             </v-flex> -->
 
             <v-flex
-              v-for="(child, i) in this.$store.state.exceptChannelUsers"
+              v-for="(child, i) in searchList"
               :key="i" xs3
               
               style = "margin:10px 50px 10px 7px;"
@@ -287,15 +287,17 @@
 </template>
 <script>
 import axios from "axios";
+import * as hangul from 'hangul-js';
+import { debug } from 'util';
 import moment from 'moment'
-// import inviteChannel from './inviteChannel.vue'
+import inviteChannel from './InviteChannel.vue'
 
 var now = new moment();
 var today = now.format("dddd, MMMM Do").toString()
 
 export default {
   components : {
-    // 'inviteChannel' : inviteChannel
+    'inviteChannel' : inviteChannel
     // 'InviteUserEmail' : InviteUserEmail
   },
   props:[
@@ -306,17 +308,12 @@ export default {
   data() {
     return {
       // star: false,
+      searchName:'',
       getUserDialog: false,
       inviteChannelDialog:false,
        userIdx: localStorage.getItem("userIdx"),
           userNickName: localStorage.getItem("userNickName"),
           channelName:'',
-          // inviteUsers:[
-          //   {
-          //     idx: '',
-          //     nickname:''
-          //   }
-          // ],
           channel:{
             idx:'',
             users:[
@@ -325,8 +322,38 @@ export default {
                 nickname:''
               }
             ]
-          }
+          },
+          inviteUsers:[
+            {
+                idx: '' ,
+                uid: '',
+                nickname: '',
+                you:''
+        }
+        ]
     };
+  },
+
+  computed: {
+    searchList: function() {
+        // debugger;
+        this.inviteUsers.splice(0);
+        
+        if(this.searchName !== '') {
+            for(var i=0; i<this.$store.state.exceptChannelUsers.length; i++) {
+              if(hangul.search(this.$store.state.exceptChannelUsers[i].nickname, this.searchName) >= 0) {
+                  if(this.$store.state.exceptChannelUsers[i].idx != localStorage.getItem("userIdx")) {
+                      // console.log(this.teamMembers[i].idx);
+                      // console.log(localStorage.getItem("userIdx"));
+                    this.inviteUsers.push(this.$store.state.exceptChannelUsers[i]);
+                  }
+                }else {
+                
+                }
+          }
+        }
+      return this.inviteUsers;
+    }
   },
   created(){
     // this.inviteUsers.splice(0)
@@ -342,27 +369,38 @@ export default {
       
     },
     inviteChannel(){
-      this.channel.idx=this.$store.state.channelInfo.idx
 
-      axios
-        .post(this.$store.state.ip + ":8083/api/channel/invite", this.channel)
-        .then(response => {
-            if(response.data.status===200) {
-              
-              for(var i=0;i<this.channel.users.length;i++){
-                this.$store.state.channelUsers.push(this.channel.users[i])
+      
+      if(this.channel.users.length==0){
+        alert('선택한 사용자가 없습니다')
+      }else{
+      
+
+        let token = localStorage.getItem('token');
+        this.channel.idx=this.$store.state.channelInfo.idx
+
+        axios
+          .post(this.$store.state.ip + ":8083/api/channel/invite", this.channel, 
+          {headers: { 'X-Auth-Token': `${token}` }}
+          )
+          .then(response => {
+              if(response.data.status===200) {
+                
+                for(var i=0;i<this.channel.users.length;i++){
+                  this.$store.state.channelUsers.push(this.channel.users[i])
+                }
+
+                this.$store.state.channelUserCount=this.$store.state.channelUsers.length
+                
+              } else {
+              this.errors.push(e);
               }
-
-              this.$store.state.channelUserCount=this.$store.state.channelUsers.length
-              
-            } else {
+            })
+          .catch(e => {
             this.errors.push(e);
-            }
-          })
-        .catch(e => {
-          this.errors.push(e);
-        });
-        this.inviteChannelDialog = false;
+          });
+          this.inviteChannelDialog = false;
+        }
 
     },
     clickInviteUserInChannel(userIdx, nickname) {
@@ -451,6 +489,7 @@ export default {
 
     popupInviteChannelDialog(){
       this.channel.users.splice(0)
+      this.searchName=''
       this.inviteChannelDialog = !this.inviteChannelDialog;
       // this.$modal.show(inviteChannel,{
       //   teamMembers : this.teamMembers,

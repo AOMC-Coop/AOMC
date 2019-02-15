@@ -356,7 +356,6 @@ let token = localStorage.getItem('token');
 
               for(var i=0;i<this.teamsFromServer.length;i++){
                 if(this.teamsFromServer[i].idx==localStorage.getItem("teamIdx")){
-                    alert(this.teamsFromServer[i].name)
                     this.teamsFromServer.splice(i,1)
                     this.teamName=this.teamsFromServer[i-1].name
                     localStorage.setItem("teamIdx", this.teamsFromServer[i-1].idx)

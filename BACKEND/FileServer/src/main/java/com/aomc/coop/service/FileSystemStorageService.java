@@ -97,7 +97,8 @@ public class FileSystemStorageService implements StorageService {
 // "Cannot store file with relative path outside current directory"
             }
 
-            String location = "E:\\FileStorage\\" + channel_idx;
+            String location = "E:\\FileStor" +
+                    "age\\" + channel_idx;
             Path path = Paths.get(location);
 
             // 디렉토리 생성
@@ -124,9 +125,9 @@ public class FileSystemStorageService implements StorageService {
             fileToBeInserted.setUrl(url);
 
 
-            if(fileMapper.insertFile(fileToBeInserted) == 0){
-                return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
-            }
+//            if(fileMapper.insertFile(fileToBeInserted) == 0){
+//                return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
+//            }
 
 // ***** RabbitMQ에 실어주는 것
 // ***** message에 filename도 실어서 보내주기

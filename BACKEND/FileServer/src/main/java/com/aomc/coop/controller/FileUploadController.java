@@ -36,9 +36,7 @@ public class FileUploadController {
         this.storageService = storageService;
     }
 
-
     @PostMapping(path = "/{channel_idx}")
-//    @JsonInclude
 // ***** @RequestParam Message message -> String message 로 변환해서, String을 파싱해서 Message 객체로 변환하여 사용할 것
     public ResponseEntity upload(@RequestParam("file") MultipartFile file, @RequestParam("message") String stringMessage, @PathVariable final int channel_idx) throws IOException {
         Message message  = new ObjectMapper().readValue(stringMessage, Message.class);
@@ -58,6 +56,29 @@ public class FileUploadController {
         Resource file = storageService.download(filename, channel_idx);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+
+// ***** profile picture를 업로드 하는 @PostMapping
+    @PostMapping(path = "/{channel_idx}/profile/{user_idx}")
+    public ResponseEntity uploadProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable final int channel_idx, @PathVariable final int user_idx) throws IOException {
+
+        try {
+            return new ResponseEntity(storageService.uploadProfilePicture(file, channel_idx, user_idx), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
+    }
+
+// ***** profile picture를 다운로드 하는 @GetMapping
+    @GetMapping(path = "/files/{channel_idx}/profile/{filename:.+}")
+    public ResponseEntity downloadProfilePicture(@PathVariable String filename, @PathVariable final int channel_idx) throws IOException {
+
+        try {
+            return new ResponseEntity(storageService.downloadProfilePicture(filename, channel_idx), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+        }
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

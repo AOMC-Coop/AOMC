@@ -1,5 +1,8 @@
 package com.aomc.coop.service;
 
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -34,7 +37,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
 
 
 // ***** File Management Server도 별도로 만들어야 한다.
@@ -76,17 +82,19 @@ public class FileSystemStorageService implements StorageService {
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
-// Message 객체를 보낼 것
+
     @Override
     public ResponseType upload(MultipartFile file, Message message, final int channel_idx) {
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String location = "E:\\FileStorage\\" + channel_idx;
 // ***** filename 중복시, time 변수 혹은 다른 방식을 통해 filename 중복을 막도록 코드를 변경할 것
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat( "yy-MM-dd HH:mm:ss" , Locale.KOREA );
         String time = sdf.format( new Date( timestamp.getTime( ) ) );
 
+// ***** 중복된 부분은 추후 public class로 따로 빼두어서 사용하자
         try {
             if (file.isEmpty()) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
@@ -97,8 +105,6 @@ public class FileSystemStorageService implements StorageService {
 // "Cannot store file with relative path outside current directory"
             }
 
-            String location = "E:\\FileStor" +
-                    "age\\" + channel_idx;
             Path path = Paths.get(location);
 
             // 디렉토리 생성
@@ -119,16 +125,6 @@ public class FileSystemStorageService implements StorageService {
 
             String url = "http://localhost:8085/files/" + channel_idx + "/" + filename;
 
-            File fileToBeInserted = new File();
-
-            fileToBeInserted.setName(filename);
-            fileToBeInserted.setUrl(url);
-
-
-//            if(fileMapper.insertFile(fileToBeInserted) == 0){
-//                return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
-//            }
-
 // ***** RabbitMQ에 실어주는 것
 // ***** message에 filename도 실어서 보내주기
             message.setFile_url(url);
@@ -144,6 +140,69 @@ public class FileSystemStorageService implements StorageService {
 
     @Override
     public Resource download(String filename, final int channel_idx) {
+        try {
+            Path file = getFilePath(filename, channel_idx);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            }
+            else {
+                throw new StorageFileNotFoundException(
+                        "Could not read file: " + filename);
+            }
+        }
+        catch (MalformedURLException e) {
+            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+        }
+    }
+
+    @Override
+    public ResponseType uploadProfilePicture(MultipartFile file, @PathVariable final int channel_idx, @PathVariable final int user_idx) {
+
+// ***** jpg, png 등의 img 파일들만 업로드 할 수 있도록 Vue에서, 혹은 uploadProfilePicture에서 예외처리 할 것
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String location = "E:\\FileStorage\\" + channel_idx + "\\" + "profile";
+// ***** response type에 profile picture를 다루는 부분 추가
+        try {
+            if (file.isEmpty()) {
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
+            }
+            if (filename.contains("..")) {
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
+            }
+
+            Path path = Paths.get(location);
+
+            if (!Files.exists(path)) {
+                try {
+                    Files.createDirectories(path);
+                } catch (IOException e) {
+                    //fail to create directory
+                    e.printStackTrace();
+                }
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, path.resolve(filename),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+// ***** 프로필 사진은 꼭 파일명을 user_idx로 변환해서 사용해야 한다. 그래야 Get 요청을 통한 프로필 사진 활용이 쉬워짐
+
+// ***** User 객체에 String profile_pic_url을 새로 선언해서 사용하자.
+            String url = "http://localhost:8085/files/" + channel_idx + "profile/" + filename;
+// ***** User user = new User();
+// ***** user.setProfile_pic_url(url)
+// ***** 이렇게 user 정보에 저장한 후 redis, mysql에 url을 넣어두면, 따로 url을 클라이언트에 전달할 필요가 없을 것 같다.
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_File_Upload.getStatus());
+        }
+        catch (IOException e) {
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
+        }
+    }
+
+// ***** 기존의 download와 달라질 것은 없는지 고민해볼 것 -> 아예 똑같다면 역시 중복된 부분은 public class로 분리하여 사용할 것
+    @Override
+    public Resource downloadProfilePicture(String filename, @PathVariable final int channel_idx) {
         try {
             Path file = getFilePath(filename, channel_idx);
             Resource resource = new UrlResource(file.toUri());

@@ -24,4 +24,8 @@ public interface StorageService {
 
     void deleteAll();
 
+    ResponseType uploadProfilePicture(MultipartFile file, int channel_idx, int user_idx);
+
+    Resource downloadProfilePicture(String filename, int channel_idx);
+
 }

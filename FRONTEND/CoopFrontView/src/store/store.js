@@ -36,7 +36,8 @@ export const store = new Vuex.Store({
     ],
     channelInfo: {
       idx:'',
-      channelName:''
+      channelName:'',
+      userHasLastIdx:''
     },
     received_messages:[
       {

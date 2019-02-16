@@ -1,6 +1,7 @@
 package com.aomc.coop.scheduler;
 
 import com.aomc.coop.mapper.MessageMapper;
+import com.aomc.coop.model.File;
 import com.aomc.coop.model.Message;
 import com.aomc.coop.util.RedisUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -59,10 +60,19 @@ public class RedisScheduler {
                 if (message == null) {
                     break;
                 }
-                //db에 저장
-                messageMapper.createMessage(message, message.getChannel_idx(), message.getUser_idx());
-                System.out.println("///// " + message.getContent());
+                //message에 file_url있으면 filedb에 저장 후 idx 받은 후에 messagedb에 저장
+                if (message.getFile_url() != null) {
+                    File file = new File();
+                    file.setContent(message.getFile_url());
+                    int fileIdx = messageMapper.createFile(file, message.getFile_url());
+                    messageMapper.createMessageWithFile(message, file.getIdx());
+                    System.out.println("message with file_url " + message.getContent());
 
+                } else { //file_url이 없는 경우
+                    //db에 저장
+                    messageMapper.createMessage(message, message.getChannel_idx(), message.getUser_idx());
+                    System.out.println("///// " + message.getContent());
+                }
 
             }
 

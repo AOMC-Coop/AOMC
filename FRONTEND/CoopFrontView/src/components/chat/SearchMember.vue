@@ -20,7 +20,7 @@
   
 </v-flex>
 
-<v-list dense class="list">
+<!-- <v-list dense class="list">
         <template v-for="item in searchNameF"
         >
           
@@ -32,7 +32,34 @@
             </v-list-tile-content>
           </v-list-tile>
         </template>
-      </v-list>
+      </v-list> -->
+
+      <v-flex
+              v-for="(child, i) in searchNameF"
+              :key="i" xs4
+              
+              style = "margin:10px 50px 10px 7px;"
+              >
+
+              <v-flex xs12 align-center justify-space-between>
+                  <v-layout align-center>
+                    <v-list-tile-action>
+                        <v-avatar size="40px" class="mr-3">
+                            <img
+                                src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png"
+                                alt=""
+                            >
+                        </v-avatar>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title justify-space-between> {{ child.nickname }} </v-list-tile-title>
+                    </v-list-tile-content>
+                    <v-list-tile-action>
+                        <v-icon right fab @click="clickInviteUserInChannel(child.idx, child.nickname)">add</v-icon>
+                    </v-list-tile-action>
+                  </v-layout>
+                </v-flex>
+            </v-flex>
 
 
 </div>
@@ -64,10 +91,33 @@ export default {
   },
   props:[
     'teamMembers',
+    'channel',
+    'channelName'
   ],
   
   methods: {
-    
+    clickInviteUserInChannel(userIdx, nickname) {
+          debugger;
+          this.channel.name = this.channelName;
+          
+          console.log("users = " + this.channel.users);
+          // let user = {idx: userIdx, nickname: nickname};
+          var check = false;
+          if(this.channel.users.length == 0) {
+            this.channel.users.push({idx: userIdx, nickname: nickname});
+          }else {
+            for(var i=0; i<this.channel.users.length; i++) {
+              if(this.channel.users[i].idx == userIdx) {
+                // alert("이미 추가된 사용자 입니다."); //?
+                break;
+              }
+              if(i == this.channel.users.length-1) {
+                this.channel.users.push({idx: userIdx, nickname: nickname});
+              }
+          }
+          }
+
+      }
   },
 
   computed: {

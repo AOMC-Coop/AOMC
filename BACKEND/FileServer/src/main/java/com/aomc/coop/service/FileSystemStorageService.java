@@ -192,8 +192,7 @@ public class FileSystemStorageService implements StorageService {
             String url = "http://localhost:8085/files/" + channel_idx + "profile/" + filename;
 // ***** User user = new User();
 // ***** user.setProfile_pic_url(url)
-// ***** 이렇게 user 정보에 저장한 후 redis, mysql에 url을 넣어두면, 따로 url을 클라이언트에 전달할 필요가 없을 것 같다.
-            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_File_Upload.getStatus());
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_File_Upload.getStatus(), url);
         }
         catch (IOException e) {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());

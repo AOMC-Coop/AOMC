@@ -107,7 +107,7 @@ export default {
       let formData = new FormData();
       // Add the form data we need to submit
       let channel_idx = this.$store.state.channelInfo.idx
-      let url = this.$store.state.ip + ":8085/1"// expected to be "localhost:8085/1"
+      let url = this.$store.state.ip + ":8085/" + this.$store.state.channelInfo.idx// expected to be "localhost:8085/1"
 
       const sendMessage = { 
         content: this.msg , 

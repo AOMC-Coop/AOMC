@@ -19,8 +19,14 @@
           ></v-img>
                   <!-- <v-img src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png" alt=""/> -->
             </v-avatar>
+
+            <v-list-tile-content v-if="item.file_url !== null">
+            <v-list-tile-title><h5>{{item.nickname}} {{item.send_time}}</h5></v-list-tile-title>
+            <v-card-text>{{item.content}}</v-card-text>
+            <v-card-text>{{item.file_url}}</v-card-text>
+          </v-list-tile-content>
           
-          <v-list-tile-content>
+          <v-list-tile-content v-else-if="item.file_url === null">
             <v-list-tile-title><h5>{{item.nickname}} {{item.send_time}}</h5></v-list-tile-title>
             <v-card-text>{{item.content}}</v-card-text>
           </v-list-tile-content>

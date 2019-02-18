@@ -33,7 +33,10 @@ public enum Status_3000 {
     // 3450 ~ 3499 : 파일 서버 / 실패
 
     SUCCESS_File_Upload("3250"),
-    FAIL_File_Upload("3450");
+    FAIL_File_Upload("3450"),
+
+    SUCCESS_Profile_Picture_Upload("3251"),
+    FAIL_Profile_Picture_Upload("3451");
 
     final private String status;
 

@@ -1,10 +1,7 @@
 package com.aomc.coop.service;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,8 +17,9 @@ import java.util.stream.Stream;
 
 import com.aomc.coop.config.RabbitMQConfig;
 import com.aomc.coop.mapper.FileMapper;
-import com.aomc.coop.model.File;
+import com.aomc.coop.model.FileInfo;
 import com.aomc.coop.model.Message;
+import com.aomc.coop.model.User;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.storage.StorageException;
 import com.aomc.coop.storage.StorageFileNotFoundException;
@@ -125,7 +123,7 @@ public class FileSystemStorageService implements StorageService {
 
             String url = "http://localhost:8085/files/" + channel_idx + "/" + filename;
 
-// ***** RabbitMQ에 실어주는 것
+        // RabbitMQ에 실어주는 것
 // ***** message에 filename도 실어서 보내주기
             message.setFile_url(url);
             rabbitMQUtil.sendRabbitMQ(message);
@@ -162,13 +160,12 @@ public class FileSystemStorageService implements StorageService {
 // ***** jpg, png 등의 img 파일들만 업로드 할 수 있도록 Vue에서, 혹은 uploadProfilePicture에서 예외처리 할 것
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         String location = "E:\\FileStorage\\" + channel_idx + "\\" + "profile";
-// ***** response type에 profile picture를 다루는 부분 추가
         try {
             if (file.isEmpty()) {
-                return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Profile_Picture_Upload.getStatus());
             }
             if (filename.contains("..")) {
-                return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Profile_Picture_Upload.getStatus());
             }
 
             Path path = Paths.get(location);
@@ -186,16 +183,41 @@ public class FileSystemStorageService implements StorageService {
                 Files.copy(inputStream, path.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
             }
-// ***** 프로필 사진은 꼭 파일명을 user_idx로 변환해서 사용해야 한다. 그래야 Get 요청을 통한 프로필 사진 활용이 쉬워짐
+
+// *** 프로필 사진은 꼭 파일명을 user_idx로 변환해서 사용해야 한다. 그래야 Get 요청을 통한 프로필 사진 활용이 쉬워짐
+
+            // MultipartFile -> File
+            File convFile = new File(file.getOriginalFilename());
+            convFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(file.getBytes());
+            fos.close();
+
+            // original filename -> user_idx filename
+            File oldFile = new File(location + filename);
+            File newFile = new File(location + user_idx);
+
+            if (newFile.exists())
+                throw new java.io.IOException("file exists");
+
+            // Rename file (or directory)
+            boolean success = oldFile.renameTo(newFile);
+
+//            if (!success) {
+//                // File was not successfully renamed
+//            }
 
 // ***** User 객체에 String profile_pic_url을 새로 선언해서 사용하자.
             String url = "http://localhost:8085/files/" + channel_idx + "profile/" + filename;
-// ***** User user = new User();
-// ***** user.setProfile_pic_url(url)
-            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_File_Upload.getStatus(), url);
+            String tempUrl = "http://localhost:8085/files/1/profile/1.jpg";
+            User user = new User();
+// ***** 채팅 서버 테스트 끝나면 tempUrl -> url로 대체
+            user.setProfile_pic_url(tempUrl);
+
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Profile_Picture_Upload.getStatus(), url);
         }
         catch (IOException e) {
-            return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Profile_Picture_Upload.getStatus());
         }
     }
 
@@ -265,5 +287,9 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
-
+    public  static File multipartToFile(MultipartFile multipart, String fileName) throws IllegalStateException, IOException {
+        File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+fileName);
+        multipart.transferTo(convFile);
+        return convFile;
+    }
 }

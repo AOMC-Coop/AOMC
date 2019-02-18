@@ -169,6 +169,12 @@
     "description": "Success File Upload"
   },
 
+  "3251": {
+    "status": 200,
+    "message": "프로필 사진 업로드 성공",
+    "description": "Success Profile Picture Upload"
+  },
+
   "3401": {
     "status": 400,
     "message": "회원 가입 실패",
@@ -251,6 +257,12 @@
     "status": 200,
     "message": "파일 업로드 실패",
     "description": "Fail File Upload"
+  },
+
+  "3451": {
+    "status": 200,
+    "message": "프로필 사진 업로드 실패",
+    "description": "Fail Profile Picture Upload"
   },
 
   "5201": {

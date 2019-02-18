@@ -1,7 +1,7 @@
 package com.aomc.coop.service;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,8 +17,10 @@ import java.util.stream.Stream;
 
 import com.aomc.coop.config.RabbitMQConfig;
 import com.aomc.coop.mapper.FileMapper;
-import com.aomc.coop.model.File;
+import com.aomc.coop.mapper.UserMapper;
+import com.aomc.coop.model.FileInfo;
 import com.aomc.coop.model.Message;
+import com.aomc.coop.model.User;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.storage.StorageException;
 import com.aomc.coop.storage.StorageFileNotFoundException;
@@ -27,6 +29,7 @@ import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.DateFormatCustom;
 import com.aomc.coop.utils.ResponseType;
 import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -34,7 +37,10 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.imageio.ImageIO;
 
 
 // ***** File Management Server도 별도로 만들어야 한다.
@@ -72,21 +78,26 @@ public class FileSystemStorageService implements StorageService {
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
     public FileSystemStorageService(StorageProperties properties) {
         this.rootLocation = Paths.get(properties.getLocation());
     }
 
-// Message 객체를 보낼 것
+
     @Override
     public ResponseType upload(MultipartFile file, Message message, final int channel_idx) {
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String location = "E:\\FileStorage\\" + channel_idx;
 // ***** filename 중복시, time 변수 혹은 다른 방식을 통해 filename 중복을 막도록 코드를 변경할 것
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat( "yy-MM-dd HH:mm:ss" , Locale.KOREA );
         String time = sdf.format( new Date( timestamp.getTime( ) ) );
 
+// ***** 중복된 부분은 추후 public class로 따로 빼두어서 사용하자
         try {
             if (file.isEmpty()) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
@@ -97,8 +108,6 @@ public class FileSystemStorageService implements StorageService {
 // "Cannot store file with relative path outside current directory"
             }
 
-            String location = "E:\\FileStor" +
-                    "age\\" + channel_idx;
             Path path = Paths.get(location);
 
             // 디렉토리 생성
@@ -119,17 +128,7 @@ public class FileSystemStorageService implements StorageService {
 
             String url = "http://localhost:8085/files/" + channel_idx + "/" + filename;
 
-            File fileToBeInserted = new File();
-
-            fileToBeInserted.setName(filename);
-            fileToBeInserted.setUrl(url);
-
-
-//            if(fileMapper.insertFile(fileToBeInserted) == 0){
-//                return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
-//            }
-
-// ***** RabbitMQ에 실어주는 것
+        // RabbitMQ에 실어주는 것
 // ***** message에 filename도 실어서 보내주기
             message.setFile_url(url);
             rabbitMQUtil.sendRabbitMQ(message);
@@ -160,6 +159,96 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
+    @Override
+    public ResponseType uploadProfilePicture(MultipartFile file, @PathVariable final int channel_idx, @PathVariable final int user_idx) {
+
+// ***** jpg, png 등의 img 파일들만 업로드 할 수 있도록 Vue에서, 혹은 uploadProfilePicture에서 예외처리 할 것
+        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String location = "E:\\FileStorage\\" + channel_idx + "\\" + "profile";
+        try {
+            if (file.isEmpty()) {
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Profile_Picture_Upload.getStatus());
+            }
+            if (filename.contains("..")) {
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Profile_Picture_Upload.getStatus());
+            }
+
+            Path path = Paths.get(location);
+
+            if (!Files.exists(path)) {
+                try {
+                    Files.createDirectories(path);
+                } catch (IOException e) {
+                    //fail to create directory
+                    e.printStackTrace();
+                }
+            }
+
+            try (InputStream inputStream = file.getInputStream()) {
+                Files.copy(inputStream, path.resolve(filename),
+                        StandardCopyOption.REPLACE_EXISTING);
+            }
+
+// *** 프로필 사진은 꼭 파일명을 user_idx로 변환해서 사용해야 한다. 그래야 Get 요청을 통한 프로필 사진 활용이 쉬워짐
+
+            // MultipartFile -> File
+            File convFile = new File(file.getOriginalFilename());
+            convFile.createNewFile();
+            FileOutputStream fos = new FileOutputStream(convFile);
+            fos.write(file.getBytes());
+            fos.close();
+
+            String locationToBeChanged = location + "\\";
+            String ext = FilenameUtils.getExtension(filename);
+
+            // original filename -> user_idx filename
+            File oldFile = new File(locationToBeChanged + filename);
+            File newFile = new File(locationToBeChanged + user_idx + "." + ext);
+//
+//            if (newFile.exists())
+//                throw new java.io.IOException("file exists");
+
+            // Rename file (or directory)
+            boolean success = oldFile.renameTo(newFile);
+
+//            if (!success) {
+//                // File was not successfully renamed
+//            }
+
+// ***** User 객체에 String profile_pic_url을 새로 선언해서 사용하자.
+            String url = "http://localhost:8085/files/" + channel_idx + "/profile/" + filename;
+            User user = new User();
+// ***** 채팅 서버 테스트 끝나면 tempUrl -> url로 대체
+            user.setImage(url);
+
+            userMapper.updateUserImage(user_idx, url);
+
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Profile_Picture_Upload.getStatus(), url);
+        }
+        catch (IOException e) {
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Profile_Picture_Upload.getStatus());
+        }
+    }
+
+// ***** 기존의 download와 달라질 것은 없는지 고민해볼 것 -> 아예 똑같다면 역시 중복된 부분은 public class로 분리하여 사용할 것
+    @Override
+    public Resource downloadProfilePicture(String filename, @PathVariable final int channel_idx) {
+        try {
+            Path file = getFilePathForProfile(filename, channel_idx);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            }
+            else {
+                throw new StorageFileNotFoundException(
+                        "Could not read file: " + filename);
+            }
+        }
+        catch (MalformedURLException e) {
+            throw new StorageFileNotFoundException("Could not read file: " + filename, e);
+        }
+    }
+
     // Path : object that may be used to locate a file in a file system.
     //        It will typically represent a system dependent file path.
     @Override
@@ -167,6 +256,14 @@ public class FileSystemStorageService implements StorageService {
         String location = channel_idx + "\\" +filename;
         return rootLocation.resolve(location);
     }
+
+// ***** getFilePath와의 중복구조 해결하기 -> 무조건 다른 방법 사용할 것
+    @Override
+    public Path getFilePathForProfile(String filename, final int channel_idx) {
+        String location = channel_idx + "\\profile\\" +filename;
+        return rootLocation.resolve(location);
+    }
+
 
     @Override
     public Stream<Path> getAllFilesPaths() {
@@ -207,5 +304,9 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
-
+    public  static File multipartToFile(MultipartFile multipart, String fileName) throws IllegalStateException, IOException {
+        File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+fileName);
+        multipart.transferTo(convFile);
+        return convFile;
+    }
 }

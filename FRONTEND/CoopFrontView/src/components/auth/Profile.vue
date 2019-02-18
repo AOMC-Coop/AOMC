@@ -123,19 +123,24 @@
             class="mx-auto d-block"
             size="130"
           >
-            <img
-              src="https://demos.creative-tim.com/vue-material-dashboard/img/marc.aba54d65.jpg"
-            >
+          <img :src="ProfileUrl">
           </v-avatar>
           <v-card-text class="text-xs-center">
             <!-- <h6 class="category text-gray font-weight-thin mb-3">CEO / CO-FOUNDER</h6>
             <h4 class="card-title font-weight-light">Alec Thompson</h4>
             <p class="card-description font-weight-light"></p> -->
+            
             <v-btn
               color="success"
               round
               class="font-weight-light"
             >Change Photo</v-btn>
+            <div class="large-12 medium-12 small-12 cell">
+            <label>File
+              <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+            </label>
+            <button v-on:click="submitFile()">Submit</button>
+          </div>
           </v-card-text>
         </material-card>
       </v-flex>
@@ -146,8 +151,10 @@
 <script>
 import axios from "axios";
 import Vue from 'vue'
+import { locale } from 'moment';
 
 let gender = localStorage.getItem('gender')
+let ProfileUrl
 
 new Vue({
     el: '#nickname_bind',
@@ -189,7 +196,47 @@ export default {
           this.errors(e)
           location.href = './'
         })      
-    }
+    },
+    submitFile(){
+      // Initialize the form data
+      let formData = new FormData();
+      // Add the form data we need to submit
+      // ***** 테스트를 위해 channel_idx를 1로 세팅
+      let channel_idx = 1
+      let user_idx = localStorage.getItem('idx')
+      let url = this.$store.state.ip + ":8085/" + channel_idx + "/profile/" + user_idx
+      console.log(channel_idx)
+      console.log(url)
+
+      formData.append('file', this.file);
+      // formData.append('message', sendMessage);
+      // Make the request to the POST /single-file URL
+      axios.post( url,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(response => {
+        debugger
+        console.log(response.data.data)
+          if(response.data.status==200) {
+              ProfileUrl = response.data.data
+              console.log('Successfully submit profile photo!');
+            } else {
+            this.errors.push(e);
+            }
+        })
+        .catch(function(){
+          console.log('Fail to submit profile photo!');
+        });
+
+      },
+      handleFileUpload(){
+        this.file = this.$refs.file.files[0];
+        debugger
+      }
+
   }
 }
 </script>

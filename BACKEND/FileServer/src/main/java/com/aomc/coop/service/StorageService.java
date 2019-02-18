@@ -20,8 +20,14 @@ public interface StorageService {
 
     Path getFilePath(String filename, final int channel_idx);
 
+    Path getFilePathForProfile(String filename, final int channel_idx);
+
     Resource download(String filename, final int channel_idx);
 
     void deleteAll();
+
+    ResponseType uploadProfilePicture(MultipartFile file, int channel_idx, int user_idx);
+
+    Resource downloadProfilePicture(String filename, int channel_idx);
 
 }

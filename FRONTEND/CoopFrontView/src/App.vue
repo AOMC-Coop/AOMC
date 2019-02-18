@@ -8,7 +8,7 @@
     </div> -->
     <notifications group="foo" />
     <router-view/>
-    <!-- <FileUpload></FileUpload> -->
+    <FileUploadTest></FileUploadTest>
   </div>
 </template>
 

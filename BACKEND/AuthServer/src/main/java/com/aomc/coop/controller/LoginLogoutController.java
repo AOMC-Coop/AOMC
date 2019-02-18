@@ -34,7 +34,6 @@ Profile 프로필 수정      ㅣ Done ㅣ 파일 서버 & 스토리지 구축 �
 
 토큰 헤더                ㅣ      ㅣ 토큰 헤더에 담아서 보내기
 
-
 */
 
 @RestController

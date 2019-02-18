@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import com.aomc.coop.config.RabbitMQConfig;
 import com.aomc.coop.mapper.FileMapper;
+import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.model.FileInfo;
 import com.aomc.coop.model.Message;
 import com.aomc.coop.model.User;
@@ -28,6 +29,7 @@ import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.DateFormatCustom;
 import com.aomc.coop.utils.ResponseType;
 import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -74,6 +76,9 @@ public class FileSystemStorageService implements StorageService {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -193,12 +198,15 @@ public class FileSystemStorageService implements StorageService {
             fos.write(file.getBytes());
             fos.close();
 
-            // original filename -> user_idx filename
-            File oldFile = new File(location + filename);
-            File newFile = new File(location + user_idx);
+            String locationToBeChanged = location + "\\";
+            String ext = FilenameUtils.getExtension(filename);
 
-            if (newFile.exists())
-                throw new java.io.IOException("file exists");
+            // original filename -> user_idx filename
+            File oldFile = new File(locationToBeChanged + filename);
+            File newFile = new File(locationToBeChanged + user_idx + "." + ext);
+//
+//            if (newFile.exists())
+//                throw new java.io.IOException("file exists");
 
             // Rename file (or directory)
             boolean success = oldFile.renameTo(newFile);
@@ -208,11 +216,12 @@ public class FileSystemStorageService implements StorageService {
 //            }
 
 // ***** User 객체에 String profile_pic_url을 새로 선언해서 사용하자.
-            String url = "http://localhost:8085/files/" + channel_idx + "profile/" + filename;
-            String tempUrl = "http://localhost:8085/files/1/profile/1.jpg";
+            String url = "http://localhost:8085/files/" + channel_idx + "/profile/" + filename;
             User user = new User();
 // ***** 채팅 서버 테스트 끝나면 tempUrl -> url로 대체
-            user.setProfile_pic_url(tempUrl);
+            user.setImage(url);
+
+            userMapper.updateUserImage(user_idx, url);
 
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Profile_Picture_Upload.getStatus(), url);
         }
@@ -225,7 +234,7 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public Resource downloadProfilePicture(String filename, @PathVariable final int channel_idx) {
         try {
-            Path file = getFilePath(filename, channel_idx);
+            Path file = getFilePathForProfile(filename, channel_idx);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
@@ -247,6 +256,14 @@ public class FileSystemStorageService implements StorageService {
         String location = channel_idx + "\\" +filename;
         return rootLocation.resolve(location);
     }
+
+// ***** getFilePath와의 중복구조 해결하기 -> 무조건 다른 방법 사용할 것
+    @Override
+    public Path getFilePathForProfile(String filename, final int channel_idx) {
+        String location = channel_idx + "\\profile\\" +filename;
+        return rootLocation.resolve(location);
+    }
+
 
     @Override
     public Stream<Path> getAllFilesPaths() {

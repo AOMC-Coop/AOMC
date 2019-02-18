@@ -12,9 +12,7 @@ public class User implements Serializable {
     private String pwd;
     private String salt;
     private String nickname;
-    /////////////////////////////////
-    private String profile_pic_url;//
-    /////////////////////////////////
+    private String image;
     private int gender;
     private int role;
     private int status;

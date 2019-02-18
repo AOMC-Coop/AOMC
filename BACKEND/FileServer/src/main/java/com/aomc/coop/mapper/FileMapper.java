@@ -10,8 +10,7 @@ public interface FileMapper {
 
         // insert 성공시 1을 return, 실패시 0을 return.
         @Insert("INSERT INTO file(url, name) VALUES(#{url},#{name})")
-        int insertFile(File file);
-
+        int insertFile(FileInfo file);
 
 //
 //        private int idx;

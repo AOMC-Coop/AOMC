@@ -201,17 +201,13 @@ export default {
       // Initialize the form data
       let formData = new FormData();
       // Add the form data we need to submit
-      let channel_idx = this.$store.state.channelInfo.idx
-      // ***** channel _idx가 String 인듯?
+      // ***** 테스트를 위해 channel_idx를 1로 세팅
+      let channel_idx = 1
       let user_idx = localStorage.getItem('idx')
-      let url = this.$store.state.ip + ":8085/files/" + channel_idx + "/profile/" + user_idx
-      //레디스에서 받은 사용자의 nickname을 세팅
-      // this.msg.nickname = 'yunyun',
-      // this.msg.send_date
-      // this.msg.send_time
-      // this.msg.send_db_date    
-      // "channel_idx":1,
-      // "user_idx":1
+      let url = this.$store.state.ip + ":8085/" + channel_idx + "/profile/" + user_idx
+      console.log(channel_idx)
+      console.log(url)
+
       formData.append('file', this.file);
       // formData.append('message', sendMessage);
       // Make the request to the POST /single-file URL
@@ -222,8 +218,10 @@ export default {
           'Content-Type': 'multipart/form-data'
         }
       }).then(response => {
-          if(response.data.url) {
-              ProfileUrl = response.data.url
+        debugger
+        console.log(response.data.data)
+          if(response.data.status==200) {
+              ProfileUrl = response.data.data
               console.log('Successfully submit profile photo!');
             } else {
             this.errors.push(e);

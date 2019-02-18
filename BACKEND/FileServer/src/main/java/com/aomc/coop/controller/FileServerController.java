@@ -25,14 +25,14 @@ import com.aomc.coop.storage.StorageFileNotFoundException;
 
 @CrossOrigin
 @Controller
-public class FileUploadController {
+public class FileServerController {
 
     private final StorageService storageService;
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
     @Autowired
-    public FileUploadController(StorageService storageService) {
+    public FileServerController(StorageService storageService) {
         this.storageService = storageService;
     }
 
@@ -72,12 +72,9 @@ public class FileUploadController {
     // profile picture를 다운로드 하는 @GetMapping
     @GetMapping(path = "/files/{channel_idx}/profile/{filename:.+}")
     public ResponseEntity downloadProfilePicture(@PathVariable String filename, @PathVariable final int channel_idx) throws IOException {
-
-        try {
-            return new ResponseEntity(storageService.downloadProfilePicture(filename, channel_idx), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
+        Resource file = storageService.downloadProfilePicture(filename, channel_idx);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

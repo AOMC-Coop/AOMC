@@ -90,7 +90,7 @@ public class FileSystemStorageService implements StorageService {
     public ResponseType upload(MultipartFile file, Message message, final int channel_idx) {
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        String location = "E:\\FileStorage\\" + channel_idx;
+        String location = "C:\\FileStorage\\" + channel_idx;
 // ***** filename 중복시, time 변수 혹은 다른 방식을 통해 filename 중복을 막도록 코드를 변경할 것
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -164,7 +164,7 @@ public class FileSystemStorageService implements StorageService {
 
 // ***** jpg, png 등의 img 파일들만 업로드 할 수 있도록 Vue에서, 혹은 uploadProfilePicture에서 예외처리 할 것
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        String location = "E:\\FileStorage\\" + channel_idx + "\\" + "profile";
+        String location = "C:\\FileStorage\\" + channel_idx + "\\" + "profile";
         try {
             if (file.isEmpty()) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Profile_Picture_Upload.getStatus());

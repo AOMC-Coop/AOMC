@@ -18,4 +18,5 @@ public class Message implements Serializable {
     private String type;
     private FileInfo file;
     private Reply reply;
+    private String image;
 }

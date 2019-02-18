@@ -9,4 +9,5 @@ public class UserWithToken implements Serializable {
     private String uid;
     private String nickname;
     private String token;
+    private String image;
 }

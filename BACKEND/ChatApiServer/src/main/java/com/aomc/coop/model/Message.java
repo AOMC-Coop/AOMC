@@ -12,6 +12,7 @@ public class Message implements Serializable {
     private String nickname;
     private int channel_idx;
     private int user_idx;
+    private String image;
     private String send_date;
     private String send_time;
     private String send_db_date;

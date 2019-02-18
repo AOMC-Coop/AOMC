@@ -15,7 +15,7 @@
             <v-avatar size="42px" class="mr-3">
               <v-img
             class="elevation-6"
-            src="https://avataaars.io/?avatarStyle=Transparent&topType=ShortHairShortCurly&accessoriesType=Prescription02&hairColor=Black&facialHairType=Blank&clotheType=Hoodie&clotheColor=White&eyeType=Default&eyebrowType=DefaultNatural&mouthType=Default&skinColor=Light"
+            :src= "item.image"
           ></v-img>
                   <!-- <v-img src="//ssl.gstatic.com/s2/oz/images/sge/grey_silhouette.png" alt=""/> -->
             </v-avatar>

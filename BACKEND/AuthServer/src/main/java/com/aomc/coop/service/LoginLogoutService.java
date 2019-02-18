@@ -129,6 +129,7 @@ public class LoginLogoutService {
                 userWithToken.setIdx(myUser.getIdx());
                 userWithToken.setUid(myUser.getUid());
                 userWithToken.setToken(key);
+                userWithToken.setImage(myUser.getImage());
                 userWithToken.setNickname(myUser.getNickname());
 
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), userWithToken); // ,로 파라미터에 token 객체 넘기기 (token String, idx)

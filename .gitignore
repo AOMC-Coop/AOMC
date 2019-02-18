@@ -47,3 +47,5 @@ test/
 *.xls
 *.xlsx
 *.pdf
+BACKEND/FileServer/dog.jpg
+BACKEND/FileServer/dog2.jpg

@@ -222,6 +222,7 @@ export default {
         console.log(response.data.data)
           if(response.data.status==200) {
               ProfileUrl = response.data.data
+              localStorage.setItem("userImage", ProfileUrl);
               console.log('Successfully submit profile photo!');
             } else {
             this.errors.push(e);

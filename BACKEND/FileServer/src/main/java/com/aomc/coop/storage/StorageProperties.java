@@ -9,9 +9,9 @@ public class StorageProperties {
      * Folder location for storing files
      */
 
-// ***** 여기서 upload directory를 관리하자.
-// ***** 해당 채널로 생성된 디렉토리가 없다면 생성하고, 있다면 사용하는 코드 작성
-    private String location = "C:\\FileStorage";
+// ***** 여기서 upload directory를 관리하자. -> 상대 경로로 지정할 것
+    private String location = "E:\\FileStorage";
+//    private String location = "E:\\FileStorage";
 
     public String getLocation() {
         return location;

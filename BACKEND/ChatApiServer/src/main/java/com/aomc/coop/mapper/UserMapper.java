@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface UserMapper {
 
     //회원 이름으로 조회
-    @Select("SELECT idx, uid, nickname, gender, status FROM users WHERE uid = #{uid}")
+    @Select("SELECT idx, uid, nickname, image FROM users WHERE uid = #{uid}")
     User findBysUserid(final String uid);
 
     //회원 고유 번호로 조회

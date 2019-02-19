@@ -141,6 +141,7 @@ export default {
       return {
           userIdx: localStorage.getItem("userIdx"),
           userNickName: localStorage.getItem("userNickName"),
+          userImage: localStorage.getItem("userImage"),
           del_password:'',
           channelName:'',
           channel:{
@@ -150,7 +151,8 @@ export default {
             users:[
               {
                 idx: '',
-                nickname:''
+                nickname:'',
+                image:''
               }
             ]
           }
@@ -250,7 +252,7 @@ export default {
     // console.log(this.channels);
     this.channel.teamIdx = this.teamIdx
     this.channel.users.pop(); // 왜 유저가 한개 들어있을까?ㅁ
-    this.channel.users.push({idx: this.userIdx, nickname: this.userNickName});
+    this.channel.users.push({idx: this.userIdx, nickname: this.userNickName, image:this.userImage});
     // this.channel.teamIdx = localStorage.getItem(teamIdx);
     this.printLog(this.teamMembers)
   },

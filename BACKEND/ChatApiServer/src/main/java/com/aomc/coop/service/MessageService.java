@@ -69,7 +69,7 @@ public class MessageService {
                     //mysql에서 가져오기
                     System.out.println("//////-getChannelMessage - MySQL");
                     List<Message> messages = messageMapper.getChannelMessage(channelIdx, start);
-//            System.out.println(messages);
+//                    System.out.println(messages);
 
                     if (messages.size() == 0) {
                         return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages, start);

@@ -110,10 +110,12 @@ const baseURI = localStorage.getItem('baseURI')
 
       checkIsTeam(userIdx) {
         let token = localStorage.getItem('token');
+        console.log("checkIsTeam -> token = " + localStorage.getItem("token"))
         debugger
          axios({
         method: 'get',
-        url: "http://localhost:8083/api/team/user/" + userIdx,
+        url: "http://10.240.202.225:8083/api/team/user/" + userIdx,
+        // url: "/api/team/user/" + userIdx,
         headers: { 'X-Auth-Token': `${token}` }
       })
         .then(response => { //
@@ -153,7 +155,7 @@ const baseURI = localStorage.getItem('baseURI')
       signin: function () {
 
       // this.$store.state.ip + `:8082/login`  
-        axios.post(`http://localhost:8082/login`, this.userInfo) 
+        axios.post(`http://10.240.202.225:8082/login`, this.userInfo) 
           .then(response => { 
             debugger
             let description = response.data.description
@@ -166,6 +168,7 @@ const baseURI = localStorage.getItem('baseURI')
             } else {
               localStorage.setItem('token', response.data.data.token)
               console.log(JSON.stringify(localStorage))
+              console.log("sign in -> token = " + localStorage.getItem("token"))
               localStorage.setItem('idx', response.data.data.idx)
               
               localStorage.setItem("userId", response.data.data.uid); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함

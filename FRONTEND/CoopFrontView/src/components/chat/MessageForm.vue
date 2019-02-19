@@ -91,6 +91,7 @@ export default {
       file: '',
       userIdx: localStorage.getItem("userIdx"),
       userNickName: localStorage.getItem("userNickName"),
+      userImage:localStorage.getItem("userImage"),
       loader: null,
       loading: false,
       loading2: false,
@@ -107,6 +108,7 @@ export default {
       setTimeout(() => (this[l] = false), 3000)
 
       this.loader = null
+     
     }
   },
 
@@ -124,7 +126,7 @@ export default {
 
       if (this.$store.state.stompClient) {
         
-        const sendMessage = { content: this.msg , channel_idx: this.$store.state.channelInfo.idx, user_idx: this.userIdx, nickname: this.userNickName, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
+        const sendMessage = { content: this.msg , channel_idx: this.$store.state.channelInfo.idx, user_idx: this.userIdx, nickname: this.userNickName, image:this.userImage, send_date: send_date, send_time:send_time, send_db_date: send_db_date};//레디스에서 받은 사용자의 nickname을 세팅
         const sendChannel = { idx: this.$store.state.channelInfo.idx};
         console.log("channelInfo.idx = " + this.$store.state.channelInfo.idx);
         console.log("this.channel.idx = " + this.channel.idx);
@@ -146,7 +148,8 @@ export default {
       const sendMessage = { 
         content: this.msg , 
         channel_idx: this.$store.state.channelInfo.idx, 
-        user_idx: this.userIdx, 
+        user_idx: this.userIdx,
+        image:this.userImage,
         nickname: this.userNickName, 
         send_date: send_date, 
         send_time:send_time, 

@@ -45,7 +45,9 @@ export const store = new Vuex.Store({
         content : '',
         nickname:'',
         send_date:'',
-        send_time:''
+        send_time:'',
+        file_url:'',
+        image:''
       }
     ],
     inviteUsers: [

@@ -419,13 +419,19 @@ let token = localStorage.getItem('token');
               }
             }else { // 다른 채팅방에서 메세지 올 때 알림 띄우기
               // debugger
-              let nicknamePlusTime = message.nickname + "   " + message.send_date;
-              this.$notify({
-                group: 'foo',
-                title: nicknamePlusTime,
-                text: message.content,
-                // animationType: velocity
-              });
+              for(var i=0; i<this.channels.length; i++) {
+                if(this.channels[i].idx == message.channel_idx) {
+                  let nicknamePlusTime = message.nickname + "   " + message.send_date;
+                  this.$notify({
+                   group: 'foo',
+                   title: nicknamePlusTime,
+                   text: message.content,
+                  // animationType: velocity
+                });
+                break;
+                }
+              }
+              
             }
           });
         },

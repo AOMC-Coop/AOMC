@@ -155,6 +155,7 @@ const baseURI = localStorage.getItem('baseURI')
       // this.$store.state.ip + `:8082/login`  
         axios.post(`http://localhost:8082/api/login`, this.userInfo) 
           .then(response => { 
+            debugger
             let description = response.data.description
             if(description == "Fail Login : Wrong ID"){
               alert("Your ID is not signed up yet! please check your ID again!")
@@ -171,6 +172,8 @@ const baseURI = localStorage.getItem('baseURI')
               localStorage.setItem("userIdx", response.data.data.idx);
               // localStorage.setItem("userIdx", 5);
               localStorage.setItem("userNickName", response.data.data.nickname);
+              localStorage.setItem("userImage", response.data.data.image);
+
 
               this.$store.state.userId = response.data.data.uid;
               this.$store.state.userIdx = response.data.data.idx; //test용으로 넣어놈. 로그인 할때 받아야함

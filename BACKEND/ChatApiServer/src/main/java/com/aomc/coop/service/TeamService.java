@@ -95,6 +95,7 @@ public class TeamService {
             message.setSend_date(sendDate);
             message.setSend_time(sendTime);
             message.setSend_db_date(sendDBDate);
+            message.setImage(ownerUserInfo.getImage());
 
 
 

@@ -74,6 +74,7 @@ public class ChannelService {
         message.setSend_date(sendDate);
         message.setSend_time(sendTime);
         message.setSend_db_date(sendDBDate);
+        message.setImage(channel.getUsers().get(0).getImage());
 
         List<Message> messages = new ArrayList<>();
         messages.add(message);

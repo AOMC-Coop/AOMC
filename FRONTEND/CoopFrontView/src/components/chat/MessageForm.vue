@@ -1,15 +1,33 @@
 <template>
 
  <v-container fluid fill-height>
-    <!-- ***** 추후 대체 되어야 할 파일 업로드 버튼. vue로 바꾸어보자 -->
+
         <div class="container">
           <div class="large-12 medium-12 small-12 cell">
-            <label>File
+            <label>
               <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
             </label>
             <button v-on:click="submitFile()">Submit</button>
           </div>
         </div>
+
+     <div class="vertical">
+        <upload-btn icon title='' large=false id="file" ref="file" type="file" v-on:change="handleFileUpload()">
+          <template slot="icon">
+            <v-icon class="white--text">add</v-icon>
+          </template>
+        </upload-btn>
+
+        <v-btn round icon large
+            :loading="loading3"
+            :disabled="loading3"
+            color="secondary"
+            class="white--text"
+            @click="loader = 'loading3'"
+            v-on:click="submitFile()">
+            <v-icon right dark left>cloud_upload</v-icon>
+        </v-btn>
+     </div>
 
         <v-layout justify-center align-end>
 
@@ -52,7 +70,6 @@ var send_date = now.format("dddd, MMMM Do").toString()
 var send_time = now.format("LT").toString()
 var send_db_date = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
 
-
 export default {
 
   name: 'MessageForm',
@@ -73,9 +90,26 @@ export default {
       },
       file: '',
       userIdx: localStorage.getItem("userIdx"),
-      userNickName: localStorage.getItem("userNickName")
+      userNickName: localStorage.getItem("userNickName"),
+      loader: null,
+      loading: false,
+      loading2: false,
+      loading3: false,
+      loading4: false
     }
   },
+
+  watch: {
+    loader () {
+      const l = this.loader
+      this[l] = !this[l]
+
+      setTimeout(() => (this[l] = false), 3000)
+
+      this.loader = null
+    }
+  },
+
   methods: {
     submitMessageFunc() {
       debugger;
@@ -107,7 +141,7 @@ export default {
       let formData = new FormData();
       // Add the form data we need to submit
       let channel_idx = this.$store.state.channelInfo.idx
-      let url = this.$store.state.ip + ":8085/1"// expected to be "localhost:8085/1"
+      let url = this.$store.state.ip + ":8085/api/files/" + channel_idx
 
       const sendMessage = { 
         content: this.msg , 
@@ -128,11 +162,9 @@ export default {
       formData.append('message', JSON.stringify(sendMessage));
       debugger
       alert(JSON.stringify(sendMessage))
- 
+      
       // formData.append('message', sendMessage);
       // Make the request to the POST /single-file URL
-      
-      
       
       axios.post( url,
         formData,
@@ -149,8 +181,9 @@ export default {
       },
       // Handles a change on the file upload
       handleFileUpload(){
-        this.file = this.$refs.file.files[0];
         debugger
+        this.file = this.$refs.file.files[0];
+        
       }
     },
 
@@ -214,4 +247,40 @@ export default {
 .left_align{
   float: left;
 }
+  .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 </style>

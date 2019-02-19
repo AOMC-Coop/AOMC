@@ -799,7 +799,7 @@ let token = localStorage.getItem('token');
       // this.stompClient.disconnect(distick => {
       //   console.log("socket disconnect");
       // });
-      axios.post(this.$store.state.ip + `:8082/logout`, this.userWithToken)
+      axios.post(this.$store.state.ip + `:8082/api/logout`, this.userWithToken)
       .then(response => {
           let description = response.data.description
           if(description == "Fail Logout"){
@@ -819,7 +819,7 @@ let token = localStorage.getItem('token');
     },
     withdrawal: function (){
       let idx = localStorage.getItem('idx')
-      let url = this.$store.state.ip + `:8082/members/`+ idx
+      let url = this.$store.state.ip + `:8082/api/members/`+ idx
       axios.put(url, this.userWithToken)
         .then(response => {
           let description = response.data.description
@@ -840,7 +840,7 @@ let token = localStorage.getItem('token');
     },
     getProfile: function (){
       let idx = localStorage.getItem('idx')
-      let url = this.$store.state.ip + `:8082/profile/`+ idx
+      let url = this.$store.state.ip + `:8082/api/profile/`+ idx
       axios.post(url, this.userWithToken)
         .then(response => {
           let description = response.data.description

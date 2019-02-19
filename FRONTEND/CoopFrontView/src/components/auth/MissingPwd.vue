@@ -96,7 +96,7 @@ const baseURI = localStorage.getItem('baseURI')
       sendMail : function () {
       // this.$store.state.ip + `:8082/login`  
       let idx = localStorage.getItem("userIdx");
-      let url = `http://localhost:8082/members/missing/` + idx;
+      let url = `http://localhost:8082/api/members/missing/` + idx;
         axios.post(url) 
           .then(response => { 
             let description = response.data.description

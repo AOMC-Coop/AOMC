@@ -178,7 +178,7 @@ import axios from 'axios'
           alert('Passwords do not match! Are you insane?')
         } else {
           /*this.$store.state.ip*/
-          axios.post(`http://localhost:8082/members`, this.userInfo)
+          axios.post(`http://localhost:8082/api/members`, this.userInfo)
             .then(response => { 
               let description = response.data.description
               if(description == "Fail Register : Already registered e-mail address"){

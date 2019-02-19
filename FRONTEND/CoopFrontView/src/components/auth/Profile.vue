@@ -178,7 +178,7 @@ export default {
   methods: {
     setProfile: function (){
       let idx = localStorage.getItem('idx')
-      let url = this.$store.state.ip + `:8082/profile/`+ idx
+      let url = this.$store.state.ip + `:8082/api/profile/`+ idx
       axios.put(url, this.profileWithToken)
         .then(response => {
           let description = response.data.description
@@ -204,11 +204,12 @@ export default {
       // ***** 테스트를 위해 channel_idx를 1로 세팅
       let channel_idx = this.$store.state.channelInfo.idx
       let user_idx = localStorage.getItem('idx')
-      let url = this.$store.state.ip + ":8085/" + channel_idx + "/profile/" + user_idx
-      console.log(channel_idx)
-      console.log(url)
+      let url = this.$store.state.ip + ":8085/api/files/" + channel_idx + "/profile/" + user_idx
+      // console.log(channel_idx)
+      // console.log(url)
 
       formData.append('file', this.file);
+      console.log(formData)
       // formData.append('message', sendMessage);
       // Make the request to the POST /single-file URL
       axios.post( url,
@@ -219,7 +220,7 @@ export default {
         }
       }).then(response => {
         debugger
-        console.log(response.data.data)
+        //console.log(response.data.data)
           if(response.data.status==200) {
               ProfileUrl = response.data.data
               console.log('Successfully submit profile photo!');
@@ -228,7 +229,7 @@ export default {
             }
         })
         .catch(function(){
-          console.log('Fail to submit profile photo!');
+          //console.log('Fail to submit profile photo!');
         });
 
       },

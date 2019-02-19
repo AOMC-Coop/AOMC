@@ -36,8 +36,9 @@ Profile 프로필 수정      ㅣ Done ㅣ 파일 서버 & 스토리지 구축 �
 
 */
 
+@CrossOrigin
 @RestController
-@RequestMapping
+@RequestMapping("/api")
 public class LoginLogoutController {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
@@ -47,7 +48,6 @@ public class LoginLogoutController {
 
     //로그인
     @PostMapping(value = "/login")
-    @CrossOrigin
     public ResponseEntity login(@RequestBody User user) { // header, body(json), HTTP.status //
         try {
             return new ResponseEntity(loginLogoutService.loginUser(user), HttpStatus.OK);
@@ -59,7 +59,6 @@ public class LoginLogoutController {
     //로그아웃
 //    @Auth
     @PostMapping(value = "/logout")
-    @CrossOrigin
     public ResponseEntity logout(@RequestBody UserWithToken userWithToken) { // header, body(json), HTTP.status //
         try {
             return new ResponseEntity(loginLogoutService.logoutUser(userWithToken), HttpStatus.OK);

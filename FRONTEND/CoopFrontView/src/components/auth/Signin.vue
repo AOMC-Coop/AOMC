@@ -55,8 +55,10 @@
           </v-card-text>
         </v-card>
         <br><br><br><br>
-        <a href="http://localhost:9999/signup">NOT SIGN UP YET? JOIN US!</a> <br><br>
-        <a href="http://localhost:9999/missingpwd">FORGOT YOUR PASSWORD?</a>
+        <!-- <a href="http://localhost:9999/signup">NOT SIGN UP YET? JOIN US!</a> <br><br> -->
+        <a href="/signup">NOT SIGN UP YET? JOIN US!</a> <br><br>
+        <!-- <a href="http://localhost:9999/missingpwd">FORGOT YOUR PASSWORD?</a> -->
+         <a href="/missingpwd">FORGOT YOUR PASSWORD?</a>
       </v-flex>
     </v-layout>
   </v-container>
@@ -114,8 +116,8 @@ const baseURI = localStorage.getItem('baseURI')
         debugger
          axios({
         method: 'get',
-        url: "http://10.240.202.225:8083/api/team/user/" + userIdx,
-        // url: "/api/team/user/" + userIdx,
+        // url: "http://10.240.202.225:8083/api/team/user/" + userIdx,
+        url: "/api/team/user/" + userIdx,
         headers: { 'X-Auth-Token': `${token}` }
       })
         .then(response => { //
@@ -155,7 +157,8 @@ const baseURI = localStorage.getItem('baseURI')
       signin: function () {
 
       // this.$store.state.ip + `:8082/login`  
-        axios.post(`http://10.240.202.225:8082/login`, this.userInfo) 
+        // axios.post(`http://10.240.202.225:8082/login`, this.userInfo) 
+        axios.post(`/login`, this.userInfo)
           .then(response => { 
             debugger
             let description = response.data.description

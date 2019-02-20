@@ -2,8 +2,21 @@
 <v-content>
   <div>
     <Message-Header :channels="channels" :teamMembers="teamMembers"></Message-Header>
-    <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages"></Message-List>
-    <Message-From class="msg-form"></Message-From>
+    <Message-List class="msg-list" v-auto-bottom="this.$store.state.received_messages" 
+    style="
+    position: absolute;
+    background-color:white; 
+    top:20;
+    width:100%;
+    height:73%;
+    "></Message-List>
+    <Message-From class="msg-form" style="
+    background-color:white;
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:20%;
+    "></Message-From>
     <!-- <Message-From class="msg-form" v-on:submitMessage="sendMessage" ></Message-From> -->
   </div>
   </v-content>
@@ -42,7 +55,7 @@ export default {
 </script>
 
 <style>
-.msg-list {
+/* .msg-list {
   position: absolute;
   background-color:white; 
   top:20;
@@ -55,5 +68,5 @@ export default {
   bottom:0;
   width:100%;
   height:20%;
-}
+} */
 </style>

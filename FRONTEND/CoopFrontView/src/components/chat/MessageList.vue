@@ -5,13 +5,13 @@
       <!-- <v-infinite-scroll :onTopScrollsToBottom=false :loading="loading" @top="infiniteHandler" :offset='30' style="max-height: 100%; overflow-y: scroll;"> -->
 
     <infinite-loading ref="infiniteLoading" direction="top" @infinite="infiniteHandler" spinner="waveDots" v-if="this.$store.state.scrollFlag" force-use-infinite-wrapper="true"></infinite-loading>
-   <v-list class="card">
+   <v-list class="card" style="padding-left: 2%;">
      
-      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index" class="list_div">
+      <div v-for="(item,index) in getReceivedMessages" v-bind:key="index" class="list_div" >
         <v-divider v-if="item.send_date" :key="index" inset ></v-divider>
         <v-subheader v-if="item.send_date" :key="item.send_date">{{ item.send_date }}</v-subheader>
         <!-- <v-list-tile> -->
-          <v-card-actions>
+          <v-card-actions onmouseover="this.style.backgroundColor='rgba(230, 230, 230, 0.979)'" onmouseout="this.style.backgroundColor=''">
             <v-avatar size="42px" class="mr-3">
               <v-img
             class="elevation-6"
@@ -92,7 +92,8 @@ export default {
       console.log(this.$store.state.messageLastIdx);
        axios({
         method: 'get',
-        url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        // url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        url: "/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
         params: {
           start: this.$store.state.messageStartNum,
           messageLastIdx: this.$store.state.messageLastIdx
@@ -170,23 +171,12 @@ export default {
 </script>
 
 <style>
-.list-item {
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 50px;
-}
-.list-enter-active, .list-leave-active {
-  transition: all 1s;
-}
-.list-enter, .list-leave-to /* .list-leave-active below version 2.1.8 */ {
-  opacity: 0;
-  transform: translateX(30px);
-}
-.card{
+
+/* .card{
   padding-left: 2%;
-}
-.list_div:hover {
+} */
+/* .list_div:hover {
   background: rgba(230, 230, 230, 0.979);
-}
+} */
 
 </style>

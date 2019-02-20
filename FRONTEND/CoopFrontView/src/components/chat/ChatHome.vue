@@ -147,18 +147,19 @@
       </v-btn>
     </v-flex>
 
-    <form @submit.prevent="signOut">
-      <v-btn color="warning" type="submit">Sign out</v-btn>
-    </form>
-    <form @submit.prevent="withdrawal">
-      <v-btn color="error" type="submit">Withdrawal</v-btn>
-    </form>
-    <form @submit.prevent="getProfile">
-      <v-btn color="success" type="submit">Profile</v-btn>
-    </form>
-    <form @submit.prevent="changePwd">
-      <v-btn color="info" type="submit">Change Password</v-btn>
-    </form>
+
+    <v-flex xs12>
+          <form @submit.prevent="signOut" id="horizontal1">
+            <v-btn color="warning" type="submit" flat>Sign out</v-btn>
+          </form>
+
+          <form @submit.prevent="getProfile" id="horizontal2">
+            <v-btn color="success" type="submit" flat>Profile</v-btn>
+          </form>
+    </v-flex>
+
+
+
     </v-navigation-drawer>
     
         
@@ -815,7 +816,8 @@ let token = localStorage.getItem('token');
       //   console.log("socket disconnect");
       // });
       // axios.post(this.$store.state.ip + `:8082/logout`, this.userWithToken)
-      axios.post(`/logout`, this.userWithToken)
+      axios.post(`/api/logout`, this.userWithToken)
+      // axios.post(this.$store.state.ip + `:8082/api/logout`, this.userWithToken)
       .then(response => {
           let description = response.data.description
           if(description == "Fail Logout"){
@@ -835,8 +837,12 @@ let token = localStorage.getItem('token');
     },
     withdrawal: function (){
       let idx = localStorage.getItem('idx')
+<<<<<<< HEAD
       // let url = this.$store.state.ip + `:8082/members/`+ idx
       let url = `/members/`+ idx
+=======
+      let url = this.$store.state.ip + `:8082/api/members/`+ idx
+>>>>>>> b8e4e2dfb71cb5a59dfb89d3bb2cee2b58c1ee3e
       axios.put(url, this.userWithToken)
         .then(response => {
           let description = response.data.description
@@ -857,8 +863,12 @@ let token = localStorage.getItem('token');
     },
     getProfile: function (){
       let idx = localStorage.getItem('idx')
+<<<<<<< HEAD
       // let url = this.$store.state.ip + `:8082/profile/`+ idx
       let url = `/profile/`+ idx
+=======
+      let url = this.$store.state.ip + `:8082/api/profile/`+ idx
+>>>>>>> b8e4e2dfb71cb5a59dfb89d3bb2cee2b58c1ee3e
       axios.post(url, this.userWithToken)
         .then(response => {
           let description = response.data.description
@@ -971,7 +981,12 @@ let token = localStorage.getItem('token');
 background-color: aqua;
 color: brown;
 }
-
+#horizontal1{
+  display: inline-block;
+}
+#horizontal2{
+  display: inline-block;
+}
 .teamName {
   font-size: 50px;
 }

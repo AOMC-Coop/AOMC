@@ -25,6 +25,7 @@ import com.aomc.coop.storage.StorageFileNotFoundException;
 
 @CrossOrigin
 @Controller
+@RequestMapping("/api/files")
 public class FileServerController {
 
     private final StorageService storageService;
@@ -48,7 +49,7 @@ public class FileServerController {
     }
 
 // ***** 아래 두 Controller들도 ResponseEntity, codeJsonParser 양식에 맞게 바꾸기
-    @GetMapping(path = "/files/{channel_idx}/{filename:.+}")
+    @GetMapping(path = "/{channel_idx}/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> download(@PathVariable String filename, @PathVariable final int channel_idx) {
 
@@ -70,7 +71,7 @@ public class FileServerController {
     }
 
     // profile picture를 다운로드 하는 @GetMapping
-    @GetMapping(path = "/files/{channel_idx}/profile/{filename:.+}")
+    @GetMapping(path = "/{channel_idx}/profile/{filename:.+}")
     public ResponseEntity downloadProfilePicture(@PathVariable String filename, @PathVariable final int channel_idx) throws IOException {
         Resource file = storageService.downloadProfilePicture(filename, channel_idx);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
@@ -81,12 +82,6 @@ public class FileServerController {
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
     }
-
-
-
-
-
-
 
 
 

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 public class MemberController {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();

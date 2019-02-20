@@ -76,7 +76,7 @@ import axios from 'axios'
             alert('Passwords do not match! Are you insane?')
         } else {
             let idx = localStorage.getItem('idx')
-            let url = "http://localhost:8082/members/pwd/" + idx
+            let url = "http://localhost:8082/api/members/pwd/" + idx
             this.pwdInfo.idx = idx
             debugger
             axios.put(url, this.pwdInfo)

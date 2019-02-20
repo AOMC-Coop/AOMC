@@ -837,12 +837,9 @@ let token = localStorage.getItem('token');
     },
     withdrawal: function (){
       let idx = localStorage.getItem('idx')
-<<<<<<< HEAD
       // let url = this.$store.state.ip + `:8082/members/`+ idx
-      let url = `/members/`+ idx
-=======
-      let url = this.$store.state.ip + `:8082/api/members/`+ idx
->>>>>>> b8e4e2dfb71cb5a59dfb89d3bb2cee2b58c1ee3e
+      let url = `/api/members/`+ idx
+      // let url = this.$store.state.ip + `:8082/api/members/`+ idx
       axios.put(url, this.userWithToken)
         .then(response => {
           let description = response.data.description

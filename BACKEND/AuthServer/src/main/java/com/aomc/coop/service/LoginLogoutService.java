@@ -35,7 +35,7 @@ public class LoginLogoutService {
     @Autowired
     private UserMapper userMapper;
 
-    @Autowired // 이렇게 하는거 맞나?
+    @Autowired
     private JwtService jwtService;
 
     @Resource(name="redisTemplate") // @Resource : 일단 @Autowired와 비슷한 것으로 알고 있기
@@ -123,6 +123,7 @@ public class LoginLogoutService {
                 // 4. 토큰을 client에 보내기
 //				HttpHeaders headers = new HttpHeaders();
 //				headers.add("auth_token", token);
+
                 // 제대로 로그인이 되었다면
                 System.out.println("Successfully login!");
                 UserWithToken userWithToken = new UserWithToken();

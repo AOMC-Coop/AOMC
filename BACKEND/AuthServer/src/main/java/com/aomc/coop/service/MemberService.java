@@ -192,7 +192,6 @@ public class MemberService {
         {
             try {
                 userMapper.withdrawal(idx);
-
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
             } catch (Exception e) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());

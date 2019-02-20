@@ -109,19 +109,3 @@
     }
   }
 </script>
-
-<codepen-resources lang="json">
-  {
-    "js": [
-      "https://cdn.jsdelivr.net/npm/vuelidate/dist/vuelidate.min.js",
-      "https://cdn.jsdelivr.net/npm/vuelidate/dist/validators.min.js"
-    ]
-  }
-</codepen-resources>
-
-<codepen-additional>
-  const { required, maxLength, email } = validators
-  const validationMixin = vuelidate.validationMixin
-
-  Vue.use(vuelidate.default)
-</codepen-additional>

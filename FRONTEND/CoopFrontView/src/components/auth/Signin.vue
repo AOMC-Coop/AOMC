@@ -100,26 +100,19 @@ const baseURI = localStorage.getItem('baseURI')
       }
     },
     methods: {
-      // onSignin () {
-      //   this.$store.dispatch('signUserIn', {email: this.email, password: this.password})
-      // },
-
       onDismissed () {
         this.$store.dispatch('clearError')
       },
 
       checkIsTeam(userIdx) {
         let token = localStorage.getItem('token');
-        debugger
          axios({
         method: 'get',
         url: "http://localhost:8083/api/team/user/" + userIdx,
         headers: { 'X-Auth-Token': `${token}` }
       })
-        .then(response => { //
-            debugger;
+        .then(response => { 
             if(response.data.data == null) {
-              debugger;
               this.$router.push({path: '/checkTeam'});
 
               // this.teamsFromServer = response.data.data;
@@ -152,9 +145,13 @@ const baseURI = localStorage.getItem('baseURI')
       
       signin: function () {
 
+        let token = localStorage.getItem('token');
       // this.$store.state.ip + `:8082/login`  
-        axios.post(`http://localhost:8082/api/login`, this.userInfo) 
-          .then(response => { 
+        axios.post(
+          `http://localhost:8082/api/login`,
+          this.userInfo,
+          { headers: { 'token': `${token}` }}          
+        ).then(response => { 
             debugger
             let description = response.data.description
             if(description == "Fail Login : Wrong ID"){
@@ -170,10 +167,9 @@ const baseURI = localStorage.getItem('baseURI')
               
               localStorage.setItem("userId", response.data.data.uid); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
               localStorage.setItem("userIdx", response.data.data.idx);
-              // localStorage.setItem("userIdx", 5);
+
               localStorage.setItem("userNickName", response.data.data.nickname);
               localStorage.setItem("userImage", response.data.data.image);
-
 
               this.$store.state.userId = response.data.data.uid;
               this.$store.state.userIdx = response.data.data.idx; //test용으로 넣어놈. 로그인 할때 받아야함

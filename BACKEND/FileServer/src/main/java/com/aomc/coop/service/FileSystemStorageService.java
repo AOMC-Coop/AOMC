@@ -42,7 +42,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 
-
 // ***** File Management Server도 별도로 만들어야 한다.
 // ***** 현재 upload 함수 내에서 만들 것
 
@@ -215,10 +214,8 @@ public class FileSystemStorageService implements StorageService {
 //                // File was not successfully renamed
 //            }
 
-// ***** User 객체에 String profile_pic_url을 새로 선언해서 사용하자.
             String url = "http://localhost:8085/files/" + channel_idx + "/profile/" + filename;
             User user = new User();
-// ***** 채팅 서버 테스트 끝나면 tempUrl -> url로 대체
             user.setImage(url);
 
             userMapper.updateUserImage(user_idx, url);
@@ -304,7 +301,7 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
-    public  static File multipartToFile(MultipartFile multipart, String fileName) throws IllegalStateException, IOException {
+    public static File multipartToFile(MultipartFile multipart, String fileName) throws IllegalStateException, IOException {
         File convFile = new File(System.getProperty("java.io.tmpdir")+"/"+fileName);
         multipart.transferTo(convFile);
         return convFile;

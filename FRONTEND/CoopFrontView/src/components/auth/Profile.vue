@@ -192,7 +192,11 @@ export default {
     setProfile: function (){
       let idx = localStorage.getItem('idx')
       let url = this.$store.state.ip + `:8082/api/profile/`+ idx
-      axios.put(url, this.profileWithToken)
+      let token = localStorage.getItem('token')
+      axios.put(url, 
+      this.profileWithToken,
+      { headers: { 'token': `${token}` }} 
+      )
         .then(response => {
           let description = response.data.description
           if(description == "Fail Set Profile"){
@@ -256,6 +260,7 @@ export default {
       },
       withdrawal: function (){
         alert("Are you sure?")
+        let token = localStorage.getItem('token')
         let idx = localStorage.getItem('idx')
         let url = this.$store.state.ip + `:8082/api/members/`+ idx
         axios.put(url, this.userWithToken)

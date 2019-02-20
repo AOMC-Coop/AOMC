@@ -92,13 +92,14 @@ const baseURI = localStorage.getItem('baseURI')
       onDismissed () {
         this.$store.dispatch('clearError')
       },
-
       sendMail : function () {
       // this.$store.state.ip + `:8082/login`  
       let idx = localStorage.getItem("userIdx");
       let url = `http://localhost:8082/api/members/missing/` + idx;
-        axios.post(url) 
-          .then(response => { 
+        axios.post(
+          url,
+          { headers: { 'token': `${token}` }}    
+          ).then(response => { 
             let description = response.data.description
             if(description == "Fail Login : Wrong ID"){
               alert("Your ID is not signed up yet! please check your ID again!")

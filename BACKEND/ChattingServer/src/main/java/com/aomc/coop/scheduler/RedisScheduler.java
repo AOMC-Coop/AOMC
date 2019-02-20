@@ -6,6 +6,9 @@ import com.aomc.coop.model.Message;
 import com.aomc.coop.util.RedisUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.client.AMQP;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
@@ -32,6 +35,8 @@ public class RedisScheduler {
     @Autowired
     private MessageMapper messageMapper;
 
+    private static final Logger logger = LoggerFactory.getLogger(AMQP.Channel.Open.class);
+
     // 애플리케이션 시작 후 30초 후에 첫 실행, 그 후 매 30초마다 주기적으로 실행한다.
 //    @Scheduled(initialDelay = 30000, fixedDelay = 30000)
     @Transactional
@@ -52,8 +57,6 @@ public class RedisScheduler {
 
             int key = (int) iterator.next();
 
-            System.out.println("hashMap Key : " + key);
-
             while (true) {
                 Message message = listOperations.leftPop(RedisUtil.redisKey + key);
 
@@ -66,12 +69,12 @@ public class RedisScheduler {
                     file.setContent(message.getFile_url());
                     int fileIdx = messageMapper.createFile(file, message.getFile_url());
                     messageMapper.createMessageWithFile(message, file.getIdx());
-                    System.out.println("message with file_url " + message.getContent());
+                    logger.debug("message with file_url " + message.getContent());
 
                 } else { //file_url이 없는 경우
                     //db에 저장
                     messageMapper.createMessage(message, message.getChannel_idx(), message.getUser_idx());
-                    System.out.println("///// " + message.getContent());
+                    logger.debug("message without file_url " + message.getContent());
                 }
 
             }

@@ -5,8 +5,11 @@ import com.aomc.coop.model.Message;
 import com.aomc.coop.util.RedisUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.client.AMQP;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.jdbc.Null;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +34,11 @@ public class MessageController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    private static final Logger logger = LoggerFactory.getLogger(AMQP.Channel.Open.class);
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void onMessage(HashMap<String, Message> map) {
-//        System.out.println("message = " + map);
+        logger.debug("message = " + map.get("msg"));
         int channelIdx = map.get("msg").getChannel_idx();
 
         //redis에 저장하기
@@ -53,7 +57,6 @@ public class MessageController {
         }
 
         map.get("msg").setMessage_idx(lastIdx);
-        System.out.println("lastIdx = " + lastIdx);
 
         channelInfo_map.put(map.get("msg").getChannel_idx(), lastIdx);
 
@@ -64,7 +67,7 @@ public class MessageController {
         //receive 큐에보냄
         if (map.get("msg") != null) {
             rabbitTemplate.convertAndSend(RabbitMQConfig.RECEIVE_QUEUE_NAME, map.get("msg"));
-            System.out.println("receive_rabbitMQ send");
+            logger.debug("receive_rabbitMQ send" + map.get("msg"));
         }
 
 

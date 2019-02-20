@@ -109,7 +109,7 @@ public class LoginLogoutService {
                 //                 ...                ...
 
                 // 테스트를 위해 토큰 유지 시간을 5시간으로 바꿈
-                hashOperations.getOperations().expire(key, 5L, TimeUnit.HOURS);
+                hashOperations.getOperations().expire(key, 24L, TimeUnit.HOURS);
 
                 // <test>
                 // Object userId = hashOperations.get(key, "uid");

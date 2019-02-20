@@ -2,6 +2,9 @@ package com.aomc.coop.utils.rabbitMQ;
 
 import com.aomc.coop.config.RabbitMQConfig;
 import com.aomc.coop.model.Message;
+import com.aomc.coop.service.TeamService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,26 +23,24 @@ public class RabbitMQUtil {
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
+    private static final Logger logger = LoggerFactory.getLogger(RabbitMQUtil.class);
+
     public Message sendRabbitMQ(Message message) {
         System.out.println("요청이 왔습니다" + message);
-//        System.out.println("channelIdx는 " + channelIdx);
 
         Map<String, Message> map = new HashMap<>();
         map.put("msg", message);
-//        map.put("channelIdx", ms);
 
-        //큐에보냄
         if(message != null) {
             rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, RabbitMQConfig.QUEUE_NAME, map);
-            System.out.println("rabbitMQ send");
+            logger.debug("rabbitMQ send");
         }
 
         return  message;
     }
 
     public void receiveRabbitMQ(Message message) {
-        System.out.println("rabbitMQ receive = " + message);
-        //SendTo("/topic/message")
+        logger.debug("rabbitMQ receive = " + message);
         this.simpMessagingTemplate.convertAndSend("/topic/message", message);
     }
 }

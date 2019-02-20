@@ -329,7 +329,6 @@ public class TeamController {
      */
     @GetMapping(path = "/user/{userIdx}")
     public ResponseEntity readTeamOfUser(@PathVariable(value = "userIdx") final int userIdx) {
-        System.out.println("token!!!!!!!!!!!!!!!");
         try {
             return new ResponseEntity<>(teamService.readTeamOfUser(userIdx), HttpStatus.OK);
         } catch (Exception e) {

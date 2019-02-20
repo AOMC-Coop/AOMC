@@ -27,7 +27,7 @@ public class OpenAPITokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-//        logger.info("in Interceptor");
+        logger.debug("in Interceptor");
         String tokenString = request.getHeader(HEADER_AUTH);
 //        logger.info(tokenString);
         if (tokenString != null) {

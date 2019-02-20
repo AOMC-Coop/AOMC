@@ -18,6 +18,8 @@ import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -55,6 +57,8 @@ public class TeamService {
     private JavaMailSender mailSender;
 
     MailSend mailSend = new MailSend();
+
+    private static final Logger logger = LoggerFactory.getLogger(TeamService.class);
 
 
     @Resource(name = "redisTemplate")
@@ -110,7 +114,7 @@ public class TeamService {
             channelMapper.createChannel(channel, team.getIdx());
 
             message.setChannel_idx(channel.getIdx());
-            rabbitMQUtil.sendRabbitMQ(message);
+
 
             for (User user : users) {
 
@@ -121,7 +125,6 @@ public class TeamService {
                 hashMap.put("teamIdx", team.getIdx());
                 hashMap.put("channelIdx", channel.getIdx());
 
-                //방장인 경우 메일 안보냄
                 if (user.getUid().equals(team.getOwner())) {
                     teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 1, 1);
                     channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
@@ -129,29 +132,26 @@ public class TeamService {
 
                     //초대받은팀원이 User가 아닌 경우 - userID만 넣기
                     if (userTemp == null) {
-//                        hashMap.put("uid", user.getUid());
                         hashMap.put("userIdx", 0);
 
                     } else {//초대받은팀원이 User인 경우
-                        //각테이블에 생성 데이터넣기
                         System.out.println(userTemp.getIdx());
                         teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0, 0);
                         channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
 
-                        //Redis에 정보 저장
-//                        hashMap.put("uid", user.getUid());
                         hashMap.put("userIdx", userTemp.getIdx());
                     }
 
                     values.putAll(token.getToken(), hashMap);
 
-                    //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
 
                     SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), token.getToken(), team.getName(), team.getOwner());
                     sendMailThread.start();
 
                 }
             }
+
+            rabbitMQUtil.sendRabbitMQ(message);
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_TEAM.getStatus(), team.getIdx());
 
@@ -170,7 +170,7 @@ public class TeamService {
         if (team == null) {
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
         }
-        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), team); // team 데이터 보낼때
+        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), team);
 
     }
 

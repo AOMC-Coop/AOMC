@@ -153,7 +153,7 @@ const baseURI = localStorage.getItem('baseURI')
       signin: function () {
 
       // this.$store.state.ip + `:8082/login`  
-        axios.post(`http://localhost:8082/login`, this.userInfo) 
+        axios.post(`http://localhost:8082/api/login`, this.userInfo) 
           .then(response => { 
             debugger
             let description = response.data.description

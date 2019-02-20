@@ -81,6 +81,7 @@ public class TeamController {
     @PostMapping
     public ResponseEntity makeTeam(@RequestBody final Team team) {
         try {
+            System.out.println(team);
             return new ResponseEntity<>(teamService.createTeam(team), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
@@ -329,7 +330,6 @@ public class TeamController {
      */
     @GetMapping(path = "/user/{userIdx}")
     public ResponseEntity readTeamOfUser(@PathVariable(value = "userIdx") final int userIdx) {
-        System.out.println("token!!!!!!!!!!!!!!!");
         try {
             return new ResponseEntity<>(teamService.readTeamOfUser(userIdx), HttpStatus.OK);
         } catch (Exception e) {

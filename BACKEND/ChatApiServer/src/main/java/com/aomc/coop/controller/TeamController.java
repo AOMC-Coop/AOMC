@@ -81,7 +81,6 @@ public class TeamController {
     @PostMapping
     public ResponseEntity makeTeam(@RequestBody final Team team) {
         try {
-            System.out.println(team);
             return new ResponseEntity<>(teamService.createTeam(team), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);

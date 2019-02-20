@@ -18,6 +18,8 @@ import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -55,6 +57,8 @@ public class TeamService {
     private JavaMailSender mailSender;
 
     MailSend mailSend = new MailSend();
+
+    private static final Logger logger = LoggerFactory.getLogger(TeamService.class);
 
 
     @Resource(name = "redisTemplate")
@@ -110,7 +114,7 @@ public class TeamService {
             channelMapper.createChannel(channel, team.getIdx());
 
             message.setChannel_idx(channel.getIdx());
-            rabbitMQUtil.sendRabbitMQ(message);
+
 
             for (User user : users) {
 
@@ -121,7 +125,6 @@ public class TeamService {
                 hashMap.put("teamIdx", team.getIdx());
                 hashMap.put("channelIdx", channel.getIdx());
 
-                //방장인 경우 메일 안보냄
                 if (user.getUid().equals(team.getOwner())) {
                     teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 1, 1);
                     channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
@@ -129,29 +132,25 @@ public class TeamService {
 
                     //초대받은팀원이 User가 아닌 경우 - userID만 넣기
                     if (userTemp == null) {
-//                        hashMap.put("uid", user.getUid());
                         hashMap.put("userIdx", 0);
 
                     } else {//초대받은팀원이 User인 경우
-                        //각테이블에 생성 데이터넣기
-                        System.out.println(userTemp.getIdx());
                         teamMapper.createUserHasTeam(team.getIdx(), userTemp.getIdx(), 0, 0);
                         channelMapper.createUserHasChannel(channel.getIdx(), userTemp.getIdx());
 
-                        //Redis에 정보 저장
-//                        hashMap.put("uid", user.getUid());
                         hashMap.put("userIdx", userTemp.getIdx());
                     }
 
                     values.putAll(token.getToken(), hashMap);
 
-                    //mailSend.mailsend(mailSender, user.getUid(), token.getToken());
 
                     SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), token.getToken(), team.getName(), team.getOwner());
                     sendMailThread.start();
 
                 }
             }
+
+            rabbitMQUtil.sendRabbitMQ(message);
 
             return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_CREATE_TEAM.getStatus(), team.getIdx());
 
@@ -170,7 +169,7 @@ public class TeamService {
         if (team == null) {
             return codeJsonParser.codeJsonParser(Status_5000.FAIL_READ_TEAM.getStatus());
         }
-        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), team); // team 데이터 보낼때
+        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_READ_TEAM.getStatus(), team);
 
     }
 
@@ -302,7 +301,7 @@ public class TeamService {
     public ResponseType inviteTeam(final Team team) {
 
         List<User> inviteUsers = team.getUsers();
-        System.out.println(inviteUsers);
+        logger.debug("[TeamSeeervice, inviteTeam] inviteUsers = "+inviteUsers);
 //        List<Channel> channels = team.getChannels();
 
         List<User> usersOfTeam = teamMapper.readUserOfTeam(team.getIdx());
@@ -327,8 +326,8 @@ public class TeamService {
         }
 
 
-        System.out.println("firstUsers : "+firstUsers);
-        System.out.println("existUsers : "+existUsers);
+//        System.out.println("firstUsers : "+firstUsers);
+//        System.out.println("existUsers : "+existUsers);
         if(firstUsers.size()==0){
             return codeJsonParser.codeJsonParser(Status_5000.No_Invite_Member.getStatus());
         }
@@ -365,10 +364,6 @@ public class TeamService {
             values.putAll(token.getToken(), hashMap);
             values.getOperations().expire(token.getToken(), 1L, TimeUnit.HOURS);
 
-            String test = (String) values.get(token.getToken(), "teamIdx");
-            System.out.println("[TeamService, inviteTeam]test = "+test);
-
-
             SendMailThread sendMailThread = new SendMailThread(mailSender, user.getUid(), token.getToken(), teamTemp.getName(), inviteUsers.get(0).getUid());
             sendMailThread.start();
 
@@ -387,30 +382,20 @@ public class TeamService {
         String string_teamIdx = (String) values.get(token, "teamIdx");
         String string_userIdx = (String) values.get(token, "userIdx");
 
-//        Map<String, Integer> map = values.entries(token);
-//        ObjectMapper mapper = new ObjectMapper();
-//        HashMap<String, Integer> map3 =  mapper.convertValue(map, new TypeReference<HashMap<String, Integer>>() {});
-//
-//        int teamIdx = map3.get("teamIdx");
-//        int userIdx = map3.get("userIdx");
-
         int teamIdx = Integer.parseInt(string_teamIdx);
         int userIdx = Integer.parseInt(string_userIdx);
 
-        System.out.println("[TeamService, acceptInvite] teamIdx = "+teamIdx);
-        System.out.println("[TeamService,acceptInvite] userIdx = "+userIdx);
 
         if (teamIdx == -1) {
-            return "http://localhost:9999/signup/"; //회원가입창 //만료된주소입니다라는 메세지 보내야함
-//            return codeJsonParser.codeJsonParser(Status_5000.FAIL_INCORRECT_AUTHKEY.getStatus());
+            return "http://localhost:9999/signup"; //만료된주소입니다
         }
         if (userIdx == 0) {
-            return "http://localhost:9999/signup/"+token; //회원가입창
-//            return codeJsonParser.codeJsonParser(Status_5000.PLEASE_SIGNUP.getStatus(), token);
+            return "http://localhost:9999/signup/"+token; //회원가입
+        }else{
+            teamMapper.updateInviteFlag(teamIdx, userIdx);
+            return "http://localhost:9999/";
         }
-        teamMapper.updateInviteFlag(teamIdx, userIdx);
-        return "http://localhost:9999/";
-//        return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_ACCEPT_INVITE.getStatus());
+
 
 
     }

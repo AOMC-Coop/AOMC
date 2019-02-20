@@ -13,6 +13,8 @@ import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import com.aomc.coop.utils.redis.RedisUtil;
 import com.aomc.coop.utils.ResponseType;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -52,6 +54,9 @@ public class ChannelService {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
+    private static final Logger logger = LoggerFactory.getLogger(ChannelService.class);
+
+
     public ResponseType createChannel(Channel channel) {
 
         if (channel == null) {
@@ -86,7 +91,6 @@ public class ChannelService {
         rabbitMQUtil.sendRabbitMQ(message);
         //
         for (int i = 0; i < channel.getUsers().size(); i++) {
-//            System.out.println("채널 생성 함수의 user index = " + channel.getUsers().get(i).getIdx());
             channelMapper.createUserHasChannel(channel.getIdx(), channel.getUsers().get(i).getIdx());
 
         }
@@ -133,11 +137,11 @@ public class ChannelService {
                     int status = channelMapper.findChannelStatus(channel.getIdx(), inviteUser.getIdx());
 
                     if (status == 0) {
-                        System.out.println("해당 채널을 나간 사용자 입니다.");
+                        logger.debug("해당 채널을 나간 사용자 입니다.");
                         channelMapper.updateChannelStatus(1, channel.getIdx(), inviteUser.getIdx());
 //                      return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Invite_Channel_User.getStatus());
                     } else if (status == 1) {
-                        System.out.println("이미 채널에 있는 사용자입니다.");
+                        logger.debug("이미 채널에 있는 사용자입니다.");
 //                      return codeJsonParser.codeJsonParser(Status_1000.Channel_Already_Has_User.getStatus());
                     }
                 } catch (Exception e) {

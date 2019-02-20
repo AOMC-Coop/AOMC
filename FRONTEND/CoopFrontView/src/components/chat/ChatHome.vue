@@ -860,12 +860,9 @@ let token = localStorage.getItem('token');
     },
     getProfile: function (){
       let idx = localStorage.getItem('idx')
-<<<<<<< HEAD
       // let url = this.$store.state.ip + `:8082/profile/`+ idx
-      let url = `/profile/`+ idx
-=======
+      // let url = `/api/profile/`+ idx
       let url = this.$store.state.ip + `:8082/api/profile/`+ idx
->>>>>>> b8e4e2dfb71cb5a59dfb89d3bb2cee2b58c1ee3e
       axios.post(url, this.userWithToken)
         .then(response => {
           let description = response.data.description

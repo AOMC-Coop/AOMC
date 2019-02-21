@@ -113,14 +113,14 @@ public class TeamController {
      * @brief Get http://localhost:8083/api/team/detail/{teamIdx}
      * @details Team 조회
      */
-    @GetMapping(path = "/detail/{teamIdx}")
-    public ResponseEntity readTeamDatail(@PathVariable(value = "teamIdx") final int teamIdx) {
-        try {
-            return new ResponseEntity<>(teamService.readTeamDetail(teamIdx), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
-    }
+//    @GetMapping(path = "/detail/{teamIdx}")
+//    public ResponseEntity readTeamDatail(@PathVariable(value = "teamIdx") final int teamIdx) {
+//        try {
+//            return new ResponseEntity<>(teamService.readTeamDetail(teamIdx), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+//        }
+//    }
 
     /**
      * @param RequestBody final Team team
@@ -162,14 +162,14 @@ public class TeamController {
      * "name":"winterdevcamp"
      * }
      */
-    @PutMapping
-    public ResponseEntity updateTeam(@RequestBody final Team team) {
-        try {
-            return new ResponseEntity<>(teamService.updateTeam(team), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
-    }
+//    @PutMapping
+//    public ResponseEntity updateTeam(@RequestBody final Team team) {
+//        try {
+//            return new ResponseEntity<>(teamService.updateTeam(team), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+//        }
+//    }
 
     /**
      * @param PathVariable(value = "teamIdx") final int teamIdx
@@ -277,14 +277,14 @@ public class TeamController {
      * @brief Put http://localhost:8083/api/team/manage/{teamIdx}&{userIdx}
      * @details Team의 멤버 비활성화
      */
-    @PutMapping(path = "/manage/{teamIdx}&{userIdx}")
-    public ResponseEntity deactiveUser(@PathVariable(value = "teamIdx") final int teamIdx, @PathVariable(value = "userIdx") final int userIdx) {
-        try {
-            return new ResponseEntity<>(teamService.deactiveUser(teamIdx, userIdx), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
-    }
+//    @PutMapping(path = "/manage/{teamIdx}&{userIdx}")
+//    public ResponseEntity deactiveUser(@PathVariable(value = "teamIdx") final int teamIdx, @PathVariable(value = "userIdx") final int userIdx) {
+//        try {
+//            return new ResponseEntity<>(teamService.deactiveUser(teamIdx, userIdx), HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+//        }
+//    }
 
     /**
      * @param PathVariable(value = "userIdx") final int userIdx
@@ -448,7 +448,6 @@ public class TeamController {
     @PostMapping(path = "/invite")
     public ResponseEntity inviteTeam(@RequestBody final Team team) {
         try {
-
             return new ResponseEntity<>(teamService.inviteTeam(team), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);

@@ -60,20 +60,20 @@ public class FileServerController {
 
 
     // profile picture를 업로드 하는 @PostMapping
-    @PostMapping(path = "/{channel_idx}/profile/{user_idx}")
-    public ResponseEntity uploadProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable final int channel_idx, @PathVariable final int user_idx) throws IOException {
+    @PostMapping(path = "/profile/{user_idx}")
+    public ResponseEntity uploadProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable final int user_idx) throws IOException {
 
         try {
-            return new ResponseEntity(storageService.uploadProfilePicture(file, channel_idx, user_idx), HttpStatus.OK);
+            return new ResponseEntity(storageService.uploadProfilePicture(file, user_idx), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
     }
 
     // profile picture를 다운로드 하는 @GetMapping
-    @GetMapping(path = "/{channel_idx}/profile/{filename:.+}")
-    public ResponseEntity downloadProfilePicture(@PathVariable String filename, @PathVariable final int channel_idx) throws IOException {
-        Resource file = storageService.downloadProfilePicture(filename, channel_idx);
+    @GetMapping(path = "/profile/{filename:.+}")
+    public ResponseEntity downloadProfilePicture(@PathVariable String filename) throws IOException {
+        Resource file = storageService.downloadProfilePicture(filename);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }

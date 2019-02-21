@@ -140,6 +140,7 @@ export default {
   data:function(){
       return {
           userIdx: localStorage.getItem("userIdx"),
+
           userNickName: localStorage.getItem("userNickName"),
           userImage: localStorage.getItem("userImage"),
           fromInvite:{
@@ -274,9 +275,9 @@ export default {
     // console.log(this.channels);
     this.channel.teamIdx = this.teamIdx
     this.channel.users.pop(); // 왜 유저가 한개 들어있을까?ㅁ
+
     this.channel.users.push({idx: this.userIdx, nickname: this.userNickName, image:this.userImage});
-    //실시간 초대 -> 초대한 사람 넣기
-    // this.$store.state.channelInvite.frominvite = this.fromInvite;
+
     // this.channel.teamIdx = localStorage.getItem(teamIdx);
     this.printLog(this.teamMembers)
   },

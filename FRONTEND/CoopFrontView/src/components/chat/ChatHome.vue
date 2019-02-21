@@ -26,14 +26,15 @@
           >
             <v-list-tile slot="activator">
               <v-list-tile-content>
-                <v-list-tile-title style = "fontSize : 33px">
+                <v-list-tile-title style = "fontSize : 27px">
                   {{ teamName }}
                 </v-list-tile-title>
-                <v-list-tile-title style = "fontSize : 15px">
+                <v-list-tile-title style = "fontSize : 14px">
                   {{ userName }}
                 </v-list-tile-title>
               </v-list-tile-content>
             </v-list-tile>
+
             <v-list-tile
               v-for="(child, i) in teamsFromServer"
               :key="i"
@@ -52,7 +53,7 @@
 
             <v-flex xs6>
               <v-btn color="primary" depressed @click="addCreateTeamDialog">
-                <v-icon class="white--text">add</v-icon>
+                <v-icon color="warning" class="white--text">add</v-icon>
                 <span>create Team</span>
               </v-btn>
               <!-- <v-subheader class="white--text" >
@@ -63,7 +64,7 @@
 
             <v-flex xs6>
               <v-btn color="primary" depressed @click="exitTeam">
-                <v-icon class="white--text">remove</v-icon>
+                <v-icon color="warning" class="white--text">remove</v-icon>
                 <span>sign out of {{teamName}}</span>
               </v-btn>
             </v-flex>
@@ -934,8 +935,10 @@ let token = localStorage.getItem('token');
       //   { headers: { 'token': `${token}` }}    
       // ).then(response => {
       // axios.post(this.$store.state.ip + `:8082/logout`, this.userWithToken)
+      
       // axios.post(`/api/logout`, this.userWithToken, { headers: { 'token': `${token}` }} )
-      axios.post(this.$store.state.ip + `:8082/api/logout`, this.userWithToken)
+      axios.post(this.$store.state.ip + `:8082/api/logout`, this.userWithToken, { headers: { 'token': `${token}` }})
+
       .then(response => {
           let description = response.data.description
           if(description == "Fail Logout"){
@@ -1008,7 +1011,7 @@ let token = localStorage.getItem('token');
 // -> Chathome.vue에서 this.$store로 찾아보기
               localStorage.setItem('nickname', nickname)
               localStorage.setItem('gender', gender)
-              location.href = './profile'
+              this.$router.push({path: '/profile'})
            }
          }).catch(e => {
           console.log(e)

@@ -34,11 +34,11 @@ public class MemberController {
     }
 
     // 회원 가입 시 이메일 인증
-    @GetMapping(path="/{authUrl}")
+    @GetMapping(path="/{authUrl}/{invite_token}")
     @CrossOrigin
-    public ResponseEntity emailAuth(@PathVariable(value = "authUrl") String authUrl) {
+    public ResponseEntity emailAuth(@PathVariable(value = "authUrl") String authUrl, @PathVariable(value = "invite_token") String invite_token) {
         try {
-            return new ResponseEntity(memberService.emailAuth(authUrl), HttpStatus.OK);
+            return new ResponseEntity(memberService.emailAuth(authUrl, invite_token), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }

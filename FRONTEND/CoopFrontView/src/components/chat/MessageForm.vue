@@ -2,9 +2,9 @@
 
  <v-container fluid fill-height>
 
-<!-- 
-     <div class="vertical" v-on:change="handleFileUpload()">
-        <upload-btn icon title='' large=false id="file" ref="file" type="file">
+
+     <div class="vertical">
+        <upload-btn icon title='' large=false :fileChangedCallback="fileChanged">
           <template slot="icon">
             <v-icon class="white--text">add</v-icon>
           </template>
@@ -19,20 +19,20 @@
             v-on:click="submitFile()">
             <v-icon right dark left>cloud_upload</v-icon>
         </v-btn>
-     </div> -->
+     </div>
 
         <v-layout justify-center align-end>
 
           <v-flex xs12>
 
-            <div class="container">
+            <!-- <div class="container">
               <div class="large-12 medium-12 small-12 cell">
                 <label>File
                   <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
                 </label>
                 <button v-on:click="submitFile()">Submit</button>
               </div>
-            </div>
+            </div> -->
               <!-- <form @submit.prevent="sendFile"> 
                 <upload-btn icon>
                   <template slot="icon">
@@ -141,8 +141,12 @@ export default {
     submitFile(){
       // Initialize the form data
       let formData = new FormData();
+      let checkFile = this.file
       // Add the form data we need to submit
       let channel_idx = this.$store.state.channelInfo.idx
+/* *******************************************************************************************************************************************************      
+           여기가 에러의 주범이야 여기를 봐 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   ******************************************************************************************************************************************************* */
       let url =  "http://localhost:8085/api/files/"+ channel_idx
       // let url = this.$store.state.ip + ":8085/api/files/" + channel_idx
       debugger
@@ -188,6 +192,10 @@ export default {
         debugger
         this.file = this.$refs.file.files[0];
         
+      },
+      fileChanged (file) {
+        debugger
+        this.file = file
       }
     },
 

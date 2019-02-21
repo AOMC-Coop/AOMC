@@ -108,8 +108,16 @@ public class MemberService {
                 hashOperations.putAll(authUrl, hashMap);
                 hashOperations.getOperations().expire(authUrl, 3L, TimeUnit.MINUTES);
 
-                SendMailThread sendMailThread = new SendMailThread(mailSender, uid, authUrl);
-                sendMailThread.start();
+                String invite_token = user.getInvite_token();
+
+                if(invite_token== null){
+                    SendMailThread sendMailThread = new SendMailThread(mailSender, uid, authUrl);
+                    sendMailThread.start();
+                } else {
+                    SendMailThread sendMailThread = new SendMailThread(mailSender, uid, authUrl, invite_token);
+                    sendMailThread.runToInvite();
+                }
+
 
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register_Auth_Mail_Sent.getStatus());
 
@@ -125,9 +133,10 @@ public class MemberService {
     }
 
 // ***** 이메일 인증 성공시 바로 로그인 창으로 넘어가도록 구조를 바꿔보자
-    public ResponseType emailAuth(@PathVariable(value = "authUrl") final String authUrl) {
+    public ResponseType emailAuth(@PathVariable(value = "authUrl") final String authUrl,  @PathVariable(value = "invite_token") String invite_token) {
 
         try {
+
             Map userInfo = hashOperations.entries(authUrl);
             String uid = (String) userInfo.get("uid");
 
@@ -162,6 +171,11 @@ public class MemberService {
                 // user.setReg_date(reg_date);
                 // user.setAccess_date(access_date);
                 user.setStatus(1);
+
+                if(invite_token != "0"){ // 초대로 회원가입한 유저인 경우
+                    hashOperations
+                    // user has team에 정보 넣어주고, user has channel에도 넣어줘야 함 (redis에서 찾아서 할 것), teamservice의 356줄 flag를 1로 해서 저장 (2개 다))
+                }
 
                 // 제대로 db에 저장이 되었다면
                 if (userMapper.insertUser(user) == 1) {
@@ -208,6 +222,7 @@ public class MemberService {
         JavaMailSender mailSender;
         String uid;
         String authUrl;
+        String invite_token;
         int idx;
 
         public SendMailThread(JavaMailSender mailSender, String uid, String authUrl) {
@@ -215,6 +230,14 @@ public class MemberService {
             this.uid = uid;
             this.authUrl = authUrl;
         }
+
+        public SendMailThread(JavaMailSender mailSender, String uid, String authUrl, String invite_token) {
+            this.mailSender = mailSender;
+            this.uid = uid;
+            this.authUrl = authUrl;
+            this.invite_token = invite_token;
+        }
+
 // ***** 이런 식으로 중복되는 생성자가 있는건 별로인가?
         public SendMailThread(JavaMailSender mailSender, String uid, int idx) {
             this.mailSender = mailSender;
@@ -225,9 +248,7 @@ public class MemberService {
         public void run() {
             mailSend.mailsend(mailSender, uid, authUrl);
         }
-//        public void run() {
-//            mailSend.mailsendForMissingPwd(mailSender, uid, idx);
-//        }
+        public void runToInvite() { mailSend.mailsendToInvite(mailSender, uid, authUrl, invite_token); }
     }
 
     // <3. 비밀번호 변경>

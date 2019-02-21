@@ -166,7 +166,7 @@ const baseURI = localStorage.getItem('baseURI')
         // axios.post(`/api/login`, this.userInfo, { headers: { 'token': `${token}` }} )
         // axios.post(`http://localhost:8082/api/login`, this.userInfo) 
 
-        axios.post(`http://localhost:8082/api/login`, this.userInfo, { headers: { 'token': `${token}` }}) 
+        axios.post(`http://localhost:8082/api/login`, this.userInfo) 
         // axios.post(`/api/login`, this.userInfo, { headers: { 'token': `${token}` }} )
         // axios.post(`http://localhost:8082/api/login`, this.userInfo) 
 

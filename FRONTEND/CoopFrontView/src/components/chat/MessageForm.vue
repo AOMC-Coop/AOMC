@@ -143,7 +143,7 @@ export default {
       let formData = new FormData();
       // Add the form data we need to submit
       let channel_idx = this.$store.state.channelInfo.idx
-      let url =  "http://localhost:8085/api/files/1"// + channel_idx
+      let url =  "http://localhost:8085/api/files/"+ channel_idx
       // let url = this.$store.state.ip + ":8085/api/files/" + channel_idx
 
       const sendMessage = { 

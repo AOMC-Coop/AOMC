@@ -194,8 +194,8 @@ export default {
         // .post(this.$store.state.ip + ":8083/api/channel/", this.channel)
         let token = localStorage.getItem('token');
         axios
-        .post(this.$store.state.ip + ":8083/api/channel/", this.channel, 
-        // .post("/api/channel/", this.channel, 
+        // .post(this.$store.state.ip + ":8083/api/channel/", this.channel, 
+        .post("/api/channel/", this.channel, 
         {headers: { 'X-Auth-Token': `${token}` }}
         )
         .then(response => {

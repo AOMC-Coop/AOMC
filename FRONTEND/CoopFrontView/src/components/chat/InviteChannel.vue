@@ -201,8 +201,8 @@ export default {
        this.channel.idx=this.$store.state.channelInfo.idx
 
       axios
-        .post(this.$store.state.ip + ":8083/api/channel/invite", this.channel, 
-        // .post("/api/channel/invite", this.channel, 
+        // .post(this.$store.state.ip + ":8083/api/channel/invite", this.channel, 
+        .post("/api/channel/invite", this.channel, 
         {headers: { 'X-Auth-Token': `${token}` }}
         )
         .then(response => {

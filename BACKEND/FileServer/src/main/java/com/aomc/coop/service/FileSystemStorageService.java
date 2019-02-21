@@ -89,7 +89,8 @@ public class FileSystemStorageService implements StorageService {
     public ResponseType upload(MultipartFile file, Message message, final int channel_idx) {
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        String location = "C:\\FileStorage\\" + channel_idx;
+//        String location = "C:\\FileStorage\\" + channel_idx;
+        String location = "/Users/iyunjae/FileStorage/" + channel_idx;
 // ***** filename 중복시, time 변수 혹은 다른 방식을 통해 filename 중복을 막도록 코드를 변경할 것
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -163,7 +164,8 @@ public class FileSystemStorageService implements StorageService {
 
 // ***** jpg, png 등의 img 파일들만 업로드 할 수 있도록 Vue에서, 혹은 uploadProfilePicture에서 예외처리 할 것
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        String location = "C:\\FileStorage\\"+ "profile";
+//        String location = "C:\\FileStorage\\"+ "profile";
+        String location = "/Users/iyunjae/FileStorage/" + "profile";
         try {
             if (file.isEmpty()) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Profile_Picture_Upload.getStatus());
@@ -252,14 +254,14 @@ public class FileSystemStorageService implements StorageService {
     //        It will typically represent a system dependent file path.
     @Override
     public Path getFilePath(String filename, final int channel_idx) {
-        String location = channel_idx + "\\" +filename;
+        String location = channel_idx + "/" +filename;
         return rootLocation.resolve(location);
     }
 
 // ***** getFilePath와의 중복구조 해결하기 -> 무조건 다른 방법 사용할 것
     @Override
     public Path getFilePathForProfile(String filename) {
-        String location = "profile\\" +filename;
+        String location = "profile/" +filename;
         return rootLocation.resolve(location);
     }
 

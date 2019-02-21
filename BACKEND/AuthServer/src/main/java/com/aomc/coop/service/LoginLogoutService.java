@@ -62,10 +62,10 @@ public class LoginLogoutService {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login_Wrong_ID.getStatus());
             }
 // *** updateAccess_date(user)가 제대로 되지 않는 경우는 어떤 때일까?
-            if(userMapper.updateAccess_date(user.getUid()) == 0) {
-                System.out.println("updateAccess_date : Fail");
-                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login.getStatus());
-            }
+//            if(userMapper.updateAccess_date(user.getUid()) == 0) {
+//                System.out.println("updateAccess_date : Fail");
+//                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login.getStatus());
+//            }
 
             // 탈퇴한 회원일 경우
 // *** 추후 Status_3000 수정하자 -> 더 자세히 경우 나누기

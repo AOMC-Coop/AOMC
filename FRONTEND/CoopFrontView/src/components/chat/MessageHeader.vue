@@ -380,8 +380,8 @@ export default {
         this.channel.idx=this.$store.state.channelInfo.idx
 
         axios
-          .post(this.$store.state.ip + ":8083/api/channel/invite", this.channel,
-          // .post("/api/channel/invite", this.channel, 
+          // .post(this.$store.state.ip + ":8083/api/channel/invite", this.channel,
+          .post("/api/channel/invite", this.channel, 
           {headers: { 'X-Auth-Token': `${token}` }}
           )
           .then(response => {
@@ -473,8 +473,8 @@ export default {
        let token = localStorage.getItem('token');
        axios({
         method: 'get',
-        url: this.$store.state.ip + ":8083/api/channel/star?channelIdx=" + this.$store.state.channelInfo.idx + "&userIdx=" + localStorage.getItem("userIdx") + "&starFlag=" + starFlag,
-        // url: "/api/channel/star?channelIdx=" + this.$store.state.channelInfo.idx + "&userIdx=" + localStorage.getItem("userIdx") + "&starFlag=" + starFlag,
+        // url: this.$store.state.ip + ":8083/api/channel/star?channelIdx=" + this.$store.state.channelInfo.idx + "&userIdx=" + localStorage.getItem("userIdx") + "&starFlag=" + starFlag,
+        url: "/api/channel/star?channelIdx=" + this.$store.state.channelInfo.idx + "&userIdx=" + localStorage.getItem("userIdx") + "&starFlag=" + starFlag,
         
         headers: { 'X-Auth-Token': `${token}` },
       })
@@ -528,8 +528,8 @@ export default {
       let token = localStorage.getItem('token');
        axios({
         method: 'delete',
-        url: this.$store.state.ip + ":8083/api/channel",
-        // url: "/api/channel",
+        // url: this.$store.state.ip + ":8083/api/channel",
+        url: "/api/channel",
         params: {
           channelIdx: this.$store.state.channelInfo.idx,
           userIdx: localStorage.getItem("userIdx")
@@ -574,8 +574,8 @@ export default {
       let token = localStorage.getItem('token');
        axios({
         method: 'get',
-        url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
-        // url: "/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        // url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        url: "/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
         params: {
            start: this.$store.state.messageStartNum,
           messageLastIdx: this.$store.state.messageLastIdx

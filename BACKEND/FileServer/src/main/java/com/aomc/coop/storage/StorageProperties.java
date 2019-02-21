@@ -34,7 +34,7 @@ public class StorageProperties {
 //        - 만약 두단계 상위 디렉토리로 이동하려면
 //            '../../' 이렇게 사용하면 된다.
 
-    private String location = "C:\\FileStorage";
+    private String location = "/Users/iyunjae/FileStorage";
 
     public String getLocation() {
         return location;

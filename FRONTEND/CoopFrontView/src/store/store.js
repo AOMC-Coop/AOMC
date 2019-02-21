@@ -9,6 +9,8 @@ export const store = new Vuex.Store({
   state: {
     ip:"http://10.240.202.225",
     stompClient:null,
+    stompSubscription: null,
+    connected:false,
     userId:'',
     userIdx:'',
     userNickName:'',

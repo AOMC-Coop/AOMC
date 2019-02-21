@@ -40,7 +40,7 @@ public class RabbitMQUtil {
     }
 
     public void receiveRabbitMQ(Message message) {
-        logger.debug("rabbitMQ receive = " + message);
-        this.simpMessagingTemplate.convertAndSend("/topic/message", message);
+        logger.info("rabbitMQ receive = " + message);
+        this.simpMessagingTemplate.convertAndSend("/topic/message/" + message.getChannel_idx(), message);
     }
 }

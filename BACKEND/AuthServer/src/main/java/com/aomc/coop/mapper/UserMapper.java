@@ -24,7 +24,7 @@ public interface UserMapper {
 
     // mysql query문으로 자동 업데이트 될 것임 vs 그런데 LoginController에서 필요함 -> 일단 사용
     @Update("UPDATE users SET access_date = now() WHERE uid = #{uid}")
-    int updateAccess_date(final String userId);
+    int updateAccess_date(final String uid);
 
     @Update("UPDATE users SET nickname = #{newNickname}, gender = #{newGender} WHERE idx = #{idx}")
     int updateUserInfo(final int idx, final String newNickname, final int newGender);

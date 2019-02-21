@@ -370,8 +370,6 @@ public class TeamService {
 
         }
 
-
-
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_INVITE.getStatus(), firstUsers, existUsers);
 
     }

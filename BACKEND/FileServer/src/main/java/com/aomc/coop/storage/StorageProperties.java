@@ -1,8 +1,12 @@
 package com.aomc.coop.storage;
-
-import com.aomc.coop.response.Status_3000;
+import com.aomc.coop.service.StorageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @ConfigurationProperties("storage")
 public class StorageProperties {
@@ -21,9 +25,7 @@ public class StorageProperties {
 //    ex) index.php가 C:\index\a에 위치한다면,
 //
 //    여기서 / 는 C:
-//
 //          ./ 는 a
-//
 //          ../ 는 index라는 것.
 //
 //        - 3가지를 간단히 정리하자면,
@@ -43,5 +45,19 @@ public class StorageProperties {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    Path path = Paths.get(location);
+
+    // 디렉토리 생성
+    if (!Files.exists(path)) {
+        try {
+            Files.createDirectories(path);
+        } catch (IOException e) {
+            //fail to create directory
+            e.printStackTrace();
+        }
+    }
+
+
 
 }

@@ -30,12 +30,15 @@
               class="font-weight-light"
             >Change Photo</v-btn>
             
-            <div class="large-12 medium-12 small-12 cell">
-            <label>File
-              <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-            </label>
-            <button v-on:click="submitFile()">Submit</button>
-          </div>
+            <div class="container">
+              <div class="large-12 medium-12 small-12 cell">
+                <label>File
+                  <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+                </label>
+                <button v-on:click="submitFile()">Submit</button>
+              </div>
+            </div>
+            
           </v-card-text>
         </material-card>
       </v-flex>
@@ -163,7 +166,7 @@ import Vue from 'vue'
 import { locale } from 'moment';
 
 let gender = localStorage.getItem('gender')
-let ProfileUrl
+let ProfileUrl = ''
 
 new Vue({
     el: '#nickname_bind',
@@ -218,16 +221,12 @@ export default {
       // Initialize the form data
       let formData = new FormData();
       // Add the form data we need to submit
-      // ***** 테스트를 위해 channel_idx를 1로 세팅
       let channel_idx = this.$store.state.channelInfo.idx
       let user_idx = localStorage.getItem('idx')
       let url = this.$store.state.ip + ":8085/api/files/" + channel_idx + "/profile/" + user_idx
-      // console.log(channel_idx)
-      // console.log(url)
 
       formData.append('file', this.file);
       console.log(formData)
-      // formData.append('message', sendMessage);
       // Make the request to the POST /single-file URL
       axios.post( url,
       formData,
@@ -247,7 +246,7 @@ export default {
             }
         })
         .catch(function(){
-          //console.log('Fail to submit profile photo!');
+          console.log('Fail to submit profile photo!');
         });
 
       },
@@ -265,7 +264,7 @@ export default {
         let url = this.$store.state.ip + `:8082/api/members/`+ idx
         axios.put(url, this.userWithToken)
           .then(response => {
-            let description = response.data.description
+            let description = response.data.descfription
             if(description == "Fail Withdrawal"){
                 alert("Fail to withdraw!")
             } else {

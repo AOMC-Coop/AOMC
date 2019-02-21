@@ -148,8 +148,7 @@ const baseURI = localStorage.getItem('baseURI')
       },
       
       signin: function () {
-
-        let token = localStorage.getItem('token');
+      debugger
       // this.$store.state.ip + `:8082/login`  
 
         // axios.post(
@@ -159,9 +158,10 @@ const baseURI = localStorage.getItem('baseURI')
         // ).then(response => { 
 
         // axios.post(`http://10.240.202.225:8082/login`, this.userInfo) 
-        axios.post(`/api/login`, this.userInfo, { headers: { 'token': `${token}` }} )
+        axios.post(`http://localhost:8082/api/login`, this.userInfo )
         // axios.post(`http://localhost:8082/api/login`, this.userInfo) 
           .then(response => { 
+            
             let description = response.data.description
             if(description == "Fail Login : Wrong ID"){
               alert("Your ID is not signed up yet! please check your ID again!")
@@ -177,7 +177,6 @@ const baseURI = localStorage.getItem('baseURI')
               
               localStorage.setItem("userId", response.data.data.uid); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
               localStorage.setItem("userIdx", response.data.data.idx);
-
               localStorage.setItem("userNickName", response.data.data.nickname);
               localStorage.setItem("userImage", response.data.data.image);
 
@@ -194,7 +193,7 @@ const baseURI = localStorage.getItem('baseURI')
               console.log(localStorage.getItem("userNickName"));
 
               this.checkIsTeam(response.data.data.idx);
-             
+              location.href = './chat'
             }
             }
           ).catch(e => {

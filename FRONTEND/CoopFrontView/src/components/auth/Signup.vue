@@ -93,6 +93,7 @@
 
 <script>
 import axios from 'axios'
+import { locale } from 'moment';
   export default {
     data () {
       return {
@@ -101,7 +102,8 @@ import axios from 'axios'
           pwd: '',
           confirm_pwd: '',
           nickname: '',
-          gender:''
+          gender:'',
+          invite_token:''
         },
         radios: 'radio-1',
         loader: null
@@ -173,12 +175,15 @@ import axios from 'axios'
         this.$store.dispatch('clearError')
       },
       signup: function () {
+        this.userInfo.invite_token = localStorage.getItem('invite_token')
         
         if(this.userInfo.pwd !== this.userInfo.confirm_pwd ){
           alert('Passwords do not match! Are you insane?')
         } else {
           /*this.$store.state.ip*/
-          axios.post(`http://localhost:8082/api/members`, this.userInfo)
+          axios.post(`http://localhost:8082/api/members`, 
+          this.userInfo
+          )
             .then(response => { 
               let description = response.data.description
               if(description == "Fail Register : Already registered e-mail address"){

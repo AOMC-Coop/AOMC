@@ -19,4 +19,5 @@ public class User implements Serializable {
     private Date access_date;
     private Date update_date;
     private String image;
+    private String invite_token;
 }

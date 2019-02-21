@@ -408,12 +408,34 @@ let token = localStorage.getItem('token');
           this.$store.state.connected = true;
           this.chatCreated();
           this.channelChangeSubscribe();
+          this.teamMemberChangeSubscribe();
         },
         error => {
           console.log(error);
           this.$store.state.connected = false;
         }
       )
+      },
+      teamMemberChangeSubscribe() {
+        debugger;
+        var teamIdx = localStorage.getItem("teamIdx");
+        console.log("teamMemberChangeSubscribe teamIdx = " + teamIdx);
+        this.$store.state.stompClient.subscribe("/topic/inviteMemberInTeam/" + teamIdx, tick => {
+            // console.log(tick);
+            debugger
+            var user = JSON.parse(tick.body);
+              // this.$store.state.received_messages.push(JSON.parse(tick.body));
+
+              console.log("subcribe = " + tick.body);
+              
+              this.teamMembers.push(user);
+              if(this.$store.state.channelInfo.channelName === "general") {
+                this.$store.state.channelUserCount = this.$store.state.channelUserCount + 1;
+              }
+              alert(user.nickname + "님이 팀에 초대됐습니다.");
+
+
+          });
       },
       channelChangeSubscribe() {
         debugger;

@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -375,6 +376,9 @@ public class TeamService {
 
     }
 
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
     //초대 승낙
     public String acceptInvite(final String token) {
 
@@ -393,6 +397,8 @@ public class TeamService {
             return "http://localhost:9999/signup/"+token; //회원가입
         }else{
             teamMapper.updateInviteFlag(teamIdx, userIdx);
+            User user = userMapper.findByUserIdx(userIdx);
+            this.simpMessagingTemplate.convertAndSend("/topic/inviteMemberInTeam/" + teamIdx, user);
             return "http://localhost:9999/";
         }
 

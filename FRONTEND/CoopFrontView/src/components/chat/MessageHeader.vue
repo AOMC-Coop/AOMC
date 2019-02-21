@@ -380,8 +380,8 @@ export default {
         this.channel.idx=this.$store.state.channelInfo.idx
 
         axios
-          // .post(this.$store.state.ip + ":8083/api/channel/invite", this.channel,
-          .post("/api/channel/invite", this.channel, 
+          .post(this.$store.state.ip + ":8083/api/channel/invite", this.channel,
+          // .post("/api/channel/invite", this.channel, 
           {headers: { 'X-Auth-Token': `${token}` }}
           )
           .then(response => {
@@ -392,6 +392,23 @@ export default {
                 }
 
                 this.$store.state.channelUserCount=this.$store.state.channelUsers.length
+
+                //실시간 초대하기
+              if (this.$store.state.stompClient) {
+                console.log(this.$store.state.channelInvite.fromInvite.idx);
+                console.log(this.userIdx);
+                console.log(this.$store.state.channelInvite.fromInvite.nickname);
+                console.log(this.userNickName);
+                this.$store.state.channelInvite.fromInvite.idx = this.userIdx;
+                this.$store.state.channelInvite.fromInvite.nickname = this.userNickName;
+                this.$store.state.channelInvite.toInvite = this.channel.users;
+                this.$store.state.channelInvite.channel.idx = this.channel.idx;
+                this.$store.state.channelInvite.channel.name = this.$store.state.channelInfo.channelName;
+                console.log(this.$store.state.channelInvite.toInvite);
+                console.log(this.$store.state.channelInvite.channel.idx);
+                console.log(this.$store.state.channelInvite.channel.channelName);
+                this.$store.state.stompClient.send("/app/channelInvite", JSON.stringify(this.$store.state.channelInvite));
+              }
                 
               } else {
               this.errors.push(e);

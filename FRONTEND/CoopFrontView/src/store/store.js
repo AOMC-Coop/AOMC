@@ -21,6 +21,27 @@ export const store = new Vuex.Store({
     channelUserCount:0,
     starChannelCount:0,
     starFlag:false,
+    channelInvite:{
+      fromInvite :{
+        idx: '',
+        uid:'',
+        nickname:'',
+        image:''
+      },
+      toInvite:[
+        {
+          "idx": '',
+          "uid":'',
+          "nickname":'',
+          "image":''
+        }
+      ],
+      channel:{
+        idx:'',
+        name:'',
+        userHasLastIdx:''
+      }
+    },
     channelUsers: [
       {
         "idx":0,

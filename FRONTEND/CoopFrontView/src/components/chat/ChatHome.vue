@@ -350,8 +350,8 @@ let token = localStorage.getItem('token');
       exitTeam(){
         axios({
         method: 'delete',
-        // url: this.$store.state.ip + ":8083/api/team",
-        url:  "/api/team",
+        url: this.$store.state.ip + ":8083/api/team",
+        // url:  "/api/team",
         params: {
           teamIdx: localStorage.getItem("teamIdx")
         },
@@ -406,12 +406,35 @@ let token = localStorage.getItem('token');
           console.log("connect success");
           this.$store.state.connected = true;
           this.chatCreated();
+          this.channelChangeSubscribe();
         },
         error => {
           console.log(error);
           this.$store.state.connected = false;
         }
       )
+      },
+      channelChangeSubscribe() {
+        debugger;
+        var userIdx = localStorage.getItem("userIdx");
+        console.log("channelChangeSubscribe userIdx = " + userIdx);
+        this.$store.state.stompClient.subscribe("/topic/chatInvite/" + userIdx, tick => {
+            // console.log(tick);
+            debugger
+            var channelInvite = JSON.parse(tick.body);
+              // this.$store.state.received_messages.push(JSON.parse(tick.body));
+
+              console.log("subcribe = " + tick.body);
+              console.log("channelInvite.fromInvite.idx = " + channelInvite.fromInvite.idx);
+              
+              console.log("localStorage.getItem = " + localStorage.getItem("userIdx"));
+              if((+channelInvite.fromInvite.idx) !== (+userIdx)) {
+                this.channels.push(channelInvite.channel);
+                alert(channelInvite.fromInvite.nickname + "님이 " + channelInvite.channel.name + "채널에 초대하였습니다.");
+              }
+
+
+          });
       },
       channelSubscribe(channelIdx) {
         console.log("channelSubscribe = > channelIdx : " + channelIdx);
@@ -525,8 +548,8 @@ let token = localStorage.getItem('token');
         // )
         let token = localStorage.getItem('token');
         axios
-        // .post(this.$store.state.ip + ":8083/api/team", this.createTeam,
-        .post("/api/team", this.createTeam, 
+        .post(this.$store.state.ip + ":8083/api/team", this.createTeam,
+        // .post("/api/team", this.createTeam, 
         {headers: { 'X-Auth-Token': `${token}` }}
         )
         .then(response => {
@@ -619,8 +642,8 @@ let token = localStorage.getItem('token');
         // .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam)
         let token = localStorage.getItem('token');
         axios
-        // .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam,
-        .post("/api/team/invite", this.inviteTeam, 
+        .post(this.$store.state.ip + ":8083/api/team/invite", this.inviteTeam,
+        // .post("/api/team/invite", this.inviteTeam, 
         {headers: { 'X-Auth-Token': `${token}` }}
         )
       .then(response => {
@@ -674,8 +697,8 @@ let token = localStorage.getItem('token');
         let token = localStorage.getItem('token');
         axios({
         method: 'get',
-        // url: this.$store.state.ip + ":8083/api/team/" + teamIdx,
-        url: "/api/team/" + teamIdx,
+        url: this.$store.state.ip + ":8083/api/team/" + teamIdx,
+        // url: "/api/team/" + teamIdx,
         headers: { 'X-Auth-Token': `${token}` }
       })
         .then(response => {
@@ -701,8 +724,8 @@ let token = localStorage.getItem('token');
         let token = localStorage.getItem('token');
         axios({
         method: 'get',
-        // url: this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx,
-        url: "/api/team/channel/" + teamIdx + "&" + userIdx,
+        url: this.$store.state.ip + ":8083/api/team/channel/" + teamIdx + "&" + userIdx,
+        // url: "/api/team/channel/" + teamIdx + "&" + userIdx,
         headers: { 'X-Auth-Token': `${token}` }
       })
       .then(response => {
@@ -766,8 +789,8 @@ let token = localStorage.getItem('token');
       let token = localStorage.getItem('token');
       axios({
         method: 'get',
-        // url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
-        url: "/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        // url: "/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
         params: {
           start: this.$store.state.messageStartNum,
           messageLastIdx: this.$store.state.messageLastIdx
@@ -843,8 +866,8 @@ let token = localStorage.getItem('token');
       let token = localStorage.getItem('token');
       axios({
         method: 'get',
-        // url: this.$store.state.ip + ":8083/api/channel/users",
-        url: "/api/channel/users",
+        url: this.$store.state.ip + ":8083/api/channel/users",
+        // url: "/api/channel/users",
         params: {
          channelIdx: this.$store.state.channelInfo.idx,
          teamIdx: localStorage.getItem("teamIdx")
@@ -911,8 +934,8 @@ let token = localStorage.getItem('token');
       //   { headers: { 'token': `${token}` }}    
       // ).then(response => {
       // axios.post(this.$store.state.ip + `:8082/logout`, this.userWithToken)
-      axios.post(`/api/logout`, this.userWithToken, { headers: { 'token': `${token}` }} )
-      // axios.post(this.$store.state.ip + `:8082/api/logout`, this.userWithToken)
+      // axios.post(`/api/logout`, this.userWithToken, { headers: { 'token': `${token}` }} )
+      axios.post(this.$store.state.ip + `:8082/api/logout`, this.userWithToken)
       .then(response => {
           let description = response.data.description
           if(description == "Fail Logout"){
@@ -940,8 +963,8 @@ let token = localStorage.getItem('token');
       //   { headers: { 'token': `${token}` }}    
       // ).then(response => {
       // let url = this.$store.state.ip + `:8082/members/`+ idx
-      let url = `/api/members/`+ idx
-      // let url = this.$store.state.ip + `:8082/api/members/`+ idx
+      // let url = `/api/members/`+ idx
+      let url = this.$store.state.ip + `:8082/api/members/`+ idx
       axios.put(url, this.userWithToken, { headers: { 'token': `${token}` }} )
         .then(response => {
           let description = response.data.description
@@ -1009,8 +1032,8 @@ let token = localStorage.getItem('token');
       //   })
         axios({
         method: 'get',
-        // url: this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"),
-        url: "/api/team/user/" + localStorage.getItem("userIdx"),
+        url: this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"),
+        // url: "/api/team/user/" + localStorage.getItem("userIdx"),
         headers: { 'X-Auth-Token': `${token}` }
       })
         .then(response => { //
@@ -1072,9 +1095,8 @@ let token = localStorage.getItem('token');
       console.log(localStorage.getItem("userIdx"));
       console.log(localStorage.getItem("userNickName"));
 
+      debugger;
       this.createSocket();
-
-
 
       // let token = localStorage.getItem('token');
 

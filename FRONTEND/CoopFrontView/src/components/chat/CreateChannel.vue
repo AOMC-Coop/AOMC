@@ -142,6 +142,10 @@ export default {
           userIdx: localStorage.getItem("userIdx"),
           userNickName: localStorage.getItem("userNickName"),
           userImage: localStorage.getItem("userImage"),
+          fromInvite:{
+            idx: localStorage.getItem("userIdx"),
+            nickname: localStorage.getItem("userNickName"),
+          },
           del_password:'',
           channelName:'',
           channel:{
@@ -189,17 +193,34 @@ export default {
         // .post(this.$store.state.ip + ":8083/api/channel/", this.channel)
         let token = localStorage.getItem('token');
         axios
-        // .post(this.$store.state.ip + ":8083/api/channel/", this.channel, 
-        .post("/api/channel/", this.channel, 
+        .post(this.$store.state.ip + ":8083/api/channel/", this.channel, 
+        // .post("/api/channel/", this.channel, 
         {headers: { 'X-Auth-Token': `${token}` }}
         )
         .then(response => {
-          // debugger;
+          debugger;
             if(response.data) {
               // this.teamMembers = response.data.data;
               // console.log(response.data);
               this.channel.idx = response.data.data;
               this.channels.push(this.channel);
+
+              //실시간 초대하기
+              if (this.$store.state.stompClient) {
+                console.log(this.$store.state.channelInvite.fromInvite.idx);
+                console.log(this.userIdx);
+                console.log(this.$store.state.channelInvite.fromInvite.nickname);
+                console.log(this.userNickName);
+                this.$store.state.channelInvite.fromInvite.idx = this.userIdx;
+                this.$store.state.channelInvite.fromInvite.nickname = this.userNickName;
+                this.$store.state.channelInvite.toInvite = this.channel.users;
+                this.$store.state.channelInvite.channel.idx = this.channel.idx;
+                this.$store.state.channelInvite.channel.name = this.channelName;
+                console.log(this.$store.state.channelInvite.toInvite);
+                console.log(this.$store.state.channelInvite.channel.idx);
+                console.log(this.$store.state.channelInvite.channel.channelName);
+                this.$store.state.stompClient.send("/app/channelInvite", JSON.stringify(this.$store.state.channelInvite));
+              }
             } else {
             this.errors.push(e);
             }
@@ -254,6 +275,8 @@ export default {
     this.channel.teamIdx = this.teamIdx
     this.channel.users.pop(); // 왜 유저가 한개 들어있을까?ㅁ
     this.channel.users.push({idx: this.userIdx, nickname: this.userNickName, image:this.userImage});
+    //실시간 초대 -> 초대한 사람 넣기
+    // this.$store.state.channelInvite.frominvite = this.fromInvite;
     // this.channel.teamIdx = localStorage.getItem(teamIdx);
     this.printLog(this.teamMembers)
   },

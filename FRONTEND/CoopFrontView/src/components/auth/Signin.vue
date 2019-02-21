@@ -107,18 +107,20 @@ const baseURI = localStorage.getItem('baseURI')
       },
 
       checkIsTeam(userIdx) {
+        debugger
         let token = localStorage.getItem('token');
         console.log("checkIsTeam -> token = " + localStorage.getItem("token"))
          axios({
         method: 'get',
 
-        url: "http://10.240.202.225:8083/api/team/user/" + userIdx,
+        // url: "http://10.240.202.225:8083/api/team/user/" + userIdx,
 
-        // url: "http://localhost:8083/api/team/user/" + userIdx,
+        url: "http://localhost:8083/api/team/user/" + userIdx,
         // url: "/api/team/user/" + userIdx,
         headers: { 'X-Auth-Token': `${token}` }
       })
         .then(response => { 
+          debugger
             if(response.data.data == null) {
               this.$router.push({path: '/checkTeam'});
 
@@ -203,7 +205,7 @@ const baseURI = localStorage.getItem('baseURI')
               console.log(localStorage.getItem("userNickName"));
 
               this.checkIsTeam(response.data.data.idx);
-              location.href = './chat'
+              // location.href = './chat'
             }
             }
           ).catch(e => {

@@ -522,7 +522,8 @@ export default {
       //   })    
 
     },
-    exitChannel() {        
+    exitChannel() {
+      debugger
      
       let token = localStorage.getItem('token');
        axios({
@@ -531,7 +532,7 @@ export default {
         // url: "/api/channel",
         params: {
           channelIdx: this.$store.state.channelInfo.idx,
-          userIdx: this.$store.state.userIdx
+          userIdx: localStorage.getItem("userIdx")
         },
         headers: { 'X-Auth-Token': `${token}` },
       })

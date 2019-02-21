@@ -63,6 +63,9 @@ public class ChannelService {
             return codeJsonParser.codeJsonParser(Status_1000.FAIL_CREATE_Channel.getStatus());
         }
 
+        User inviteUser = userMapper.findByUserIdx(channel.getUsers().get(0).getIdx());
+        System.out.println(inviteUser);
+
         //message Date Format
         Date date = new Date();
         DateFormatCustom dataFormatCustom = new DateFormatCustom();
@@ -73,13 +76,13 @@ public class ChannelService {
         //message info setting
         Message message = new Message();
         message.setContent("joined #" + channel.getName());
-        message.setNickname(channel.getUsers().get(0).getNickname());
+        message.setNickname(inviteUser.getNickname());
         message.setMessage_idx(0);
         message.setUser_idx(channel.getUsers().get(0).getIdx());
         message.setSend_date(sendDate);
         message.setSend_time(sendTime);
         message.setSend_db_date(sendDBDate);
-        message.setImage(channel.getUsers().get(0).getImage());
+        message.setImage(inviteUser.getImage());
 
         List<Message> messages = new ArrayList<>();
         messages.add(message);

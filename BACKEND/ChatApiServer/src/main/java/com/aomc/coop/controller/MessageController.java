@@ -51,17 +51,11 @@ public class MessageController {
     }
 
     /**
-
      *
-
-     *        @brief GET http://localhost:8083/api/channel/message?channelIdx=21
-
+     *        @brief GET http://localhost:8083/api/channel/message?channelIdx=21&start=0&messageLastIdx=0
      *        @details 채널의 메세지를 가져오는 함수
-
      *        @param RequestParam("channelIdx") final int channelIdx
-
      *        @return ResponseEntity<>
-
      *        성공시
      *
      *        {

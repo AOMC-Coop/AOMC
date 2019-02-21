@@ -126,7 +126,7 @@ public class FileSystemStorageService implements StorageService {
             }
 // ***** StandardCopyOption.REPLACE_EXISTING은 결국에는 쓰이지 말아야 한다.
 
-            String url = "http://localhost:8085/files/" + channel_idx + "/" + filename;
+            String url = "http://localhost:8085/api/files/" + channel_idx + "/" + filename;
 
         // RabbitMQ에 실어주는 것
 // ***** message에 filename도 실어서 보내주기
@@ -160,11 +160,11 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public ResponseType uploadProfilePicture(MultipartFile file, @PathVariable final int channel_idx, @PathVariable final int user_idx) {
+    public ResponseType uploadProfilePicture(MultipartFile file, @PathVariable final int user_idx) {
 
 // ***** jpg, png 등의 img 파일들만 업로드 할 수 있도록 Vue에서, 혹은 uploadProfilePicture에서 예외처리 할 것
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
-        String location = "C:\\FileStorage\\" + channel_idx + "\\" + "profile";
+        String location = "C:\\FileStorage\\"+ "profile";
         try {
             if (file.isEmpty()) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Profile_Picture_Upload.getStatus());
@@ -216,7 +216,7 @@ public class FileSystemStorageService implements StorageService {
 //            }
 
 // ***** User 객체에 String profile_pic_url을 새로 선언해서 사용하자.
-            String url = "http://localhost:8085/files/" + channel_idx + "/profile/" + filename;
+            String url = "http://localhost:8085/api/files/profile/" + filename;
             User user = new User();
 // ***** 채팅 서버 테스트 끝나면 tempUrl -> url로 대체
             user.setImage(url);
@@ -232,9 +232,9 @@ public class FileSystemStorageService implements StorageService {
 
 // ***** 기존의 download와 달라질 것은 없는지 고민해볼 것 -> 아예 똑같다면 역시 중복된 부분은 public class로 분리하여 사용할 것
     @Override
-    public Resource downloadProfilePicture(String filename, @PathVariable final int channel_idx) {
+    public Resource downloadProfilePicture(String filename) {
         try {
-            Path file = getFilePathForProfile(filename, channel_idx);
+            Path file = getFilePathForProfile(filename);
             Resource resource = new UrlResource(file.toUri());
             if (resource.exists() || resource.isReadable()) {
                 return resource;
@@ -259,8 +259,8 @@ public class FileSystemStorageService implements StorageService {
 
 // ***** getFilePath와의 중복구조 해결하기 -> 무조건 다른 방법 사용할 것
     @Override
-    public Path getFilePathForProfile(String filename, final int channel_idx) {
-        String location = channel_idx + "\\profile\\" +filename;
+    public Path getFilePathForProfile(String filename) {
+        String location = "profile\\" +filename;
         return rootLocation.resolve(location);
     }
 

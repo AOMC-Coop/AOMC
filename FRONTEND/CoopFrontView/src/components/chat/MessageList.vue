@@ -92,8 +92,8 @@ export default {
       console.log(this.$store.state.messageLastIdx);
        axios({
         method: 'get',
-        // url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
-        url: "/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        url: this.$store.state.ip + ":8083/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
+        // url: "/api/channel/message?channelIdx=" + this.$store.state.channelInfo.idx,
         params: {
           start: this.$store.state.messageStartNum,
           messageLastIdx: this.$store.state.messageLastIdx

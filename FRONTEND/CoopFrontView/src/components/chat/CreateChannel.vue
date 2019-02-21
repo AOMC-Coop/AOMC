@@ -140,8 +140,8 @@ export default {
   data:function(){
       return {
           userIdx: localStorage.getItem("userIdx"),
-          userNickName: localStorage.getItem("userNickName"),
-          userImage: localStorage.getItem("userImage"),
+          // userNickName: localStorage.getItem("userNickName"),
+          // userImage: localStorage.getItem("userImage"),
           del_password:'',
           channelName:'',
           channel:{
@@ -189,8 +189,8 @@ export default {
         // .post(this.$store.state.ip + ":8083/api/channel/", this.channel)
         let token = localStorage.getItem('token');
         axios
-        // .post(this.$store.state.ip + ":8083/api/channel/", this.channel, 
-        .post("/api/channel/", this.channel, 
+        .post(this.$store.state.ip + ":8083/api/channel/", this.channel, 
+        // .post("/api/channel/", this.channel, 
         {headers: { 'X-Auth-Token': `${token}` }}
         )
         .then(response => {
@@ -253,7 +253,7 @@ export default {
     // console.log(this.channels);
     this.channel.teamIdx = this.teamIdx
     this.channel.users.pop(); // 왜 유저가 한개 들어있을까?ㅁ
-    this.channel.users.push({idx: this.userIdx, nickname: this.userNickName, image:this.userImage});
+    this.channel.users.push({idx: this.userIdx});
     // this.channel.teamIdx = localStorage.getItem(teamIdx);
     this.printLog(this.teamMembers)
   },

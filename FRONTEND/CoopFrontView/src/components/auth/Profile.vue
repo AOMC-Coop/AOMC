@@ -192,7 +192,11 @@ export default {
     setProfile: function (){
       let idx = localStorage.getItem('idx')
       let url = this.$store.state.ip + `:8082/api/profile/`+ idx
-      axios.put(url, this.profileWithToken)
+      let token = localStorage.getItem('token')
+      axios.put(url, 
+      this.profileWithToken,
+      { headers: { 'token': `${token}` }} 
+      )
         .then(response => {
           let description = response.data.description
           if(description == "Fail Set Profile"){
@@ -216,8 +220,8 @@ export default {
       // Add the form data we need to submit
       // ***** 테스트를 위해 channel_idx를 1로 세팅
       let channel_idx = this.$store.state.channelInfo.idx
-      let user_idx = localStorage.getItem('idx')
-      let url = this.$store.state.ip + ":8085/api/files/" + channel_idx + "/profile/" + user_idx
+      let user_idx = localStorage.getItem('userIdx')
+      let url = this.$store.state.ip + ":8085/api/files/profile/" + user_idx
       // console.log(channel_idx)
       // console.log(url)
 
@@ -256,6 +260,7 @@ export default {
       },
       withdrawal: function (){
         alert("Are you sure?")
+        let token = localStorage.getItem('token')
         let idx = localStorage.getItem('idx')
         let url = this.$store.state.ip + `:8082/api/members/`+ idx
         axios.put(url, this.userWithToken)

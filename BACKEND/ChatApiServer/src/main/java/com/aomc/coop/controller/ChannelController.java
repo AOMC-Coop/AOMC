@@ -88,8 +88,10 @@ public class ChannelController {
      */
     @PostMapping
     public ResponseEntity makeChannel(@RequestBody final Channel channel){
+        System.out.println(channel);
 
         if(channel != null) {
+
             return new ResponseEntity<>(channelService.createChannel(channel), HttpStatus.OK);
         }else {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
@@ -136,14 +138,14 @@ public class ChannelController {
      *
 
      */
-    @PutMapping
-    public ResponseEntity updateChannel(@RequestBody final Channel channel){
-        if(channel != null) {
-            return new ResponseEntity<>(channelService.updateChannel(channel), HttpStatus.OK);
-        }else {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
-    }
+//    @PutMapping
+//    public ResponseEntity updateChannel(@RequestBody final Channel channel){
+//        if(channel != null) {
+//            return new ResponseEntity<>(channelService.updateChannel(channel), HttpStatus.OK);
+//        }else {
+//            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
+//        }
+//    }
 
 
 

@@ -10,7 +10,7 @@ public class StorageProperties {
      */
 
 // ***** 여기서 upload directory를 관리하자. -> 상대 경로로 지정할 것
-    private String location = "E:\\FileStorage";
+    private String location = "C:\\FileStorage";
 //    private String location = "E:\\FileStorage";
 
     public String getLocation() {

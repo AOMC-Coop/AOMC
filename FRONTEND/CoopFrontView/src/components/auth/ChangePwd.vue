@@ -78,8 +78,11 @@ import axios from 'axios'
             let idx = localStorage.getItem('idx')
             let url = "http://localhost:8082/api/members/pwd/" + idx
             this.pwdInfo.idx = idx
-            debugger
-            axios.put(url, this.pwdInfo)
+            let token = localStorage.getItem('token')
+            axios.put(url, 
+            this.pwdInfo,
+            {headers: { 'token': `${token}` }}
+            )
             .then(response => { 
               let description = response.data.description
               if(description == "Success Change Password"){

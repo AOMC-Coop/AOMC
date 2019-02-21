@@ -8,7 +8,7 @@ public class MailSend {
     public void mailsend(JavaMailSender mailSender, String uid, String authUrl){
 
         try{
-            String url = "http://localhost:8082/members/" + authUrl;
+            String url = "http://localhost:8082/api/members/" + authUrl;
             MailConfig sendMail = new MailConfig(mailSender);
             sendMail.setFrom("Starever222@gmail.com", "CoopDeveloper");
             sendMail.setTo(uid);

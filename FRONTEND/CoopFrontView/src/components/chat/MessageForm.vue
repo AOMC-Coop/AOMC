@@ -11,8 +11,8 @@
           </div>
         </div>
 
-     <div class="vertical">
-        <upload-btn icon title='' large=false id="file" ref="file" type="file" v-on:change="handleFileUpload()">
+     <div class="vertical" v-on:change="handleFileUpload()">
+        <upload-btn icon title='' large=false id="file" ref="file" type="file">
           <template slot="icon">
             <v-icon class="white--text">add</v-icon>
           </template>
@@ -143,7 +143,8 @@ export default {
       let formData = new FormData();
       // Add the form data we need to submit
       let channel_idx = this.$store.state.channelInfo.idx
-      let url = this.$store.state.ip + ":8085/api/files/" + channel_idx
+      let url =  "http://localhost:8085/api/files/1"// + channel_idx
+      // let url = this.$store.state.ip + ":8085/api/files/" + channel_idx
 
       const sendMessage = { 
         content: this.msg , 
@@ -164,7 +165,7 @@ export default {
       formData.append('file', this.file);
       formData.append('message', JSON.stringify(sendMessage));
       debugger
-      alert(JSON.stringify(sendMessage))
+      // alert(JSON.stringify(sendMessage))
       
       // formData.append('message', sendMessage);
       // Make the request to the POST /single-file URL

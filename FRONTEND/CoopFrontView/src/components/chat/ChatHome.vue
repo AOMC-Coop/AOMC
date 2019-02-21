@@ -407,12 +407,35 @@ let token = localStorage.getItem('token');
           console.log("connect success");
           this.$store.state.connected = true;
           this.chatCreated();
+          this.channelChangeSubscribe();
         },
         error => {
           console.log(error);
           this.$store.state.connected = false;
         }
       )
+      },
+      channelChangeSubscribe() {
+        debugger;
+        var userIdx = localStorage.getItem("userIdx");
+        console.log("channelChangeSubscribe userIdx = " + userIdx);
+        this.$store.state.stompClient.subscribe("/topic/chatInvite/" + userIdx, tick => {
+            // console.log(tick);
+            debugger
+            var channelInvite = JSON.parse(tick.body);
+              // this.$store.state.received_messages.push(JSON.parse(tick.body));
+
+              console.log("subcribe = " + tick.body);
+              console.log("channelInvite.fromInvite.idx = " + channelInvite.fromInvite.idx);
+              
+              console.log("localStorage.getItem = " + localStorage.getItem("userIdx"));
+              if((+channelInvite.fromInvite.idx) !== (+userIdx)) {
+                this.channels.push(channelInvite.channel);
+                alert(channelInvite.fromInvite.nickname + "님이 " + channelInvite.channel.name + "채널에 초대하였습니다.");
+              }
+
+
+          });
       },
       channelSubscribe(channelIdx) {
         console.log("channelSubscribe = > channelIdx : " + channelIdx);
@@ -915,6 +938,7 @@ let token = localStorage.getItem('token');
       
       // axios.post(`/api/logout`, this.userWithToken, { headers: { 'token': `${token}` }} )
       axios.post(this.$store.state.ip + `:8082/api/logout`, this.userWithToken, { headers: { 'token': `${token}` }})
+
       .then(response => {
           let description = response.data.description
           if(description == "Fail Logout"){
@@ -944,7 +968,6 @@ let token = localStorage.getItem('token');
       // let url = this.$store.state.ip + `:8082/members/`+ idx
       // let url = `/api/members/`+ idx
       let url = this.$store.state.ip + `:8082/api/members/`+ idx
-
       axios.put(url, this.userWithToken, { headers: { 'token': `${token}` }} )
         .then(response => {
           let description = response.data.description
@@ -1075,9 +1098,8 @@ let token = localStorage.getItem('token');
       console.log(localStorage.getItem("userIdx"));
       console.log(localStorage.getItem("userNickName"));
 
+      debugger;
       this.createSocket();
-
-
 
       // let token = localStorage.getItem('token');
 

@@ -45,7 +45,7 @@ public class MemberController {
     }
 
     // 회원 탈퇴
-//    @Auth
+    @Auth
     @PutMapping(path="/{idx}")
     @CrossOrigin
     public ResponseEntity withdrawal(@RequestBody UserWithToken userWithToken, @PathVariable(value = "idx") int idx) {
@@ -57,7 +57,7 @@ public class MemberController {
     }
 
     // 비밀번호 변경
-//    @Auth
+    @Auth
     @PutMapping(path="/pwd/{idx}")
     @CrossOrigin
     public ResponseEntity changePwd(@RequestBody NewPwd newPwd, @PathVariable(value = "idx") int idx) {
@@ -69,7 +69,7 @@ public class MemberController {
     }
 
     // 비밀번호 분실 시 인증용 이메일 전송
-//    @Auth
+    @Auth
     @GetMapping(path="/missing/{idx}")
     @CrossOrigin
     public ResponseEntity missingEmailAuth(@PathVariable(value = "idx") int idx) {

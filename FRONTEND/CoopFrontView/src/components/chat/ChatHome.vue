@@ -343,6 +343,11 @@ let token = localStorage.getItem('token');
     },
 
     methods: {
+      // startInterval() {
+      //     setInterval(() => {
+      //         this.getMemberByTeamId(localStorage.getItem("teamIdx"));
+      //         this.getChannelsByTeamIdxAndUserIdx(localStorage.getItem("teamIdx"), localStorage.getItem("userIdx"));
+      //              }, 5000)},
       exitTeam(){
         axios({
         method: 'delete',
@@ -386,25 +391,36 @@ let token = localStorage.getItem('token');
           this.errors.push(e);
         });
       },
+      getChannelIdx() {
+        return this.$store.state.channelInfo.idx;
+      },
       createSocket() {
       debugger
       this.msg = '';
       this.socket = new SockJS(this.$store.state.ip + ":8083/socketconnect")
       // this.stompClient = Stomp.over(this.socket);
       this.$store.state.stompClient = Stomp.over(this.socket)
-      // this.stompClient.connect(
-        this.$store.state.stompClient.connect(
+      this.$store.state.stompClient.connect(
         {},
         frame => {
           debugger;
           console.log("connect success");
-          // this.connected = true;
-          // console.log("////////////////////////"+frame);
-          this.$store.state.stompClient.subscribe("/topic/message", tick => {
+          this.$store.state.connected = true;
+          this.chatCreated();
+        },
+        error => {
+          console.log(error);
+          this.$store.state.connected = false;
+        }
+      )
+      },
+      channelSubscribe(channelIdx) {
+        console.log("channelSubscribe = > channelIdx : " + channelIdx);
+         this.$store.state.stompSubscription = this.$store.state.stompClient.subscribe("/topic/message/" + channelIdx, tick => {
             // console.log(tick);
             debugger
             var message = JSON.parse(tick.body);
-            if(message.channel_idx === this.$store.state.channelInfo.idx){ //현재 있는 채팅방인 경우
+            // if(message.channel_idx === this.$store.state.channelInfo.idx){ //현재 있는 채팅방인 경우
               this.$store.state.received_messages.push(JSON.parse(tick.body));
 
               console.log("subcribe = " + tick.body);
@@ -420,27 +436,76 @@ let token = localStorage.getItem('token');
                  this.$store.state.received_messages.slice(-1)[0].send_date = ''
                 }
               }
-            }else { // 다른 채팅방에서 메세지 올 때 알림 띄우기
+            // }else { // 다른 채팅방에서 메세지 올 때 알림 띄우기
               // debugger
-              for(var i=0; i<this.channels.length; i++) {
-                if(this.channels[i].idx == message.channel_idx) {
-                  let nicknamePlusTime = message.nickname + "   " + message.send_date;
-                  this.$notify({
-                   group: 'foo',
-                   title: nicknamePlusTime,
-                   text: message.content,
-                  // animationType: velocity
-                });
-                break;
-                }
-              }
+              // for(var i=0; i<this.channels.length; i++) {
+              //   if(this.channels[i].idx == message.channel_idx) {
+              //     let nicknamePlusTime = message.nickname + "   " + message.send_date;
+              //     this.$notify({
+              //      group: 'foo',
+              //      title: nicknamePlusTime,
+              //      text: message.content,
+              //     // animationType: velocity
+              //   });
+              //   break;
+              //   }
+              // }
               
-            }
+            // }
           });
+      },
+      socketConnect() { //안쓰는 함수 지워야함
+        // this.$store.state.stompClient.disconnect();
+        console.log("socketConnect");
+        this.$store.state.stompClient.connect(
+        {},
+        frame => {
+          debugger;
+          console.log("connect success");
+          this.$store.state.connected = true;
+          // this.connected = true;
+          // console.log("////////////////////////"+frame);
+          // this.$store.state.stompClient.subscribe("/topic/message/" + channelIdx, tick => {
+          //   // console.log(tick);
+          //   debugger
+          //   var message = JSON.parse(tick.body);
+          //   // if(message.channel_idx === this.$store.state.channelInfo.idx){ //현재 있는 채팅방인 경우
+          //     this.$store.state.received_messages.push(JSON.parse(tick.body));
+
+          //     console.log("subcribe = " + tick.body);
+
+          //     var newValue= this.$store.state.received_messages.slice(-1)[0].send_date
+
+          //     for(var i=0; i<this.$store.state.received_messages.length;i++){
+          //      if(this.$store.state.received_messages[i].send_date===now.format("dddd, MMMM Do").toString()||this.$store.state.received_messages[i].send_date==='today'){
+          //        this.$store.state.received_messages.slice(-1)[0].send_date = 'today'
+          //        newValue='today'
+          //       }
+          //       if(this.$store.state.received_messages[i].send_date===newValue){
+          //        this.$store.state.received_messages.slice(-1)[0].send_date = ''
+          //       }
+          //     }
+          //   // }else { // 다른 채팅방에서 메세지 올 때 알림 띄우기
+          //     // debugger
+          //     // for(var i=0; i<this.channels.length; i++) {
+          //     //   if(this.channels[i].idx == message.channel_idx) {
+          //     //     let nicknamePlusTime = message.nickname + "   " + message.send_date;
+          //     //     this.$notify({
+          //     //      group: 'foo',
+          //     //      title: nicknamePlusTime,
+          //     //      text: message.content,
+          //     //     // animationType: velocity
+          //     //   });
+          //     //   break;
+          //     //   }
+          //     // }
+              
+          //   // }
+          // });
         },
         error => {
           console.log(error);
-          this.connected = false;
+          this.$store.state.connected = false;
         }
       )
       },
@@ -489,7 +554,25 @@ let token = localStorage.getItem('token');
         this.createTeamDialog = !this.createTeamDialog;
         this.$store.state.inviteUsers.push({uid:localStorage.getItem("userId")});
       },
+      disconnect() {
+        // console.log("disconnect.....")
+        if (this.$store.state.stompClient) {
+         console.log("disconnect.....")
+         this.$store.state.stompClient.disconnect();
+        }
+          this.connected = false;
+       },
+       unSubscription() {
+         if (this.$store.state.stompSubscription !== null) {
+            this.$store.state.stompSubscription.unsubscribe()
+            this.$store.state.stompSubscription = null
+          }
+       },
+    tickleConnection() {
+      this.connected ? this.disconnect() : this.connect();
+    },
       clickChannel(itemIdx, channelName, userHasLastIdx) {
+        this.unSubscription();
         debugger
         if(itemIdx !== this.$store.state.channelInfo.idx){
           this.$store.state.messageLastIdx = 0;
@@ -499,6 +582,11 @@ let token = localStorage.getItem('token');
           this.$store.state.messageStartNum=0
           this.getMessage();
           this.getChannelUsers();
+          console.log("clickChannel idx = " + itemIdx);
+          this.channelSubscribe(itemIdx);
+
+          //test
+          // this.createSocket();
 
           if(this.$store.state.channelInfo.channelName==='general'){
             this.$store.state.generalFlag=false
@@ -635,6 +723,7 @@ let token = localStorage.getItem('token');
               this.$store.state.messageStartNum=0
               this.getMessage();
               this.getChannelUsers();
+              this.channelSubscribe(this.$store.state.channelInfo.idx);
 
               for(var i=0; i<this.channels.length; i++) {
                 if(this.channels[i].star_flag == 1) {
@@ -823,8 +912,9 @@ let token = localStorage.getItem('token');
       //   { headers: { 'token': `${token}` }}    
       // ).then(response => {
       // axios.post(this.$store.state.ip + `:8082/logout`, this.userWithToken)
+      
       // axios.post(`/api/logout`, this.userWithToken, { headers: { 'token': `${token}` }} )
-      axios.post(this.$store.state.ip + `:8082/api/logout`, this.userWithToken)
+      axios.post(this.$store.state.ip + `:8082/api/logout`, this.userWithToken, { headers: { 'token': `${token}` }})
       .then(response => {
           let description = response.data.description
           if(description == "Fail Logout"){
@@ -854,6 +944,7 @@ let token = localStorage.getItem('token');
       // let url = this.$store.state.ip + `:8082/members/`+ idx
       // let url = `/api/members/`+ idx
       let url = this.$store.state.ip + `:8082/api/members/`+ idx
+
       axios.put(url, this.userWithToken, { headers: { 'token': `${token}` }} )
         .then(response => {
           let description = response.data.description
@@ -908,6 +999,53 @@ let token = localStorage.getItem('token');
     changePwd : function (){
       debugger
       this.$router.push({path: '/pwd'})
+    },
+    chatCreated() {
+      let token = localStorage.getItem('token');
+
+
+      // axios
+      //   .get(this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"), {
+      //     headers: {
+      //       'X-Auth-Token' : '${token}'
+      //     }
+      //   })
+        axios({
+        method: 'get',
+        url: this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"),
+        // url: "/api/team/user/" + localStorage.getItem("userIdx"),
+        headers: { 'X-Auth-Token': `${token}` }
+      })
+        .then(response => { //
+            if(response.data) {
+
+              this.teamsFromServer = response.data.data;
+              this.teamName = response.data.data[0].name;
+              this.userName = localStorage.getItem("userNickName"); //로그인 한 후 userName 받기 -> localStorage에서 받기 
+              localStorage.setItem("teamIdx", response.data.data[0].idx);
+              console.log("teamIdx" + response.data.data[0].idx);
+              this.getMemberByTeamId(response.data.data[0].idx);
+
+              this.$store.state.messageLastIdx = 0;
+
+              this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, localStorage.getItem("userIdx"));
+
+              // this.$store.state.channelInfo.idx = response.data.data[0].idx;
+              // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+              // this.startInterval();
+              // this.channelSubscribe(this.$store.state.channelInfo.idx);
+              
+              
+            } else {
+            //   app.renderNotification('Successfully Singed Up');
+            //   app.toggleSignUp();
+            this.errors.push(e);
+            }
+          })
+        .catch(e => {
+          // location.href = './';
+          this.errors.push(e);
+        });
     }
 
 
@@ -939,52 +1077,55 @@ let token = localStorage.getItem('token');
 
       this.createSocket();
 
-      let token = localStorage.getItem('token');
 
 
-      // axios
-      //   .get(this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"), {
-      //     headers: {
-      //       'X-Auth-Token' : '${token}'
-      //     }
-      //   })
-        axios({
-        method: 'get',
-        url: this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"),
-        // url: "/api/team/user/" + localStorage.getItem("userIdx"),
-        headers: { 'X-Auth-Token': `${token}` }
-      })
-        .then(response => { //
-            if(response.data) {
+      // let token = localStorage.getItem('token');
 
-              this.teamsFromServer = response.data.data;
-              this.teamName = response.data.data[0].name;
-              this.userName = localStorage.getItem("userNickName"); //로그인 한 후 userName 받기 -> localStorage에서 받기 
-              localStorage.setItem("teamIdx", response.data.data[0].idx);
-              console.log("teamIdx" + response.data.data[0].idx);
-              this.getMemberByTeamId(response.data.data[0].idx);
 
-              this.$store.state.messageLastIdx = 0;
+      // // axios
+      // //   .get(this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"), {
+      // //     headers: {
+      // //       'X-Auth-Token' : '${token}'
+      // //     }
+      // //   })
+      //   axios({
+      //   method: 'get',
+      //   // url: this.$store.state.ip + ":8083/api/team/user/" + localStorage.getItem("userIdx"),
+      //   url: "/api/team/user/" + localStorage.getItem("userIdx"),
+      //   headers: { 'X-Auth-Token': `${token}` }
+      // })
+      //   .then(response => { //
+      //       if(response.data) {
 
-              this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, localStorage.getItem("userIdx"));
+      //         this.teamsFromServer = response.data.data;
+      //         this.teamName = response.data.data[0].name;
+      //         this.userName = localStorage.getItem("userNickName"); //로그인 한 후 userName 받기 -> localStorage에서 받기 
+      //         localStorage.setItem("teamIdx", response.data.data[0].idx);
+      //         console.log("teamIdx" + response.data.data[0].idx);
+      //         this.getMemberByTeamId(response.data.data[0].idx);
 
-              this.$store.state.channelInfo.idx = response.data.data[0].idx;
-              this.$store.state.channelInfo.channelName = response.data.data[0].name;
+      //         this.$store.state.messageLastIdx = 0;
+
+      //         this.getChannelsByTeamIdxAndUserIdx(response.data.data[0].idx, localStorage.getItem("userIdx"));
+
+      //         // this.$store.state.channelInfo.idx = response.data.data[0].idx;
+      //         // this.$store.state.channelInfo.channelName = response.data.data[0].name;
+      //         // this.startInterval();
+      //         // this.channelSubscribe(this.$store.state.channelInfo.idx);
               
               
-            } else {
-            //   app.renderNotification('Successfully Singed Up');
-            //   app.toggleSignUp();
-            this.errors.push(e);
-            }
-          })
-        .catch(e => {
-          // location.href = './';
-          this.errors.push(e);
-        });
+      //       } else {
+      //       //   app.renderNotification('Successfully Singed Up');
+      //       //   app.toggleSignUp();
+      //       this.errors.push(e);
+      //       }
+      //     })
+      //   .catch(e => {
+      //     // location.href = './';
+      //     this.errors.push(e);
+      //   });
       
-
-    } 
+    }
   };
 
   

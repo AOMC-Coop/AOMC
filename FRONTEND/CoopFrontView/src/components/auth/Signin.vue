@@ -158,9 +158,9 @@ const baseURI = localStorage.getItem('baseURI')
         //   { headers: { 'token': `${token}` }}          
         // ).then(response => { 
 
-        // axios.post(`http://10.240.202.225:8082/login`, this.userInfo) 
-        // axios.post(`/api/login`, this.userInfo, { headers: { 'token': `${token}` }} )
         axios.post(`http://localhost:8082/api/login`, this.userInfo, { headers: { 'token': `${token}` }}) 
+        // axios.post(`/api/login`, this.userInfo, { headers: { 'token': `${token}` }} )
+        // axios.post(`http://localhost:8082/api/login`, this.userInfo) 
           .then(response => { 
             let description = response.data.description
             if(description == "Fail Login : Wrong ID"){

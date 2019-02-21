@@ -7,8 +7,10 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
   // 메세지 를 state 속성으로 추가
   state: {
-    ip:"http://10.240.202.225",
+    ip:"http://localhost",
     stompClient:null,
+    stompSubscription: null,
+    connected:false,
     userId:'',
     userIdx:'',
     userNickName:'',
@@ -19,6 +21,27 @@ export const store = new Vuex.Store({
     channelUserCount:0,
     starChannelCount:0,
     starFlag:false,
+    channelInvite:{
+      fromInvite :{
+        idx: '',
+        uid:'',
+        nickname:'',
+        image:''
+      },
+      toInvite:[
+        {
+          "idx": '',
+          "uid":'',
+          "nickname":'',
+          "image":''
+        }
+      ],
+      channel:{
+        idx:'',
+        name:'',
+        userHasLastIdx:''
+      }
+    },
     channelUsers: [
       {
         "idx":0,

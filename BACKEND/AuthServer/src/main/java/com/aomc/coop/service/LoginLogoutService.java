@@ -15,6 +15,7 @@ import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,9 @@ public class LoginLogoutService {
         try
         {
             String uid = user.getUid();
+            System.out.println("1 " + uid);
             User myUser = userMapper.getUserWithUid(uid);
+            System.out.println("2 " + myUser);
 
             // 해당 이메일로 가입된 유저가 없는 경우
             if(myUser == null){

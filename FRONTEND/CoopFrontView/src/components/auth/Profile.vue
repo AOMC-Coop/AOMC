@@ -222,8 +222,11 @@ export default {
       let formData = new FormData();
       // Add the form data we need to submit
       let channel_idx = this.$store.state.channelInfo.idx
-      let user_idx = localStorage.getItem('idx')
-      let url = this.$store.state.ip + ":8085/api/files/" + channel_idx + "/profile/" + user_idx
+
+      let user_idx = localStorage.getItem('userIdx')
+      let url = this.$store.state.ip + ":8085/api/files/profile/" + user_idx
+      // console.log(channel_idx)
+      // console.log(url)
 
       formData.append('file', this.file);
       console.log(formData)

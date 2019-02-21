@@ -111,8 +111,11 @@ const baseURI = localStorage.getItem('baseURI')
         console.log("checkIsTeam -> token = " + localStorage.getItem("token"))
          axios({
         method: 'get',
-        // url: "http://10.240.202.225:8083/api/team/user/" + userIdx,
-        url: "/api/team/user/" + userIdx,
+
+        url: "http://10.240.202.225:8083/api/team/user/" + userIdx,
+
+        // url: "http://localhost:8083/api/team/user/" + userIdx,
+        // url: "/api/team/user/" + userIdx,
         headers: { 'X-Auth-Token': `${token}` }
       })
         .then(response => { 
@@ -157,9 +160,16 @@ const baseURI = localStorage.getItem('baseURI')
         //   { headers: { 'token': `${token}` }}          
         // ).then(response => { 
 
+
         // axios.post(`http://10.240.202.225:8082/login`, this.userInfo) 
-        axios.post(`http://localhost:8082/api/login`, this.userInfo )
+
+        // axios.post(`/api/login`, this.userInfo, { headers: { 'token': `${token}` }} )
         // axios.post(`http://localhost:8082/api/login`, this.userInfo) 
+
+        axios.post(`http://localhost:8082/api/login`, this.userInfo, { headers: { 'token': `${token}` }}) 
+        // axios.post(`/api/login`, this.userInfo, { headers: { 'token': `${token}` }} )
+        // axios.post(`http://localhost:8082/api/login`, this.userInfo) 
+
           .then(response => { 
             
             let description = response.data.description

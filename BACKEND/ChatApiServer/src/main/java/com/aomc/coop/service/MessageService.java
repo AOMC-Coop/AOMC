@@ -7,10 +7,7 @@ import com.aomc.coop.response.Status_1000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
 import com.aomc.coop.utils.redis.RedisUtil;
-import com.rabbitmq.client.AMQP;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -44,11 +41,8 @@ public class MessageService {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
-    private static final Logger logger = LoggerFactory.getLogger(MessageService.class);
-
-
     public ResponseType getChannelMessage(int channelIdx, int start, int messageLastIdx) {
-        logger.debug("start = " + start + " lastIdx = " + messageLastIdx + " channelIdx = " + channelIdx);
+        System.out.println("start = " + start + " lastIdx = " + messageLastIdx + " channelIdx = " + channelIdx);
 
         if (channelIdx >= 0) {
             //redis에서 메세지 가져오기
@@ -57,29 +51,30 @@ public class MessageService {
             if (redis_messageList.size() > 0) {
                 if(start == -1) {
                     start = -3;
-                    logger.debug("-1-getChannelMessage - Redis");
+                    System.out.println("-1-getChannelMessage - Redis");
                     redis_messageList.clear();
                     return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList, start);
                 }
                 else if(redis_messageList.size() == 1 && messageLastIdx == 0 && redis_messageList.get(0).getMessage_idx() == 0) { //join #general 이 redis에 유일하게 있는 경우
                     start = -2;
-                    logger.debug("0-getChannelMessage - Redis");
+                    System.out.println("0-getChannelMessage - Redis");
                     return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList, start);
                 }
                 else if (messageLastIdx == 0) { // redis 일 때
                     start = -1;
                     Collections.reverse(redis_messageList);
-                    logger.debug("1-getChannelMessage - Redis");
+                    System.out.println("1-getChannelMessage - Redis");
                     return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), redis_messageList, start);
                 } else if (messageLastIdx <= redis_messageList.get(redis_messageList.size() - 1).getMessage_idx()) { //redis이지만 이미 다 가져온 경우
                     //mysql에서 가져오기
-                    logger.debug("getChannelMessage - MySQL");
+                    System.out.println("//////-getChannelMessage - MySQL");
                     List<Message> messages = messageMapper.getChannelMessage(channelIdx, start);
+//                    System.out.println(messages);
 
                     if (messages.size() == 0) {
                         return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages, start);
                     }
-                    logger.debug("2-getChannelMessage - MySQL");
+                    System.out.println("2-getChannelMessage - MySQL");
                     return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages, start);
                 }
 //                else if (messageLastIdx < redis_messageList.get(redis_messageList.size() - 1).getMessage_idx()) { //redis인 경우 - 부분만 가져왔을 경우
@@ -95,14 +90,15 @@ public class MessageService {
 
             } else {
                 //mysql에서 메세지 가져오기
-                logger.debug("getChannelMessage - MySQL2");
+                System.out.println("||||||||||-getChannelMessage - MySQL");
                 List<Message> messages = messageMapper.getChannelMessage(channelIdx, start);
+//            System.out.println(messages);
 
                 if (messages.size() == 0) {
                     return codeJsonParser.codeJsonParser(Status_1000.No_Message.getStatus(), start);
                 }
 
-                logger.debug("4-getChannelMessage - MySQL");
+                System.out.println("4-getChannelMessage - MySQL");
                 return codeJsonParser.codeJsonParser(Status_1000.SUCCESS_Get_Message.getStatus(), messages, start);
             }
 

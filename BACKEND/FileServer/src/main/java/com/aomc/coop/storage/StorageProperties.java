@@ -51,14 +51,14 @@ public class StorageProperties {
     Path path = Paths.get(location);
 
     // 디렉토리 생성
-    if (!Files.exists(path)) {
-        try {
-            Files.createDirectories(path);
-        } catch (IOException e) {
-            //fail to create directory
-            e.printStackTrace();
-        }
-    }
+//    if (!Files.exists(path)) {
+//        try {
+//            Files.createDirectories(path);
+//        } catch (IOException e) {
+//            //fail to create directory
+//            e.printStackTrace();
+//        }
+//    }
 
 
 

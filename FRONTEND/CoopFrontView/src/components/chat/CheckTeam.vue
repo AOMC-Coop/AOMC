@@ -12,7 +12,7 @@
           </v-card-title>
   
           <v-card-text>
-            당신은 친구가 없습니까? 오, 그렇다면 당신은 우리 서비스를 이용할 수 없습니다!
+            새로운 팀을 생성하시고, 친구들과 즐거운 채팅을 시작해보세요!
           </v-card-text>
   
           <v-divider></v-divider>

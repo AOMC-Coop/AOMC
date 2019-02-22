@@ -173,7 +173,7 @@ public class MemberService {
                 user.setStatus(1);
 
                 if(invite_token != "0"){ // 초대로 회원가입한 유저인 경우
-                    hashOperations
+//                    hashOperations
                     // user has team에 정보 넣어주고, user has channel에도 넣어줘야 함 (redis에서 찾아서 할 것), teamservice의 356줄 flag를 1로 해서 저장 (2개 다))
                 }
 

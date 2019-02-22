@@ -20,7 +20,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(createOpenApiInterceptor())
-                .addPathPatterns("/api/**").excludePathPatterns("/api/login");
+                .addPathPatterns("/api/**").excludePathPatterns("/api/team/accept");
     }
 
     @Override

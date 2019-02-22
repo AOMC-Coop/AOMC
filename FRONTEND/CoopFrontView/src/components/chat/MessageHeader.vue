@@ -90,7 +90,7 @@
           
           <v-layout row justify-center>
             <v-flex xs2>
-              <v-btn @click="inviteChannel" v-if="this.$store.state.generalFlag">
+              <v-btn @click="popupInviteChannelDialog" v-if="this.$store.state.generalFlag">
                     <v-avatar size="30px" tile>
                     <img src="./../../assets/image/invite.png" alt="Vuetify">
                     </v-avatar>

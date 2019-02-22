@@ -271,7 +271,7 @@ let token = localStorage.getItem('token');
     userIdx: '',
       
     teamName: '',
-    userName:'',
+    userName:localStorage.getItem('userNickName'),
     teams: [
         {
           icon: 'keyboard_arrow_up',
@@ -1121,7 +1121,8 @@ let token = localStorage.getItem('token');
       console.log(localStorage.getItem("userIdx"));
       console.log(localStorage.getItem("userNickName"));
 
-      debugger;
+      this.userName=localStorage.getItem("userNickName");
+
       this.createSocket();
 
       // let token = localStorage.getItem('token');

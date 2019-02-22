@@ -1,31 +1,24 @@
 <template>
-  <v-container
-    fill-height
-    fluid
-    grid-list-xl>
-    <v-layout
-      justify-center
-      wrap
-    >
-          <v-flex
-        xs12
-        md4
-      >
+ <v-container fluid grid-list-md>
+    <v-layout row wrap>
+      <v-flex d-flex xs12 sm6 md6>
+        <v-flex xs12>
+        <v-card dark color="primary">
+          <v-card-text>< 프로필 변경 > </v-card-text>
+        </v-card>
+
         <material-card class="v-card-profile">
           <v-avatar
             slot="offset"
             class="mx-auto d-block"
-            size="130"
+            size="200"
           >
           <img :src="ProfileUrl">
           </v-avatar>
           <v-card-text class="text-xs-center">
-            <!-- <h6 class="category text-gray font-weight-thin mb-3">CEO / CO-FOUNDER</h6>
-            <h4 class="card-title font-weight-light">Alec Thompson</h4>
-            <p class="card-description font-weight-light"></p> -->
             
             <v-btn
-              color="brown"
+              color="primary"
               round
               class="font-weight-light"
             >Change Photo</v-btn>
@@ -42,132 +35,69 @@
           </v-card-text>
         </material-card>
       </v-flex>
-      <v-flex
-        xs12
-        md8
-      >
-        <material-card
-          color="green"
-          title="Edit Profile"
-          text="Complete your profile"
-        >
-          <v-form>
-            <v-container py-0>
-              <v-layout wrap>
-                <v-flex xs12 md4>
-                  <!-- <v-text-field
-                    label="Company (disabled)"
-                    disabled/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4
-                > -->
-                <form @submit.prevent="setProfile"> 
+      </v-flex>
+      
+      <v-flex d-flex xs12 sm6 md6>
+          <v-flex d-flex>
+            <v-layout row wrap >
+              <v-flex  xs class="center">
+                
+                <v-card dark color="primary">
+                    <v-card-text>< 닉네임 변경 > </v-card-text>
+                </v-card>
+                
+
+                <!-- <form @submit.prevent="setProfile">  -->
                     <v-text-field
                         id="nickname_bind"
                         class="purple-input"
                         label="User Name"
                         v-model="profileWithToken.nickname"
                     />
-                    <v-btn type="submit" class="mx-0 font-weight-light" color="brown">
+                    <v-btn type="submit" @click="setProfile" class="mx-0 font-weight-light" color="primary">
                         Update Profile
                     </v-btn>
-                </form>
+                <!-- </form> -->
+              </v-flex>
 
+
+              <v-flex  xs12 class="center">
                 <form @submit.prevent="changePwd">
-                  <v-btn type="submit" color="brown">Change Password</v-btn>
-                </form>
+                  <v-btn type="submit" color="primary">비밀번호 변경</v-btn>
+                </form>              
+              </v-flex>
+
+
+              <v-flex d-flex xs12 class="center">
                 <form @submit.prevent="withdrawal">
-                  <v-btn type="submit" color="brown">Withdrawal</v-btn>
-                </form>
+                  <v-btn type="submit" color="primary" >회원탈퇴</v-btn>
+                </form>                
+              </v-flex>
 
-<!-- ***** v-text-field안에 v-bind:value=nickname 씨벌탱 이렇게 해도 바인딩이 안된다. v-bind:value="nickname" 여기에 유저 nickname을 가져와서 표시해야 한다.-->
-                <!-- </v-flex>
-                <v-flex
-                  xs12
-                  md4
-                >
-                  <v-text-field
-                    label="Email Address"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md6
-                > 
-                   <v-text-field
-                    label="First Name"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md6
-                > 
-                  <v-text-field
-                    label="Last Name"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md12
-                > 
-                  <v-text-field
-                    label="Adress"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4>
-                  <v-text-field
-                    label="City"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4>
-                  <v-text-field
-                    label="Country"
-                    class="purple-input"/>
-                </v-flex>
-                <v-flex
-                  xs12
-                  md4>
-                  <v-text-field
-                    class="purple-input"
-                    label="Postal Code"
-                    type="number"/>
-                </v-flex>
-                <v-flex xs12>
-                  <v-textarea
-                    class="purple-input"
-                    label="About Me"
-                  />
-                </v-flex>
-                <v-flex
-                  xs12
-                  text-xs-right
-                > -->
+            </v-layout>
+          </v-flex>
 
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-form>
-        </material-card>
+          
+          
+      </v-flex>
+
+
+      <v-flex xs12>
+          <v-btn @click="goChatHome" color="primary" >홈으로</v-btn>
       </v-flex>
 
     </v-layout>
-  </v-container>
+  </v-container>  
 </template>
 
 <script>
 import axios from "axios";
 import Vue from 'vue'
 import { locale } from 'moment';
+import { loadavg } from 'os';
 
 let gender = localStorage.getItem('gender')
 let ProfileUrl = ''
-
 new Vue({
     el: '#nickname_bind',
     data: {
@@ -176,6 +106,9 @@ new Vue({
 });
 
 export default {
+  created(){
+    this.ProfileUrl = localStorage.getItem('userImage')
+  },
 
   data: () => ({
     profileWithToken : {
@@ -192,6 +125,9 @@ export default {
     }
    }),
   methods: {
+    goChatHome(){
+      this.$router.push({path:'./chat'})
+    },
     setProfile: function (){
       let idx = localStorage.getItem('idx')
       let url = this.$store.state.ip + `:8082/api/profile/`+ idx
@@ -207,8 +143,11 @@ export default {
            } else if (description == "Fail Set Profile : Wrong Idx"){
               alert("Wrong URL!")
            } else {
+                localStorage.setItem('userNickname', this.profileWithToken.nickname)
+                this.$store.state.userNickName=this.profileWithToken.nickname
+                this.profileWithToken.nickname=''
                 alert("Successfully update profile!")
-                location.href = './profile'
+                // location.href = './profile'
            }   
            }
          ).catch(e => {
@@ -287,3 +226,14 @@ export default {
   }
 }
 </script>
+<style>
+.center {
+    position: relative;
+  }
+.center form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+</style>

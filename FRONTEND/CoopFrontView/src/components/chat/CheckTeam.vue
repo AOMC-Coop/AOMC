@@ -125,13 +125,16 @@ export default {
         // .post(this.$store.state.ip + ":8083/api/team", this.createTeam)
         let token = localStorage.getItem('token');
         axios
-        // .post(this.$store.state.ip + ":8083/api/team", this.createTeam, 
-         .post("/api/team", this.createTeam, 
+        .post(this.$store.state.ip + ":8083/api/team", this.createTeam, 
+        //  .post("/api/team", this.createTeam, 
         {headers: { 'X-Auth-Token': `${token}` }}
         )
         .then(response => {
+          debugger
             if(response.data) {
-              console.log(response.data);
+              debugger
+              console.log("CheckTeam" + response.data);
+              localStorage.setItem("teamIdx", response.data.data);
             this.$router.push({path: '/chat'});
             } else {
             this.errors.push(e);

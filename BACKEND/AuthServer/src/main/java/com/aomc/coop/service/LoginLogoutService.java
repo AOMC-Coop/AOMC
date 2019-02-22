@@ -28,7 +28,7 @@ import com.aomc.coop.utils.SHA256;
 
 @Slf4j
 @Service
-@Transactional
+//@Transactional
 public class LoginLogoutService {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
@@ -53,9 +53,9 @@ public class LoginLogoutService {
         try
         {
             String uid = user.getUid();
-            System.out.println("1 " + uid);
+//            System.out.println("1 " + uid);
             User myUser = userMapper.getUserWithUid(uid);
-            System.out.println("2 " + myUser);
+//            System.out.println("2 " + myUser);
 
             // 해당 이메일로 가입된 유저가 없는 경우
             if(myUser == null){
@@ -73,7 +73,7 @@ public class LoginLogoutService {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login.getStatus());
             }
             String hashPassword = SHA256.getInstance().encodeSHA256(myUser.getSalt() + user.getPwd());
-            System.out.println("hashPassword : "+hashPassword);
+//            System.out.println("hashPassword : "+hashPassword);
                 // 1. Http request로 들어온 user와 db상의 user가 같다면
             if(hashPassword.equals(myUser.getPwd())) {
                 // 2. JWT(JSON Web Tokens) 토큰 생성
@@ -81,7 +81,7 @@ public class LoginLogoutService {
 
                 // 3. redis에 토큰 보내기
                 String key = token.getToken();
-                System.out.println("token : " + key);
+//                System.out.println("token : " + key);
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 SimpleDateFormat sdf = new SimpleDateFormat( "yy-MM-dd HH:mm:ss" , Locale.KOREA );
                 String time = sdf.format( new Date( timestamp.getTime( ) ) );
@@ -128,7 +128,7 @@ public class LoginLogoutService {
 //				headers.add("auth_token", token);
 
                 // 제대로 로그인이 되었다면
-                System.out.println("Successfully login!");
+//                System.out.println("Successfully login!");
                 UserWithToken userWithToken = new UserWithToken();
                 userWithToken.setIdx(myUser.getIdx());
                 userWithToken.setUid(myUser.getUid());
@@ -139,12 +139,12 @@ public class LoginLogoutService {
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), userWithToken); // ,로 파라미터에 token 객체 넘기기 (token String, idx)
             } else {
                 // Http request로 들어온 user와 db상의 user가 다르다면
-                System.out.println("Wrong Password");
+//                System.out.println("Wrong Password");
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login_Wrong_Password.getStatus());
             }
         }
         catch (Exception e) {
-            System.out.println("Catch Error");
+//            System.out.println("Catch Error");
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login.getStatus());
         }
     }
@@ -160,7 +160,7 @@ public class LoginLogoutService {
 
             // redis token pop
             hashOperations.getOperations().delete(key);
-            System.out.println("Successfully logout!");
+//            System.out.println("Successfully logout!");
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Logout.getStatus());
         }
         catch (Exception e) {

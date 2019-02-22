@@ -65,8 +65,8 @@ public class MemberService {
         try {
 
             if (!user.getPwd().equals(user.getConfirm_pwd())) {
-                System.out.println(user.getPwd() + " " + user.getConfirm_pwd());
-                System.out.println("Password doesn't match!");
+//                System.out.println(user.getPwd() + " " + user.getConfirm_pwd());
+//                System.out.println("Password doesn't match!");
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
             }
 
@@ -76,7 +76,7 @@ public class MemberService {
             // db상에 이미 가입되어 있는 내역이 없는 경우, 정상 절차대로 가입
             if (myUser == null) {
 
-                System.out.println("Register");
+//                System.out.println("Register");
 
                 HashMap<String, Object> hashMap = new HashMap<>();
 
@@ -92,7 +92,7 @@ public class MemberService {
                     authUrl += secRan.nextInt(10);
                 }
 
-                System.out.println("authUrl : " + authUrl);
+//                System.out.println("authUrl : " + authUrl);
 
                 String newPassword = salt + user.getPwd();
                 String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
@@ -123,7 +123,7 @@ public class MemberService {
 
             } else {
                 // 이미 가입되어 있는 uid(e-mail)이라면
-                System.out.println("Already registerd ID!");
+//                System.out.println("Already registerd ID!");
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
             }
         }
@@ -201,7 +201,7 @@ public class MemberService {
 
         int userIdx = userWithToken.getIdx();
 
-        System.out.println("userIdx : " + userIdx +"  idx : " + idx);
+//        System.out.println("userIdx : " + userIdx +"  idx : " + idx);
         if(userIdx == idx)
         {
             try {
@@ -255,7 +255,7 @@ public class MemberService {
     public ResponseType changePwd (@RequestBody NewPwd newPwd, final int idx) {
 
         if(newPwd.getIdx() != idx){
-            System.out.println("idx don't match");
+//            System.out.println("idx don't match");
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus());
         }
         String pwd = newPwd.getPwd();
@@ -273,14 +273,14 @@ public class MemberService {
             String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
 
             if(userMapper.changePwd(hashPassword, newSalt, idx) == 1){
-                System.out.println("password change success");
+//                System.out.println("password change success");
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Change_Pwd.getStatus());
             } else {
-                System.out.println("password change fail");
+//                System.out.println("password change fail");
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd.getStatus());
             }
         } catch (Exception e) {
-            System.out.println("password change fail");
+//            System.out.println("password change fail");
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd.getStatus());
         }
     }

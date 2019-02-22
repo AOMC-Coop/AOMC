@@ -115,8 +115,8 @@ const baseURI = localStorage.getItem('baseURI')
 
         // url: "http://10.240.202.225:8083/api/team/user/" + userIdx,
 
-        // url: "http://localhost:8083/api/team/user/" + userIdx,
-        url: "/api/team/user/" + userIdx,
+        url: "http://localhost:8083/api/team/user/" + userIdx,
+        // url: "/api/team/user/" + userIdx,
         headers: { 'X-Auth-Token': `${token}` }
       })
         .then(response => { 
@@ -170,8 +170,8 @@ const baseURI = localStorage.getItem('baseURI')
 
         // axios.post(`http://localhost:8082/api/login`, this.userInfo) 
         // axios.post(`/api/login`, this.userInfo, { headers: { 'token': `${token}` }} )
-        // axios.post(`http://localhost:8082/api/login`, this.userInfo) 
-          axios.post(`/api/login`, this.userInfo)
+        axios.post(`http://localhost:8082/api/login`, this.userInfo) 
+          // axios.post(`/api/login`, this.userInfo)
           .then(response => { 
             
             let description = response.data.description

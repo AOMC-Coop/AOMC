@@ -205,7 +205,6 @@ const baseURI = localStorage.getItem('baseURI')
               console.log(localStorage.getItem("userNickName"));
 
               this.checkIsTeam(response.data.data.idx);
-              // location.href = './chat'
             }
             }
           ).catch(e => {

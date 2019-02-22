@@ -1,18 +1,19 @@
 package com.aomc.coop.config;
 
-import com.aomc.coop.filter.TestFilter;
+import com.aomc.coop.filter.CORSFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-        import org.springframework.context.annotation.Bean;
-        import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class FilterConfig
-{
+public class FilterConfig {
+
     @Bean
-    public FilterRegistrationBean getFilterRegistrationBean()
-    {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean(new TestFilter());
-        // registrationBean.addUrlPatterns("/*"); // 서블릿 등록 빈 처럼 패턴을 지정해 줄 수 있다.
+    public FilterRegistrationBean getCORSFilterRegistrationBean() {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean(new CORSFilter());
+        registrationBean.addUrlPatterns("/api/*");
+        registrationBean.setName("corsFilter");
+        registrationBean.setOrder(1);
         return registrationBean;
     }
 }

@@ -429,6 +429,7 @@ let token = localStorage.getItem('token');
               console.log("subcribe = " + tick.body);
               
               this.teamMembers.push(user);
+              this.$store.state.channelUsers.push(user);
               if(this.$store.state.channelInfo.channelName === "general") {
                 this.$store.state.channelUserCount = this.$store.state.channelUserCount + 1;
               }

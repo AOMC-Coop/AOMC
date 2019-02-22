@@ -16,8 +16,8 @@ public class StorageProperties {
      */
 
 // ***** 여기서 upload directory를 관리하자. -> 상대 경로로 지정할 것
-    private String location = "C:\\FileStorage";
-//    private String location = "E:\\FileStorage";
+//    private String location = "C:\\FileStorage";
+    private String location = "E:\\FileStorage";
 
 // ***** 아래 설명을 꼭 참조하고 짤 것!!!
 //    / : 루트
@@ -49,17 +49,6 @@ public class StorageProperties {
     }
 
     Path path = Paths.get(location);
-
-    // 디렉토리 생성
-//    if (!Files.exists(path)) {
-//        try {
-//            Files.createDirectories(path);
-//        } catch (IOException e) {
-//            //fail to create directory
-//            e.printStackTrace();
-//        }
-//    }
-
 
 
 }

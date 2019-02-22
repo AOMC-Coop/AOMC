@@ -302,7 +302,7 @@ public class TeamService {
     public ResponseType inviteTeam(final Team team) {
 
         List<User> inviteUsers = team.getUsers();
-        logger.debug("[TeamSeeervice, inviteTeam] inviteUsers = "+inviteUsers);
+        logger.debug("[TeamSeeervice, inviteTeam] inviteUsers = "+ inviteUsers);
 //        List<Channel> channels = team.getChannels();
 
         List<User> usersOfTeam = teamMapper.readUserOfTeam(team.getIdx());
@@ -369,8 +369,6 @@ public class TeamService {
             sendMailThread.start();
 
         }
-
-
 
         return codeJsonParser.codeJsonParser(Status_5000.SUCCESS_INVITE.getStatus(), firstUsers, existUsers);
 

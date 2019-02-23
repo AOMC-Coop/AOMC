@@ -948,6 +948,8 @@ let token = localStorage.getItem('token');
       this.visible = !this.visible
     },
     signOut: function (){
+      debugger
+      let token = localStorage.getItem('token');
       // this.stompClient.disconnect(distick => {
       //   console.log("socket disconnect");
       // });
@@ -960,9 +962,11 @@ let token = localStorage.getItem('token');
       // axios.post(this.$store.state.ip + `:8082/logout`, this.userWithToken)
       
       // axios.post(`/api/logout`, this.userWithToken, { headers: { 'token': `${token}` }} )
-      axios.post(this.$store.state.ip + `:8082/api/logout`, this.userWithToken, { headers: { 'token': `${token}` }})
-
+      axios.post(this.$store.state.ip + `:8082/api/logout`, 
+      this.userWithToken, 
+      {headers: { 'X-Auth-Token': `${token}` }})
       .then(response => {
+        debugger
           let description = response.data.description
           if(description == "Fail Logout"){
               alert("Fail to sign out!")
@@ -1019,7 +1023,7 @@ let token = localStorage.getItem('token');
       axios.post(
       url, 
       this.userWithToken,
-      { headers: { 'token': `${token}` }} 
+      { headers: { 'X-Auth-Token': `${token}` }} 
       )
         .then(response => {
           let description = response.data.description

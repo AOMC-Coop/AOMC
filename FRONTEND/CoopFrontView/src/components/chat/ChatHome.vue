@@ -407,8 +407,8 @@ let token = localStorage.getItem('token');
           console.log("connect success");
           this.$store.state.connected = true;
           this.chatCreated();
-          this.channelChangeSubscribe();
-          this.teamMemberChangeSubscribe();
+          // this.channelChangeSubscribe();
+          // this.teamMemberChangeSubscribe();
         },
         error => {
           console.log(error);
@@ -416,50 +416,50 @@ let token = localStorage.getItem('token');
         }
       )
       },
-      teamMemberChangeSubscribe() {
-        debugger;
-        var teamIdx = localStorage.getItem("teamIdx");
-        console.log("teamMemberChangeSubscribe teamIdx = " + teamIdx);
-        this.$store.state.stompClient.subscribe("/topic/inviteMemberInTeam/" + teamIdx, tick => {
-            // console.log(tick);
-            debugger
-            var user = JSON.parse(tick.body);
-              // this.$store.state.received_messages.push(JSON.parse(tick.body));
+      // teamMemberChangeSubscribe() {
+      //   debugger;
+      //   var teamIdx = localStorage.getItem("teamIdx");
+      //   console.log("teamMemberChangeSubscribe teamIdx = " + teamIdx);
+      //   this.$store.state.stompClient.subscribe("/topic/inviteMemberInTeam/" + teamIdx, tick => {
+      //       // console.log(tick);
+      //       debugger
+      //       var user = JSON.parse(tick.body);
+      //         // this.$store.state.received_messages.push(JSON.parse(tick.body));
 
-              console.log("subcribe = " + tick.body);
+      //         console.log("subcribe = " + tick.body);
               
-              this.teamMembers.push(user);
-              this.$store.state.channelUsers.push(user);
-              if(this.$store.state.channelInfo.channelName === "general") {
-                this.$store.state.channelUserCount = this.$store.state.channelUserCount + 1;
-              }
-              alert(user.nickname + "님이 팀에 초대됐습니다.");
+      //         this.teamMembers.push(user);
+      //         this.$store.state.channelUsers.push(user);
+      //         if(this.$store.state.channelInfo.channelName === "general") {
+      //           this.$store.state.channelUserCount = this.$store.state.channelUserCount + 1;
+      //         }
+      //         alert(user.nickname + "님이 팀에 초대됐습니다.");
 
 
-          });
-      },
-      channelChangeSubscribe() {
-        debugger;
-        var userIdx = localStorage.getItem("userIdx");
-        console.log("channelChangeSubscribe userIdx = " + userIdx);
-        this.$store.state.stompClient.subscribe("/topic/chatInvite/" + userIdx, tick => {
-            // console.log(tick);
-            debugger
-            var channelInvite = JSON.parse(tick.body);
-              // this.$store.state.received_messages.push(JSON.parse(tick.body));
+      //     });
+      // },
+      // channelChangeSubscribe() {
+      //   debugger;
+      //   var userIdx = localStorage.getItem("userIdx");
+      //   console.log("channelChangeSubscribe userIdx = " + userIdx);
+      //   this.$store.state.stompClient.subscribe("/topic/chatInvite/" + userIdx, tick => {
+      //       // console.log(tick);
+      //       debugger
+      //       var channelInvite = JSON.parse(tick.body);
+      //         // this.$store.state.received_messages.push(JSON.parse(tick.body));
 
-              console.log("subcribe = " + tick.body);
-              console.log("channelInvite.fromInvite.idx = " + channelInvite.fromInvite.idx);
+      //         console.log("subcribe = " + tick.body);
+      //         console.log("channelInvite.fromInvite.idx = " + channelInvite.fromInvite.idx);
               
-              console.log("localStorage.getItem = " + localStorage.getItem("userIdx"));
-              if((+channelInvite.fromInvite.idx) !== (+userIdx)) {
-                this.channels.push(channelInvite.channel);
-                alert(channelInvite.fromInvite.nickname + "님이 " + channelInvite.channel.name + "채널에 초대하였습니다.");
-              }
+      //         console.log("localStorage.getItem = " + localStorage.getItem("userIdx"));
+      //         if((+channelInvite.fromInvite.idx) !== (+userIdx)) {
+      //           this.channels.push(channelInvite.channel);
+      //           alert(channelInvite.fromInvite.nickname + "님이 " + channelInvite.channel.name + "채널에 초대하였습니다.");
+      //         }
 
 
-          });
-      },
+      //     });
+      // },
       channelSubscribe(channelIdx) {
         console.log("channelSubscribe = > channelIdx : " + channelIdx);
          this.$store.state.stompSubscription = this.$store.state.stompClient.subscribe("/topic/message/" + channelIdx, tick => {
@@ -1047,6 +1047,7 @@ let token = localStorage.getItem('token');
       this.$router.push({path: '/pwd'})
     },
     chatCreated() {
+      debugger
       let token = localStorage.getItem('token');
 
 
@@ -1064,7 +1065,7 @@ let token = localStorage.getItem('token');
       })
         .then(response => { //
             if(response.data) {
-
+              debugger
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;
               this.userName = localStorage.getItem("userNickName"); //로그인 한 후 userName 받기 -> localStorage에서 받기 

@@ -1,6 +1,7 @@
 package com.aomc.coop.controller;
 
 import com.aomc.coop.config.RabbitMQConfig;
+import com.aomc.coop.model.ChannelInvite;
 import com.aomc.coop.model.Message;
 import com.aomc.coop.util.RedisUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -71,5 +72,11 @@ public class MessageController {
         }
 
 
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.CHANNEL_QUEUE_NAME)
+    public void channelInvite(ChannelInvite channelInvite) {
+        logger.debug("receive_rabbitMQ send" + channelInvite);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.CHANNEL_TOPIC_QUEUE_NAME, channelInvite);
     }
 }

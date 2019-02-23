@@ -1,5 +1,6 @@
 package com.aomc.coop.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.io.Serializable;

@@ -20,6 +20,10 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
 
     public static final String RECEIVE_QUEUE_NAME = "receieve_queue";
 
+    public static final String CHANNEL_QUEUE_NAME = "channel_queue";
+
+    public static final String CHANNEL_TOPIC_QUEUE_NAME = "channel_topic_queue";
+
     public static final String EXCHANGE = QUEUE_NAME + "-exchange";
 
     @Bean
@@ -46,6 +50,12 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
     }
 
     @Bean
+    public Queue channel_queue() {
+        return new Queue(CHANNEL_QUEUE_NAME, true);
+    }
+
+
+    @Bean
     public DirectExchange exchange() {
         return new DirectExchange(EXCHANGE);
     }
@@ -54,6 +64,12 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
     public Binding binding(Queue queue, DirectExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(QUEUE_NAME);
     }
+
+    @Bean
+    public Binding channel_binding(Queue queue, DirectExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(CHANNEL_QUEUE_NAME);
+    }
+
 
     @Bean
     public Jackson2JsonMessageConverter jsonMessageConverter() {

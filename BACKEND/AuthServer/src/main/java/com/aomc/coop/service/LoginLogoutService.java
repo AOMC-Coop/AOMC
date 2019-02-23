@@ -53,7 +53,7 @@ public class LoginLogoutService {
         try
         {
             String uid = user.getUid();
-//            System.out.println("1 " + uid);
+            System.out.println("1 " + uid);
             User myUser = userMapper.getUserWithUid(uid);
 //            System.out.println("2 " + myUser);
 
@@ -128,7 +128,7 @@ public class LoginLogoutService {
 //				headers.add("auth_token", token);
 
                 // 제대로 로그인이 되었다면
-//                System.out.println("Successfully login!");
+                System.out.println("Successfully login!");
                 UserWithToken userWithToken = new UserWithToken();
                 userWithToken.setIdx(myUser.getIdx());
                 userWithToken.setUid(myUser.getUid());

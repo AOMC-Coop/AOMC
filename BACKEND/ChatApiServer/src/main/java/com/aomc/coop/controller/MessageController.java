@@ -9,6 +9,7 @@ import com.aomc.coop.service.MessageService;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -46,20 +47,27 @@ public class MessageController {
     @MessageMapping("/channelInvite")
     public ChannelInvite broadcasting(ChannelInvite invite) throws Exception{
 
-        logger.info("channelInvite => " + invite);
+        return rabbitMQUtil.channel_sendRabbitMQ(invite);
 
-        //list만큼 돌기
-        for(int i=0; i<invite.getToInvite().size(); i++) {
-            this.simpMessagingTemplate.convertAndSend("/topic/chatInvite/" + invite.getToInvite().get(i).getIdx(), invite);
-            logger.info("sendTo => " + invite.getToInvite().get(i).getIdx());
-        }
-
-        return invite;
+//        logger.info("channelInvite => " + invite);
+//
+//        //list만큼 돌기
+//        for(int i=0; i<invite.getToInvite().size(); i++) {
+//            this.simpMessagingTemplate.convertAndSend("/topic/chatInvite/" + invite.getToInvite().get(i).getIdx(), invite);
+//            logger.info("sendTo => " + invite.getToInvite().get(i).getIdx());
+//        }
+//
+//        return invite;
     }
 
     @RabbitListener(queues = RabbitMQConfig.RECEIVE_QUEUE_NAME)
     public void broadCasting(Message message) throws Exception {
         rabbitMQUtil.receiveRabbitMQ(message);
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.CHANNEL_TOPIC_QUEUE_NAME)
+    public void broadCasting(ChannelInvite invite) throws Exception {
+        rabbitMQUtil.channel_receiveRabbitMQ(invite);
     }
 
     /**
@@ -104,6 +112,7 @@ public class MessageController {
     @GetMapping
     @RequestMapping("/api/channel/message")
     public ResponseEntity getChannelMessage(@RequestParam("channelIdx") final int channelIdx, @RequestParam("start") final int start, @RequestParam("messageLastIdx") final int messageLastIdx){
+        System.out.println("MessageController");
         if(channelIdx >= 0) {
             return new ResponseEntity<>(messageService.getChannelMessage(channelIdx, start, messageLastIdx), HttpStatus.OK);
         }else {

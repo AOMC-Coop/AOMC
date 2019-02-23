@@ -24,6 +24,10 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
 
     public static final String RECEIVE_QUEUE_NAME = "receieve_queue";
 
+    public static final String CHANNEL_QUEUE_NAME = "channel_queue";
+
+    public static final String CHANNEL_TOPIC_QUEUE_NAME = "channel_topic_queue";
+
     private static final String EXCHANGE = RECEIVE_QUEUE_NAME + "-exchange";
 
 
@@ -51,6 +55,11 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
     }
 
     @Bean
+    public Queue channel_topic_queue() {
+        return new Queue(CHANNEL_TOPIC_QUEUE_NAME, false);
+    }
+
+    @Bean
     public TopicExchange exchange() {
         return new TopicExchange(EXCHANGE);
     }
@@ -58,6 +67,11 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(RECEIVE_QUEUE_NAME);
+    }
+
+    @Bean
+    public Binding channel_topic_binding(Queue queue, TopicExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(CHANNEL_TOPIC_QUEUE_NAME);
     }
 
     @Bean

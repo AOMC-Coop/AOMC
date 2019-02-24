@@ -1096,13 +1096,13 @@ let token = localStorage.getItem('token');
               alert("Fail to get profile!")
            } else {
               let nickname = response.data.nickname
-              let gender = response.data.gender
+              // let gender = response.data.gender
 // ***** localStorage로 저장하여도 ./Profile에는 적용되지 않는다. localStorage의 범위 알아볼 것
 // <아래 방법 활용>
 // : store.js
 // -> Chathome.vue에서 this.$store로 찾아보기
               localStorage.setItem('nickname', nickname)
-              localStorage.setItem('gender', gender)
+              // localStorage.setItem('gender', gender)
               this.$router.push({path: '/profile'})
            }
          }).catch(e => {

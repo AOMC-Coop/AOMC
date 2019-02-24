@@ -39,7 +39,7 @@
                 <v-layout row>
                   <v-container fluid>
                     <!-- radio 체크 박스를 data()로 전달하는 방법 : 이것만 알면 Gender도 전달 가능 -->
-                    <p align="left" style="font-size:120%; color:grey;">Gender</p>
+                    <!-- <p align="left" style="font-size:120%; color:grey;">Gender</p> -->
                     <v-radio-group v-model="radios" :mandatory="true">
                       <v-radio label="Male" value="Male"></v-radio>
                       <v-radio label="Female" value="Female" ></v-radio>
@@ -102,7 +102,7 @@ import { locale } from 'moment';
           pwd: '',
           confirm_pwd: '',
           nickname: '',
-          gender:'',
+          // gender:'',
           invite_token:''
         },
         radios: 'radio-1',

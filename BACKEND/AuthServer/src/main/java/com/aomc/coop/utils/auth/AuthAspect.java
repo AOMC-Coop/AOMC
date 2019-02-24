@@ -61,9 +61,9 @@ public class AuthAspect {
         if (token == null) {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.UNAUTHORIZED.getStatus()), HttpStatus.UNAUTHORIZED);
         } else {
-            final User user = userMapper.getUserWithIdx(token.getUser_idx());
-            //유효 사용자 검사
-            if (user == null){
+            final String uid = userMapper.getUid(token.getUser_idx());
+// ***** 유효 사용자 검사 -> 속도 향상을 위해 user에서 uid만 찾는 것으로 userMapper를 변경함
+            if (uid == null){
                 return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.UNAUTHORIZED.getStatus()), HttpStatus.UNAUTHORIZED);
             }
 

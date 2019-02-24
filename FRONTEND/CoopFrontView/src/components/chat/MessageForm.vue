@@ -141,13 +141,14 @@ export default {
     submitFile(){
       // Initialize the form data
       let formData = new FormData();
-      let checkFile = this.file
+      // let checkFile = this.file
       // Add the form data we need to submit
       let channel_idx = this.$store.state.channelInfo.idx
+      let token = localStorage.getItem('token')
 /* *******************************************************************************************************************************************************      
            여기가 에러의 주범이야 여기를 봐 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    ******************************************************************************************************************************************************* */
-      let url =  "http://localhost:8085/api/files/"+ channel_idx
+      let url =  "http://localhost:8085/api/files/upload/"+ channel_idx
       // let url = this.$store.state.ip + ":8085/api/files/" + channel_idx
       debugger
       const sendMessage = { 
@@ -178,7 +179,8 @@ export default {
         formData,
         {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
+            'X-Auth-Token' : `${token}`
           }
         }).then(function(){
           console.log('Successfully submitted file!');
@@ -188,11 +190,11 @@ export default {
         });
       },
       // Handles a change on the file upload
-      handleFileUpload(){
-        debugger
-        this.file = this.$refs.file.files[0];
+      // handleFileUpload(){
+      //   debugger
+      //   this.file = this.$refs.file.files[0];
         
-      },
+      // },
       fileChanged (file) {
         debugger
         this.file = file

@@ -23,7 +23,21 @@
             <v-list-tile-content v-if="item.file_url !== null">
             <v-list-tile-title><h5>{{item.nickname}} {{item.send_time}}</h5></v-list-tile-title>
             <v-card-text>{{item.content}}</v-card-text>
-            <v-card-text>{{item.file_url}}</v-card-text>
+            <!-- File Download URL을 버튼으로 만들어야 함 -->
+            <!-- <v-card-text> {{item.file_url}} </v-card-text> -->
+            <!-- <a v-bind:href="item.file_url">Download</a> -->
+            
+            <form @submit.prevent="download(item.file_url)"
+            v-if="item.file_url != null">
+                <v-btn type="submit"
+                  :loading="loading"
+                  :disabled="loading"
+                  color="secondary"
+                  @click="loader = 'loading'"
+                >
+                  Download
+                </v-btn> 
+            </form>   
           </v-list-tile-content>
           
           <v-list-tile-content v-else-if="item.file_url === null">
@@ -53,12 +67,23 @@ export default {
    data() {
     return {
       // beforeValue:0,
+        loader: null,
+        loading: false,
+        loading2: false,
+        loading3: false,
+        loading4: false
     };
   },
   watch: {
     getReceivedMessages: function (e) {
-     this.change()
-    }
+      this.change()
+    },
+    loader () {
+      const l = this.loader
+      this[l] = !this[l]
+      setTimeout(() => (this[l] = false), 3000)
+      this.loader = null
+    }   
   },
   computed:{
         ...mapGetters([
@@ -160,6 +185,19 @@ export default {
       console.log("MessageList - LastIdx = " + this.$store.state.messageLastIdx);
     }); 
     
+    },
+    download(fileUrl) {
+      // let token = localStorage.getItem('token')
+      debugger
+      axios({
+        method: 'get',
+        url: fileUrl,
+        // headers: { 'X-Auth-Token': `${token}` }
+      })
+      .then((response) => {
+       alert("Download success!")
+    });       
+
     }
   },
   created() {
@@ -171,12 +209,40 @@ export default {
 </script>
 
 <style>
-
-/* .card{
-  padding-left: 2%;
-} */
-/* .list_div:hover {
-  background: rgba(230, 230, 230, 0.979);
-} */
-
+  .custom-loader {
+    animation: loader 1s infinite;
+    display: flex;
+  }
+  @-moz-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-webkit-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @-o-keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes loader {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
 </style>

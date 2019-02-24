@@ -10,6 +10,7 @@ export const store = new Vuex.Store({
     ip:"http://localhost",
     stompClient:null,
     stompSubscription: null,
+    stompOtherSubscription:[],
     connected:false,
     userId:'',
     userIdx:'',
@@ -28,14 +29,12 @@ export const store = new Vuex.Store({
         nickname:'',
         image:''
       },
-      toInvite:[
-        {
-          "idx": '',
-          "uid":'',
-          "nickname":'',
-          "image":''
-        }
-      ],
+      toInvite:{
+        idx: '',
+        uid:'',
+        nickname:'',
+        image:''
+      },
       channel:{
         idx:'',
         name:'',

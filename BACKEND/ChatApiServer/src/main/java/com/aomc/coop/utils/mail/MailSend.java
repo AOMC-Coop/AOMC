@@ -17,7 +17,7 @@ public class MailSend {
             String imgHtml = "<img src=\"https://github.com/AOMC-Coop/AOMC/blob/master/image/coop_logo2.png?raw=true\" width=\"50\" height=\"50\">";
             sendMail.setText(new StringBuffer().append(imgHtml + "<h1>Join " + teamName + " on Coop</h1><br/>")
                     .append("(<b style=\"text-decoration:none\">" + teamOwner + "</b>) has invited you to join the Slack workspace <b>" + teamName + "</b>. Join now to start collaborating!<br/>")
-                    .append("<a href='http://10.240.202.225:80/api/team/accept?token=")
+                    .append("<a href='http://localhost:8083/api/team/accept?token=")
                     .append(token)
                     .append("' target='_blenk'>이메일로 초대 수락</a>")
                     .toString());

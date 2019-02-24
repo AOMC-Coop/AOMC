@@ -1,6 +1,7 @@
 package com.aomc.coop.controller;
 
 import com.aomc.coop.config.RabbitMQConfig;
+import com.aomc.coop.model.ChannelInvite;
 import com.aomc.coop.model.Message;
 import com.aomc.coop.util.RedisUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
@@ -34,11 +36,14 @@ public class MessageController {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private SimpleMessageListenerContainer simpleMessageListenerContainer;
+
     private static final Logger logger = LoggerFactory.getLogger(AMQP.Channel.Open.class);
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void onMessage(HashMap<String, Message> map) {
-        logger.debug("message = " + map.get("msg"));
+        logger.info("message = " + map.get("msg"));
         int channelIdx = map.get("msg").getChannel_idx();
 
         //redis에 저장하기
@@ -66,10 +71,20 @@ public class MessageController {
 
         //receive 큐에보냄
         if (map.get("msg") != null) {
+            rabbitTemplate.setRoutingKey(RabbitMQConfig.RECEIVE_QUEUE_NAME);
+            simpleMessageListenerContainer.setQueueNames(RabbitMQConfig.RECEIVE_QUEUE_NAME);
             rabbitTemplate.convertAndSend(RabbitMQConfig.RECEIVE_QUEUE_NAME, map.get("msg"));
             logger.debug("receive_rabbitMQ send" + map.get("msg"));
         }
 
 
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.CHANNEL_Direct_QUEUE_NAME)
+    public void channelInvite(ChannelInvite channelInvite) {
+        logger.debug("receive_rabbitMQ send" + channelInvite);
+        rabbitTemplate.setRoutingKey(RabbitMQConfig.CHANNEL_Topic_QUEUE_NAME);
+        simpleMessageListenerContainer.setQueueNames(RabbitMQConfig.CHANNEL_Topic_QUEUE_NAME);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.CHANNEL_Topic_QUEUE_NAME, channelInvite);
     }
 }

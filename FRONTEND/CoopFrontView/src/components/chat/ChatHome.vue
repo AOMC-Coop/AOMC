@@ -462,7 +462,8 @@ let token = localStorage.getItem('token');
       },
       channelSubscribe(channelIdx) {
         console.log("channelSubscribe = > channelIdx : " + channelIdx);
-         this.$store.state.stompSubscription = this.$store.state.stompClient.subscribe("/topic/message/" + channelIdx, tick => {
+          
+            this.$store.state.stompSubscription = this.$store.state.stompClient.subscribe("/topic/message/" + channelIdx, tick => {
             // console.log(tick);
             debugger
             var message = JSON.parse(tick.body);
@@ -499,6 +500,7 @@ let token = localStorage.getItem('token');
               
             // }
           });
+        
       },
       socketConnect() { //안쓰는 함수 지워야함
         // this.$store.state.stompClient.disconnect();
@@ -613,12 +615,20 @@ let token = localStorage.getItem('token');
             this.$store.state.stompSubscription.unsubscribe()
             this.$store.state.stompSubscription = null
           }
+          for(var i=0; i<this.$store.state.stompOtherSubscription.length; i++) {
+            if(this.$store.state.stompOtherSubscription[i] !== null) {
+              debugger;
+              this.$store.state.stompOtherSubscription[i].unsubscribe()
+              this.$store.state.stompOtherSubscription[i] = null
+            }
+          }
        },
     tickleConnection() {
       this.connected ? this.disconnect() : this.connect();
     },
       clickChannel(itemIdx, channelName, userHasLastIdx) {
         this.unSubscription();
+        this.$store.state.stompOtherSubscription.splice(0);
         debugger
         if(itemIdx !== this.$store.state.channelInfo.idx){
           this.$store.state.messageLastIdx = 0;
@@ -630,6 +640,30 @@ let token = localStorage.getItem('token');
           this.getChannelUsers();
           console.log("clickChannel idx = " + itemIdx);
           this.channelSubscribe(itemIdx);
+          for(var i=0; i<this.channels.length; i++) {
+            debugger;
+            console.log(this.channels[i].idx);
+            if(this.channels[i].idx != itemIdx) {
+            
+            var stompSubscribe = this.$store.state.stompClient.subscribe("/topic/message/" + this.channels[i].idx, tick => {
+            // console.log(tick);
+            debugger
+            var message = JSON.parse(tick.body);
+
+            console.log("otherChannelSubscribe subcribe = " + tick.body);
+
+
+            let nicknamePlusTime = message.nickname + "   " + message.send_date;
+            this.$notify({
+              group: 'foo',
+              title: nicknamePlusTime,
+              text: message.content,
+               });
+          });
+          this.$store.state.stompOtherSubscription.push(stompSubscribe);
+            }
+          }
+          
 
           //test
           // this.createSocket();
@@ -754,11 +788,11 @@ let token = localStorage.getItem('token');
       })
       .then(response => {
             if(response.data) {
-              debugger
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
               this.$store.state.channelInfo.userHasLastIdx = this.channels[0].userHasLastIdx;
+
 
               if(this.$store.state.channelInfo.channelName==='general'){
                this.$store.state.generalFlag=false
@@ -767,15 +801,46 @@ let token = localStorage.getItem('token');
               }
 
               this.$store.state.messageStartNum=0
+              
               this.getMessage();
               this.getChannelUsers();
+
+              this.unSubscription();
+              this.$store.state.stompOtherSubscription.splice(0);
               this.channelSubscribe(this.$store.state.channelInfo.idx);
 
+              
+
+              debugger
               for(var i=0; i<this.channels.length; i++) {
+                if(this.channels[i].idx != this.$store.state.channelInfo.idx) {
+                  debugger
+                  console.log(this.channels[i].idx);
+                  console.log(this.$store.state.channelInfo.idx);
+                  // this.$store.state.stompOtherSubscription.push(null);
+                  // this.otherChannelSubscribe(this.$store.state.stompOtherSubscription[i], this.channels[i].idx);
+                  var stompSubscribe = this.$store.state.stompClient.subscribe("/topic/message/" + this.channels[i].idx, tick => {
+                  // console.log(tick);
+                 debugger
+                  var message = JSON.parse(tick.body);
+
+                  console.log("otherChannelSubscribe subcribe = " + tick.body);
+
+
+                  let nicknamePlusTime = message.nickname + "   " + message.send_date;
+                  this.$notify({
+                   group: 'foo',
+                    title: nicknamePlusTime,
+                    text: message.content,
+                    });
+                });
+                this.$store.state.stompOtherSubscription.push(stompSubscribe);
+                }
                 if(this.channels[i].star_flag == 1) {
                   this.$store.state.starChannelCount = this.$store.state.starChannelCount + 1;
                 }
               }
+              
               if(this.channels[0].star_flag === 1) {
                 this.$store.state.starFlag = true;
               }else {
@@ -879,6 +944,7 @@ let token = localStorage.getItem('token');
         } else {
           alert(response.data.message)
         }
+       
       });
       },
       getChannelUsers(){
@@ -903,6 +969,8 @@ let token = localStorage.getItem('token');
               this.$store.state.channelUsers=response.data.data
               this.$store.state.channelUserCount=this.$store.state.channelUsers.length
               this.getExceptChannelUsers();
+
+               
 
             } else {
             this.errors.push(e);
@@ -1051,6 +1119,7 @@ let token = localStorage.getItem('token');
       this.$router.push({path: '/pwd'})
     },
     chatCreated() {
+      debugger
       let token = localStorage.getItem('token');
 
 
@@ -1068,7 +1137,7 @@ let token = localStorage.getItem('token');
       })
         .then(response => { //
             if(response.data) {
-
+              debugger
               this.teamsFromServer = response.data.data;
               this.teamName = response.data.data[0].name;
               this.userName = localStorage.getItem("userNickName"); //로그인 한 후 userName 받기 -> localStorage에서 받기 

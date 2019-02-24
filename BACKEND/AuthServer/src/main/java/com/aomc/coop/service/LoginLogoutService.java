@@ -127,7 +127,7 @@ public class LoginLogoutService {
 //				headers.add("auth_token", token);
 
                 // 제대로 로그인이 되었다면
-//                System.out.println("Successfully login!");
+                System.out.println("Successfully login!");
                 UserWithToken userWithToken = new UserWithToken();
                 userWithToken.setIdx(myUser.getIdx());
                 userWithToken.setUid(uid);

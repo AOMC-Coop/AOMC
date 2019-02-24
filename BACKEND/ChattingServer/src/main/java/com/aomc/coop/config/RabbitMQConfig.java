@@ -24,13 +24,20 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
 
     public static final String RECEIVE_QUEUE_NAME = "receieve_queue";
 
+    public static final String CHANNEL_Direct_QUEUE_NAME = "channel_direct_queue";
+
+    public static final String CHANNEL_Topic_QUEUE_NAME = "channel_topic_queue";
+
     private static final String EXCHANGE = RECEIVE_QUEUE_NAME + "-exchange";
+
+    public static final String MessageRoutingKey = "charge.message.route";
+    public static final String ChannelRoutingKey = "charge.channel.route";
 
 
     @Bean
     public RabbitTemplate rabbitTemplate() {
         RabbitTemplate template = new RabbitTemplate(connectionFactory());
-        template.setRoutingKey(RECEIVE_QUEUE_NAME); //default
+//        template.setRoutingKey(RECEIVE_QUEUE_NAME); //default
         template.setMessageConverter(jsonMessageConverter());
         return template;
     }
@@ -39,7 +46,7 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
     public SimpleMessageListenerContainer container() {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory());
-        container.setQueueNames(RECEIVE_QUEUE_NAME); //default
+//        container.setQueueNames(RECEIVE_QUEUE_NAME); //default
 //        container.setMessageListener(listenerAdapter);
 //        container.setMessageConverter(jsonMessageConverter());
         return container;
@@ -51,6 +58,11 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
     }
 
     @Bean
+    public Queue topic_queue() {
+        return new Queue(CHANNEL_Topic_QUEUE_NAME, false);
+    }
+
+    @Bean
     public TopicExchange exchange() {
         return new TopicExchange(EXCHANGE);
     }
@@ -58,6 +70,11 @@ public class RabbitMQConfig { //monitoring -> http://localhost:15672
     @Bean
     public Binding binding(Queue queue, TopicExchange exchange) {
         return BindingBuilder.bind(queue).to(exchange).with(RECEIVE_QUEUE_NAME);
+    }
+
+    @Bean
+    public Binding channel_binding(Queue topic_queue, TopicExchange exchange) {
+        return BindingBuilder.bind(topic_queue).to(exchange).with(CHANNEL_Topic_QUEUE_NAME);
     }
 
     @Bean

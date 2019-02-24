@@ -57,7 +57,7 @@ public class LoginLogoutController {
     }
 
     //로그아웃
-    @Auth
+//    @Auth
     @PostMapping(value = "/logout")
     public ResponseEntity logout(@RequestBody UserWithToken userWithToken) { // header, body(json), HTTP.status //
         try {

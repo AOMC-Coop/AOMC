@@ -502,48 +502,6 @@ let token = localStorage.getItem('token');
           });
         
       },
-      otherChannelSubscribe(stompSubscribe, channelIdx) {
-        debugger;
-        console.log("otherChannelSubscribe");
-            debugger;
-            // this.$store.state.stompOtherSubscription.push(null);
-            stompSubscribe = this.$store.state.stompClient.subscribe("/topic/message/" + channelIdx, tick => {
-            // console.log(tick);
-            debugger
-            var message = JSON.parse(tick.body);
-            // if(message.channel_idx === this.$store.state.channelInfo.idx){ //현재 있는 채팅방인 경우
-              // this.$store.state.received_messages.push(JSON.parse(tick.body));
-
-              console.log("otherChannelSubscribe subcribe = " + tick.body);
-
-              // var newValue= this.$store.state.received_messages.slice(-1)[0].send_date
-
-              let nicknamePlusTime = message.nickname + "   " + message.send_date;
-              this.$notify({
-              group: 'foo',
-              title: nicknamePlusTime,
-              text: message.content,
-               });
-                  // animationType: velocity
-
-            // }else { // 다른 채팅방에서 메세지 올 때 알림 띄우기
-              // debugger
-              // for(var i=0; i<this.channels.length; i++) {
-              //   if(this.channels[i].idx == message.channel_idx) {
-              //     let nicknamePlusTime = message.nickname + "   " + message.send_date;
-              //     this.$notify({
-              //      group: 'foo',
-              //      title: nicknamePlusTime,
-              //      text: message.content,
-              //     // animationType: velocity
-              //   });
-              //   break;
-              //   }
-              // }
-              
-            // }
-          });
-      },
       socketConnect() { //안쓰는 함수 지워야함
         // this.$store.state.stompClient.disconnect();
         console.log("socketConnect");
@@ -659,6 +617,7 @@ let token = localStorage.getItem('token');
           }
           for(var i=0; i<this.$store.state.stompOtherSubscription.length; i++) {
             if(this.$store.state.stompOtherSubscription[i] !== null) {
+              debugger;
               this.$store.state.stompOtherSubscription[i].unsubscribe()
               this.$store.state.stompOtherSubscription[i] = null
             }
@@ -669,6 +628,7 @@ let token = localStorage.getItem('token');
     },
       clickChannel(itemIdx, channelName, userHasLastIdx) {
         this.unSubscription();
+        this.$store.state.stompOtherSubscription.splice(0);
         debugger
         if(itemIdx !== this.$store.state.channelInfo.idx){
           this.$store.state.messageLastIdx = 0;
@@ -680,13 +640,29 @@ let token = localStorage.getItem('token');
           this.getChannelUsers();
           console.log("clickChannel idx = " + itemIdx);
           this.channelSubscribe(itemIdx);
-          // for(var i=0; i<this.channels.length; i++) {
-          //   debugger;
-          //   console.log(this.channels[i].idx);
-          //   if(this.channels[i].idx != itemIdx) {
-          //     this.otherChannelSubscribe(this.$store.state.stompOtherSubscription[i], this.channels[i].idx);
-          //   }
-          // }
+          for(var i=0; i<this.channels.length; i++) {
+            debugger;
+            console.log(this.channels[i].idx);
+            if(this.channels[i].idx != itemIdx) {
+            
+            var stompSubscribe = this.$store.state.stompClient.subscribe("/topic/message/" + this.channels[i].idx, tick => {
+            // console.log(tick);
+            debugger
+            var message = JSON.parse(tick.body);
+
+            console.log("otherChannelSubscribe subcribe = " + tick.body);
+
+
+            let nicknamePlusTime = message.nickname + "   " + message.send_date;
+            this.$notify({
+              group: 'foo',
+              title: nicknamePlusTime,
+              text: message.content,
+               });
+          });
+          this.$store.state.stompOtherSubscription.push(stompSubscribe);
+            }
+          }
           
 
           //test
@@ -829,19 +805,37 @@ let token = localStorage.getItem('token');
               this.getMessage();
               this.getChannelUsers();
 
-              this.unsubscribe();
+              this.unSubscription();
+              this.$store.state.stompOtherSubscription.splice(0);
               this.channelSubscribe(this.$store.state.channelInfo.idx);
 
               
 
               debugger
               for(var i=0; i<this.channels.length; i++) {
-                // debugger
-                // console.log(this.channels[i].idx);
-                // if(this.channels[i].idx != this.$store.state.channelInfo.idx) {
-                //   this.$store.state.stompOtherSubscription.push(null);
-                //   this.otherChannelSubscribe(this.$store.state.stompOtherSubscription[i], this.channels[i].idx);
-                // }
+                if(this.channels[i].idx != this.$store.state.channelInfo.idx) {
+                  debugger
+                  console.log(this.channels[i].idx);
+                  console.log(this.$store.state.channelInfo.idx);
+                  // this.$store.state.stompOtherSubscription.push(null);
+                  // this.otherChannelSubscribe(this.$store.state.stompOtherSubscription[i], this.channels[i].idx);
+                  var stompSubscribe = this.$store.state.stompClient.subscribe("/topic/message/" + this.channels[i].idx, tick => {
+                  // console.log(tick);
+                 debugger
+                  var message = JSON.parse(tick.body);
+
+                  console.log("otherChannelSubscribe subcribe = " + tick.body);
+
+
+                  let nicknamePlusTime = message.nickname + "   " + message.send_date;
+                  this.$notify({
+                   group: 'foo',
+                    title: nicknamePlusTime,
+                    text: message.content,
+                    });
+                });
+                this.$store.state.stompOtherSubscription.push(stompSubscribe);
+                }
                 if(this.channels[i].star_flag == 1) {
                   this.$store.state.starChannelCount = this.$store.state.starChannelCount + 1;
                 }

@@ -66,6 +66,7 @@
 
 <script>
 import axios from 'axios'
+import { debug } from 'util';
 
 const baseURI = localStorage.getItem('baseURI')
 
@@ -143,6 +144,7 @@ const baseURI = localStorage.getItem('baseURI')
             //   app.renderNotification('Successfully Singed Up');
             //   app.toggleSignUp();
             //this.errors.push(e);
+            debugger
              this.$router.push({path: '/chat'});
             }
           })

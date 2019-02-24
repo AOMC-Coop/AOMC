@@ -17,20 +17,36 @@
           </v-avatar>
           <v-card-text class="text-xs-center">
             
-            <v-btn
+            <!-- <v-btn
               color="primary"
               round
               class="font-weight-light"
-            >Change Photo</v-btn>
+            >Change Photo</v-btn> -->
+
+        <upload-btn icon title='Change Photo' large=false :fileChangedCallback="fileChanged">
+          <template slot="icon">
+            <v-icon class="white--text">add</v-icon>
+          </template>
+        </upload-btn>
+
+        <v-btn round icon large
+            :loading="loading3"
+            :disabled="loading3"
+            color="secondary"
+            class="white--text"
+            @click="loader = 'loading3'"
+            v-on:click="submitFile()">
+            <v-icon right dark left>cloud_upload</v-icon>
+        </v-btn>
             
-            <div class="container">
+            <!-- <div class="container">
               <div class="large-12 medium-12 small-12 cell">
                 <label>File
                   <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
                 </label>
                 <button v-on:click="submitFile()">Submit</button>
               </div>
-            </div>
+            </div> -->
             
           </v-card-text>
         </material-card>
@@ -95,8 +111,9 @@ import axios from "axios";
 import Vue from 'vue'
 import { locale } from 'moment';
 import { loadavg } from 'os';
+import UploadButton from 'vuetify-upload-button';
 
-let gender = localStorage.getItem('gender')
+// let gender = localStorage.getItem('gender')
 let ProfileUrl = ''
 new Vue({
     el: '#nickname_bind',
@@ -109,7 +126,9 @@ export default {
   created(){
     this.ProfileUrl = localStorage.getItem('userImage')
   },
-
+  components: {
+      'upload-btn': UploadButton
+  },
   data: () => ({
     profileWithToken : {
       token: localStorage.getItem('token'),  
@@ -117,13 +136,35 @@ export default {
       //   uid :
       nickname : '',
 // ***** 아직 gender는 문제가 많아 부득이하게 1로 고정하여 전송
-      gender : 1
+      // gender : 1
     },
     userWithToken : {
       idx : localStorage.getItem('idx'),
       token: localStorage.getItem('token')
-    }
+    },
+    file: '',
+    userIdx: localStorage.getItem("userIdx"),
+    userNickName: localStorage.getItem("userNickName"),
+    userImage:localStorage.getItem("userImage"),
+    loader: null,
+    loading: false,
+    loading2: false,
+    loading3: false,
+    loading4: false,
+
    }),
+
+  watch: {
+    loader () {
+      const l = this.loader
+      this[l] = !this[l]
+
+      setTimeout(() => (this[l] = false), 3000)
+
+      this.loader = null
+    }
+  },
+
   methods: {
     goChatHome(){
       this.$router.push({path:'./chat'})
@@ -159,17 +200,14 @@ export default {
     submitFile(){
       // Initialize the form data
       let formData = new FormData();
-      // Add the form data we need to submit
-      let channel_idx = this.$store.state.channelInfo.idx
+      // let checkFile = this.file
 
       let user_idx = localStorage.getItem('userIdx')
-      let url = this.$store.state.ip + ":8085/api/files/profile/" + user_idx
-      // console.log(channel_idx)
-      // console.log(url)
+      let url = this.$store.state.ip + ":8085/api/files/upload/profile/" + user_idx
 
       formData.append('file', this.file);
       console.log(formData)
-      // Make the request to the POST /single-file URL
+
       axios.post( url,
       formData,
       {
@@ -221,7 +259,11 @@ export default {
             this.errors(e)
             location.href = './'
           })      
-      }  
+      },
+      fileChanged (file) {
+        debugger
+        this.file = file
+      }
 
   }
 }

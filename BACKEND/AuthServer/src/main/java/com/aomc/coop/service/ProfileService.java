@@ -54,11 +54,10 @@ public class ProfileService {
                 String uid = (String) userInfo.get("uid");
                 String nickname = (String) userInfo.get("nickname");
 // ***** gender는 'Object -> int' 형 변환 오류로 인해 일단 주석처리
-                // int gender = (int) userInfo.get("gender");
 
                 profileWithToken.setUid(uid);
                 profileWithToken.setNickname(nickname);
-                // profileWithToken.setGender(gender);
+
 // ***** 프로필 사진 정보 추가해야 함
 
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Get_Profile.getStatus(), profileWithToken);
@@ -87,15 +86,13 @@ public class ProfileService {
                 Map userInfo = hashOperations.entries(key);
 
                 String newNickname = profileWithToken.getNickname();
-                int newGender = profileWithToken.getGender();
 
                 // redis 정보 수정
                 userInfo.replace("nickname", newNickname);
-                userInfo.replace("gender", newGender);
                 hashOperations.putAll(key, userInfo);
 
                 // db 정보 수정
-                userMapper.updateUserInfo(idx, newNickname, newGender);
+                userMapper.updateUserInfo(idx, newNickname);
 
                 // *** 클라이언트 단에서는 Vue에서 입력한 정보로 바로 수정된 내역이 출력되도록 하자. 때문에 여기서 response에 담아서 줄 필요 X
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Set_Profile.getStatus());

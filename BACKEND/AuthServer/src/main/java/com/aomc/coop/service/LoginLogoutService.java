@@ -53,9 +53,7 @@ public class LoginLogoutService {
         try
         {
             String uid = user.getUid();
-//            System.out.println("1 " + uid);
             User myUser = userMapper.getUserWithUid(uid);
-//            System.out.println("2 " + myUser);
 
             // 해당 이메일로 가입된 유저가 없는 경우
             if(myUser == null){
@@ -89,17 +87,17 @@ public class LoginLogoutService {
                 // Code Refactoring : 필요없는 User 정보는 redis에 저장하지 말자
                 HashMap<String, Object> hashMap = new HashMap<>();
 // *** 모든 User 정보를 넣기 위해 String -> Object로 바꾸었는데, Side effect 없겠지?
+// ***** 유저 정보에서 필요없는 것들은 빼버렸다.
                 hashMap.put("idx", myUser.getIdx()); // put(K key, V value)
-                hashMap.put("uid", myUser.getUid());
-                hashMap.put("pwd", myUser.getPwd());
-                hashMap.put("salt", myUser.getSalt());
+                hashMap.put("uid", uid);
+//                hashMap.put("pwd", myUser.getPwd());
+//                hashMap.put("salt", myUser.getSalt());
                 hashMap.put("nickname", myUser.getNickname());
-                hashMap.put("role", myUser.getRole());
-                hashMap.put("gender", myUser.getGender());
-                hashMap.put("status", myUser.getStatus());
-                hashMap.put("reg_date", myUser.getReg_date());
-                hashMap.put("access_date", myUser.getAccess_date());
-                hashMap.put("update_date", myUser.getUpdate_date());
+//                hashMap.put("role", myUser.getRole());
+//                hashMap.put("status", myUser.getStatus());
+//                hashMap.put("reg_date", myUser.getReg_date());
+//                hashMap.put("access_date", myUser.getAccess_date());
+//                hashMap.put("update_date", myUser.getUpdate_date());
                 hashMap.put("ip", Http.getIp());
                 hashMap.put("timeStamp", time);
                 hashOperations.putAll(key, hashMap);
@@ -111,7 +109,8 @@ public class LoginLogoutService {
                 //                                    "timeStamp", time]
                 //                 ...                ...
 
-                // 테스트를 위해 토큰 유지 시간을 5시간으로 바꿈
+                // 테스트를 위해 토큰 유지 시간을 24시간으로 바꿈
+// ***** 실제 서비스와 같이 30분으로 변경할 것 -> 30분이 지나면 "다시 로그인 하셔야 합니다."와 같은 메시지가 팝업되며 로그인 페이지로 이동시킬 것
                 hashOperations.getOperations().expire(key, 24L, TimeUnit.HOURS);
 
                 // <test>
@@ -131,7 +130,7 @@ public class LoginLogoutService {
 //                System.out.println("Successfully login!");
                 UserWithToken userWithToken = new UserWithToken();
                 userWithToken.setIdx(myUser.getIdx());
-                userWithToken.setUid(myUser.getUid());
+                userWithToken.setUid(uid);
                 userWithToken.setToken(key);
                 userWithToken.setImage(myUser.getImage());
                 userWithToken.setNickname(myUser.getNickname());

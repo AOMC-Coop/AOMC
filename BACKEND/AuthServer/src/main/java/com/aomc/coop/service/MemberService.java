@@ -1,5 +1,6 @@
 package com.aomc.coop.service;
 
+import java.nio.channels.Channel;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.Timestamp;
@@ -11,7 +12,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.aomc.coop.mapper.UserMapper;
+import com.aomc.coop.mapper.*;
 import com.aomc.coop.model.NewPwd;
 import com.aomc.coop.model.UserWithToken;
 import com.aomc.coop.response.Status_3000;
@@ -42,8 +43,15 @@ public class MemberService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private TeamMapper teamMapper;
+
+    @Autowired
+    private ChannelMapper channelMapper;
+
+// ***** 결국 String으로 변경함
     @Resource(name="redisTemplate")
-    private HashOperations<String, String, Object> hashOperations;
+    private HashOperations<String, String, String> hashOperations;
 
     MailSend mailSend = new MailSend();
 
@@ -64,21 +72,26 @@ public class MemberService {
 
         try {
 
-            if (!user.getPwd().equals(user.getConfirm_pwd())) {
-//                System.out.println(user.getPwd() + " " + user.getConfirm_pwd());
-//                System.out.println("Password doesn't match!");
-                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
-            }
+// *** pwd, confirm_pwd 가 같은지 체크하는 작업은
+// *** 서버 단에도 있는 것이 가장 바람직하겠으나, 이미 클라이언트 단에서 예외처리를 하였으므로
+// *** 성능 향상을 위해 주석처리 함
 
+//            if (!user.getPwd().equals(user.getConfirm_pwd())) {
+////                System.out.println(user.getPwd() + " " + user.getConfirm_pwd());
+////                System.out.println("Password doesn't match!");
+//                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
+//            }
+
+// ***** DB 연산을 줄이기 위해 Mapper 함수 변경함
             String uid = user.getUid();
-            User myUser = userMapper.getUserWithUid(uid);
+            String myUser = userMapper.checkUser(uid);
 
             // db상에 이미 가입되어 있는 내역이 없는 경우, 정상 절차대로 가입
             if (myUser == null) {
 
 //                System.out.println("Register");
 
-                HashMap<String, Object> hashMap = new HashMap<>();
+                HashMap<String, String> hashMap = new HashMap<>();
 
                 SecureRandom secRan = SecureRandom.getInstance("SHA1PRNG");
                 int numLength = 16;
@@ -97,16 +110,14 @@ public class MemberService {
                 String newPassword = salt + user.getPwd();
                 String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
                 String nickname = user.getNickname();
-                int gender = user.getGender();
 
                 hashMap.put("uid", uid);
                 hashMap.put("pwd", hashPassword);
                 hashMap.put("salt", salt);
                 hashMap.put("nickname", nickname);
-                hashMap.put("gender", gender);
 
                 hashOperations.putAll(authUrl, hashMap);
-                hashOperations.getOperations().expire(authUrl, 3L, TimeUnit.MINUTES);
+                hashOperations.getOperations().expire(authUrl, 5L, TimeUnit.MINUTES);
 
                 String invite_token = user.getInvite_token();
 
@@ -156,8 +167,7 @@ public class MemberService {
                 String salt = (String) userInfo.get("salt");
                 String role = "user_role";
                 String nickname = (String) userInfo.get("nickname");
-// ***** gender : Object -> int 캐스팅 에러 발생. 일단은 gender를 1로 강제 할당. 추후 필히 변경
-                // int gender = ((Integer) userInfo.get("gender")).intValue();
+
                 // Date reg_date = new Date( timestamp.getTime());
                 // Date access_date = (Date) userInfo.get(("access_date"));
 
@@ -165,16 +175,27 @@ public class MemberService {
                 user.setUid(uid);
                 user.setPwd(pwd);
                 user.setSalt(salt);
-                user.setRole(role);
+                // user.setRole(role);
                 user.setNickname(nickname);
-                user.setGender(1);
                 // user.setReg_date(reg_date);
                 // user.setAccess_date(access_date);
                 user.setStatus(1);
 
-                if(invite_token != "0"){ // 초대로 회원가입한 유저인 경우
-//                    hashOperations
-                    // user has team에 정보 넣어주고, user has channel에도 넣어줘야 함 (redis에서 찾아서 할 것), teamservice의 356줄 flag를 1로 해서 저장 (2개 다))
+                // 초대로 회원가입한 유저인 경우
+                if(invite_token != "0"){
+
+                    Map invitedUserInfo = hashOperations.entries(invite_token);
+                    int team_idx = (int) invitedUserInfo.get("team_idx");
+                    int user_idx = (int) invitedUserInfo.get("user_idx");
+                    int invite_flag = 1;
+
+                    int channel_idx = (int) invitedUserInfo.get("channel_idx");
+
+// ***** user has team에 정보 넣어주고, user has channel에도 넣어줘야 함 (redis에서 찾아서 할 것), teamservice의 356줄 flag를 1로 해서 저장 (2개 다))
+
+                    teamMapper.createUserHasTeam(team_idx, user_idx, invite_flag);
+                    channelMapper.createUserHasChannel(channel_idx, user_idx);
+
                 }
 
                 // 제대로 db에 저장이 되었다면
@@ -296,8 +317,7 @@ public class MemberService {
 // *****          return codeJsonParser.codeJsonParser(Status_3000.FAIL_Missing_Pwd_Email_Auth.getStatus());
 // *****     }
 
-            User myUser = userMapper.getUserWithIdx(idx);
-            String uid = myUser.getUid();
+            String uid = userMapper.getUid(idx);
 
             SendMailThread sendMailThread = new SendMailThread(mailSender, uid, idx);
             sendMailThread.run();

@@ -21,6 +21,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(createOpenApiInterceptor())
                 .addPathPatterns("/api/**").excludePathPatterns("/api/login");
+// ***** 회원 가입도 패턴에서 제외시켜야 함
     }
 
     @Override

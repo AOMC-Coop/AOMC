@@ -69,7 +69,7 @@ public class MemberController {
     }
 
     // 비밀번호 분실 시 인증용 이메일 전송
-    @Auth
+//    @Auth
     @GetMapping(path="/missing/{idx}")
     @CrossOrigin
     public ResponseEntity missingEmailAuth(@PathVariable(value = "idx") int idx) {

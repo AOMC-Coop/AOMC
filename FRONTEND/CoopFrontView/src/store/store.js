@@ -28,14 +28,12 @@ export const store = new Vuex.Store({
         nickname:'',
         image:''
       },
-      toInvite:[
-        {
-          "idx": '',
-          "uid":'',
-          "nickname":'',
-          "image":''
-        }
-      ],
+      toInvite:{
+        idx: '',
+        uid:'',
+        nickname:'',
+        image:''
+      },
       channel:{
         idx:'',
         name:'',

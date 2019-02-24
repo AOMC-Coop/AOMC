@@ -13,6 +13,6 @@ import java.util.List;
 public class ChannelInvite implements Serializable {
 
     private User fromInvite;
-    private List<User> toInvite;
+    private User toInvite;
     private Channel channel;
 }

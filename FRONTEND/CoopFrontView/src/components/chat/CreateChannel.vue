@@ -214,13 +214,18 @@ export default {
                 console.log(this.userNickName);
                 this.$store.state.channelInvite.fromInvite.idx = this.userIdx;
                 this.$store.state.channelInvite.fromInvite.nickname = this.userNickName;
-                this.$store.state.channelInvite.toInvite = this.channel.users;
+                // this.$store.state.channelInvite.toInvite = this.channel.users;
                 this.$store.state.channelInvite.channel.idx = this.channel.idx;
                 this.$store.state.channelInvite.channel.name = this.channelName;
                 console.log(this.$store.state.channelInvite.toInvite);
                 console.log(this.$store.state.channelInvite.channel.idx);
                 console.log(this.$store.state.channelInvite.channel.channelName);
-                this.$store.state.stompClient.send("/app/channelInvite", JSON.stringify(this.$store.state.channelInvite));
+                for(var i=0; i<this.channel.users.length; i++) {
+                  debugger;
+                  console.log(this.$store.state.channelInvite);
+                  this.$store.state.channelInvite.toInvite = this.channel.users[i];
+                  this.$store.state.stompClient.send("/app/channelInvite", JSON.stringify(this.$store.state.channelInvite));
+                }
               }
             } else {
             this.errors.push(e);

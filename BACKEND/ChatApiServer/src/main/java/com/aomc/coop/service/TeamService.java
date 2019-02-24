@@ -397,7 +397,9 @@ public class TeamService {
             teamMapper.updateInviteFlag(teamIdx, userIdx);
             User user = userMapper.findByUserIdx(userIdx);
             this.simpMessagingTemplate.convertAndSend("/topic/inviteMemberInTeam/" + teamIdx, user);
-            return "http://10.240.202.225:80/";
+            //rabbitmq 로 보내기
+
+            return "http://localhost:9999/";
         }
 
 

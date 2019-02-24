@@ -462,7 +462,8 @@ let token = localStorage.getItem('token');
       },
       channelSubscribe(channelIdx) {
         console.log("channelSubscribe = > channelIdx : " + channelIdx);
-         this.$store.state.stompSubscription = this.$store.state.stompClient.subscribe("/topic/message/" + channelIdx, tick => {
+          
+            this.$store.state.stompSubscription = this.$store.state.stompClient.subscribe("/topic/message/" + channelIdx, tick => {
             // console.log(tick);
             debugger
             var message = JSON.parse(tick.body);
@@ -482,6 +483,49 @@ let token = localStorage.getItem('token');
                  this.$store.state.received_messages.slice(-1)[0].send_date = ''
                 }
               }
+            // }else { // 다른 채팅방에서 메세지 올 때 알림 띄우기
+              // debugger
+              // for(var i=0; i<this.channels.length; i++) {
+              //   if(this.channels[i].idx == message.channel_idx) {
+              //     let nicknamePlusTime = message.nickname + "   " + message.send_date;
+              //     this.$notify({
+              //      group: 'foo',
+              //      title: nicknamePlusTime,
+              //      text: message.content,
+              //     // animationType: velocity
+              //   });
+              //   break;
+              //   }
+              // }
+              
+            // }
+          });
+        
+      },
+      otherChannelSubscribe(stompSubscribe, channelIdx) {
+        debugger;
+        console.log("otherChannelSubscribe");
+            debugger;
+            // this.$store.state.stompOtherSubscription.push(null);
+            stompSubscribe = this.$store.state.stompClient.subscribe("/topic/message/" + channelIdx, tick => {
+            // console.log(tick);
+            debugger
+            var message = JSON.parse(tick.body);
+            // if(message.channel_idx === this.$store.state.channelInfo.idx){ //현재 있는 채팅방인 경우
+              // this.$store.state.received_messages.push(JSON.parse(tick.body));
+
+              console.log("otherChannelSubscribe subcribe = " + tick.body);
+
+              // var newValue= this.$store.state.received_messages.slice(-1)[0].send_date
+
+              let nicknamePlusTime = message.nickname + "   " + message.send_date;
+              this.$notify({
+              group: 'foo',
+              title: nicknamePlusTime,
+              text: message.content,
+               });
+                  // animationType: velocity
+
             // }else { // 다른 채팅방에서 메세지 올 때 알림 띄우기
               // debugger
               // for(var i=0; i<this.channels.length; i++) {
@@ -613,6 +657,12 @@ let token = localStorage.getItem('token');
             this.$store.state.stompSubscription.unsubscribe()
             this.$store.state.stompSubscription = null
           }
+          for(var i=0; i<this.$store.state.stompOtherSubscription.length; i++) {
+            if(this.$store.state.stompOtherSubscription[i] !== null) {
+              this.$store.state.stompOtherSubscription[i].unsubscribe()
+              this.$store.state.stompOtherSubscription[i] = null
+            }
+          }
        },
     tickleConnection() {
       this.connected ? this.disconnect() : this.connect();
@@ -630,6 +680,14 @@ let token = localStorage.getItem('token');
           this.getChannelUsers();
           console.log("clickChannel idx = " + itemIdx);
           this.channelSubscribe(itemIdx);
+          // for(var i=0; i<this.channels.length; i++) {
+          //   debugger;
+          //   console.log(this.channels[i].idx);
+          //   if(this.channels[i].idx != itemIdx) {
+          //     this.otherChannelSubscribe(this.$store.state.stompOtherSubscription[i], this.channels[i].idx);
+          //   }
+          // }
+          
 
           //test
           // this.createSocket();
@@ -754,11 +812,11 @@ let token = localStorage.getItem('token');
       })
       .then(response => {
             if(response.data) {
-              debugger
               this.channels = response.data.data;
               this.$store.state.channelInfo.idx = this.channels[0].idx;
               this.$store.state.channelInfo.channelName = this.channels[0].name;
               this.$store.state.channelInfo.userHasLastIdx = this.channels[0].userHasLastIdx;
+
 
               if(this.$store.state.channelInfo.channelName==='general'){
                this.$store.state.generalFlag=false
@@ -767,15 +825,28 @@ let token = localStorage.getItem('token');
               }
 
               this.$store.state.messageStartNum=0
+              
               this.getMessage();
               this.getChannelUsers();
+
+              this.unsubscribe();
               this.channelSubscribe(this.$store.state.channelInfo.idx);
 
+              
+
+              debugger
               for(var i=0; i<this.channels.length; i++) {
+                // debugger
+                // console.log(this.channels[i].idx);
+                // if(this.channels[i].idx != this.$store.state.channelInfo.idx) {
+                //   this.$store.state.stompOtherSubscription.push(null);
+                //   this.otherChannelSubscribe(this.$store.state.stompOtherSubscription[i], this.channels[i].idx);
+                // }
                 if(this.channels[i].star_flag == 1) {
                   this.$store.state.starChannelCount = this.$store.state.starChannelCount + 1;
                 }
               }
+              
               if(this.channels[0].star_flag === 1) {
                 this.$store.state.starFlag = true;
               }else {
@@ -879,6 +950,7 @@ let token = localStorage.getItem('token');
         } else {
           alert(response.data.message)
         }
+       
       });
       },
       getChannelUsers(){
@@ -903,6 +975,8 @@ let token = localStorage.getItem('token');
               this.$store.state.channelUsers=response.data.data
               this.$store.state.channelUserCount=this.$store.state.channelUsers.length
               this.getExceptChannelUsers();
+
+               
 
             } else {
             this.errors.push(e);

@@ -157,7 +157,7 @@ public class LoginLogoutService {
         try
         {
             String key = userWithToken.getToken();
-
+            System.out.println("let's log out");
             // redis token pop
             hashOperations.getOperations().delete(key);
 //            System.out.println("Successfully logout!");

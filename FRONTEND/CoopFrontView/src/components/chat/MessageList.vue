@@ -27,8 +27,8 @@
             <!-- <v-card-text> {{item.file_url}} </v-card-text> -->
             <!-- <a v-bind:href="item.file_url">Download</a> -->
             
-            <form @submit.prevent="download(item.file_url)"
-            v-if="item.file_url != null">
+            <!-- <form @submit.prevent="download(item.file_url)" -->
+            <a v-bind:href="item.file_url" style="text-decoration: none" v-if="item.file_url != null">
                 <v-btn type="submit"
                   :loading="loading"
                   :disabled="loading"
@@ -36,8 +36,9 @@
                   @click="loader = 'loading'"
                 >
                   Download
-                </v-btn> 
-            </form>   
+                </v-btn>
+            </a> 
+            <!-- </form>    -->
           </v-list-tile-content>
           
           <v-list-tile-content v-else-if="item.file_url === null">
@@ -186,11 +187,11 @@ export default {
     }); 
     
     },
+// ***** filter, interceptor 다 날리고 사용하기 때문에, 이 함수 역시 지금은 사용되지 않음 
     download(fileUrl) {
       // let token = localStorage.getItem('token')
       debugger
       axios({
-        method: 'get',
         url: fileUrl,
 // ***** 다운로드 요청 시 필요한 header가 뭔지만 알면 될 듯                
         headers: { 'Content-Type': 'multipart/form-data' }

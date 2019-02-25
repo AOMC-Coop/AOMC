@@ -117,7 +117,7 @@ public class MemberService {
                 hashMap.put("nickname", nickname);
 
                 hashOperations.putAll(authUrl, hashMap);
-                hashOperations.getOperations().expire(authUrl, 5L, TimeUnit.MINUTES);
+                hashOperations.getOperations().expire(authUrl, 5L, TimeUnit.HOURS);
 
                 String invite_token = user.getInvite_token();
 
@@ -144,7 +144,7 @@ public class MemberService {
     }
 
 // ***** 이메일 인증 성공시 바로 로그인 창으로 넘어가도록 구조를 바꿔보자
-    public String emailAuth(@PathVariable(value = "authUrl") final String authUrl,  @PathVariable(value = "invite_token") String invite_token) {
+    public String emailAuth(final String authUrl, String invite_token) {
 
         try {
 
@@ -153,13 +153,13 @@ public class MemberService {
 
             if(userMapper.getUserWithUid(uid) != null ) {
 // ***** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
-                return "http://localhost:9999/signin";
+                return "http://localhost:9999";
 //                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
             }
 
             if(userInfo == null) {
 // ***** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
-                return "http://localhost:9999/signin";
+                return "http://localhost:9999";
 //                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Timeout.getStatus());
 
             } else {
@@ -185,42 +185,49 @@ public class MemberService {
                 // user.setAccess_date(access_date);
                 user.setStatus(1);
 
-                // 초대로 회원가입한 유저인 경우
-                if(invite_token != "0"){
-
-                    Map invitedUserInfo = hashOperations.entries(invite_token);
-                    int team_idx = (int) invitedUserInfo.get("team_idx");
-                    int user_idx = (int) invitedUserInfo.get("user_idx");
-                    int invite_flag = 1;
-
-                    int channel_idx = (int) invitedUserInfo.get("channel_idx");
-
-// ***** user has team에 정보 넣어주고, user has channel에도 넣어줘야 함 (redis에서 찾아서 할 것), teamservice의 356줄 flag를 1로 해서 저장 (2개 다))
-
-                    teamMapper.createUserHasTeam(team_idx, user_idx, invite_flag);
-                    channelMapper.createUserHasChannel(channel_idx, user_idx);
-
-                }
-
+                String check = invite_token;
                 // 제대로 db에 저장이 되었다면
                 if (userMapper.insertUser(user) == 1) {
+
                     System.out.println("Successfully Registered");
-                    return "http://localhost:9999/signin";
 //                    return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register.getStatus());
                 } else {
                     // 어떠한 이유로 db에 저장이 되지 못했다면
                     System.out.println("Fail to store user in db!");
 // ***** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
-                    return "http://localhost:9999/signin";
 //                    return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
                 }
+                int user_idx = user.getIdx();
+
+                // 초대로 회원가입한 유저인 경우
+                if(!"invitation".equals(check)){
+
+                    Map invitedUserInfo = hashOperations.entries(invite_token);
+
+                    String team_idx = (String) invitedUserInfo.get("teamIdx");
+                    int teamIdx = Integer.parseInt(team_idx);
+
+                    int invite_flag = 1;
+
+                    String channel_idx = (String) invitedUserInfo.get("channelIdx");
+                    int channelIdx = Integer.parseInt(channel_idx);
+
+// ***** user has team에 정보 넣어주고, user has channel에도 넣어줘야 함 (redis에서 찾아서 할 것), teamservice의 356줄 flag를 1로 해서 저장 (2개 다))
+
+                    teamMapper.createUserHasTeam(teamIdx, user_idx, invite_flag);
+                    channelMapper.createUserHasChannel(channelIdx, user_idx);
+                }
+
+                return "http://localhost:9999";
+
 
             }
 
         }
         catch (Exception e) {
 // ***** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
-            return "http://localhost:9999/signin";
+            System.out.println(e);
+            return "http://localhost:9999";
 //            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
         }
 

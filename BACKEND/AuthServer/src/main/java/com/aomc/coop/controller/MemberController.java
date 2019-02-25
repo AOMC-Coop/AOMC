@@ -9,9 +9,16 @@ import com.aomc.coop.service.MemberService;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.auth.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/members")
@@ -34,11 +41,17 @@ public class MemberController {
     }
 
     // 회원 가입 시 이메일 인증
+// ***** URL Redirection 때문에 return type을 String으로 바꾸다 보니, 예외처리 제대로 안되고 있음
     @GetMapping(path="/{authUrl}/{invite_token}")
     @CrossOrigin
-    public ResponseEntity emailAuth(@PathVariable(value = "authUrl") String authUrl, @PathVariable(value = "invite_token") String invite_token) {
+    public ResponseEntity emailAuth(RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response,
+                                    @PathVariable(value = "authUrl") String authUrl, @PathVariable(value = "invite_token") String invite_token) {
         try {
-            return new ResponseEntity(memberService.emailAuth(authUrl, invite_token), HttpStatus.OK);
+            String redirectAddress = memberService.emailAuth(authUrl, invite_token);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setLocation(URI.create(redirectAddress));
+            return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).headers(headers).build();
+//            return new ResponseEntity(memberService.emailAuth(authUrl, invite_token), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
@@ -79,6 +92,7 @@ public class MemberController {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
     }
+
 
 //    // 비밀번호 분실 후 변경
 //    @Auth

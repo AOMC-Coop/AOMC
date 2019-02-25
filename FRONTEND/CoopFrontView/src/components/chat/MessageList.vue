@@ -192,7 +192,8 @@ export default {
       axios({
         method: 'get',
         url: fileUrl,
-        // headers: { 'X-Auth-Token': `${token}` }
+// ***** 다운로드 요청 시 필요한 header가 뭔지만 알면 될 듯                
+        headers: { 'Content-Type': 'multipart/form-data' }
       })
       .then((response) => {
        alert("Download success!")

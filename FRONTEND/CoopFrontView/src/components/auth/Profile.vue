@@ -13,6 +13,7 @@
             class="mx-auto d-block"
             size="200"
           >
+<!-- ***** 이거 해결하면 됨 -->
           <img :src="ProfileUrl">
           </v-avatar>
           <v-card-text class="text-xs-center">
@@ -175,7 +176,7 @@ export default {
       let token = localStorage.getItem('token')
       axios.put(url, 
       this.profileWithToken,
-      { headers: { 'token': `${token}` }} 
+      { headers: { 'X-Auth-Token': `${token}` }} 
       )
         .then(response => {
           let description = response.data.description

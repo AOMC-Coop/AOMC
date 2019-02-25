@@ -144,7 +144,7 @@ public class MemberService {
     }
 
 // ***** 이메일 인증 성공시 바로 로그인 창으로 넘어가도록 구조를 바꿔보자
-    public ResponseType emailAuth(@PathVariable(value = "authUrl") final String authUrl,  @PathVariable(value = "invite_token") String invite_token) {
+    public String emailAuth(@PathVariable(value = "authUrl") final String authUrl,  @PathVariable(value = "invite_token") String invite_token) {
 
         try {
 
@@ -152,11 +152,15 @@ public class MemberService {
             String uid = (String) userInfo.get("uid");
 
             if(userMapper.getUserWithUid(uid) != null ) {
-                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
+// ***** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
+                return "http://localhost:9999/signin";
+//                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
             }
 
             if(userInfo == null) {
-                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Timeout.getStatus());
+// ***** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
+                return "http://localhost:9999/signin";
+//                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Timeout.getStatus());
 
             } else {
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -201,18 +205,23 @@ public class MemberService {
                 // 제대로 db에 저장이 되었다면
                 if (userMapper.insertUser(user) == 1) {
                     System.out.println("Successfully Registered");
-                    return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register.getStatus());
+                    return "http://localhost:9999/signin";
+//                    return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register.getStatus());
                 } else {
                     // 어떠한 이유로 db에 저장이 되지 못했다면
                     System.out.println("Fail to store user in db!");
-                    return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
+// ***** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
+                    return "http://localhost:9999/signin";
+//                    return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
                 }
 
             }
 
         }
         catch (Exception e) {
-            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
+// ***** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
+            return "http://localhost:9999/signin";
+//            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
         }
 
     }

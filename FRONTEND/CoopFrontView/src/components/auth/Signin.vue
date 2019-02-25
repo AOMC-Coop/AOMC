@@ -8,7 +8,7 @@
     <v-layout row>
       
       <v-flex xs12 sm6 offset-sm3>
-        <img src="https://github.com/AOMC-Coop/AOMC/blob/master/image/coop_logo2.png?raw=true" width="70" height="70">
+        <img src="https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/coop.png?raw=true" width="70" height="70">
         <br><br>
         <v-toolbar>
             
@@ -17,7 +17,6 @@
             <v-btn flat>Login</v-btn>
             </v-toolbar-items>
         </v-toolbar>
-        <img
         <v-card>
           <v-card-text>
             <v-container>

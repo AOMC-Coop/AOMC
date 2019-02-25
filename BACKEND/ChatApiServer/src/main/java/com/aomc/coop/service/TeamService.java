@@ -362,6 +362,8 @@ public class TeamService {
 
             }
 
+            String checkToken = token.getToken();
+            System.out.println("invite token : "+checkToken);
             values.putAll(token.getToken(), hashMap);
             values.getOperations().expire(token.getToken(), 1L, TimeUnit.HOURS);
 

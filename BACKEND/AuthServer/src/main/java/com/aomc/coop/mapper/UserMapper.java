@@ -30,8 +30,8 @@ public interface UserMapper {
 //    @Update("UPDATE users SET access_date = now() WHERE uid = #{uid}")
 //    int updateAccess_date(final String uid);
 
-    @Update("UPDATE users SET nickname = #{newNickname}, WHERE idx = #{idx}")
-    int updateUserInfo(final int idx, final String newNickname);
+    @Update("UPDATE users SET nickname = #{newNickname} WHERE idx = #{idx}")
+    int updateUserInfo(final String newNickname, final int idx);
 
     @Update("UPDATE users SET status = 0 WHERE idx = #{idx}")
     int withdrawal(final int idx);

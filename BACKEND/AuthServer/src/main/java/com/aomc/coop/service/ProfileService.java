@@ -89,10 +89,11 @@ public class ProfileService {
 
                 // redis 정보 수정
                 userInfo.replace("nickname", newNickname);
+// ***** 기존 key에 있는 정보 삭제하던가, nickname만 잘 바꾸던가
                 hashOperations.putAll(key, userInfo);
 
                 // db 정보 수정
-                userMapper.updateUserInfo(idx, newNickname);
+                userMapper.updateUserInfo(newNickname, idx);
 
                 // *** 클라이언트 단에서는 Vue에서 입력한 정보로 바로 수정된 내역이 출력되도록 하자. 때문에 여기서 response에 담아서 줄 필요 X
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Set_Profile.getStatus());

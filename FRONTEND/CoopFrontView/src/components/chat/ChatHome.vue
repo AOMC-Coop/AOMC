@@ -639,8 +639,8 @@ let token = localStorage.getItem('token');
           this.getMessage();
           this.getChannelUsers();
           console.log("clickChannel idx = " + itemIdx);
-          this.channelSubscribe(itemIdx);
-          for(var i=0; i<this.channels.length; i++) {
+          this.channelSubscribe(itemIdx); //현재 채널 구독하기
+          for(var i=0; i<this.channels.length; i++) { //현재 채널 제외하고 구독하기
             debugger;
             console.log(this.channels[i].idx);
             if(this.channels[i].idx != itemIdx) {
@@ -664,9 +664,6 @@ let token = localStorage.getItem('token');
             }
           }
           
-
-          //test
-          // this.createSocket();
 
           if(this.$store.state.channelInfo.channelName==='general'){
             this.$store.state.generalFlag=false
@@ -807,12 +804,12 @@ let token = localStorage.getItem('token');
 
               this.unSubscription();
               this.$store.state.stompOtherSubscription.splice(0);
-              this.channelSubscribe(this.$store.state.channelInfo.idx);
+              this.channelSubscribe(this.$store.state.channelInfo.idx); //현재채널 구독하기
 
               
 
               debugger
-              for(var i=0; i<this.channels.length; i++) {
+              for(var i=0; i<this.channels.length; i++) { //현재 채널 제외하고 구독하기
                 if(this.channels[i].idx != this.$store.state.channelInfo.idx) {
                   debugger
                   console.log(this.channels[i].idx);

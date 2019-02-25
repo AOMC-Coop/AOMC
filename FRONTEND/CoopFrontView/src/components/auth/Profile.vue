@@ -168,7 +168,7 @@ export default {
 
   methods: {
     goChatHome(){
-      this.$router.push({path:'./chat'})
+      this.$router.push({path:'/chat'})
     },
     setProfile: function (){
       let idx = localStorage.getItem('idx')

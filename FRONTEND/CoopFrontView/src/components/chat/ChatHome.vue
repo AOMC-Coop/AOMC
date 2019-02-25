@@ -1170,11 +1170,10 @@ let token = localStorage.getItem('token');
 
   mounted() {
     debugger;
-    console.log("mounted");
+    console.log("mounted");   
   },
   
-    created() {
-      
+    created() {      
       this.$store.state.inviteUsers.splice(0);
       this.inviteTeam.channels.splice(0);
       // localStorage.setItem("userId", "yunjea0312@naver.com"); //test용으로 임의로 넣어놈. 원래는 로그인 할때 넣어야 함
@@ -1192,7 +1191,7 @@ let token = localStorage.getItem('token');
       console.log(localStorage.getItem("userNickName"));
 
       this.userName=localStorage.getItem("userNickName");
-
+      
       this.createSocket();
 
       // let token = localStorage.getItem('token');
@@ -1240,6 +1239,7 @@ let token = localStorage.getItem('token');
       //     // location.href = './';
       //     this.errors.push(e);
       //   });
+      
       
     }
   };

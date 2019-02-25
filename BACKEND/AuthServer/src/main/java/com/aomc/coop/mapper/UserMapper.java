@@ -23,7 +23,7 @@ public interface UserMapper {
     String checkUser(final String uid);
 
     // insert 성공시 1을 return, 실패시 0을 return.
-    @Insert("INSERT INTO users(uid, pwd, salt, nickname) VALUES( #{uid}, #{pwd}, #{salt}, #{nickname} )")
+    @Insert("INSERT INTO users(uid, pwd, salt, nickname, image) VALUES( #{uid}, #{pwd}, #{salt}, #{nickname}, #{image} )")
     @Options(useGeneratedKeys = true, keyProperty = "idx")
     int insertUser(User user);
 

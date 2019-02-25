@@ -171,6 +171,7 @@ public class MemberService {
                 String salt = (String) userInfo.get("salt");
                 String role = "user_role";
                 String nickname = (String) userInfo.get("nickname");
+                String image = "https://avatars0.githubusercontent.com/u/28426269?s=460&v=4";
 
                 // Date reg_date = new Date( timestamp.getTime());
                 // Date access_date = (Date) userInfo.get(("access_date"));
@@ -181,9 +182,10 @@ public class MemberService {
                 user.setSalt(salt);
                 // user.setRole(role);
                 user.setNickname(nickname);
+                user.setImage(image);
                 // user.setReg_date(reg_date);
                 // user.setAccess_date(access_date);
-                user.setStatus(1);
+                // user.setStatus(1);
 
                 String check = invite_token;
                 // 제대로 db에 저장이 되었다면

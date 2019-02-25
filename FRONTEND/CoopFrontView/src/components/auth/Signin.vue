@@ -17,7 +17,6 @@
             <v-btn flat>Login</v-btn>
             </v-toolbar-items>
         </v-toolbar>
-        <img
         <v-card>
           <v-card-text>
             <v-container>

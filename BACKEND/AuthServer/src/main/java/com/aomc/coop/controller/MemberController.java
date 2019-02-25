@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -20,6 +21,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 
+// ***** 트랜잭셔널 : 이놈의 역할 정확히 공부하기
+@Transactional
 @RestController
 @RequestMapping("/api/members")
 public class MemberController {
@@ -42,11 +45,12 @@ public class MemberController {
 
     // 회원 가입 시 이메일 인증
 // ***** URL Redirection 때문에 return type을 String으로 바꾸다 보니, 예외처리 제대로 안되고 있음
-    @GetMapping(path="/{authUrl}/{invite_token}")
+    @GetMapping(path="/eauth")
     @CrossOrigin
     public ResponseEntity emailAuth(RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response,
-                                    @PathVariable(value = "authUrl") String authUrl, @PathVariable(value = "invite_token") String invite_token) {
+                                    @RequestParam(value = "authUrl") String authUrl, @RequestParam(value = "invite_token") String invite_token) {
         try {
+            System.out.println("invite token : " + invite_token);
             String redirectAddress = memberService.emailAuth(authUrl, invite_token);
             HttpHeaders headers = new HttpHeaders();
             headers.setLocation(URI.create(redirectAddress));

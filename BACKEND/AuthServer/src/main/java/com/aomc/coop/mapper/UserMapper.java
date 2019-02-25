@@ -23,7 +23,8 @@ public interface UserMapper {
     String checkUser(final String uid);
 
     // insert 성공시 1을 return, 실패시 0을 return.
-    @Insert("INSERT INTO users(uid, pwd, salt, nickname, gender) VALUES(#{uid},#{pwd},#{salt},#{nickname},#{gender})")
+    @Insert("INSERT INTO users(uid, pwd, salt, nickname) VALUES( #{uid}, #{pwd}, #{salt}, #{nickname} )")
+    @Options(useGeneratedKeys = true, keyProperty = "idx")
     int insertUser(User user);
 
     // mysql query문으로 자동 업데이트 될 것임

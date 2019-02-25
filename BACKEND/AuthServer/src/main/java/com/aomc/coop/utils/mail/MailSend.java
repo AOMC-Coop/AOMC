@@ -8,7 +8,9 @@ public class MailSend {
     public void mailsend(JavaMailSender mailSender, String uid, String authUrl){
 
         try{
-            String url = "http://localhost:8082/api/members/" + authUrl + "/0";
+            String invite_token = "invitation";
+// ***** 아래 URL 양식에 맞게 바꿀 것 (필요하면)
+            String url = "http://localhost:8082/api/members/eauth/" + authUrl + "/" + invite_token;
             MailConfig sendMail = new MailConfig(mailSender);
             sendMail.setFrom("Starever222@gmail.com", "CoopDeveloper");
             sendMail.setTo(uid);
@@ -28,7 +30,8 @@ public class MailSend {
     public void mailsendToInvite(JavaMailSender mailSender, String uid, String authUrl, String invite_token){
 
         try{
-            String url = "http://localhost:8082/api/members/" + authUrl + "/" + invite_token;
+// ***** RequestParam에 맞는 양식으로 변경함
+            String url = "http://localhost:8082/api/members/eauth?authUrl="+authUrl + "&invite_token=" + invite_token;
             MailConfig sendMail = new MailConfig(mailSender);
             sendMail.setFrom("Starever222@gmail.com", "CoopDeveloper");
             sendMail.setTo(uid);

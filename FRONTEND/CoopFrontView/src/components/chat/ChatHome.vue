@@ -762,6 +762,7 @@ let token = localStorage.getItem('token');
               for(var i=0; i<this.teamMembers.length; i++) {
                 if(this.teamMembers[i].idx == this.userIdx) {
                   this.teamMembers[i].you = "(you)";
+                  this.userName = this.teamMembers[i].nickname;
                 }
               }
             } else {

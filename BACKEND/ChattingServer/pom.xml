@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.aomc</groupId>
-    <artifactId>coop</artifactId>
+    <artifactId>ChattingServer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>ChattingServer</name>

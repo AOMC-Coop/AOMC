@@ -235,6 +235,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
 // ***** 기존의 download와 달라질 것은 없는지 고민해볼 것 -> 아예 똑같다면 역시 중복된 부분은 public class로 분리하여 사용할 것
+// ***** 파일명이 자동으로 idx로 설정되는데, download url은 기존 파일명이 그대로 반영됨 -> 프로필 사진을 못 읽어오는 오류 발생
     @Override
     public Resource downloadProfilePicture(String filename) {
         try {

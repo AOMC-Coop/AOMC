@@ -33,7 +33,7 @@ Slack-like Chatting Server.
 사용자는 파일을 업로드 및 다운로드 할 수 있다.
 
 ## 구조
-사용자는 nGinx를 통해 서버와 통신하고 모든 서버는 redis와 연결되어 사용자의 인증토큰값을 이용하여 connectinless하게 설계하였으며 ChatApiServer와 ChattingServer, FileServer사이에 rabbitMQ를 두어 메세지가 사라질 확률을 줄였다.
+사용자는 nGinx를 통해 서버와 통신하고 모든 서버는 redis와 연결되어 사용자의 인증토큰값을 이용하여 connectionless하게 설계하였으며 ChatApiServer와 ChattingServer, FileServer사이에 rabbitMQ를 두어 메세지가 사라질 확률을 줄였다.
 
 ***
 

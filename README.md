@@ -1,5 +1,4 @@
 # AOMC
-Slack-like Chatting Server.
 
 ## 프로젝트 정의
 공동 작업의 중심지로써 대화가 일어나고 의사결정이 이루어지는 slack을 모방한 채팅 서비스

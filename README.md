@@ -52,7 +52,7 @@
 nGrinder 랩탑 CPU |
 nGrinder 랩탑 OS |
 Vuser 수 |
-// 그 외 필요한 정보가 있다면 추가할 것
+
 
 ## 로그 분석
 서버 로그 수집 및 분석은 ELK 스택을 활용하였다.
@@ -60,7 +60,7 @@ Vuser 수 |
 
 ## 역할
 
-* #### 이윤재 : 
+* #### 이윤재 : ChatAPI서버, Chatting 서버, Nginx, nGrinder, Vue js
 * #### 이은미 : 
 * #### 최가람 : 인증 서버, 파일 서버, 파일 스토리지
 

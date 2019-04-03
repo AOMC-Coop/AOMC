@@ -32,13 +32,11 @@
 사용자는 업로드 및 다운로드를 통해 파일을 공유 할 수 있다.
 
 ## 구조
-사용자는 nGinx를 통해 서버와 통신한다. 모든 서버는 redis와 연결되는데, 사용자의 인증 토큰을 redis에 저장하여 확인하는 방식으로 connectionless하게 설계하기 위함이다. ChatApiServer와 ChattingServer, FileServer사이에 rabbitMQ를 두어 메시지가 사라질 확률을 줄였다.
-// 사라질 확률이 줄어든 것인지, 사라지지 않게 한 것인지 -> 표현이 애매
+사용자는 nGinx를 통해 서버와 통신한다. 모든 서버는 redis와 연결되는데, 사용자의 인증 토큰을 redis에 저장하여 확인하는 방식으로 connectionless하게 설계하기 위함이다. ChatApiServer와 ChattingServer, FileServer사이에 rabbitMQ를 두어 메시지가 사라지지 않도록 했다.
 
 ***
 
 ![Coop](https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/coop-architecture.png?raw=true)
-// 3월 둘째 주 이후엔 ELK 스택 그레이 아웃 지우기
 
 ## 성능
 * #### TPS : 
@@ -54,15 +52,11 @@ nGrinder 랩탑 OS |
 Vuser 수 |
 
 
-## 로그 분석
-서버 로그 수집 및 분석은 ELK 스택을 활용하였다.
-// 대략의 결과 
-
 ## 역할
 
 * #### 이윤재 : ChatAPI서버, Chatting 서버, Nginx, nGrinder, Vue js
 * #### 이은미 : 
-* #### 최가람 : 인증 서버, 파일 서버, 파일 스토리지
+* #### 최가람 : 인증 서버, 파일 서버, 파일 스토리지, Vue.js(회원가입, 로그인, 프로필 페이지 등)
 
 '2019년 스마일 게이트 Winter:Dev’
 

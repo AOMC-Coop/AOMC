@@ -39,18 +39,21 @@
 ![Coop](https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/coop-architecture.png?raw=true)
 
 ## 성능
-* #### TPS : 
-// 그래프 사진 첨부
+* #### TPS : 249.5
+![Coop](https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/TPS_1.png)
 
-성능 측정 환경 | 세부 정보
-:---: | :---:
+성능 측정 환경 | 세부 정보 
+:---: | :---: |
 성능 테스트 툴 | nGrinder
 호스팅 랩탑 CPU | Intel i7-6700HQ 2.60GHZ
-호스팅 랩탑 OS | CentOS 7
+호스팅 랩탑 OS | Windows 10
 nGrinder 랩탑 CPU |
 nGrinder 랩탑 OS |
-Vuser 수 |
+Vuser 수 | 3,000
 
+개선책 | 변경 이유 | 개선 후 성능 
+:---: | :---: | :---: 
+Windows 10 -> CentOS 7 | 서버 호스팅에 특화 된 CentOS를 사용하여, 서버의 성능과 관련 된 세부 사항들을 수정한다. | 
 
 ## 역할
 

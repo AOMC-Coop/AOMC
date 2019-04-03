@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dbde70fa-270b-414d-a3f7-a52d8efb0129" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/controller/ChannelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/controller/ChannelController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/controller/TeamController.java" beforeDir="false" afterPath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/controller/TeamController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FRONTEND/CoopFrontView/src/components/chat/ChatHome.vue" beforeDir="false" afterPath="$PROJECT_DIR$/FRONTEND/CoopFrontView/src/components/chat/ChatHome.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/config/ISO8601DateDecorator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/config/PrettyPrintingDecorator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BACKEND/ChatApiServer/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/BACKEND/ChatApiServer/pom.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -17,8 +17,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/service/TeamService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2520">
-              <caret line="168" column="9" selection-start-line="168" selection-start-column="9" selection-end-line="168" selection-end-column="9" />
+            <state relative-caret-position="2565">
+              <caret line="171" column="9" selection-start-line="171" selection-start-column="9" selection-end-line="171" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -35,8 +35,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/COMMON/code.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="358">
-              <caret line="107" column="31" lean-forward="true" selection-start-line="107" selection-start-column="31" selection-end-line="107" selection-end-column="31" />
+            <state relative-caret-position="-52">
+              <caret line="107" column="31" selection-start-line="107" selection-start-column="31" selection-end-line="107" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -62,7 +62,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_common.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
+            <state relative-caret-position="270">
               <caret line="18" selection-start-line="18" selection-end-line="18" />
             </state>
           </provider>
@@ -100,7 +100,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -163,6 +162,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -202,14 +202,15 @@
       <workItem from="1549851897435" duration="21000" />
       <workItem from="1549872924365" duration="6000" />
       <workItem from="1549945942612" duration="862000" />
+      <workItem from="1551945680333" duration="24000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3106000" />
+    <option name="totallyTimeSpent" value="3130000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1440" height="834" extended-state="6" />
+    <frame x="0" y="23" width="1440" height="835" extended-state="6" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25229034" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -248,8 +249,8 @@
     <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_3000.js" />
     <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/service/TeamService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2520">
-          <caret line="168" column="9" selection-start-line="168" selection-start-column="9" selection-end-line="168" selection-end-column="9" />
+        <state relative-caret-position="2565">
+          <caret line="171" column="9" selection-start-line="171" selection-start-column="9" selection-end-line="171" selection-end-column="9" />
         </state>
       </provider>
     </entry>
@@ -276,15 +277,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/BACKEND/ChatApiServer/src/main/java/com/aomc/coop/response/Status_common.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
+        <state relative-caret-position="270">
           <caret line="18" selection-start-line="18" selection-end-line="18" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/COMMON/code.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="358">
-          <caret line="107" column="31" lean-forward="true" selection-start-line="107" selection-start-column="31" selection-end-line="107" selection-end-column="31" />
+        <state relative-caret-position="-52">
+          <caret line="107" column="31" selection-start-line="107" selection-start-column="31" selection-end-line="107" selection-end-column="31" />
         </state>
       </provider>
     </entry>

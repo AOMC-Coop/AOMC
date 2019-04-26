@@ -29,7 +29,7 @@ Profile 프로필 수정      ㅣ Done ㅣ 파일 서버 & 스토리지 구축 �
 
 토큰 헤더                ㅣ Done ㅣ 토큰 헤더에 담아서 보내기
 
-방 초대시 인증서버 동기화 ㅣ      ㅣ
+방 초대시 인증서버 동기화 ㅣ Done ㅣ
 (비회원 유저라면, 초대 토큰을 받아서 회원가입 시키기 -> user has team에 정보 넣어주고, user has channel에도 넣어줘야 함 (redis에서 찾아서 할 것), teamservice의 356줄 flag를 1로 해서 저장 (2개 다))
 
 비밀번호 분실 후 변경     : Milestone 2
@@ -46,6 +46,37 @@ public class LoginLogoutController {
     @Autowired
     private LoginLogoutService loginLogoutService;
 
+    /**
+     *
+     *        @brief GET http://localhost:8082/api/login/
+     *        @details 유저의 로그인 요청을 처리하는 함수
+     *        @param RequestBody User user
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *
+     *        {
+     *              "status": 200,
+     *              "message": "로그인 성공",
+     *              "description": "Success Login"
+     *        }
+     *
+     *        실패시
+     *
+     *        {
+     *              "status": 400,
+     *              "message": "로그인 실패",
+     *              "description": "Fail Login"
+     *        },
+     *
+     *
+
+     *        @throws
+
+     *
+
+     */
+
     //로그인
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody User user) { // header, body(json), HTTP.status //
@@ -55,6 +86,34 @@ public class LoginLogoutController {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
     }
+
+
+    /**
+     *
+     *        @brief GET http://localhost:8082/api/logout/
+     *        @details 유저의 로그아웃 요청을 처리하는 함수
+     *        @param RequestBody UserWithToken userWithToken
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *        {
+     *              "status": 200,
+     *              "message": "로그아웃 성공",
+     *              "description": "Success Logout"
+     *        }
+     *
+     *        실패시
+     *        {
+     *              "status": 400,
+     *              "message": "로그아웃 실패",
+     *              "description": "Fail Logout"
+     *        }
+     *
+     *        @throws
+
+     *
+
+     */
 
     //로그아웃
 //    @Auth

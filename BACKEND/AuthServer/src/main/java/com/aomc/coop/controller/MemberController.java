@@ -32,6 +32,36 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    /**
+     *
+     *        @brief GET http://localhost:8082/api/members
+     *        @details 유저의 회원 가입 요청을 처리하는 함수
+     *        @param RequestBody User user
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *
+     *        {
+     *              "status": 200,
+     *              "message": "회원 가입 성공",
+     *              "description": "Success Register"
+     *        }
+     *
+     *        실패시
+     *
+     *        {
+     *              "status": 400,
+     *              "message": "회원 가입 실패",
+     *              "description": "Fail Register"
+     *        }
+     *
+
+     *        @throws
+
+     *
+
+     */
+
     // 회원 가입
     @PostMapping
     @CrossOrigin
@@ -42,6 +72,30 @@ public class MemberController {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
     }
+
+
+    /**
+     *
+     *        @brief GET http://localhost:8082/api/members/eauth
+     *        @details 유저의 회원 가입 이메일 인증을 처리하는 함수
+     *        @param RequestParam(value = "authUrl") String authUrl, RequestParam(value = "invite_token") String invite_token
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *
+     *        {
+     *              "status": 200,
+     *              "message": "회원 가입 인증 메일 발송 성공",
+     *              "description": "Success Auth Mail Sent"
+     *        }
+     *
+     *        실패시
+     *
+     *        @throws
+
+     *
+
+     */
 
     // 회원 가입 시 이메일 인증
 // ***** URL Redirection 때문에 return type을 String으로 바꾸다 보니, 예외처리 제대로 안되고 있음
@@ -61,6 +115,35 @@ public class MemberController {
         }
     }
 
+
+    /**
+     *
+     *        @brief GET http://localhost:8082/api/members/{idx}
+     *        @details 유저의 회원 탈퇴 요청을 처리하는 함수
+     *        @param RequestBody UserWithToken userWithToken, PathVariable(value = "idx") int idx
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *
+     *        {
+     *              "status": 200,
+     *              "message": "회원 탈퇴 성공",
+     *              "description": "Success Withdrawal"
+     *        }
+     *
+     *        실패시
+     *
+     *        {
+     *              "status": 400,
+     *              "message": "회원 탈퇴 실패",
+     *              "description": "Fail Withdrawal"
+     *        }
+     *
+     *        @throws
+     *
+
+     */
+
     // 회원 탈퇴
 //    @Auth
     @PutMapping(path="/{idx}")
@@ -73,6 +156,35 @@ public class MemberController {
         }
     }
 
+    /**
+     *
+     *        @brief GET http://localhost:8082/api/pwd/{idx}
+     *        @details 유저의 비밀번호 변경 요청을 처리하는 함수
+     *        @param RequestBody NewPwd newPwd, @PathVariable(value = "idx") int idx
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *
+     *        {
+     *              "status": 200,
+     *              "message": "비밀번호 변경 성공",
+     *              "description": "Success Change Password"
+     *        }
+     *
+     *        실패시
+     *
+     *        {
+     *              "status": 400,
+     *              "message": "비밀번호 변경 실패",
+     *              "description": "Fail Change Password"
+     *        }
+     *
+     *        @throws
+
+     *
+
+     */
+
     // 비밀번호 변경
 //    @Auth
     @PutMapping(path="/pwd/{idx}")
@@ -84,6 +196,30 @@ public class MemberController {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
     }
+
+    /**
+     *
+     *        @brief GET http://localhost:8082/api/missing/{idx}
+     *        @details 유저 비밀번호 분실 시 인증 이메일을 전송하는 함수
+     *        @param PathVariable(value = "idx") int idx
+     *        @return ResponseEntity<>
+     *
+     *        성공시
+     *
+     *        {
+     *              "status": 200,
+     *              "message": "비밀번호 변경 인증 메일 발송 성공",
+     *              "description": "Success Missing Password Mail Auth"
+     *        }
+     *
+     *        실패시
+     *
+     *
+     *        @throws
+
+     *
+
+     */
 
     // 비밀번호 분실 시 인증용 이메일 전송
 //    @Auth

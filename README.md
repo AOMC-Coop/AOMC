@@ -32,7 +32,7 @@
 사용자는 업로드 및 다운로드를 통해 파일을 공유 할 수 있다.
 
 ## 구조
-사용자는 nGinx를 통해 서버와 통신한다. 모든 서버는 redis와 연결되는데, 사용자의 인증 토큰을 redis에 저장하여 확인하는 방식으로 connectionless하게 설계하기 위함이다. ChatApiServer와 ChattingServer, FileServer사이에 rabbitMQ를 두어 메시지가 사라지지 않도록 했다.
+사용자는 Nginx를 통해 서버와 통신한다. 모든 서버는 redis와 연결되는데, 사용자의 인증 토큰을 redis에 저장하여 확인하는 방식으로 connectionless하게 설계하기 위함이다. ChatApiServer와 ChattingServer, FileServer사이에 rabbitMQ를 두어 메시지가 사라지지 않도록 했다.
 
 ***
 

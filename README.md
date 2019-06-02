@@ -59,7 +59,7 @@ Windows 10 -> CentOS 7 | 서버 호스팅에 특화 된 CentOS를 사용하여, 
 
 * #### 이윤재 : ChatAPI서버, Chatting 서버, Nginx, nGrinder, Vue js
 * #### 이은미 : 
-* #### 최가람 : 인증 서버, 파일 서버, 파일 스토리지, Vue.js(회원가입, 로그인, 프로필 페이지 등)
+* #### 최가람 : 인증 서버, 파일 서버, Vue.js(회원가입, 로그인, 프로필 페이지 등)
 
 '2019년 스마일 게이트 Winter:Dev’
 

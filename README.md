@@ -1,38 +1,31 @@
 # AOMC
 
 ## 프로젝트 정의
-협업용 채팅 서비스 Slack의 핵심 기능을 Spring Boot와 Vue.js를 통해 구현하였다.
+협업용 채팅 서비스 Slack의 핵심 기능 및 구조를 Spring Boot와 Vue.js를 통해 구현하였다.
 
 ## 기능
 * #### 회원가입 및 로그인 
-사용자는 회원가입과 로그인을 할 수 있다.
 
 * #### 이메일 인증
-사용자는 회원가입을 할 때와 팀에 초대를 받을 때 이메일 인증을 거친다.
+회원가입 및 팀 초대시 이메일 인증을 거친다.
 
-* #### 팀 생성
-사용자는 팀을 생성할 수 있다.
+* #### 팀 생성 및 초대
 
-* #### 팀 초대
-사용자는 다른 사용자들을 팀에 초대할 수 있다.
-
-* #### 채널 생성
-사용자는 팀 내 소규모 채팅방인 채널을 생성할 수 있다.
-
-* #### 채널 초대
-사용자는 채널에 다른 사용자를 초대할 수 있다.
+* #### 채널 생성 및 초대 
+채널은 팀 내 소규모 채팅방이다.
 
 * #### 채팅
-사용자는 다른 사용자들과 채팅을 할 수 있다.
+
+* #### 파일 업로드 및 다운로드
 
 ![coop-chatting](https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/chatting.png?raw=true)
 
 
-* #### 파일 업로드 및 다운로드
-사용자는 업로드 및 다운로드를 통해 파일을 공유 할 수 있다.
 
 ## 구조
-사용자는 Nginx를 통해 서버와 통신한다. 모든 서버는 redis와 연결되는데, 사용자의 인증 토큰을 redis에 저장하여 확인하는 방식으로 connectionless하게 설계하기 위함이다. ChatApiServer와 ChattingServer, FileServer사이에 rabbitMQ를 두어 메시지가 사라지지 않도록 했다.
+* 사용자는 Nginx를 통해 서버와 통신한다.
+* 모든 서버는 Redis와 연결된다. 사용자의 인증 토큰을 Redis에 저장한 후 인증에 활용하여 connectionless하게 설계했다.
+* ChatApi Server와 Chatting Server, File Server사이에 RabbitMQ를 두어 메시지가 사라지지 않도록 했다.
 
 ***
 
@@ -53,14 +46,12 @@ Vuser 수 | 3,000
 
 개선책 | 변경 이유 | 개선 후 성능 
 :---: | :---: | :---: 
-Windows 10 -> CentOS 7 | 서버 호스팅에 특화 된 CentOS를 사용하여, 서버의 성능과 관련 된 세부 사항들을 수정한다. | 
+Windows 10 -> CentOS 7 | 서버 호스팅에 특화 된 CentOS를 사용하여, 서버의 성능과 관련 된 세부 설정을 수정한다. | 
 
 ## 역할
 
-* #### 이윤재 : ChatAPI서버, Chatting 서버, Nginx, nGrinder, Vue js
-* #### 이은미 : 
-* #### 최가람 : 인증 서버, 파일 서버, Vue.js(회원가입, 로그인, 프로필 페이지 등)
-
-'2019년 스마일 게이트 Winter:Dev’
+* #### 이윤재 : ChatAPI 서버, Chatting 서버, Nginx, nGrinder, Vue js
+* #### 이은미 : ChatAPI 서버, Chatting 서버, Vue js
+* #### 최가람 : 인증 서버, 파일 서버, Vue.js
 
 ***

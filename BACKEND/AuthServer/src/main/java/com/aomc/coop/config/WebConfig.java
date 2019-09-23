@@ -29,7 +29,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();
         builder.serializationInclusion(JsonInclude.Include.NON_NULL);
         builder.serializationInclusion(JsonInclude.Include.NON_EMPTY);
-//        builder.serializationInclusion(JsonInclude.Include.NON_DEFAULT);
         builder.failOnUnknownProperties(false);
         converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
     }

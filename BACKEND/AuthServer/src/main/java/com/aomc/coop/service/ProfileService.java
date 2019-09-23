@@ -2,7 +2,6 @@ package com.aomc.coop.service;
 
 import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.model.ProfileWithToken;
-import com.aomc.coop.model.User;
 import com.aomc.coop.model.UserWithToken;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
@@ -32,15 +31,13 @@ public class ProfileService {
     private JwtService jwtService;
 
     ProfileWithToken profileWithToken = new ProfileWithToken();
-    User user = new User();
 
     @Resource(name="redisTemplate")
     private HashOperations<String, String, Object> hashOperations;
 
-    // 프로필 조회
+
     public ResponseType getProfile(@RequestBody UserWithToken userWithToken, int idx){
 
-        System.out.println(userWithToken.getIdx() + " " + userWithToken.getToken());
         // URL로 들어온 idx와 토큰에 저장된 idx가 같아야 함 : 유저는 자기 idx에 해당하는 자기 정보만 볼 수 있어야 함
         int userIdx = userWithToken.getIdx();
         if(idx == userIdx)
@@ -58,7 +55,7 @@ public class ProfileService {
                 profileWithToken.setUid(uid);
                 profileWithToken.setNickname(nickname);
 
-// ***** 프로필 사진 정보 추가해야 함
+// *** 프로필 사진 정보 추가해야 함
 
                 return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Get_Profile.getStatus(), profileWithToken);
             } catch (Exception e) {
@@ -89,7 +86,7 @@ public class ProfileService {
 
                 // redis 정보 수정
                 userInfo.replace("nickname", newNickname);
-// ***** 기존 key에 있는 정보 삭제하던가, nickname만 잘 바꾸던가
+// *** 기존 key에 있는 정보 삭제하던가, nickname만 잘 바꾸던가
                 hashOperations.putAll(key, userInfo);
 
                 // db 정보 수정
@@ -101,7 +98,6 @@ public class ProfileService {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Set_Profile.getStatus());
             }
         } else {
-            // URL로 다른 유저의 idx 요청을 보냈다면
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Set_Profile_Wrong_Idx.getStatus());
         }
     }

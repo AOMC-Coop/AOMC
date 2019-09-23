@@ -46,9 +46,7 @@ public class TokenService {
     public TokenService.Token decode(final String token) {
 
         try {
-            //토큰 해독 객체 생성
             final JWTVerifier jwtVerifier = require(Algorithm.HMAC256(SECRET)).withIssuer(ISSUER).build();
-            //토큰 검증
             DecodedJWT decodedJWT = jwtVerifier.verify(token);
 
             //토큰 payload 반환, 정상적인 토큰이라면 토큰 주인(사용자) 고유 ID, 아니라면 -1
@@ -63,7 +61,6 @@ public class TokenService {
 
 
     public static class Token {
-        //토큰에 담길 정보 필드
         //초기값을 -1로 설정함으로써 로그인 실패시 -1반환
         private int user_idx = -1;
 
@@ -82,7 +79,6 @@ public class TokenService {
 
     //반환될 토큰Res
     public static class TokenRes {
-        //실제 토큰
         private String token;
 
         public TokenRes() {

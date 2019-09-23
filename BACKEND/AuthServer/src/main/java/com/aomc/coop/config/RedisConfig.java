@@ -14,20 +14,16 @@ public class RedisConfig {
 
     @Bean
     public JedisPoolConfig jedisPoolConfig() {
-        // JedisPoolConfig : includes getters/setters so it can be more easily configured by Spring and other IoC frameworks.
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         return jedisPoolConfig;
     }
 
     @Bean
     public JedisConnectionFactory jedisConnectionFactory(JedisPoolConfig jedisPoolConfig) {
-        // JedisConnectionFactory should be configured using an environmental configuration and the client configuration.
-        // Constructs a new JedisConnectionFactory instance using the given pool configuration.
         JedisConnectionFactory jedisConnectionFactory = new JedisConnectionFactory(jedisPoolConfig);
         return jedisConnectionFactory;
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Bean(name = "redisTemplate")
     public RedisTemplate redisTemplateConfig(JedisConnectionFactory jedisConnectionFactory) {
         RedisTemplate redisTemplate = new RedisTemplate();

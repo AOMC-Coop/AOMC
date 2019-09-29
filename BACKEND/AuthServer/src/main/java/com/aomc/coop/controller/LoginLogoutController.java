@@ -1,7 +1,6 @@
 package com.aomc.coop.controller;
 
 import com.aomc.coop.model.User;
-import com.aomc.coop.model.UserWithToken;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.auth.Auth;
@@ -35,10 +34,6 @@ Profile 프로필 수정      ㅣ Done ㅣ 파일 서버 & 스토리지 구축 �
 비밀번호 분실 후 변경     : Milestone 2
 
 */
-
-
-
-
 
 @CrossOrigin
 @RestController
@@ -118,9 +113,9 @@ public class LoginLogoutController {
      */
 
     @PostMapping(value = "/logout")
-    public ResponseEntity logout(@RequestBody UserWithToken userWithToken) {
+    public ResponseEntity logout(@RequestBody User user) {
         try {
-            return new ResponseEntity(loginLogoutService.logoutUser(userWithToken), HttpStatus.OK);
+            return new ResponseEntity(loginLogoutService.logoutUser(user), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }

@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 
 import com.aomc.coop.mapper.*;
 import com.aomc.coop.model.NewPwd;
-import com.aomc.coop.model.UserWithToken;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
@@ -199,9 +198,9 @@ public class MemberService {
     }
 
     // <2. 회원 탈퇴>
-    public ResponseType withdrawal(@RequestBody UserWithToken userWithToken, final int idx) {
+    public ResponseType withdrawal(@RequestBody User user, final int idx) {
 
-        int userIdx = userWithToken.getIdx();
+        int userIdx = user.getIdx();
 
         if(userIdx == idx)
         {

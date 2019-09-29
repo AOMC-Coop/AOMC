@@ -5,10 +5,10 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class UserWithToken implements Serializable {
+public class Profile implements Serializable {
     private int idx;
     private String uid;
     private String nickname;
-    private String token;
-    private String image;
+    private int gender;
+    // ***** 프로필 사진 정보 추가해야 함
 }

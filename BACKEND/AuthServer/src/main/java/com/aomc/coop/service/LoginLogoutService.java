@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 
 import com.aomc.coop.mapper.UserMapper;
-import com.aomc.coop.model.UserWithToken;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
@@ -37,7 +36,7 @@ public class LoginLogoutService {
     @Autowired
     private JwtService jwtService;
 
-    @Resource(name="redisTemplate") // @Resource : 일단 @Autowired와 비슷한 것으로 알고 있기
+    @Resource(name="redisTemplate")
     private HashOperations<String, String, Object> hashOperations;
 
     public ResponseType loginUser(@RequestBody User user) {
@@ -53,9 +52,8 @@ public class LoginLogoutService {
             }
 
             // 탈퇴한 회원일 경우
-            // *** 추후 Status_3000 수정하자 -> 더 자세히 경우 나누기
             if(myUser.getStatus() == 0){
-                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login.getStatus());
+                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login_Withdrawal.getStatus());
             }
             String hashPassword = SHA256.getInstance().encodeSHA256(myUser.getSalt() + user.getPwd());
 
@@ -78,22 +76,21 @@ public class LoginLogoutService {
                 hashMap.put("timeStamp", time);
                 hashOperations.putAll(key, hashMap);
 
-                // *** 30분이 지나면 "다시 로그인 하셔야 합니다."와 같은 메시지가 팝업되며 로그인 페이지로 이동시킬 것
+                // *** 30분이 지나면 "다시 로그인 하셔야 합니다."와 같은 메시지가 팝업되며 로그인 페이지로 이동시킬 것 -> vue.js에서 해야 함
                 hashOperations.getOperations().expire(key, 30L, TimeUnit.MINUTES);
 
-                // 4. 토큰을 client에 보내기
-//				HttpHeaders headers = new HttpHeaders();
-//				headers.add("auth_token", token);
+                // *** 토큰을 header에 실어서 client에 보내기
+				// HttpHeaders headers = new HttpHeaders();
+				// headers.add("auth_token", token);
 
                 // 제대로 로그인이 되었다면
-                UserWithToken userWithToken = new UserWithToken();
-                userWithToken.setIdx(myUser.getIdx());
-                userWithToken.setUid(uid);
-                userWithToken.setToken(key);
-                userWithToken.setImage(myUser.getImage());
-                userWithToken.setNickname(myUser.getNickname());
+                User responseUser = new User();
+                responseUser.setIdx(myUser.getIdx());
+                responseUser.setUid(uid);
+                responseUser.setImage(myUser.getImage());
+                responseUser.setNickname(myUser.getNickname());
 
-                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), userWithToken);
+                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), responseUser);
             } else {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login_Wrong_Password.getStatus());
             }
@@ -103,18 +100,17 @@ public class LoginLogoutService {
         }
     }
 
-    public ResponseType logoutUser(@RequestBody UserWithToken userWithToken) {
+    public ResponseType logoutUser(@RequestBody User user) {
 
         try
         {
-            String key = userWithToken.getToken();
-            hashOperations.getOperations().delete(key);
+            // *** String token;
+            hashOperations.getOperations().delete(token);
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Logout.getStatus());
         }
         catch (Exception e) {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Logout.getStatus());
         }
     }
-
 
 }

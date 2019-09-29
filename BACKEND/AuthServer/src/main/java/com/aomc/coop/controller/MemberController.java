@@ -2,7 +2,6 @@ package com.aomc.coop.controller;
 
 import com.aomc.coop.model.NewPwd;
 import com.aomc.coop.model.User;
-import com.aomc.coop.model.UserWithToken;
 import com.aomc.coop.model.NewPwd;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.MemberService;
@@ -141,9 +140,9 @@ public class MemberController {
      */
 
     @PutMapping(path="/{idx}")
-    public ResponseEntity withdrawal(@RequestBody UserWithToken userWithToken, @PathVariable(value = "idx") int idx) {
+    public ResponseEntity withdrawal(@RequestBody User user, @PathVariable(value = "idx") int idx) {
         try {
-            return new ResponseEntity(memberService.withdrawal(userWithToken, idx), HttpStatus.OK);
+            return new ResponseEntity(memberService.withdrawal(user, idx), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }

@@ -1,8 +1,8 @@
 package com.aomc.coop.service;
 
 import com.aomc.coop.mapper.UserMapper;
-import com.aomc.coop.model.ProfileWithToken;
-import com.aomc.coop.model.UserWithToken;
+import com.aomc.coop.model.Profile;
+import com.aomc.coop.model.User;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
@@ -30,34 +30,34 @@ public class ProfileService {
     @Autowired
     private JwtService jwtService;
 
-    ProfileWithToken profileWithToken = new ProfileWithToken();
+    Profile profile = new Profile();
 
     @Resource(name="redisTemplate")
     private HashOperations<String, String, Object> hashOperations;
 
 
-    public ResponseType getProfile(@RequestBody UserWithToken userWithToken, int idx){
+    public ResponseType getProfile(@RequestBody User user, int idx){
 
         // URL로 들어온 idx와 토큰에 저장된 idx가 같아야 함 : 유저는 자기 idx에 해당하는 자기 정보만 볼 수 있어야 함
-        int userIdx = userWithToken.getIdx();
+        int userIdx = user.getIdx();
         if(idx == userIdx)
         {
             try
             {
-                String key = userWithToken.getToken();
-                Map userInfo = hashOperations.entries(key);
+                // String token;
+                Map userInfo = hashOperations.entries(token);
 
                 // Code Refactoring : 형 변환을 피하자
                 String uid = (String) userInfo.get("uid");
                 String nickname = (String) userInfo.get("nickname");
 // ***** gender는 'Object -> int' 형 변환 오류로 인해 일단 주석처리
 
-                profileWithToken.setUid(uid);
-                profileWithToken.setNickname(nickname);
+                profile.setUid(uid);
+                profile.setNickname(nickname);
 
 // *** 프로필 사진 정보 추가해야 함
 
-                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Get_Profile.getStatus(), profileWithToken);
+                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Get_Profile.getStatus(), profile);
             } catch (Exception e) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Get_Profile.getStatus());
             }
@@ -71,23 +71,23 @@ public class ProfileService {
     }
 
     // 프로필 수정
-    public ResponseType setProfile(@RequestBody ProfileWithToken profileWithToken, int idx){
+    public ResponseType setProfile(@RequestBody Profile profile, int idx){
 
         // URL로 들어온 idx와 토큰에 저장된 idx가 같아야 함 : 유저는 자기 idx에 해당하는 자기 정보만 수정할 수 있어야 함
-        int userIdx = profileWithToken.getIdx();
+        int userIdx = profile.getIdx();
         if(idx == userIdx)
         {
             try
             {
-                String key = profileWithToken.getToken();
-                Map userInfo = hashOperations.entries(key);
+                // String token;
+                Map userInfo = hashOperations.entries(token);
 
-                String newNickname = profileWithToken.getNickname();
+                String newNickname = profile.getNickname();
 
                 // redis 정보 수정
                 userInfo.replace("nickname", newNickname);
 // *** 기존 key에 있는 정보 삭제하던가, nickname만 잘 바꾸던가
-                hashOperations.putAll(key, userInfo);
+                hashOperations.putAll(token, userInfo);
 
                 // db 정보 수정
                 userMapper.updateUserInfo(newNickname, idx);

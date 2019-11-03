@@ -35,10 +35,8 @@
 ![Coop](https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/coop-architecture.png?raw=true)
 
 - 스케일 아웃 서버 아키텍처
-
   - 인증 서버
     - 유저가 로그인하여 발급받은 토큰을 Redis에 저장합니다. 인증 정보가 필요한 모든 서버는 여러 대의 인증 서버가 아닌 Redis를 조회하면 됩니다.
-    
   - 채팅 서버
     - 각 채팅 서버가 메시지 큐(RabbitMQ)를 가지고, 동일한 채팅 내용을 각 큐에 전송하는 구조를 적용했습니다. 같은 채널 내 유저들이 다른 채팅 서버에 접속해있더라도 채팅 내용이 동기화됩니다.
 

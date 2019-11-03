@@ -20,7 +20,7 @@
 
 ![coop-chatting](https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/chatting.png?raw=true)
 
-
+* #### 실행 동영상 : https://www.youtube.com/watch?v=8QQRGSRJ4h8
 
 ## 구조
 * 사용자는 Nginx를 통해 서버와 통신한다.
@@ -45,8 +45,8 @@ Vuser 수 | 3,000
 
 ## 역할
 
-* #### 이윤재 : ChatAPI 서버, Chatting 서버, Nginx, nGrinder, Vue js
-* #### 이은미 : ChatAPI 서버, Chatting 서버, Vue js
-* #### 최가람 : 인증 서버, 파일 서버, Vue.js
+* #### 이윤재 : ChatAPI 서버, Chatting 서버, Nginx, nGrinder, Vue.js
+* #### 이은미 : ChatAPI 서버, Chatting 서버, Vue.js
+* #### 최가람 : 인증 서버, 파일 서버, CentOS 배포, Vue.js
 
 ***

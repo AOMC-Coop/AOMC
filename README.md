@@ -71,11 +71,10 @@ nGrinder로 Vuser 3,000명 기준 로그인 TPS를 측정했습니다. 로그인
 호스팅 랩탑 OS | CentOS 7
 Vuser 수 | 3,000
 
+***
 
 ## 역할
 
 * #### 이윤재 : ChatAPI 서버, Chatting 서버, Nginx, nGrinder, Vue.js
 * #### 이은미 : ChatAPI 서버, Chatting 서버, Vue.js
 * #### 최가람 : 인증 서버, 파일 서버, CentOS 배포, Vue.js
-
-***

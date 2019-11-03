@@ -24,6 +24,9 @@
 * #### 실행 동영상 : https://www.youtube.com/watch?v=8QQRGSRJ4h8
 
 ## 구조
+
+![Coop](https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/coop-architecture.png?raw=true)
+
 - 스케일 아웃 서버 아키텍처
   - 인증 서버
     - 문제점 : 인증 서버가 여러 대일 경우, 서버 간 유저 인증 정보가 일치하지 않는 문제가 발생합니다. 여러 대의 인증 서버 중, 유저가 접속한 하나의 서버에만 인증 정보가 등록되기 때문입니다. 
@@ -35,8 +38,6 @@
 * 사용자는 Nginx를 통해 서버와 통신합니다.
 
 ***
-
-![Coop](https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/coop-architecture.png?raw=true)
 
 ## 성능
 * #### TPS : 249.5

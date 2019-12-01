@@ -105,7 +105,7 @@ public class LoginLogoutService {
         try
         {
             // *** String token;
-            hashOperations.getOperations().delete(token);
+            hashOperations.getOperations().delete(user.getLogin_token());
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Logout.getStatus());
         }
         catch (Exception e) {

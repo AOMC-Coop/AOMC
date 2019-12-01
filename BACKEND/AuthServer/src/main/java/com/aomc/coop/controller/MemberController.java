@@ -7,6 +7,7 @@ import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.MemberService;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.auth.Auth;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -20,16 +21,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
 
-// ***** 트랜잭셔널 : 이놈의 역할 정확히 공부하기
-@Transactional
 @CrossOrigin
 @RestController
 @RequestMapping("/api/members")
+@AllArgsConstructor
 public class MemberController {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
-    @Autowired
     private MemberService memberService;
 
     /**

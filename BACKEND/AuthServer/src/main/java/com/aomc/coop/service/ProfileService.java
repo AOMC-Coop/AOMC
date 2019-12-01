@@ -45,7 +45,7 @@ public class ProfileService {
             try
             {
                 // String token;
-                Map userInfo = hashOperations.entries(token);
+                Map userInfo = hashOperations.entries(user.getLogin_token());
 
                 // Code Refactoring : 형 변환을 피하자
                 String uid = (String) userInfo.get("uid");
@@ -79,7 +79,8 @@ public class ProfileService {
         {
             try
             {
-                // String token;
+                // *** 토큰 헤더로 받아오기
+                String token = "tmp";
                 Map userInfo = hashOperations.entries(token);
 
                 String newNickname = profile.getNickname();

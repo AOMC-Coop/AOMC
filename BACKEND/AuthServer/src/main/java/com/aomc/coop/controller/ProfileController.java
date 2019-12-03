@@ -1,13 +1,10 @@
 package com.aomc.coop.controller;
 
-import com.aomc.coop.model.Profile;
-import com.aomc.coop.model.User;
+import com.aomc.coop.dto.Profile;
+import com.aomc.coop.dto.User;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.ProfileService;
 import com.aomc.coop.utils.CodeJsonParser;
-import com.aomc.coop.utils.auth.Auth;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +12,15 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/profile")
-@AllArgsConstructor
 public class ProfileController {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
-    private ProfileService profileService;
+    private final ProfileService profileService;
+
+    public ProfileController(ProfileService profileService){
+        this.profileService = profileService;
+    }
 
     /**
      *

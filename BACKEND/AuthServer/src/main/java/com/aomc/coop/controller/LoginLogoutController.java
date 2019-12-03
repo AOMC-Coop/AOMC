@@ -1,11 +1,8 @@
 package com.aomc.coop.controller;
 
-import com.aomc.coop.model.User;
+import com.aomc.coop.dto.User;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.utils.CodeJsonParser;
-import com.aomc.coop.utils.auth.Auth;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.aomc.coop.service.LoginLogoutService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +36,15 @@ Profile 프로필 수정      ㅣ Done ㅣ 파일 서버 & 스토리지 구축 �
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
-@AllArgsConstructor
 public class LoginLogoutController {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
-    private LoginLogoutService loginLogoutService;
+    private final LoginLogoutService loginLogoutService;
+
+    public LoginLogoutController(LoginLogoutService loginLogoutService) {
+        this.loginLogoutService = loginLogoutService;
+    }
 
     /**
      *

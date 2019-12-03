@@ -117,59 +117,59 @@
 
   "3202": {
     "status": 200,
+    "message": "회원 가입 인증 메일 발송 성공",
+    "description": "Success Register Auth Mail Sent"
+  },
+
+  "3210": {
+    "status": 200,
     "message": "회원 탈퇴 성공",
     "description": "Success Withdrawal"
   },
 
-  "3203": {
+  "3220": {
     "status": 200,
     "message": "로그인 성공",
     "description": "Success Login"
   },
 
-  "3204": {
+  "3230": {
     "status": 200,
     "message": "로그아웃 성공",
     "description": "Success Logout"
   },
 
-  "3205": {
+  "3240": {
     "status": 200,
-    "message": "마이페이지 조회 성공",
+    "message": "프로필 조회 성공",
     "description": "Success Get Profile"
   },
 
-  "3206": {
+  "3250": {
     "status": 200,
-    "message": "마이페이지 수정 성공",
+    "message": "프로필 수정 성공",
     "description": "Success Set Profile"
   },
 
-  "3207": {
+  "3260": {
     "status": 200,
     "message": "비밀번호 변경 성공",
     "description": "Success Change Password"
   },
 
-  "3210": {
-    "status": 200,
-    "message": "회원 가입 인증 메일 발송 성공",
-    "description": "Success Auth Mail Sent"
-  },
-
-  "3211": {
+  "3270": {
     "status": 200,
     "message": "비밀번호 변경 인증 메일 발송 성공",
     "description": "SUCCESS Missing Password Mail Auth"
   },
 
-  "3250": {
+  "3280": {
     "status": 200,
     "message": "파일 업로드 성공",
     "description": "Success File Upload"
   },
 
-  "3251": {
+  "3290": {
     "status": 200,
     "message": "프로필 사진 업로드 성공",
     "description": "Success Profile Picture Upload"
@@ -189,77 +189,83 @@
 
   "3403": {
     "status": 400,
+    "message": "회원 가입 실패 : 인증 시간 초과",
+    "description": "Fail Register : Auth Timeout"
+  },
+
+  "3410": {
+    "status": 400,
     "message": "탈퇴 실패",
     "description": "Fail Withdrawal"
   },
 
-  "3404": {
+  "3420": {
     "status": 400,
     "message": "로그인 실패",
     "description": "Fail Login"
   },
 
-  "3405": {
+  "3421": {
     "status": 400,
     "message": "로그인 실패 : 가입된 아이디가 없음",
     "description": "Fail Login : Wrong ID"
   },
 
-  "3406": {
+  "3422": {
     "status": 400,
     "message": "로그인 실패 : 잘못된 비밀번호",
     "description": "Fail Login : Wrong Password"
   },
 
-  "3407": {
+  "3423": {
+    "status": 400,
+    "message": "로그인 실패 : 탈퇴한 유저",
+    "description": "Fail Login : Withdrawn User"
+  },
+
+  "3430": {
     "status": 400,
     "message": "로그아웃 실패",
     "description": "Fail Logout"
   },
 
-  "3408": {
+  "3440": {
     "status": 400,
-    "message": "마이페이지 조회 실패",
+    "message": "프로필 조회 실패",
     "description": "Fail Get Profile"
   },
 
-  "3409": {
+  "3441": {
     "status": 400,
-    "message": "마이페이지 조회 실패 : 다른 유저 idx 입력",
-    "description": "Fail Set Profile : Wrong Idx"
+    "message": "프로필 조회 실패 : 다른 유저 idx 입력",
+    "description": "Fail Get Profile : Wrong Idx"
   },
 
-  "3410": {
+  "3450": {
     "status": 400,
-    "message": "마이페이지 수정 실패",
+    "message": "프로필 수정 실패",
     "description": "Fail Set Profile"
   },
 
-  "3411": {
+  "3451": {
     "status": 400,
-    "message": "마이페이지 수정 실패 : 다른 유저 idx 입력",
+    "message": "프로필 수정 실패 : 다른 유저 idx 입력",
     "description": "Fail Set Profile : Wrong Idx"
   },
 
-  "3412": {
-    "status": 400,
-    "message": "회원 가입 실패 : 인증 시간 초과",
-    "description": "Fail Set Profile : Auth Timeout"
-  },
-
-  "3413": {
+  "3460": {
     "status": 400,
     "message": "비밀번호 변경 실패",
     "description": "Fail Change Password"
   },
 
-  "3450": {
+  "3480": {
     "status": 200,
     "message": "파일 업로드 실패",
     "description": "Fail File Upload"
   },
 
-  "3451": {
+  "3490": {
     "status": 200,
     "message": "프로필 사진 업로드 실패",
     "description": "Fail Profile Picture Upload"

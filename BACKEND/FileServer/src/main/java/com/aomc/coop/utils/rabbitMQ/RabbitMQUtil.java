@@ -2,6 +2,7 @@ package com.aomc.coop.utils.rabbitMQ;
 
 import com.aomc.coop.config.RabbitMQConfig;
 import com.aomc.coop.model.Message;
+import lombok.AllArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -13,9 +14,11 @@ import java.util.Map;
 @Component
 public class RabbitMQUtil {
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private final RabbitTemplate rabbitTemplate;
 
+    public RabbitMQUtil(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
 //    @Autowired
 //    private SimpMessagingTemplate simpMessagingTemplate;
 

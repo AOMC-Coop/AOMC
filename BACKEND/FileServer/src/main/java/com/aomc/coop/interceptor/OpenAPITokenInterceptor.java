@@ -2,6 +2,7 @@
 //
 //import com.aomc.coop.service.TokenService;
 //import com.rabbitmq.client.AMQP;
+//import lombok.AllArgsConstructor;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,15 @@
 //import javax.servlet.http.HttpServletRequest;
 //import javax.servlet.http.HttpServletResponse;
 //
-//
 //public class OpenAPITokenInterceptor implements HandlerInterceptor {
 //    private static final Logger logger = LoggerFactory.getLogger(AMQP.Channel.Open.class);
 //    private static final String HEADER_AUTH = "X-Auth-Token";
 //
-//    @Autowired
-//    private TokenService tokenService;
+//    private final TokenService tokenService;
+//
+//    public OpenAPITokenInterceptor(TokenService tokenService) {
+//        this.tokenService = tokenService;
+//    }
 //
 //    @Override
 //    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

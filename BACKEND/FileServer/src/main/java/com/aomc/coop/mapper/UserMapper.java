@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Mapper
 @Repository
-
 public interface UserMapper {
 
     @Update("UPDATE users SET image = #{image} WHERE idx = #{idx}")

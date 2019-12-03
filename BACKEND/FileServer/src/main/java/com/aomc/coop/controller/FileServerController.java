@@ -8,6 +8,7 @@ import com.aomc.coop.response.Status_common;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -28,14 +29,14 @@ import com.aomc.coop.storage.StorageFileNotFoundException;
 @RequestMapping("/api/files")
 public class FileServerController {
 
-    private final StorageService storageService;
-
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
-    @Autowired
+    private final StorageService storageService;
+
     public FileServerController(StorageService storageService) {
         this.storageService = storageService;
     }
+
 // ***** Interceptor를 쓰면서 REST API가 깨졌다(url에 upload download를 명시해버림). 오히려 REST API와 맞는 방법인지, 아니라면 더 나은 방법은 있을지 고민해볼 것
 
     @PostMapping(path = "/upload/{channel_idx}")

@@ -26,16 +26,12 @@ public class TokenService {
     @Resource(name = "redisTemplate")
     private HashOperations<String, String, String> values;
 
-
     public boolean isUsableToken(String token) {
 
         String idx = (String) values.get(token, "idx");
-
         if(idx == null ) return false;
         else return true;
-
     }
-
 
     /**
      * 토큰 해독

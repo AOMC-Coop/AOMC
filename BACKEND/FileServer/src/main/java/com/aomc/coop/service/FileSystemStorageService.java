@@ -31,7 +31,6 @@ import com.aomc.coop.utils.ResponseType;
 import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -63,27 +62,21 @@ import javax.imageio.ImageIO;
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    private final Path rootLocation;
-
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
-    @Autowired
-    private FileMapper fileMapper;
+    private final Path rootLocation;
+    private final FileMapper fileMapper;
+    private final RabbitMQUtil rabbitMQUtil;
+    private final RabbitTemplate rabbitTemplate;
+    private final UserMapper userMapper;
 
-    @Autowired
-    private RabbitMQUtil rabbitMQUtil;
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    public FileSystemStorageService(StorageProperties properties) {
+    public FileSystemStorageService(StorageProperties properties, FileMapper fileMapper, RabbitMQUtil rabbitMQUtil, RabbitTemplate rabbitTemplate, UserMapper userMapper) {
         this.rootLocation = Paths.get(properties.getLocation());
+        this.fileMapper = fileMapper;
+        this.rabbitMQUtil = rabbitMQUtil;
+        this.rabbitTemplate = rabbitTemplate;
+        this.userMapper = userMapper;
     }
-
 
     @Override
     public ResponseType upload(MultipartFile file, Message message, final int channel_idx) {

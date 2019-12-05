@@ -38,8 +38,6 @@ Profile 프로필 수정      ㅣ Done ㅣ 파일 서버 & 스토리지 구축 �
 @RequestMapping("/api")
 public class LoginLogoutController {
 
-    CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
-
     private final LoginLogoutService loginLogoutService;
 
     public LoginLogoutController(LoginLogoutService loginLogoutService) {
@@ -50,7 +48,7 @@ public class LoginLogoutController {
      *
      *        @brief GET http://localhost:8082/api/login/
      *        @details 유저의 로그인 요청을 처리하는 함수
-     *        @param RequestBody User user
+     *        @param @RequestBody User user
      *        @return ResponseEntity<>
      *
      *        성공시
@@ -79,18 +77,14 @@ public class LoginLogoutController {
 
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody User user) {
-        try {
-            return new ResponseEntity(loginLogoutService.loginUser(user), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
+        return new ResponseEntity(loginLogoutService.loginUser(user), HttpStatus.OK);
     }
 
     /**
      *
      *        @brief GET http://localhost:8082/api/logout/
      *        @details 유저의 로그아웃 요청을 처리하는 함수
-     *        @param RequestBody UserWithToken userWithToken
+     *        @param @RequestBody UserWithToken userWithToken
      *        @return ResponseEntity<>
      *
      *        성공시
@@ -115,11 +109,7 @@ public class LoginLogoutController {
 
     @PostMapping(value = "/logout")
     public ResponseEntity logout(@RequestBody User user) {
-        try {
-            return new ResponseEntity(loginLogoutService.logoutUser(user), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
+        return new ResponseEntity(loginLogoutService.logoutUser(user), HttpStatus.OK);
     }
 }
 

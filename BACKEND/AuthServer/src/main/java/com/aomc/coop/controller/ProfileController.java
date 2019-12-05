@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/profile")
 public class ProfileController {
 
-    CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
-
     private final ProfileService profileService;
 
     public ProfileController(ProfileService profileService){
@@ -26,7 +24,7 @@ public class ProfileController {
      *
      *        @brief GET http://localhost:8082/api/profile/{idx}
      *        @details 유저의 프로필 조회 요청을 처리하는 함수
-     *        @param RequestBody UserWithToken userWithToken, PathVariable(value = "idx") int idx
+     *        @param @RequestBody UserWithToken userWithToken, PathVariable(value = "idx") int idx
      *        @return ResponseEntity<>
      *
      *        성공시
@@ -43,18 +41,14 @@ public class ProfileController {
 // *** 토큰을 헤더에 담아서 전송하면 해결 될 것.
     @PostMapping(path="/{idx}")
     public ResponseEntity getProfile(@RequestBody User userWithToken, @PathVariable(value = "idx") int idx) {
-        try {
-            return new ResponseEntity(profileService.getProfile(userWithToken, idx), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
+        return new ResponseEntity(profileService.getProfile(userWithToken, idx), HttpStatus.OK);
     }
 
     /**
      *
      *        @brief GET http://localhost:8082/api/profile/{idx}
      *        @details 유저의 프로필 수정 요청을 처리하는 함수
-     *        @param RequestBody ProfileWithToken profileWithToken, PathVariable(value = "idx") int idx
+     *        @param @RequestBody ProfileWithToken profileWithToken, PathVariable(value = "idx") int idx
      *        @return ResponseEntity<>
      *
      *        성공시
@@ -78,10 +72,6 @@ public class ProfileController {
 
     @PutMapping(path="/{idx}")
     public ResponseEntity setProfile(@RequestBody Profile profileWithToken, @PathVariable(value = "idx") int idx) {
-        try {
-            return new ResponseEntity(profileService.setProfile(profileWithToken, idx), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
+        return new ResponseEntity(profileService.setProfile(profileWithToken, idx), HttpStatus.OK);
     }
 }

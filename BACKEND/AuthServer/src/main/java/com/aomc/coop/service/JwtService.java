@@ -8,8 +8,11 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Value;
+
+import javax.annotation.Resource;
 import java.util.Calendar;
 import java.util.Date;
 import static com.auth0.jwt.JWT.require;
@@ -23,6 +26,17 @@ public class JwtService {
 
     @Value("${JWT.SECRET}")
     private String SECRET;
+
+    @Resource(name = "redisTemplate")
+    private HashOperations<String, String, String> values;
+
+    public boolean isUsableToken(String token) {
+
+        String idx = (String) values.get(token, "idx");
+
+        if(idx == null) return false;
+        else return true;
+    }
 
     /**
      * 토큰 생성
@@ -76,7 +90,6 @@ public class JwtService {
         return new Token();
     }
 
-// *** Token과 TokenRes의 차이는 뭘까? 일단 TokenRes에 모두 담아 사용하였다.
     public static class Token {
         //토큰에 담길 정보 필드
         //초기값을 -1로 설정함으로써 로그인 실패시 -1 반환

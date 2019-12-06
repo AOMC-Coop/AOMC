@@ -6,6 +6,7 @@ import com.aomc.coop.dto.User;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.stereotype.Service;
@@ -18,17 +19,13 @@ import java.util.Map;
 @Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ProfileService {
 //    profile 프로필 회원수정 비밀번호 찾기
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
-    private UserMapper userMapper;
-    private JwtService jwtService;
-
-    public ProfileService(UserMapper userMapper, JwtService jwtService) {
-        this.userMapper = userMapper;
-        this.jwtService = jwtService;
-    }
+    private final UserMapper userMapper;
+    private final JwtService jwtService;
 
     @Resource(name="redisTemplate")
     private HashOperations<String, String, Object> hashOperations;

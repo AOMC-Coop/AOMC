@@ -4,6 +4,7 @@ import com.aomc.coop.dto.User;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.service.LoginLogoutService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +37,10 @@ Profile 프로필 수정      ㅣ Done ㅣ 파일 서버 & 스토리지 구축 �
 @CrossOrigin
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class LoginLogoutController {
 
     private final LoginLogoutService loginLogoutService;
-
-    public LoginLogoutController(LoginLogoutService loginLogoutService) {
-        this.loginLogoutService = loginLogoutService;
-    }
 
     /**
      *

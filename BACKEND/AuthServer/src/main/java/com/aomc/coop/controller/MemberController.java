@@ -5,6 +5,7 @@ import com.aomc.coop.dto.User;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.MemberService;
 import com.aomc.coop.utils.CodeJsonParser;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,15 +20,12 @@ import java.security.NoSuchAlgorithmException;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/members")
+@RequiredArgsConstructor
 public class MemberController {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
     private final MemberService memberService;
-
-    public MemberController (MemberService memberService) {
-        this.memberService = memberService;
-    }
 
     /**
      *

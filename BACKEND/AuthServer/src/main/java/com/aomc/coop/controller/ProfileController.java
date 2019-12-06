@@ -5,6 +5,7 @@ import com.aomc.coop.dto.User;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.ProfileService;
 import com.aomc.coop.utils.CodeJsonParser;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/profile")
+@RequiredArgsConstructor
 public class ProfileController {
 
     private final ProfileService profileService;
-
-    public ProfileController(ProfileService profileService){
-        this.profileService = profileService;
-    }
 
     /**
      *

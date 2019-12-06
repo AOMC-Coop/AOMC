@@ -15,6 +15,7 @@ import com.aomc.coop.dto.NewPwd;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ import javax.annotation.Resource;
 @Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class MemberService {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
@@ -44,21 +46,11 @@ public class MemberService {
     @Resource(name="redisTemplate")
     private HashOperations<String, String, String> hashOperations;
 
-    public MemberService(UserMapper userMapper, TeamMapper teamMapper, ChannelMapper channelMapper, MailSend mailSend, JavaMailSender mailSender) {
-        this.userMapper = userMapper;
-        this.teamMapper = teamMapper;
-        this.channelMapper = channelMapper;
-        this.mailSend = mailSend;
-        this.mailSender = mailSender;
-    }
+    public ResponseType register(@RequestBody User user) throws NoSuchAlgorithmException {
 
-    public ResponseType register(@RequestBody User user) throws NoSuchAlgorithmException{
-
-// *** DB 연산을 줄이기 위해 Mapper 함수 변경함
         String uid = user.getUid();
         String myUser = userMapper.checkUser(uid);
 
-        // db상에 이미 가입되어 있는 내역이 없는 경우, 정상 절차대로 가입
         if (myUser == null) {
 
             HashMap<String, String> hashMap = new HashMap<>();
@@ -205,15 +197,9 @@ public class MemberService {
     // 이메일 발송
     public ResponseType missingEmailAuth (@PathVariable final int idx) {
 
-// *****     if (idx != 헤더 토큰의 idx) {
-// *****          return codeJsonParser.codeJsonParser(Status_3000.FAIL_Missing_Pwd_Email_Auth.getStatus());
-// *****     }
-
         String uid = userMapper.getUid(idx);
         SendMailThread sendMailThread = new SendMailThread(mailSender, uid, idx);
         sendMailThread.run();
-// ***** mailsend, mailSender, SendMailThread, JavaMailSender 진짜 헷갈린다. 시간나면 한 번 정리할 것
-// ***** 우선 sendMailThread.start() 대신, 편의상 sendMailThread.run()을 이용
 
         return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register_Auth_Mail_Sent.getStatus());
     }

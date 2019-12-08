@@ -29,6 +29,8 @@ public enum Status_3000 {
 
     SUCCESS_Change_Pwd("3260"),
     FAIL_Change_Pwd("3460"),
+    FAIL_Change_Pwd_Wrong_Idx("3461"),
+    FAIL_Change_Pwd_Wrong_Confirm_Pwd("3462"),
 
     SUCCESS_Missing_Pwd_Email_Auth("3270"),
     FAIL_Missing_Pwd_Email_Auth("3470");

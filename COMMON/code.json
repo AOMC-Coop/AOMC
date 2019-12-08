@@ -259,6 +259,18 @@
     "description": "Fail Change Password"
   },
 
+  "3461": {
+    "status": 400,
+    "message": "비밀번호 변경 실패 : 다른 유저 idx 입력",
+    "description": "Fail Change Password : Wrong Idx"
+  },
+
+  "3462": {
+    "status": 400,
+    "message": "비밀번호 변경 실패 : 확인용 비밀번호 불일치",
+    "description": "Fail Change Password : Wrong Confirm Password"
+  },
+
   "3480": {
     "status": 200,
     "message": "파일 업로드 실패",

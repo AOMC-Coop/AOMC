@@ -8,6 +8,9 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 
+import com.aomc.coop.dto.LoginRequest;
+import com.aomc.coop.dto.LoginResponse;
+import com.aomc.coop.dto.User;
 import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
@@ -20,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.aomc.coop.dto.User;
 import com.aomc.coop.utils.Http;
 import com.aomc.coop.utils.SHA256;
 
@@ -38,9 +40,10 @@ public class LoginLogoutService {
     @Resource(name="redisTemplate")
     private HashOperations<String, String, Object> hashOperations;
 
-    public ResponseType loginUser(@RequestBody User user) {
+    public ResponseType loginUser(@RequestBody LoginRequest loginRequest) {
 
-        String uid = user.getUid();
+        String uid = loginRequest.getUid();
+        // myUserRequest : JPA로 수정해야 하는 부분
         User myUser = userMapper.getUserWithUid(uid);
 
         if(myUser == null) {
@@ -50,7 +53,7 @@ public class LoginLogoutService {
         if(myUser.getStatus() == 0) {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login_Withdrawal.getStatus());
         }
-        String hashPassword = SHA256.getInstance().encodeSHA256(myUser.getSalt() + user.getPwd());
+        String hashPassword = SHA256.getInstance().encodeSHA256(myUser.getSalt() + loginRequest.getPwd());
 
         if(hashPassword.equals(myUser.getPwd())) {
             final JwtService.TokenRes token = new JwtService.TokenRes(jwtService.create(myUser.getIdx()), myUser.getIdx());
@@ -68,6 +71,7 @@ public class LoginLogoutService {
             hashMap.put("nickname", myUser.getNickname());
             hashMap.put("ip", Http.getIp());
             hashMap.put("timeStamp", time);
+            hashMap.put("image_url", myUser.getImage());
             hashOperations.putAll(key, hashMap);
 
             hashOperations.getOperations().expire(key, 30L, TimeUnit.MINUTES);
@@ -75,22 +79,20 @@ public class LoginLogoutService {
             HttpHeaders headers = new HttpHeaders();
             headers.add("auth_token", key);
 
-            User responseUser = new User();
-            responseUser.setIdx(myUser.getIdx());
-            responseUser.setUid(uid);
-            responseUser.setImage(myUser.getImage());
-            responseUser.setNickname(myUser.getNickname());
+            LoginResponse loginResponse = new LoginResponse();
+            loginResponse.setIdx(myUser.getIdx());
+            loginResponse.setUid(uid);
+            loginResponse.setImage(myUser.getImage());
+            loginResponse.setNickname(myUser.getNickname());
 
-            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), responseUser);
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), loginResponse);
         } else {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login_Wrong_Password.getStatus());
         }
     }
 
-    public ResponseType logoutUser(@RequestBody User user) {
-
-        // *** String token;
-        Boolean res = hashOperations.getOperations().delete(user.getLogin_token());
+    public ResponseType logoutUser(String token) {
+        Boolean res = hashOperations.getOperations().delete(token);
         if(res == true){
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Logout.getStatus());
         }

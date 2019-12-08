@@ -1,7 +1,8 @@
 package com.aomc.coop.controller;
 
-import com.aomc.coop.dto.NewPwd;
-import com.aomc.coop.dto.User;
+import com.aomc.coop.dto.NewPasswordRequest;
+import com.aomc.coop.dto.RegisterRequest;
+import com.aomc.coop.dto.WithdrawalRequest;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.MemberService;
 import com.aomc.coop.utils.CodeJsonParser;
@@ -58,9 +59,9 @@ public class MemberController {
      */
 
     @PostMapping
-    public ResponseEntity register(@RequestBody User user) {
+    public ResponseEntity register(@RequestBody RegisterRequest registerRequest) {
         try {
-            return new ResponseEntity(memberService.register(user), HttpStatus.OK);
+            return new ResponseEntity(memberService.register(registerRequest), HttpStatus.OK);
         }
         catch(NoSuchAlgorithmException e){
             e.printStackTrace();
@@ -130,8 +131,8 @@ public class MemberController {
      */
 
     @PutMapping(path="/{idx}")
-    public ResponseEntity withdrawal(@RequestBody User user, @PathVariable(value = "idx") int idx) {
-        return new ResponseEntity(memberService.withdrawal(user, idx), HttpStatus.OK);
+    public ResponseEntity withdrawal(@RequestBody WithdrawalRequest withdrawalRequest, @PathVariable(value = "idx") int idx) {
+        return new ResponseEntity(memberService.withdrawal(withdrawalRequest, idx), HttpStatus.OK);
     }
 
     /**
@@ -164,9 +165,9 @@ public class MemberController {
      */
 
     @PutMapping(path="/pwd/{idx}")
-    public ResponseEntity changePwd(@RequestBody NewPwd newPwd, @PathVariable(value = "idx") int idx) {
+    public ResponseEntity changePwd(@RequestBody NewPasswordRequest newPasswordRequest, @PathVariable(value = "idx") int idx) {
         try {
-            return new ResponseEntity(memberService.changePwd(newPwd, idx), HttpStatus.OK);
+            return new ResponseEntity(memberService.changePwd(newPasswordRequest, idx), HttpStatus.OK);
         }
         catch(NoSuchAlgorithmException e) {
             e.printStackTrace();

@@ -10,8 +10,11 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.aomc.coop.dto.RegisterRequest;
+import com.aomc.coop.dto.User;
+import com.aomc.coop.dto.WithdrawalRequest;
 import com.aomc.coop.mapper.*;
-import com.aomc.coop.dto.NewPwd;
+import com.aomc.coop.dto.NewPasswordRequest;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
@@ -24,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import com.aomc.coop.utils.mail.MailSend;
 
-import com.aomc.coop.dto.User;
 import com.aomc.coop.utils.SHA256;
 
 import javax.annotation.Resource;
@@ -46,9 +48,9 @@ public class MemberService {
     @Resource(name="redisTemplate")
     private HashOperations<String, String, String> hashOperations;
 
-    public ResponseType register(@RequestBody User user) throws NoSuchAlgorithmException {
+    public ResponseType register(@RequestBody RegisterRequest registerRequest) throws NoSuchAlgorithmException {
 
-        String uid = user.getUid();
+        String uid = registerRequest.getUid();
         String myUser = userMapper.checkUser(uid);
 
         if (myUser == null) {
@@ -67,9 +69,9 @@ public class MemberService {
                 authUrl += secRan.nextInt(10);
             }
 
-            String newPassword = salt + user.getPwd();
+            String newPassword = salt + registerRequest.getPwd();
             String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
-            String nickname = user.getNickname();
+            String nickname = registerRequest.getNickname();
 
             hashMap.put("uid", uid);
             hashMap.put("pwd", hashPassword);
@@ -79,7 +81,7 @@ public class MemberService {
             hashOperations.putAll(authUrl, hashMap);
             hashOperations.getOperations().expire(authUrl, 5L, TimeUnit.HOURS);
 
-            String invite_token = user.getInvite_token();
+            String invite_token = registerRequest.getInvite_token();
 
             if(invite_token == null) {
                 SendMailThread sendMailThread = new SendMailThread(mailSender, uid, authUrl);
@@ -89,9 +91,9 @@ public class MemberService {
                 sendMailThread.runToInvite();
             }
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register_Auth_Mail_Sent.getStatus());
-        } else {
-            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
         }
+
+        return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
     }
 
 // *** 이메일 인증 성공시 바로 로그인 창으로 넘어가도록 구조를 바꿔보자
@@ -118,6 +120,7 @@ public class MemberService {
             String salt = (String) userInfo.get("salt");
             String nickname = (String) userInfo.get("nickname");
 
+            // JPA로 수정해야 하는 부분 : userRequest, userMapper.insertUser(userRequest)
             User user = new User();
             user.setUid(uid);
             user.setPwd(pwd);
@@ -156,24 +159,29 @@ public class MemberService {
     }
 
     // <2. 회원 탈퇴>
-    public ResponseType withdrawal(@RequestBody User user, final int idx) {
+    public ResponseType withdrawal(@RequestBody WithdrawalRequest withdrawalRequest, final int idx) {
 
-        int userIdx = user.getIdx();
+        int userIdx = withdrawalRequest.getIdx();
 
         if(userIdx == idx) {
             userMapper.withdrawal(idx);
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
-        } else {
-            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());
         }
+
+        return codeJsonParser.codeJsonParser(Status_3000.FAIL_Withdrawal.getStatus());
     }
 
-    public ResponseType changePwd (@RequestBody NewPwd newPwd, final int idx) throws NoSuchAlgorithmException{
+    public ResponseType changePwd (@RequestBody NewPasswordRequest newPasswordRequest, final int idx) throws NoSuchAlgorithmException{
 
-        if(newPwd.getIdx() != idx) {
-            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus());
+        if(newPasswordRequest.getIdx() != idx) {
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd_Wrong_Idx.getStatus());
         }
-        String pwd = newPwd.getPwd();
+
+        if(newPasswordRequest.getPwd() != newPasswordRequest.getConfirm_pwd()) {
+            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd_Wrong_Confirm_Pwd.getStatus());
+        }
+
+        String pwd = newPasswordRequest.getPwd();
 
         SecureRandom secRan = SecureRandom.getInstance("SHA1PRNG");
         int numLength = 16;
@@ -187,9 +195,9 @@ public class MemberService {
 
         if(userMapper.changePwd(hashPassword, newSalt, idx) == 1) {
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Change_Pwd.getStatus());
-        } else {
-            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd.getStatus());
         }
+
+        return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd.getStatus());
     }
 
 

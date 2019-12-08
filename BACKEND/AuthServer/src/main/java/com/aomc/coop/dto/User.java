@@ -1,12 +1,15 @@
-package com.aomc.coop.model;
+package com.aomc.coop.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.Date;
 
-@Data
-public class User implements Serializable {
+@Getter
+@Setter
+@NoArgsConstructor
+public class User {
     private int idx;
     private String uid;
     private String pwd;

@@ -1,13 +1,13 @@
 package com.aomc.coop.controller;
 
-import com.aomc.coop.dto.User;
-import com.aomc.coop.response.Status_common;
-import com.aomc.coop.utils.CodeJsonParser;
+import com.aomc.coop.dto.LoginRequest;
 import com.aomc.coop.service.LoginLogoutService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /*
 
@@ -74,8 +74,8 @@ public class LoginLogoutController {
      */
 
     @PostMapping(value = "/login")
-    public ResponseEntity login(@RequestBody User user) {
-        return new ResponseEntity(loginLogoutService.loginUser(user), HttpStatus.OK);
+    public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
+        return new ResponseEntity(loginLogoutService.loginUser(loginRequest), HttpStatus.OK);
     }
 
     /**
@@ -106,8 +106,9 @@ public class LoginLogoutController {
      */
 
     @PostMapping(value = "/logout")
-    public ResponseEntity logout(@RequestBody User user) {
-        return new ResponseEntity(loginLogoutService.logoutUser(user), HttpStatus.OK);
+    public ResponseEntity logout(HttpServletRequest request) {
+        String token = request.getHeader("X-Auth-Token");
+        return new ResponseEntity(loginLogoutService.logoutUser(token), HttpStatus.OK);
     }
 }
 

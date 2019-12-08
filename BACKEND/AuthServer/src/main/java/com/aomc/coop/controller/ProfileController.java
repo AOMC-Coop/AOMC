@@ -1,14 +1,13 @@
 package com.aomc.coop.controller;
 
-import com.aomc.coop.dto.Profile;
-import com.aomc.coop.dto.User;
-import com.aomc.coop.response.Status_common;
+import com.aomc.coop.dto.ProfileRequest;
 import com.aomc.coop.service.ProfileService;
-import com.aomc.coop.utils.CodeJsonParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @CrossOrigin
 @RestController
@@ -35,11 +34,10 @@ public class ProfileController {
 
      */
 
-// *** 원래는 @GetMapping이 맞는데, vue에서 axios.get으로는 UserWithToken을 전달할 수 없다. 때문에 @PostMapping으로 바꿈... @GetMapping으로 돌아가게 할 수는 없을까?
-// *** 토큰을 헤더에 담아서 전송하면 해결 될 것.
-    @PostMapping(path="/{idx}")
-    public ResponseEntity getProfile(@RequestBody User userWithToken, @PathVariable(value = "idx") int idx) {
-        return new ResponseEntity(profileService.getProfile(userWithToken, idx), HttpStatus.OK);
+    @GetMapping(path="/{idx}")
+    public ResponseEntity getProfile(HttpServletRequest request, @RequestBody ProfileRequest profileRequest, @PathVariable(value = "idx") int idx) {
+        String token = request.getHeader("X-Auth-Token");
+        return new ResponseEntity(profileService.getProfile(token, profileRequest, idx), HttpStatus.OK);
     }
 
     /**
@@ -69,7 +67,8 @@ public class ProfileController {
      */
 
     @PutMapping(path="/{idx}")
-    public ResponseEntity setProfile(@RequestBody Profile profileWithToken, @PathVariable(value = "idx") int idx) {
-        return new ResponseEntity(profileService.setProfile(profileWithToken, idx), HttpStatus.OK);
+    public ResponseEntity setProfile(HttpServletRequest request, @RequestBody ProfileRequest profileRequest, @PathVariable(value = "idx") int idx) {
+        String token = request.getHeader("X-Auth-Token");
+        return new ResponseEntity(profileService.setProfile(token, profileRequest, idx), HttpStatus.OK);
     }
 }

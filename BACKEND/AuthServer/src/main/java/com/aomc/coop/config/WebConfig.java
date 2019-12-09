@@ -9,6 +9,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.util.List;
@@ -21,7 +22,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(createOpenApiInterceptor())
                 .addPathPatterns("/api/**").excludePathPatterns("/api/login").excludePathPatterns("/api/members").excludePathPatterns("/api/members/eauth/**");
-// ***** 회원 가입도 패턴에서 제외시켜야 함
     }
 
     @Override
@@ -33,6 +33,14 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         converters.add(new MappingJackson2HttpMessageConverter(builder.build()));
     }
 
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
 
     @Bean
     public OpenAPITokenInterceptor createOpenApiInterceptor() {

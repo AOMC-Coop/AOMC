@@ -2,6 +2,9 @@ package com.aomc.coop.controller;
 
 import com.aomc.coop.dto.LoginRequest;
 import com.aomc.coop.service.LoginLogoutService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +76,11 @@ public class LoginLogoutController {
 
      */
 
+    @ApiOperation(value = "유저의 로그인 요청을 처리", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "로그인 성공"),
+            @ApiResponse(code = 400, message = "로그인 실패")
+    })
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
         return new ResponseEntity(loginLogoutService.loginUser(loginRequest), HttpStatus.OK);
@@ -105,6 +113,11 @@ public class LoginLogoutController {
 
      */
 
+    @ApiOperation(value = "유저의 로그아웃 요청을 처리하는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "로그아웃 성공"),
+            @ApiResponse(code = 400, message = "로그아웃 실패")
+    })
     @PostMapping(value = "/logout")
     public ResponseEntity logout(HttpServletRequest request) {
         String token = request.getHeader("X-Auth-Token");

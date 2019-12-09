@@ -6,6 +6,9 @@ import com.aomc.coop.dto.WithdrawalRequest;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.MemberService;
 import com.aomc.coop.utils.CodeJsonParser;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,7 +33,7 @@ public class MemberController {
 
     /**
      *
-     *        @brief GET http://localhost:8082/api/members
+     *        @brief POST http://localhost:8082/api/members
      *        @details 유저의 회원 가입 요청을 처리하는 함수
      *        @param @RequestBody User user
      *        @return ResponseEntity<>
@@ -58,6 +61,11 @@ public class MemberController {
 
      */
 
+    @ApiOperation(value = "유저의 회원 가입 요청을 처리", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "회원 가입 성공"),
+            @ApiResponse(code = 400, message = "회원 가입 실패")
+    })
     @PostMapping
     public ResponseEntity register(@RequestBody RegisterRequest registerRequest) {
         try {
@@ -92,6 +100,10 @@ public class MemberController {
 
      */
 
+    @ApiOperation(value = "유저의 회원 가입 이메일 인증을 처리", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "회원 가입 인증 메일 발송 성공")
+    })
     @GetMapping(path="/eauth/{authUrl}/{invite_token}")
     public ResponseEntity emailAuth(RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response,
                                     @PathVariable(value = "authUrl") String authUrl, @PathVariable(value = "invite_token") String invite_token) {
@@ -130,6 +142,11 @@ public class MemberController {
 
      */
 
+    @ApiOperation(value = "유저의 회원 탈퇴 요청을 처리", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "회원 탈퇴 성공"),
+            @ApiResponse(code = 400, message = "회원 탈퇴 실패")
+    })
     @PutMapping(path="/{idx}")
     public ResponseEntity withdrawal(@RequestBody WithdrawalRequest withdrawalRequest, @PathVariable(value = "idx") int idx) {
         return new ResponseEntity(memberService.withdrawal(withdrawalRequest, idx), HttpStatus.OK);
@@ -164,6 +181,11 @@ public class MemberController {
 
      */
 
+    @ApiOperation(value = "유저의 비밀번호 변경 요청을 처리", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "비밀번호 변경 성공"),
+            @ApiResponse(code = 400, message = "비밀번호 변경 실패")
+    })
     @PutMapping(path="/pwd/{idx}")
     public ResponseEntity changePwd(@RequestBody NewPasswordRequest newPasswordRequest, @PathVariable(value = "idx") int idx) {
         try {
@@ -199,7 +221,10 @@ public class MemberController {
 
      */
 
-    // 비밀번호 분실 시 인증용 이메일 전송
+    @ApiOperation(value = "유저 비밀번호 분실 시 인증 이메일을 전송", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "비밀번호 변경 인증 메일 발송 성공")
+    })
     @GetMapping(path="/missing/{idx}")
     public ResponseEntity missingEmailAuth(@PathVariable(value = "idx") int idx) {
         return new ResponseEntity(memberService.missingEmailAuth(idx), HttpStatus.OK);

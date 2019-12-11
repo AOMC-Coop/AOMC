@@ -1,8 +1,12 @@
 package com.aomc.coop.utils.mail;
 
 import com.aomc.coop.config.MailConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Component;
 
+@Slf4j
+@Component
 public class MailSend {
 
     public void mailsend(JavaMailSender mailSender, String uid, String authUrl){
@@ -21,10 +25,9 @@ public class MailSend {
                     .toString());
             sendMail.send();
 
-        }catch (Exception e){
-// ***** 시간 남으면 에러 처리 할 것
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
-
     }
 
     public void mailsendToInvite(JavaMailSender mailSender, String uid, String authUrl, String invite_token){
@@ -42,8 +45,8 @@ public class MailSend {
                     .toString());
             sendMail.send();
 
-        }catch (Exception e){
-// ***** 시간 남으면 에러 처리 할 것
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
 
     }
@@ -62,9 +65,8 @@ public class MailSend {
 //                    .toString());
 //            sendMail.send();
 //
-//        }catch (Exception e){
-//// ***** 시간 남으면 에러 처리 할 것
+//        } catch (Exception e) {
+//            e.printStackTrace();
 //        }
-//
 //    }
 }

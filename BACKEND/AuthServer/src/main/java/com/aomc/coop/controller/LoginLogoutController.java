@@ -113,7 +113,7 @@ public class LoginLogoutController {
 
      */
 
-    @ApiOperation(value = "유저의 로그아웃 요청을 처리하는 함수", response = Iterable.class)
+    @ApiOperation(value = "유저의 로그아웃 요청을 처리", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "로그아웃 성공"),
             @ApiResponse(code = 400, message = "로그아웃 실패")

@@ -1,8 +1,6 @@
 package com.aomc.coop.utils.auth;
 
 import com.aomc.coop.mapper.UserMapper;
-import com.aomc.coop.model.User;
-import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.JwtService;
 import com.aomc.coop.utils.CodeJsonParser;

@@ -1,11 +1,8 @@
 package com.aomc.coop.utils.rabbitMQ;
 
 import com.aomc.coop.config.RabbitMQConfig;
-import com.aomc.coop.model.Message;
-import lombok.AllArgsConstructor;
+import com.aomc.coop.dto.MessageRequest;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -22,21 +19,21 @@ public class RabbitMQUtil {
 //    @Autowired
 //    private SimpMessagingTemplate simpMessagingTemplate;
 
-    public Message sendRabbitMQ(Message message) {
-        System.out.println("요청이 왔습니다" + message);
+    public MessageRequest sendRabbitMQ(MessageRequest messageRequest) {
+        System.out.println("요청이 왔습니다" + messageRequest);
 //        System.out.println("channelIdx는 " + channelIdx);
 
-        Map<String, Message> map = new HashMap<>();
-        map.put("msg", message);
+        Map<String, MessageRequest> map = new HashMap<>();
+        map.put("msg", messageRequest);
 //        map.put("channelIdx", ms);
 
         //큐에보냄
-        if(message != null) {
+        if(messageRequest != null) {
             System.out.println("rabbitMQ send");
             rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, map);
         }
 
-        return  message;
+        return messageRequest;
     }
 
 //    public void receiveRabbitMQ(Message message) {

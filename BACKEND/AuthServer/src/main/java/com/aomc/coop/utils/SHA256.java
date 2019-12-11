@@ -15,7 +15,6 @@ public class SHA256 {
         return instance;
     }
 
-
     public String encodeSHA256(String str) {
 
         String SHA = "";

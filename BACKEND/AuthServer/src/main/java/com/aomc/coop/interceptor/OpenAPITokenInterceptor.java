@@ -1,7 +1,7 @@
 package com.aomc.coop.interceptor;
 
 
-import com.aomc.coop.service.TokenService;
+import com.aomc.coop.service.JwtService;
 import com.rabbitmq.client.AMQP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,7 @@ public class OpenAPITokenInterceptor implements HandlerInterceptor {
     private static final String HEADER_AUTH = "X-Auth-Token";
 
     @Autowired
-    private TokenService tokenService;
+    private JwtService jwtService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -26,8 +26,7 @@ public class OpenAPITokenInterceptor implements HandlerInterceptor {
         String tokenString = request.getHeader(HEADER_AUTH);
         logger.info(tokenString);
         if (tokenString != null) {
-//            logger.info(tokenString);
-            if (tokenService.isUsableToken(tokenString)) {
+            if (jwtService.isUsableToken(tokenString)) {
                 return true;
             }
         }

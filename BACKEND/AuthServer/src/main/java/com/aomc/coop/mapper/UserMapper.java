@@ -1,6 +1,6 @@
 package com.aomc.coop.mapper;
 
-import com.aomc.coop.dto.User;
+import com.aomc.coop.dto.UserDto;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +10,7 @@ public interface UserMapper {
 
     // Login 용도
     @Select("SELECT idx, pwd, salt, nickname, status, image FROM users WHERE uid = #{uid}")
-    User getUserWithUid(final String uid);
+    UserDto getUserWithUid(final String uid);
 
     // my page 보는 용도
     @Select("SELECT uid FROM users WHERE idx = #{idx}")
@@ -23,7 +23,7 @@ public interface UserMapper {
     // insert 성공시 1을 return, 실패시 0을 return.
     @Insert("INSERT INTO users(uid, pwd, salt, nickname, image) VALUES( #{uid}, #{pwd}, #{salt}, #{nickname}, #{image} )")
     @Options(useGeneratedKeys = true, keyProperty = "idx")
-    int insertUser(User user);
+    int insertUser(UserDto userDto);
 
     @Update("UPDATE users SET nickname = #{newNickname} WHERE idx = #{idx}")
     int updateUserInfo(final String newNickname, final int idx);

@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
+public class UserDto {
     private int idx;
     private String uid;
     private String pwd;

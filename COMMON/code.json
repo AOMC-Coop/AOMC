@@ -195,7 +195,7 @@
 
   "3410": {
     "status": 400,
-    "message": "탈퇴 실패",
+    "message": "회원 탈퇴 실패",
     "description": "Fail Withdrawal"
   },
 

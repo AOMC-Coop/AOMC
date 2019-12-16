@@ -79,7 +79,7 @@ public class LoginLogoutController {
     @ApiOperation(value = "유저의 로그인 요청을 처리", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "로그인 성공"),
-            @ApiResponse(code = 400, message = "로그인 실패")
+            @ApiResponse(code = 400, message = "로그인 실패\n로그인 실패 : 가입된 아이디가 없음\n로그인 실패 : 잘못된 비밀번호\n로그인 실패 : 탈퇴한 유저")
     })
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody LoginRequest loginRequest) {

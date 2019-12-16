@@ -40,7 +40,7 @@ public class ProfileController {
     @ApiOperation(value = "유저의 프로필 조회 요청을 처리", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "프로필 조회 성공"),
-            @ApiResponse(code = 400, message = "프로필 조회 실패")
+            @ApiResponse(code = 400, message = "프로필 조회 실패\n프로필 조회 실패 : 다른 유저 idx 입력")
     })
     @GetMapping(path="/{idx}")
     public ResponseEntity getProfile(HttpServletRequest request, @RequestBody ProfileRequest profileRequest, @PathVariable(value = "idx") int idx) {

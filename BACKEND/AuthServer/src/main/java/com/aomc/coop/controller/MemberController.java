@@ -64,7 +64,7 @@ public class MemberController {
     @ApiOperation(value = "유저의 회원 가입 요청을 처리", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "회원 가입 성공"),
-            @ApiResponse(code = 400, message = "회원 가입 실패")
+            @ApiResponse(code = 400, message = "회원 가입 실패\n회원 가입 실패 : 이미 가입되어 있는 이메일 주소\n회원 가입 실패 : 인증 시간 초과")
     })
     @PostMapping
     public ResponseEntity register(@RequestBody RegisterRequest registerRequest) {
@@ -184,7 +184,7 @@ public class MemberController {
     @ApiOperation(value = "유저의 비밀번호 변경 요청을 처리", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "비밀번호 변경 성공"),
-            @ApiResponse(code = 400, message = "비밀번호 변경 실패")
+            @ApiResponse(code = 400, message = "비밀번호 변경 실패\n비밀번호 변경 실패 : 다른 유저 idx 입력\n비밀번호 변경 실패 : 확인용 비밀번호 불일치")
     })
     @PutMapping(path="/pwd/{idx}")
     public ResponseEntity changePwd(@RequestBody NewPasswordRequest newPasswordRequest, @PathVariable(value = "idx") int idx) {

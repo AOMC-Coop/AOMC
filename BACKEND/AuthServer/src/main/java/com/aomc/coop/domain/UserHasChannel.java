@@ -21,6 +21,7 @@ public class UserHasChannel {
     @Column(name = "idx")
     private int idx;
 
+    // fetchtype lazy?
     @ManyToOne
     @JoinColumn(name = "channel_idx")
     private Channel channel;
@@ -38,4 +39,11 @@ public class UserHasChannel {
     @Column(name = "user_has_last_idx")
     private int user_has_last_idx;
 
+    @Builder
+    public UserHasChannel(Channel channel, User user, int star_flag, int status) {
+        this.channel = channel;
+        this.user = user;
+        this.star_flag = star_flag;
+        this.status = status;
+    }
 }

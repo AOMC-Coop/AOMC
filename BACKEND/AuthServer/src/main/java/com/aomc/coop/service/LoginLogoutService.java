@@ -8,10 +8,11 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Resource;
 
+import com.aomc.coop.domain.User;
 import com.aomc.coop.dto.LoginRequest;
 import com.aomc.coop.dto.LoginResponse;
-import com.aomc.coop.dto.User;
 import com.aomc.coop.mapper.UserMapper;
+import com.aomc.coop.repository.UserRepository;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
@@ -34,7 +35,7 @@ public class LoginLogoutService {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
-    private final UserMapper userMapper;
+    private final UserRepository userRepository;
     private final JwtService jwtService;
 
     @Resource(name="redisTemplate")
@@ -43,8 +44,9 @@ public class LoginLogoutService {
     public ResponseType loginUser(@RequestBody LoginRequest loginRequest) {
 
         String uid = loginRequest.getUid();
-        // myUserRequest : JPA로 수정해야 하는 부분
-        User myUser = userMapper.getUserWithUid(uid);
+        // findByUid 함수에 Optional<User>를 적용해보자.
+        User myUser = userRepository.findByUid(uid);
+        // User myUser = userMapper.getUserWithUid(uid);
 
         if(myUser == null) {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login_Wrong_ID.getStatus());
@@ -85,10 +87,9 @@ public class LoginLogoutService {
             loginResponse.setImage(myUser.getImage());
             loginResponse.setNickname(myUser.getNickname());
 
-            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), loginResponse);
-        } else {
-            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login_Wrong_Password.getStatus());
+            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Login.getStatus(), loginResponse, headers);
         }
+        return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login_Wrong_Password.getStatus());
     }
 
     public ResponseType logoutUser(String token) {

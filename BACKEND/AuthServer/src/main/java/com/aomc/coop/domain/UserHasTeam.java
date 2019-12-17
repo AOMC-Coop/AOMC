@@ -21,6 +21,7 @@ public class UserHasTeam {
     @Column(name = "idx")
     private int idx;
 
+    // // fetchtype lazy?
     @ManyToOne
     @JoinColumn(name = "team_idx")
     private Team team;
@@ -40,4 +41,13 @@ public class UserHasTeam {
 
     @Column(name = "invite_flag", nullable = false)
     private int invite_flag;
+
+    @Builder
+    public UserHasTeam(Team team, User user, int owner_flag, int status, int invite_flag) {
+        this.team = team;
+        this.user = user;
+        this.owner_flag = owner_flag;
+        this.status = status;
+        this.invite_flag = invite_flag;
+    }
 }

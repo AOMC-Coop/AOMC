@@ -2,10 +2,12 @@ package com.aomc.coop.controller;
 
 import com.aomc.coop.dto.LoginRequest;
 import com.aomc.coop.service.LoginLogoutService;
+import com.aomc.coop.utils.ResponseType;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -83,7 +85,10 @@ public class LoginLogoutController {
     })
     @PostMapping(value = "/login")
     public ResponseEntity login(@RequestBody LoginRequest loginRequest) {
-        return new ResponseEntity(loginLogoutService.loginUser(loginRequest), HttpStatus.OK);
+        ResponseType responseType = loginLogoutService.loginUser(loginRequest);
+        HttpHeaders httpHeaders = (HttpHeaders)responseType.getPlusData();
+        responseType.setPlusData(null);
+        return new ResponseEntity(responseType, httpHeaders, HttpStatus.OK);
     }
 
     /**

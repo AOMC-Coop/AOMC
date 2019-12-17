@@ -43,9 +43,9 @@ public class ProfileController {
             @ApiResponse(code = 400, message = "프로필 조회 실패\n프로필 조회 실패 : 다른 유저 idx 입력")
     })
     @GetMapping(path="/{idx}")
-    public ResponseEntity getProfile(HttpServletRequest request, @RequestBody ProfileRequest profileRequest, @PathVariable(value = "idx") int idx) {
+    public ResponseEntity getProfile(HttpServletRequest request, @PathVariable(value = "idx") int idx) {
         String token = request.getHeader("X-Auth-Token");
-        return new ResponseEntity(profileService.getProfile(token, profileRequest, idx), HttpStatus.OK);
+        return new ResponseEntity(profileService.getProfile(token, idx), HttpStatus.OK);
     }
 
     /**

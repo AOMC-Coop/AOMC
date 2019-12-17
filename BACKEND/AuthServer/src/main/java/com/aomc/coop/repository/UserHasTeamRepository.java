@@ -1,8 +1,8 @@
 package com.aomc.coop.repository;
 
-import com.aomc.coop.domain.UserHasChannel;
+import com.aomc.coop.domain.UserHasTeam;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserHasChannelRepository extends JpaRepository<UserHasChannel, Long> {
+public interface UserHasTeamRepository extends JpaRepository<UserHasTeam, Integer> {
 
 }

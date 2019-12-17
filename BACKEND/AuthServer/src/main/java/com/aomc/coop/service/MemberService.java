@@ -8,13 +8,15 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import com.aomc.coop.domain.*;
 import com.aomc.coop.dto.RegisterRequest;
-import com.aomc.coop.dto.User;
 import com.aomc.coop.dto.WithdrawalRequest;
 import com.aomc.coop.mapper.*;
 import com.aomc.coop.dto.NewPasswordRequest;
+import com.aomc.coop.repository.*;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.utils.CodeJsonParser;
 import com.aomc.coop.utils.ResponseType;
@@ -39,9 +41,12 @@ public class MemberService {
 
     CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
 
-    private final UserMapper userMapper;
-    private final TeamMapper teamMapper;
-    private final ChannelMapper channelMapper;
+    private final UserRepository userRepository;
+    private final UserHasTeamRepository userHasTeamRepository;
+    private final UserHasChannelRepository userHasChannelRepository;
+    private final TeamRepository teamRepository;
+    private final ChannelRepository channelRepository;
+
     private final MailSend mailSend;
     private final JavaMailSender mailSender;
 
@@ -51,7 +56,9 @@ public class MemberService {
     public ResponseType register(@RequestBody RegisterRequest registerRequest) throws NoSuchAlgorithmException {
 
         String uid = registerRequest.getUid();
-        String myUser = userMapper.checkUser(uid);
+
+        User myUser = userRepository.findByUid(uid);
+        // String myUser = userMapper.checkUser(uid);
 
         if (myUser == null) {
 
@@ -92,7 +99,6 @@ public class MemberService {
             }
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register_Auth_Mail_Sent.getStatus());
         }
-
         return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
     }
 
@@ -102,7 +108,9 @@ public class MemberService {
         Map userInfo = hashOperations.entries(authUrl);
         String uid = (String) userInfo.get("uid");
 
-        if(userMapper.getUserWithUid(uid) != null ) {
+        // JPA로 수정한 부분
+        // if(userMapper.getUserWithUid(uid) != null )
+        if(userRepository.findByUid(uid) != null ) {
 // *** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
             return "http://localhost:9999";
 //            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
@@ -113,46 +121,51 @@ public class MemberService {
             return "http://localhost:9999";
 //            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Timeout.getStatus());
         } else {
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            SimpleDateFormat sdf = new SimpleDateFormat( "yy-MM-dd HH:mm:ss" , Locale.KOREA );
 
             String pwd = (String) userInfo.get("pwd");
             String salt = (String) userInfo.get("salt");
             String nickname = (String) userInfo.get("nickname");
+            String imageUrl = "https://avatars0.githubusercontent.com/u/28426269?s=460&v=4";
 
-            // JPA로 수정해야 하는 부분 : userRequest, userMapper.insertUser(userRequest)
-            User user = new User();
-            user.setUid(uid);
-            user.setPwd(pwd);
-            user.setSalt(salt);
-            user.setNickname(nickname);
-
-            // 제대로 db에 저장이 되었다면
-            if (userMapper.insertUser(user) == 1) {
-//                return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Register.getStatus());
-            } else {
-                // 어떠한 이유로 db에 저장이 되지 못했다면
-// *** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
-//                return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register.getStatus());
-            }
-            int user_idx = user.getIdx();
+            User user = userRepository.save(User.builder()
+                                            .uid(uid)
+                                            .pwd(pwd)
+                                            .salt(salt)
+                                            .nickname(nickname)
+                                            .role(0)
+                                            .status(1)
+                                            .image(imageUrl)
+                                            .build());
 
             // 초대로 회원가입한 유저인 경우
             if(!"invitation".equals(invite_token)){
 
                 Map invitedUserInfo = hashOperations.entries(invite_token);
 
-                String team_idx = (String) invitedUserInfo.get("teamIdx");
-                int teamIdx = Integer.parseInt(team_idx);
-                int invite_flag = 1;
+                Integer team_idx = (Integer) invitedUserInfo.get("teamIdx");
+                Team team = teamRepository.findById(team_idx).get();
 
-                String channel_idx = (String) invitedUserInfo.get("channelIdx");
-                int channelIdx = Integer.parseInt(channel_idx);
+                Integer channel_idx = (Integer) invitedUserInfo.get("channelIdx");
+                Channel channel = channelRepository.findById(channel_idx).get();
 
 // *** user has team에 정보 넣어주고, user has channel에도 넣어줘야 함 (redis에서 찾아서 할 것), teamservice의 356줄 flag를 1로 해서 저장 (2개 다))
 
-                teamMapper.createUserHasTeam(teamIdx, user_idx, invite_flag);
-                channelMapper.createUserHasChannel(channelIdx, user_idx);
+                userHasTeamRepository.save(UserHasTeam.builder()
+                                                    .team(team)
+                                                    .user(user)
+                                                    .owner_flag(0)
+                                                    .status(1)
+                                                    .invite_flag(1)
+                                                    .build());
+                // teamMapper.createUserHasTeam(teamIdx, user_idx, invite_flag);
+
+                userHasChannelRepository.save(UserHasChannel.builder()
+                                                            .channel(channel)
+                                                            .user(user)
+                                                            .star_flag(0)
+                                                            .status(1)
+                                                            .build());
+                // channelMapper.createUserHasChannel(channelIdx, user_idx);
             }
             return "http://localhost:9999";
         }
@@ -164,7 +177,11 @@ public class MemberService {
         int userIdx = withdrawalRequest.getIdx();
 
         if(userIdx == idx) {
-            userMapper.withdrawal(idx);
+            // JPA로 Update Query 적용하기
+            User user = userRepository.findById(idx).get();
+            user.withdrawalMyUser(withdrawalRequest);
+            // userMapper.withdrawal(idx);
+
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
         }
 
@@ -177,7 +194,7 @@ public class MemberService {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd_Wrong_Idx.getStatus());
         }
 
-        if(newPasswordRequest.getPwd() != newPasswordRequest.getConfirm_pwd()) {
+        if(!newPasswordRequest.getPwd().equals(newPasswordRequest.getConfirm_pwd())) {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd_Wrong_Confirm_Pwd.getStatus());
         }
 
@@ -193,11 +210,11 @@ public class MemberService {
         String newPassword = newSalt + pwd;
         String hashPassword = (SHA256.getInstance()).encodeSHA256(newPassword);
 
-        if(userMapper.changePwd(hashPassword, newSalt, idx) == 1) {
-            return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Change_Pwd.getStatus());
-        }
+        User user = userRepository.findById(idx).get();
+        user.changePassword(hashPassword, newSalt);
 
-        return codeJsonParser.codeJsonParser(Status_3000.FAIL_Change_Pwd.getStatus());
+        //if(userMapper.changePwd(hashPassword, newSalt, idx) == 1) {
+        return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Change_Pwd.getStatus());
     }
 
 
@@ -205,7 +222,9 @@ public class MemberService {
     // 이메일 발송
     public ResponseType missingEmailAuth (@PathVariable final int idx) {
 
-        String uid = userMapper.getUid(idx);
+        User user = userRepository.findById(idx).get();
+        String uid = user.getUid();
+        // String uid = userMapper.getUid(idx);
         SendMailThread sendMailThread = new SendMailThread(mailSender, uid, idx);
         sendMailThread.run();
 

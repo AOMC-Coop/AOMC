@@ -1,5 +1,8 @@
 package com.aomc.coop.domain;
 
+import com.aomc.coop.dto.NewPasswordRequest;
+import com.aomc.coop.dto.ProfileRequest;
+import com.aomc.coop.dto.WithdrawalRequest;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -31,7 +34,7 @@ public class User {
     private String nickname;
 
     @Column(name = "role", nullable = false)
-    private String role;
+    private int role;
 
     @Column(name = "status", nullable = false)
     private int status;
@@ -42,6 +45,7 @@ public class User {
 
     // access_date에 해당하는 jpa annotation은 없을지
     @Column(name = "access_date", nullable = false)
+    @UpdateTimestamp
     private Date access_date;
 
     @Column(name = "update_date", nullable = false)
@@ -52,7 +56,7 @@ public class User {
     private String image;
 
     @Builder
-    public User(String uid, String pwd, String salt, String nickname, String role, int status, String image) {
+    public User(String uid, String pwd, String salt, String nickname, int role, int status, String image) {
         this.uid = uid;
         this.pwd = pwd;
         this.salt = salt;
@@ -62,5 +66,16 @@ public class User {
         this.image = image;
     }
 
-    // User의 함수를 여기에 작성 가능 (객체지향 : 객체 본인의 책임을 다한다. 객체에 대한 정보는 객체가 제공한다.)
+    public void updateMyNickName(ProfileRequest profileRequest) {
+        this.nickname = profileRequest.getNickname();
+    }
+
+    public void withdrawalMyUser(WithdrawalRequest withdrawalRequest) {
+        this.status = withdrawalRequest.getStatus();
+    }
+
+    public void changePassword(String newHashPassword, String newSalt) {
+        this.pwd = newHashPassword;
+        this.salt = newSalt;
+    }
 }

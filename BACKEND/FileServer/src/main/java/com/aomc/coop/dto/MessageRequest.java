@@ -1,11 +1,16 @@
-package com.aomc.coop.model;
+package com.aomc.coop.dto;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 
-@Data
-public class Message implements Serializable {
+@Getter
+@Setter
+@NoArgsConstructor
+public class MessageRequest {
     private int message_idx;
     private String content;
     private String nickname;
@@ -15,8 +20,8 @@ public class Message implements Serializable {
     private String send_time;
     private String send_db_date;
     private String file_url;
+    private String file_name;
     private String type;
-    private FileInfo file;
     private Reply reply;
     private String image;
 }

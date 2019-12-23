@@ -1,25 +1,19 @@
 package com.aomc.coop.controller;
 
 import java.io.IOException;
-import java.util.stream.Collectors;
 
-import com.aomc.coop.model.Message;
-import com.aomc.coop.response.Status_common;
-import com.aomc.coop.utils.CodeJsonParser;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.aomc.coop.dto.MessageRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.aomc.coop.service.StorageService;
 import com.aomc.coop.storage.StorageFileNotFoundException;
@@ -29,8 +23,6 @@ import com.aomc.coop.storage.StorageFileNotFoundException;
 @RequestMapping("/api/files")
 public class FileServerController {
 
-    CodeJsonParser codeJsonParser = CodeJsonParser.getInstance();
-
     private final StorageService storageService;
 
     public FileServerController(StorageService storageService) {
@@ -38,43 +30,38 @@ public class FileServerController {
     }
 
 // ***** Interceptor를 쓰면서 REST API가 깨졌다(url에 upload download를 명시해버림). 오히려 REST API와 맞는 방법인지, 아니라면 더 나은 방법은 있을지 고민해볼 것
-
+    @ApiOperation(value = "파일 업로드 요청을 처리", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "파일 업로드 성공"),
+            @ApiResponse(code = 400, message = "파일 업로드 실패")
+    })
     @PostMapping(path = "/upload/{channel_idx}")
     public ResponseEntity upload(@RequestParam("file") MultipartFile file, @RequestParam("message") String stringMessage, @PathVariable final int channel_idx) throws IOException {
-        Message message  = new ObjectMapper().readValue(stringMessage, Message.class);
-
-        try {
-            return new ResponseEntity(storageService.upload(file, message, channel_idx), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
+        MessageRequest messageRequest = new ObjectMapper().readValue(stringMessage, MessageRequest.class);
+        return new ResponseEntity(storageService.upload(file, messageRequest, channel_idx), HttpStatus.OK);
     }
 
 // ***** 아래 두 Controller들도 ResponseEntity, codeJsonParser 양식에 맞게 바꾸기
     @GetMapping(path = "/download/{channel_idx}/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> download(@PathVariable String filename, @PathVariable final int channel_idx) {
-
         Resource file = storageService.download(filename, channel_idx);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
-
-    // profile picture를 업로드 하는 @PostMapping
+    @ApiOperation(value = "프로필 사진 업로드 요청을 처리", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "프로필 사진 업로드 성공"),
+            @ApiResponse(code = 400, message = "프로필 사진 업로드 실패")
+    })
     @PostMapping(path = "/upload/profile/{user_idx}")
-    public ResponseEntity uploadProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable final int user_idx) throws IOException {
-
-        try {
-            return new ResponseEntity(storageService.uploadProfilePicture(file, user_idx), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
-        }
+    public ResponseEntity uploadProfilePicture(@RequestParam("file") MultipartFile file, @PathVariable final int user_idx) {
+        return new ResponseEntity(storageService.uploadProfilePicture(file, user_idx), HttpStatus.OK);
     }
 
-    // profile picture를 다운로드 하는 @GetMapping
     @GetMapping(path = "/download/profile/{filename:.+}")
-    public ResponseEntity downloadProfilePicture(@PathVariable String filename) throws IOException {
+    public ResponseEntity downloadProfilePicture(@PathVariable String filename) {
         Resource file = storageService.downloadProfilePicture(filename);
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
                 "attachment; filename=\"" + file.getFilename() + "\"").body(file);
@@ -84,7 +71,6 @@ public class FileServerController {
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
     }
-
 
 
 //
@@ -106,17 +92,6 @@ public class FileServerController {
 //
 //// * model.addAttribute(String name, Object value)
 //// name 이름으로 value 객체를 추가한다
-//
-//// * Stream.map
-//// 맵(map)은 스트림 내 요소들을 하나씩 특정 값으로 변환해줍니다.
-//// 스트림에 들어가 있는 값이 input 이 되어서 특정 로직을 거친 후 output 이 되어
-//// (리턴되는) 새로운 스트림에 담기게 됩니다.
-//// 이러한 작업을 맵핑(mapping)이라고 합니다.
-//
-//// * MvcUriComponentsBuilder.fromMethodName
-//// Create a UriComponentsBuilder from the mapping of a controller method and an array of method argument values.
-////  Returns:
-//// a UriComponentsBuilder instance, never null
 //
 //        return "uploadForm";
 //    }

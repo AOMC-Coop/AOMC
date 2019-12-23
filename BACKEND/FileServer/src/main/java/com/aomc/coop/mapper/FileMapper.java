@@ -1,6 +1,6 @@
 package com.aomc.coop.mapper;
 
-import com.aomc.coop.model.*;
+import com.aomc.coop.dto.FileInfo;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

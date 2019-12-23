@@ -1,6 +1,6 @@
 package com.aomc.coop.service;
 
-import com.aomc.coop.model.Message;
+import com.aomc.coop.dto.MessageRequest;
 import com.aomc.coop.utils.ResponseType;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,7 +14,7 @@ public interface StorageService {
 
     void init();
 
-    ResponseType upload(MultipartFile file, Message message, final int channel_idx);
+    ResponseType upload(MultipartFile file, MessageRequest messageRequest, final int channel_idx);
 
     Stream<Path> getAllFilesPaths();
 

@@ -1,6 +1,5 @@
 package com.aomc.coop.service;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -10,23 +9,18 @@ import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.stream.Stream;
 
-import com.aomc.coop.config.RabbitMQConfig;
 import com.aomc.coop.mapper.FileMapper;
 import com.aomc.coop.mapper.UserMapper;
-import com.aomc.coop.model.FileInfo;
-import com.aomc.coop.model.Message;
-import com.aomc.coop.model.User;
+import com.aomc.coop.dto.MessageRequest;
+import com.aomc.coop.dto.User;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.storage.StorageException;
 import com.aomc.coop.storage.StorageFileNotFoundException;
 import com.aomc.coop.storage.StorageProperties;
 import com.aomc.coop.utils.CodeJsonParser;
-import com.aomc.coop.utils.DateFormatCustom;
 import com.aomc.coop.utils.ResponseType;
 import com.aomc.coop.utils.rabbitMQ.RabbitMQUtil;
 import org.apache.commons.io.FilenameUtils;
@@ -39,25 +33,22 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
+// <참고> File Management Server도 별도로 만들어야 한다.
+// 현재 upload 함수 내에서 만들 것
 
-// ***** File Management Server도 별도로 만들어야 한다.
-// ***** 현재 upload 함수 내에서 만들 것
+// 방 단위로 나눠서 스케일 아웃 -> MAX_DIRECTORY_SIZE 변수를 설정하고, 이 용량을 넘으면 자동으로 상위 디렉토리를 파도록 하자
+// 지금은 E:\FileStorage\{channel_idx} 의 구조이지만,
+// 추후엔 E:\FileStorage\{new_hdd}\{channel_idx} 의 구조로 변경할 것
 
-// ***** 방 단위로 나눠서 스케일 아웃 -> MAX_DIRECTORY_SIZE 변수를 설정하고, 이 용량을 넘으면 자동으로 상위 디렉토리를 파도록 하자
-// ***** 지금은 E:\FileStorage\{channel_idx} 의 구조이지만,
-// ***** 추후엔 E:\FileStorage\{new_hdd}\{channel_idx} 의 구조로 변경할 것
+// 국가, 지역의 디렉토리를 추가할 수도 있다.
+// 이 경우 디렉토리는 E:\FileStorage\{}\{city}\{new_hdd}\{channel_idx} 의 구조가 될 것 (예시)
+// new_hdd = new hard drive의 줄임말, 의미는 아래 참조
 
-// ***** 국가, 지역의 디렉토리를 추가할 수도 있다.
-// ***** 이 경우 디렉토리는 E:\FileStorage\{}\{city}\{new_hdd}\{channel_idx} 의 구조가 될 것 (예시)
-// ***** new_hdd = new hard drive의 줄임말, 의미는 아래 참조
-
-//       하드웨어 추가를 통한 스케일 아웃 -> 디렉토리 구조를 나눠서 만들어보자.
-//       실제/ 물리적                    -> 가상/ 논리적
-//       ex) 한 상위 디렉토리 파일 스토리지의 최대 용량을 32GB로 설정하고, 이 용량을 초과하면 새로운 디렉토리 생성(스케일 아웃)
-//       파일 매니저(매니징) 서버와 파일 서버(+스토리지)는 나눠서 짤 것 : 그럼 저장 공간이 무한대가 됨
-//       파일 URL과 디렉토리 루트를 redis에 저장
-
+// 하드웨어 추가를 통한 스케일 아웃 -> 디렉토리 구조를 나눠서 만들어보자.
+// 실제/ 물리적                    -> 가상/ 논리적
+// ex) 한 상위 디렉토리 파일 스토리지의 최대 용량을 32GB로 설정하고, 이 용량을 초과하면 새로운 디렉토리 생성(스케일 아웃)
+// 파일 매니저(매니징) 서버와 파일 서버(+스토리지)는 나눠서 짤 것 : 그럼 저장 공간이 무한대가 됨
+// 파일 URL과 디렉토리 루트를 redis에 저장
 
 @Service
 public class FileSystemStorageService implements StorageService {
@@ -79,7 +70,7 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public ResponseType upload(MultipartFile file, Message message, final int channel_idx) {
+    public ResponseType upload(MultipartFile file, MessageRequest messageRequest, final int channel_idx) {
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         String location = "E:\\FileStorage\\" + channel_idx;
@@ -123,10 +114,9 @@ public class FileSystemStorageService implements StorageService {
 
             String url = "http://localhost:8085/api/files/download/" + channel_idx + "/" + filename;
 
-        // RabbitMQ에 실어주는 것
-// ***** message에 filename도 실어서 보내주기
-            message.setFile_url(url);
-            rabbitMQUtil.sendRabbitMQ(message);
+            messageRequest.setFile_url(url);
+            messageRequest.setFile_name(filename);
+            rabbitMQUtil.sendRabbitMQ(messageRequest);
 
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_File_Upload.getStatus());
         }
@@ -134,7 +124,6 @@ public class FileSystemStorageService implements StorageService {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
         }
     }
-
 
     @Override
     public Resource download(String filename, final int channel_idx) {
@@ -160,7 +149,6 @@ public class FileSystemStorageService implements StorageService {
 // ***** jpg, png 등의 img 파일들만 업로드 할 수 있도록 Vue에서, 혹은 uploadProfilePicture에서 예외처리 할 것
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         String location = "E:\\FileStorage\\"+ "profile";
-//        String location = "C:\\FileStorage\\"+ "profile";
 //        String location = "/Users/iyunjae/FileStorage/" + "profile";
         try {
             if (file.isEmpty()) {
@@ -215,9 +203,9 @@ public class FileSystemStorageService implements StorageService {
 // ***** User 객체에 String profile_pic_url을 새로 선언해서 사용하자.
             String url = "http://localhost:8085/api/files/download/profile/" + filename;
 
+            // JPA로 수정해야 하는 부분
             User user = new User();
             user.setImage(url);
-
             userMapper.updateUserImage(user_idx, url);
 
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Profile_Picture_Upload.getStatus(), url);

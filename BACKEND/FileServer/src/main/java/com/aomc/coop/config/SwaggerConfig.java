@@ -25,9 +25,9 @@ public class SwaggerConfig {
     }
 
     private ApiInfo apiEndPointsInfo() {
-        return new ApiInfoBuilder().title("ChatApi 서버의 API 문서")
+        return new ApiInfoBuilder().title("File 서버의 API 문서")
                 .description("")
-                .contact(new Contact("", "", ""))
+                .contact(new Contact("Garam Choi", "", "Starever222@gmail.com"))
                 .version("1.0")
                 .build();
     }

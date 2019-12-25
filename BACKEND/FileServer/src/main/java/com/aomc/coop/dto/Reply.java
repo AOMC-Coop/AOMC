@@ -13,6 +13,6 @@ import java.util.Date;
 public class Reply {
     private int idx;
     private String content;
-    private User user;
+    private UserDto user;
     private Date send_date;
 }

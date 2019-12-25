@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 import com.aomc.coop.mapper.FileMapper;
 import com.aomc.coop.mapper.UserMapper;
 import com.aomc.coop.dto.MessageRequest;
-import com.aomc.coop.dto.User;
+import com.aomc.coop.dto.UserDto;
 import com.aomc.coop.response.Status_3000;
 import com.aomc.coop.storage.StorageException;
 import com.aomc.coop.storage.StorageFileNotFoundException;
@@ -204,7 +204,7 @@ public class FileSystemStorageService implements StorageService {
             String url = "http://localhost:8085/api/files/download/profile/" + filename;
 
             // JPA로 수정해야 하는 부분
-            User user = new User();
+            UserDto user = new UserDto();
             user.setImage(url);
             userMapper.updateUserImage(user_idx, url);
 

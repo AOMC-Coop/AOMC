@@ -6,6 +6,9 @@ import com.aomc.coop.response.Status_5000;
 import com.aomc.coop.response.Status_common;
 import com.aomc.coop.service.TeamService;
 import com.aomc.coop.utils.CodeJsonParser;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.omg.CORBA.portable.Delegate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +81,11 @@ public class TeamController {
      * ]
      * }
      */
+    @ApiOperation(value = "새로운 팀을 만드는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "팀 생성 성공"),
+            @ApiResponse(code = 400, message = "팀 생성 실패")
+    })
     @PostMapping
     public ResponseEntity makeTeam(@RequestBody final Team team) {
         try {
@@ -206,6 +214,11 @@ public class TeamController {
      * @brief Delete http://localhost:8083/api/team/{teamIdx}
      * @details Team 삭제(비활성화)
      */
+    @ApiOperation(value = "팀을 삭제하는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "팀 삭제 성공"),
+            @ApiResponse(code = 400, message = "팀 삭제 실패\n팀 정보 없음\n삭제된 팀입니다")
+    })
     @DeleteMapping
     public ResponseEntity deleteTeam(@RequestParam(value = "teamIdx") final int teamIdx) {
         try {
@@ -247,6 +260,11 @@ public class TeamController {
      * @brief Get http://localhost:8083/api/team/channel/{teamIdx}&{userIdx}
      * @details Team의 Channel 조회
      */
+    @ApiOperation(value = "팀의 채널을 조회하는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "채널 조회 성공"),
+            @ApiResponse(code = 400, message = "채널 정보 없음")
+    })
     @GetMapping(path = "/channel/{teamIdx}&{userIdx}")
     public ResponseEntity readChannel(@PathVariable(value = "teamIdx") final int teamIdx, @PathVariable(value = "userIdx") final int userIdx) {
         try {
@@ -327,6 +345,11 @@ public class TeamController {
      * @brief get http://localhost:8083/api/team/user/{userIdx}
      * @details User의 Team 목록 조회
      */
+    @ApiOperation(value = "유저의 팀 목록을 조회하는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "팀 조회 성공"),
+            @ApiResponse(code = 400, message = "사용자 정보 없음\n팀 정보 없음")
+    })
     @GetMapping(path = "/user/{userIdx}")
     public ResponseEntity readTeamOfUser(@PathVariable(value = "userIdx") final int userIdx) {
         try {
@@ -394,6 +417,12 @@ public class TeamController {
      * @brief get http://localhost:8083/api/team/{teamIdx}
      * @details Team의 User 목록 조회
      */
+    @ApiOperation(value = "팀의 유저 목록을 조회하는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "팀 조회 성공"),
+            @ApiResponse(code = 400, message = "사용자 정보 없음\n팀 정보 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
     @GetMapping(path = "/{teamIdx}")
     public ResponseEntity readUserOfTeam(@PathVariable(value = "teamIdx") final int teamIdx) {
         try {
@@ -445,6 +474,11 @@ public class TeamController {
      * @brief Get http://localhost:8083/api/team/invite
      * @details Team의 멤버초대(메일전송)
      */
+    @ApiOperation(value = "팀의 멤버를 초대하는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "팀 초대 성공"),
+            @ApiResponse(code = 400, message = "멤버 초대 실패")
+    })
     @PostMapping(path = "/invite")
     public ResponseEntity inviteTeam(@RequestBody final Team team) {
         try {
@@ -483,6 +517,11 @@ public class TeamController {
      * @brief Get http://localhost:8083/api/team/accept/{token}
      * @details 초대수락
      */
+    @ApiOperation(value = "초대를 수락하는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "초대 승낙 성공"),
+            @ApiResponse(code = 400, message = "인증 키가 올바르지 않습니다\n회원가입이 필요합니다")
+    })
     @GetMapping(path = "/accept")
     ResponseEntity acceptInvite(RedirectAttributes redirectAttributes, HttpServletRequest request, HttpServletResponse response, @RequestParam(value = "token") final String token) throws IOException {
 

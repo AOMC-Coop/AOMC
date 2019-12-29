@@ -8,6 +8,9 @@ import com.aomc.coop.utils.CodeJsonParser;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,6 +89,11 @@ public class ChannelController {
      *
 
      */
+    @ApiOperation(value = "채널을 생성하는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "채널 생성 성공"),
+            @ApiResponse(code = 400, message = "채널 생성 실패")
+    })
     @PostMapping
     public ResponseEntity makeChannel(@RequestBody final Channel channel){
         System.out.println(channel);
@@ -202,6 +210,11 @@ public class ChannelController {
      *
 
      */
+    @ApiOperation(value = "채널의 멤버를 모두 가져오는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "채널 멤버 조회 성공"),
+            @ApiResponse(code = 400, message = "채널 멤버 조회 실패")
+    })
     @GetMapping
     @RequestMapping("/users")
     public ResponseEntity getChannelUsers(@RequestParam("channelIdx") final int channelIdx, @RequestParam("teamIdx") final int teamIdx){
@@ -267,6 +280,12 @@ public class ChannelController {
      *
 
      */
+    @ApiOperation(value = "채널에 멤버를 초대하는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "채널 멤버 초대 성공"),
+            @ApiResponse(code = 400, message = "채널 멤버 초대 실패"),
+            @ApiResponse(code = 401, message = "채널에 이미 멤버가 있음")
+    })
     @PostMapping
     @RequestMapping("/invite")
     public ResponseEntity inviteChannelUser(@RequestBody Channel channel){
@@ -315,6 +334,11 @@ public class ChannelController {
      *
 
      */
+    @ApiOperation(value = "멤버가 채널 나가기 하는 함수", response = Iterable.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "채널 나가기 성공"),
+            @ApiResponse(code = 400, message = "채널 나가기 실패")
+    })
     @DeleteMapping
     public ResponseEntity deleteChannelUser(@RequestParam(value = "channelIdx") int channelIdx, @RequestParam(value = "userIdx") int userIdx){
 
@@ -324,6 +348,7 @@ public class ChannelController {
             return new ResponseEntity<>(codeJsonParser.codeJsonParser(Status_common.INTERNAL_SERVER_ERROR.getStatus()), HttpStatus.OK);
         }
     }
+
 
     @GetMapping
     @RequestMapping("/star")

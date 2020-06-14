@@ -32,7 +32,7 @@
 
 ## 2. 아키텍처
 
-![Coop](https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/coop-architecture.png?raw=true)
+![Coop](https://github.com/AOMC-Coop/AOMC/blob/master/COMMON/coop-arc.png?raw=true)
 (그레이 아웃 된 요소는 초기 설계에는 포함되었으나, 다른 부분에 비해 중요도가 낮다고 판단하여 최종적으로는 구현하지 않은 요소들입니다.)
 - 스케일 아웃 서버 아키텍처
   - 인증 서버

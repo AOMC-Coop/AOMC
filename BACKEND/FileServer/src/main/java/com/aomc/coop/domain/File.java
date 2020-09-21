@@ -33,6 +33,4 @@ public class File {
         this.type = type;
         this.name = name;
     }
-
-    // File 함수를 여기에 작성 가능 (객체지향 : 객체 본인의 책임을 다한다. 객체에 대한 정보는 객체가 제공한다.)
 }

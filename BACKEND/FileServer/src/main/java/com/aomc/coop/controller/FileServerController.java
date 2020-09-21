@@ -29,7 +29,6 @@ public class FileServerController {
         this.storageService = storageService;
     }
 
-// ***** Interceptor를 쓰면서 REST API가 깨졌다(url에 upload download를 명시해버림). 오히려 REST API와 맞는 방법인지, 아니라면 더 나은 방법은 있을지 고민해볼 것
     @ApiOperation(value = "파일 업로드 요청을 처리", response = Iterable.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "파일 업로드 성공"),
@@ -41,7 +40,6 @@ public class FileServerController {
         return new ResponseEntity(storageService.upload(file, messageRequest, channel_idx), HttpStatus.OK);
     }
 
-// ***** 아래 두 Controller들도 ResponseEntity, codeJsonParser 양식에 맞게 바꾸기
     @GetMapping(path = "/download/{channel_idx}/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> download(@PathVariable String filename, @PathVariable final int channel_idx) {
@@ -71,30 +69,6 @@ public class FileServerController {
     public ResponseEntity<?> handleStorageFileNotFound(StorageFileNotFoundException exc) {
         return ResponseEntity.notFound().build();
     }
-
-
-//
-//    // GET / looks up the current list of uploaded files from
-//    // the StorageService and loads it into a Thymeleaf template.
-//    // It calculates a link to the actual resource using MvcUriComponentsBuilder
-//
-//// ***** 여기서 File Server의 URL을 생성한다.
-//    @GetMapping("/")
-//    public String listUploadedFiles(Model model) throws IOException {
-//
-//// ***** filename : 한글 파일명은 제대로 읽혀지지 않으므로, UTF-8 처리가 필요하다.
-//        model.addAttribute("files", storageService.getAllFilesPaths().map(
-//                path -> MvcUriComponentsBuilder.fromMethodName
-//                        (FileUploadController.class,
-//                                "download",
-//                                path.getFileName().toString()).build().toString())
-//                .collect(Collectors.toList()));
-//
-//// * model.addAttribute(String name, Object value)
-//// name 이름으로 value 객체를 추가한다
-//
-//        return "uploadForm";
-//    }
 
 
 }

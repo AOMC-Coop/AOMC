@@ -33,23 +33,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
-// <참고> File Management Server도 별도로 만들어야 한다.
-// 현재 upload 함수 내에서 만들 것
-
-// 방 단위로 나눠서 스케일 아웃 -> MAX_DIRECTORY_SIZE 변수를 설정하고, 이 용량을 넘으면 자동으로 상위 디렉토리를 파도록 하자
-// 지금은 E:\FileStorage\{channel_idx} 의 구조이지만,
-// 추후엔 E:\FileStorage\{new_hdd}\{channel_idx} 의 구조로 변경할 것
-
-// 국가, 지역의 디렉토리를 추가할 수도 있다.
-// 이 경우 디렉토리는 E:\FileStorage\{}\{city}\{new_hdd}\{channel_idx} 의 구조가 될 것 (예시)
-// new_hdd = new hard drive의 줄임말, 의미는 아래 참조
-
-// 하드웨어 추가를 통한 스케일 아웃 -> 디렉토리 구조를 나눠서 만들어보자.
-// 실제/ 물리적                    -> 가상/ 논리적
-// ex) 한 상위 디렉토리 파일 스토리지의 최대 용량을 32GB로 설정하고, 이 용량을 초과하면 새로운 디렉토리 생성(스케일 아웃)
-// 파일 매니저(매니징) 서버와 파일 서버(+스토리지)는 나눠서 짤 것 : 그럼 저장 공간이 무한대가 됨
-// 파일 URL과 디렉토리 루트를 redis에 저장
-
 @Service
 public class FileSystemStorageService implements StorageService {
 
@@ -74,29 +57,21 @@ public class FileSystemStorageService implements StorageService {
 
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         String location = "E:\\FileStorage\\" + channel_idx;
-//        String location = "C:\\FileStorage\\" + channel_idx;
-//        String location = "/Users/iyunjae/FileStorage/" + channel_idx;
-
-// ***** filename 중복시, time 변수 혹은 다른 방식을 통해 filename 중복을 막도록 코드를 변경할 것
 
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         SimpleDateFormat sdf = new SimpleDateFormat( "yy-MM-dd HH:mm:ss" , Locale.KOREA );
         String time = sdf.format( new Date( timestamp.getTime( ) ) );
 
-// ***** 중복된 부분은 추후 public class로 따로 빼두어서 사용하자
         try {
             if (file.isEmpty()) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
             }
             if (filename.contains("..")) {
-                // This is a security check
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_File_Upload.getStatus());
-// "Cannot store file with relative path outside current directory"
             }
 
             Path path = Paths.get(location);
 
-            // 디렉토리 생성
             if (!Files.exists(path)) {
                 try {
                     Files.createDirectories(path);
@@ -110,7 +85,6 @@ public class FileSystemStorageService implements StorageService {
                 Files.copy(inputStream, path.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
             }
-// ***** StandardCopyOption.REPLACE_EXISTING은 결국에는 쓰이지 말아야 한다.
 
             String url = "http://localhost:8085/api/files/download/" + channel_idx + "/" + filename;
 
@@ -146,10 +120,8 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public ResponseType uploadProfilePicture(MultipartFile file, @PathVariable final int user_idx) {
 
-// ***** jpg, png 등의 img 파일들만 업로드 할 수 있도록 Vue에서, 혹은 uploadProfilePicture에서 예외처리 할 것
         String filename = StringUtils.cleanPath(file.getOriginalFilename());
         String location = "E:\\FileStorage\\"+ "profile";
-//        String location = "/Users/iyunjae/FileStorage/" + "profile";
         try {
             if (file.isEmpty()) {
                 return codeJsonParser.codeJsonParser(Status_3000.FAIL_Profile_Picture_Upload.getStatus());
@@ -164,7 +136,6 @@ public class FileSystemStorageService implements StorageService {
                 try {
                     Files.createDirectories(path);
                 } catch (IOException e) {
-                    //fail to create directory
                     e.printStackTrace();
                 }
             }
@@ -174,7 +145,6 @@ public class FileSystemStorageService implements StorageService {
                         StandardCopyOption.REPLACE_EXISTING);
             }
 
-// *** 프로필 사진은 꼭 파일명을 user_idx로 변환해서 사용해야 한다. 그래야 Get 요청을 통한 프로필 사진 활용이 쉬워짐
 
             // MultipartFile -> File
             File convFile = new File(file.getOriginalFilename());
@@ -189,18 +159,9 @@ public class FileSystemStorageService implements StorageService {
             // original filename -> user_idx filename
             File oldFile = new File(locationToBeChanged + filename);
             File newFile = new File(locationToBeChanged + user_idx + "." + ext);
-//
-//            if (newFile.exists())
-//                throw new java.io.IOException("file exists");
 
-            // Rename file (or directory)
             boolean success = oldFile.renameTo(newFile);
 
-//            if (!success) {
-//                // File was not successfully renamed
-//            }
-
-// ***** User 객체에 String profile_pic_url을 새로 선언해서 사용하자.
             String url = "http://localhost:8085/api/files/download/profile/" + filename;
 
             // JPA로 수정해야 하는 부분
@@ -215,8 +176,7 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
-// ***** 기존의 download와 달라질 것은 없는지 고민해볼 것 -> 아예 똑같다면 역시 중복된 부분은 public class로 분리하여 사용할 것
-// ***** 파일명이 자동으로 idx로 설정되는데, download url은 기존 파일명이 그대로 반영됨 -> 프로필 사진을 못 읽어오는 오류 발생
+
     @Override
     public Resource downloadProfilePicture(String filename) {
         try {
@@ -235,15 +195,14 @@ public class FileSystemStorageService implements StorageService {
         }
     }
 
-    // Path : object that may be used to locate a file in a file system.
-    //        It will typically represent a system dependent file path.
+
     @Override
     public Path getFilePath(String filename, final int channel_idx) {
         String location = channel_idx + "/" +filename;
         return rootLocation.resolve(location);
     }
 
-// ***** getFilePath와의 중복구조 해결하기 -> 무조건 다른 방법 사용할 것
+
     @Override
     public Path getFilePathForProfile(String filename) {
         String location = "profile/" +filename;
@@ -254,17 +213,6 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public Stream<Path> getAllFilesPaths() {
         try {
-// * Files.walk
-// Return a Stream that is lazily populated with Path
-// by walking the file tree rooted at a given starting file.
-// The file tree is traversed depth-first,
-// the elements in the stream are Path objects
-// that are obtained as if by resolving the relative path against start.
-
-// The maxDepth parameter is the maximum number of levels of directories to visit.
-// A value of 0 means that only the starting file is visited, unless denied by the security manager.
-
-// ***** channel_idx 디렉토리를 한 단계 더 생성하므로, maxDepth : 1 -> 2
             return Files.walk(this.rootLocation, 2)
                     .filter(path -> !path.equals(this.rootLocation))
                     .map(this.rootLocation::relativize);

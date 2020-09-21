@@ -21,7 +21,6 @@ public class UserHasTeam {
     @Column(name = "idx")
     private int idx;
 
-    // fetchtype lazy?
     @ManyToOne
     @JoinColumn(name = "team_idx")
     private Team team;

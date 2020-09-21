@@ -21,7 +21,6 @@ public class UserHasChannel {
     @Column(name = "idx")
     private int idx;
 
-    // fetchtype lazy?
     @ManyToOne
     @JoinColumn(name = "channel_idx")
     private Channel channel;

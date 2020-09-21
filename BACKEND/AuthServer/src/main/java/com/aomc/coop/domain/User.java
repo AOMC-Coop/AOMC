@@ -43,7 +43,6 @@ public class User {
     @CreationTimestamp
     private Date reg_date;
 
-    // access_date에 해당하는 jpa annotation은 없을지
     @Column(name = "access_date", nullable = false)
     @UpdateTimestamp
     private Date access_date;

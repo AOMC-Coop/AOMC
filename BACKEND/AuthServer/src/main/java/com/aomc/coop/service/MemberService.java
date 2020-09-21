@@ -58,7 +58,6 @@ public class MemberService {
         String uid = registerRequest.getUid();
 
         User myUser = userRepository.findByUid(uid);
-        // String myUser = userMapper.checkUser(uid);
 
         if (myUser == null) {
 
@@ -102,24 +101,17 @@ public class MemberService {
         return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
     }
 
-// *** 이메일 인증 성공시 바로 로그인 창으로 넘어가도록 구조를 바꿔보자
     public String emailAuth(final String authUrl, String invite_token) {
 
         Map userInfo = hashOperations.entries(authUrl);
         String uid = (String) userInfo.get("uid");
 
-        // JPA로 수정한 부분
-        // if(userMapper.getUserWithUid(uid) != null )
         if(userRepository.findByUid(uid) != null ) {
-// *** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
             return "http://localhost:9999";
-//            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Duplicate.getStatus());
         }
 
         if(userInfo == null) {
-// *** 적당한 예외처리를 찾지 못해서 일단 같은 URL로 박아둠
             return "http://localhost:9999";
-//            return codeJsonParser.codeJsonParser(Status_3000.FAIL_Register_Timeout.getStatus());
         } else {
 
             String pwd = (String) userInfo.get("pwd");
@@ -148,8 +140,6 @@ public class MemberService {
                 Integer channel_idx = (Integer) invitedUserInfo.get("channelIdx");
                 Channel channel = channelRepository.findById(channel_idx).get();
 
-// *** user has team에 정보 넣어주고, user has channel에도 넣어줘야 함 (redis에서 찾아서 할 것), teamservice의 356줄 flag를 1로 해서 저장 (2개 다))
-
                 userHasTeamRepository.save(UserHasTeam.builder()
                                                     .team(team)
                                                     .user(user)
@@ -157,7 +147,6 @@ public class MemberService {
                                                     .status(1)
                                                     .invite_flag(1)
                                                     .build());
-                // teamMapper.createUserHasTeam(teamIdx, user_idx, invite_flag);
 
                 userHasChannelRepository.save(UserHasChannel.builder()
                                                             .channel(channel)
@@ -165,7 +154,6 @@ public class MemberService {
                                                             .star_flag(0)
                                                             .status(1)
                                                             .build());
-                // channelMapper.createUserHasChannel(channelIdx, user_idx);
             }
             return "http://localhost:9999";
         }
@@ -177,10 +165,8 @@ public class MemberService {
         int userIdx = withdrawalRequest.getIdx();
 
         if(userIdx == idx) {
-            // JPA로 Update Query 적용하기
             User user = userRepository.findById(idx).get();
             user.withdrawalMyUser(withdrawalRequest);
-            // userMapper.withdrawal(idx);
 
             return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Withdrawal.getStatus());
         }
@@ -213,7 +199,6 @@ public class MemberService {
         User user = userRepository.findById(idx).get();
         user.changePassword(hashPassword, newSalt);
 
-        //if(userMapper.changePwd(hashPassword, newSalt, idx) == 1) {
         return codeJsonParser.codeJsonParser(Status_3000.SUCCESS_Change_Pwd.getStatus());
     }
 
@@ -224,7 +209,6 @@ public class MemberService {
 
         User user = userRepository.findById(idx).get();
         String uid = user.getUid();
-        // String uid = userMapper.getUid(idx);
         SendMailThread sendMailThread = new SendMailThread(mailSender, uid, idx);
         sendMailThread.run();
 

@@ -111,7 +111,6 @@ public class MemberController {
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create(redirectAddress));
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).headers(headers).build();
-//       return new ResponseEntity(memberService.emailAuth(authUrl, invite_token), HttpStatus.OK);
     }
 
     /**

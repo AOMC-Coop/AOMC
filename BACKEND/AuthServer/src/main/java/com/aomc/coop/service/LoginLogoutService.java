@@ -44,9 +44,7 @@ public class LoginLogoutService {
     public ResponseType loginUser(@RequestBody LoginRequest loginRequest) {
 
         String uid = loginRequest.getUid();
-        // findByUid 함수에 Optional<User>를 적용해보자.
         User myUser = userRepository.findByUid(uid);
-        // User myUser = userMapper.getUserWithUid(uid);
 
         if(myUser == null) {
             return codeJsonParser.codeJsonParser(Status_3000.FAIL_Login_Wrong_ID.getStatus());

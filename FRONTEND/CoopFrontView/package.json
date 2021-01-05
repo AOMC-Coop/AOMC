@@ -14,7 +14,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "hangul-js": "^0.2.5",
     "moment": "^2.24.0",
     "socket.io-client": "^2.2.0",
